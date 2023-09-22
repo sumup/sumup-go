@@ -1,3 +1,18 @@
+// Package sumup provides a client for using the SumUp API.
+// Usage:
+//
+//	import "github.com/sumup/sumup-go"
+//
+// Construct a new SumUp client, then use the various services on the client to
+// access different parts of the SumUp API. For example:
+//
+//	client := sumup.NewClient().WithAuth(os.Getenv("SUMUP_KEY"))
+//
+//	// get the account the client is currently authorized for
+//	account, err := client.Merchant.Get(context.Background(), sumup.GetAccountParams{})
+//
+// The client is structured around individual services that correspond to the tags
+// in SumUp documentation https://developer.sumup.com/docs/api/sum-up-rest-api/.
 package sumup
 
 import (
@@ -23,6 +38,7 @@ type service struct {
 	client *Client
 }
 
+// Client manages communication with the SumUp APIs.
 type Client struct {
 	// service is the shared service struct re-used for all services.
 	svc service
@@ -48,7 +64,7 @@ type Client struct {
 	Transactions  *TransactionsService
 }
 
-// NewClient creates new SumUp API client.
+// NewClient creates new SumUp API [Client].
 // To use APIs that require authentication use [Client.WithAuth].
 func NewClient() *Client {
 	c := &Client{
@@ -60,7 +76,7 @@ func NewClient() *Client {
 	return c
 }
 
-// WithAuth returns a copy of the client configured with the provided Authorization key.
+// WithAuth returns a copy of the [Client] configured with the provided Authorization key.
 func (c *Client) WithAuth(key string) *Client {
 	clone := Client{
 		client:    c.client,
@@ -72,7 +88,7 @@ func (c *Client) WithAuth(key string) *Client {
 	return &clone
 }
 
-// WithClient returns a copy of the client configured with the provided http client.
+// WithClient returns a copy of the [Client] configured with the provided http client.
 func (c *Client) WithHTTPClient(client *http.Client) *Client {
 	clone := Client{
 		client:    client,
