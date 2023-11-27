@@ -2,9 +2,8 @@ package main
 
 import (
 	"context"
+	"log"
 	"os"
-
-	"golang.org/x/exp/slog"
 
 	"github.com/sumup/sumup-go"
 )
@@ -20,15 +19,11 @@ func main() {
 		MerchantCode:      "MK0001",
 	})
 	if err != nil {
-		slog.Error("create checkout", slog.String("error", err.Error()))
+		log.Printf("[ERROR] create checkout: %v", err)
 		return
 	}
 
-	slog.Info("checkout created",
-		slog.String("id", *checkout.Id),
-		slog.Float64("amount", *checkout.Amount),
-		slog.String("currency", string(*checkout.Currency)),
-	)
+	log.Printf("[INFO] checkout created: id=%q, amount=%v, currency=%q", *checkout.Id, *checkout.Amount, string(*checkout.Currency))
 
 	checkoutSuccess, err := client.Checkouts.Process(ctx, *checkout.Id, sumup.ProcessCheckoutBody{
 		Card: &sumup.Card{
@@ -41,14 +36,9 @@ func main() {
 		PaymentType: sumup.ProcessCheckoutBodyPaymentTypeCard,
 	})
 	if err != nil {
-		slog.Error("process checkout", slog.String("error", err.Error()))
+		log.Printf("[ERROR] process checkout: %v", err)
 		return
 	}
 
-	slog.Info("checkout processed",
-		slog.String("id", *checkout.Id),
-		slog.Float64("amount", *checkout.Amount),
-		slog.String("currency", string(*checkout.Currency)),
-		slog.String("transaction_id", string(*(*checkout.Transactions)[0].Id)),
-	)
+	log.Printf("[INFO] checkout processed: id=%q, transaction_id=%q", *checkoutSuccess.Id, string(*(*checkoutSuccess.Transactions)[0].Id))
 }

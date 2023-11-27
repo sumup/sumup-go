@@ -2,9 +2,8 @@ package main
 
 import (
 	"context"
+	"log"
 	"os"
-
-	"golang.org/x/exp/slog"
 
 	"github.com/sumup/sumup-go"
 )
@@ -14,9 +13,9 @@ func main() {
 
 	account, err := client.Merchant.Get(context.Background(), sumup.GetAccountParams{})
 	if err != nil {
-		slog.Error("get merchant account", slog.String("error", err.Error()))
+		log.Printf("[ERROR] get merchant account: %v", err)
 		return
 	}
 
-	slog.Info("merchant account", slog.String("merchant_code", *account.MerchantProfile.MerchantCode))
+	log.Printf("[INFO] merchant code: %s", *account.MerchantProfile.MerchantCode)
 }
