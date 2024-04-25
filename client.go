@@ -123,9 +123,9 @@ func (c *Client) NewRequest(
 	}
 	req, err := http.NewRequestWithContext(
 		ctx,
-		http.MethodGet,
+		method,
 		c.url+path,
-		http.NoBody,
+		body,
 	)
 	if err != nil {
 		return nil, fmt.Errorf("build request: %s", err.Error())

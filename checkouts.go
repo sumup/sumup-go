@@ -136,7 +136,7 @@ type CheckoutCreateRequest struct {
 	PersonalDetails *CheckoutCreateRequestPersonalDetails `json:"personal_details,omitempty"`
 	// Purpose of the checkout.
 	Purpose *CheckoutCreateRequestPurpose `json:"purpose,omitempty"`
-	// __Required for 3DS checkouts.__ Refers to a URL where the end user is redirected once the payment processing completes.
+	// __Required__ for [APMs](https://developer.sumup.com/online-payments/apm/introduction) and __recommended__ for card payments. Refers to a url where the end user is redirected once the payment processing completes. If not specified, the [Payment Widget](https://developer.sumup.com/online-payments/tools/card-widget) renders [3DS challenge](https://developer.sumup.com/online-payments/features/3ds) within an iframe instead of performing a full-page redirect.
 	RedirectUrl *string `json:"redirect_url,omitempty"`
 	// URL to which the SumUp platform sends the processing status of the payment checkout.
 	ReturnUrl *string `json:"return_url,omitempty"`
@@ -304,10 +304,10 @@ type CheckoutProcessMixinPaymentType string
 
 const (
 	CheckoutProcessMixinPaymentTypeBancontact CheckoutProcessMixinPaymentType = "bancontact"
+	CheckoutProcessMixinPaymentTypeBlik       CheckoutProcessMixinPaymentType = "blik"
 	CheckoutProcessMixinPaymentTypeBoleto     CheckoutProcessMixinPaymentType = "boleto"
 	CheckoutProcessMixinPaymentTypeCard       CheckoutProcessMixinPaymentType = "card"
 	CheckoutProcessMixinPaymentTypeIdeal      CheckoutProcessMixinPaymentType = "ideal"
-	CheckoutProcessMixinPaymentTypeSofort     CheckoutProcessMixinPaymentType = "sofort"
 )
 
 // Current status of the checkout.
@@ -494,7 +494,7 @@ type CreateCheckoutBody struct {
 	PersonalDetails *CreateCheckoutBodyPersonalDetails `json:"personal_details,omitempty"`
 	// Purpose of the checkout.
 	Purpose *CreateCheckoutBodyPurpose `json:"purpose,omitempty"`
-	// __Required for 3DS checkouts.__ Refers to a URL where the end user is redirected once the payment processing completes.
+	// __Required__ for [APMs](https://developer.sumup.com/online-payments/apm/introduction) and __recommended__ for card payments. Refers to a url where the end user is redirected once the payment processing completes. If not specified, the [Payment Widget](https://developer.sumup.com/online-payments/tools/card-widget) renders [3DS challenge](https://developer.sumup.com/online-payments/features/3ds) within an iframe instead of performing a full-page redirect.
 	RedirectUrl *string `json:"redirect_url,omitempty"`
 	// URL to which the SumUp platform sends the processing status of the payment checkout.
 	ReturnUrl *string `json:"return_url,omitempty"`
@@ -643,6 +643,23 @@ type CreateCheckoutBodyTransaction struct {
 	VatAmount *float64 `json:"vat_amount,omitempty"`
 }
 
+// GetPaymentMethodsParams are query parameters for GetPaymentMethods
+type GetPaymentMethodsParams struct {
+	Amount   *float64 `json:"amount,omitempty"`
+	Currency *string  `json:"currency,omitempty"`
+}
+
+// GetPaymentMethodsResponse is the type definition for a GetPaymentMethodsResponse.
+type GetPaymentMethodsResponse struct {
+	AvailablePaymentMethods *[]GetPaymentMethodsResponseAvailablePaymentMethod `json:"available_payment_methods,omitempty"`
+}
+
+// GetPaymentMethodsResponseAvailablePaymentMethod is the type definition for a GetPaymentMethodsResponseAvailablePaymentMethod.
+type GetPaymentMethodsResponseAvailablePaymentMethod struct {
+	// The ID of the payment method.
+	Id string `json:"id"`
+}
+
 // DeactivateCheckoutResponse is Details of the deleted checkout.
 type DeactivateCheckoutResponse struct {
 	// Amount of the payment.
@@ -768,28 +785,11 @@ type ProcessCheckoutBodyPaymentType string
 
 const (
 	ProcessCheckoutBodyPaymentTypeBancontact ProcessCheckoutBodyPaymentType = "bancontact"
+	ProcessCheckoutBodyPaymentTypeBlik       ProcessCheckoutBodyPaymentType = "blik"
 	ProcessCheckoutBodyPaymentTypeBoleto     ProcessCheckoutBodyPaymentType = "boleto"
 	ProcessCheckoutBodyPaymentTypeCard       ProcessCheckoutBodyPaymentType = "card"
 	ProcessCheckoutBodyPaymentTypeIdeal      ProcessCheckoutBodyPaymentType = "ideal"
-	ProcessCheckoutBodyPaymentTypeSofort     ProcessCheckoutBodyPaymentType = "sofort"
 )
-
-// GetPaymentMethodsParams are query parameters for GetPaymentMethods
-type GetPaymentMethodsParams struct {
-	Amount   *float64 `json:"amount,omitempty"`
-	Currency *string  `json:"currency,omitempty"`
-}
-
-// GetPaymentMethodsResponse is the type definition for a GetPaymentMethodsResponse.
-type GetPaymentMethodsResponse struct {
-	AvailablePaymentMethods *[]GetPaymentMethodsResponseAvailablePaymentMethod `json:"available_payment_methods,omitempty"`
-}
-
-// GetPaymentMethodsResponseAvailablePaymentMethod is the type definition for a GetPaymentMethodsResponseAvailablePaymentMethod.
-type GetPaymentMethodsResponseAvailablePaymentMethod struct {
-	// The ID of the payment method.
-	Id string `json:"id"`
-}
 
 type CheckoutsService service
 
@@ -824,7 +824,7 @@ func (s *CheckoutsService) List(ctx context.Context, params ListCheckoutsParams)
 	}
 
 	var v ListCheckoutsResponse
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+	if err := dec.Decode(&v); err != nil {
 		return nil, fmt.Errorf("decode response: %s", err.Error())
 	}
 
@@ -871,7 +871,45 @@ func (s *CheckoutsService) Create(ctx context.Context, body CreateCheckoutBody) 
 	}
 
 	var v Checkout
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+	if err := dec.Decode(&v); err != nil {
+		return nil, fmt.Errorf("decode response: %s", err.Error())
+	}
+
+	return &v, nil
+}
+
+// ListAvailablePaymentMethods: Get available payment methods
+// Get payment methods available for the given merchant to use with a checkout.
+func (s *CheckoutsService) ListAvailablePaymentMethods(ctx context.Context, merchantCode string, params GetPaymentMethodsParams) (*GetPaymentMethodsResponse, error) {
+	path := fmt.Sprintf("/v0.1/merchants/%v/payment-methods", merchantCode)
+
+	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
+	if err != nil {
+		return nil, fmt.Errorf("error building request: %v", err)
+	}
+
+	resp, err := s.client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 500 {
+		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
+
+	dec := json.NewDecoder(resp.Body)
+	if resp.StatusCode >= 400 {
+		var apiErr APIError
+		if err := dec.Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	}
+
+	var v GetPaymentMethodsResponse
+	if err := dec.Decode(&v); err != nil {
 		return nil, fmt.Errorf("decode response: %s", err.Error())
 	}
 
@@ -909,7 +947,7 @@ func (s *CheckoutsService) Deactivate(ctx context.Context, id string) (*Deactiva
 	}
 
 	var v DeactivateCheckoutResponse
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+	if err := dec.Decode(&v); err != nil {
 		return nil, fmt.Errorf("decode response: %s", err.Error())
 	}
 
@@ -947,7 +985,7 @@ func (s *CheckoutsService) Get(ctx context.Context, id string) (*CheckoutSuccess
 	}
 
 	var v CheckoutSuccess
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+	if err := dec.Decode(&v); err != nil {
 		return nil, fmt.Errorf("decode response: %s", err.Error())
 	}
 
@@ -992,45 +1030,7 @@ func (s *CheckoutsService) Process(ctx context.Context, id string, body ProcessC
 	}
 
 	var v CheckoutSuccess
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
-}
-
-// ListAvailablePaymentMethods: Get available payment methods
-// Get payment methods available for the given merchant to use with a checkout.
-func (s *CheckoutsService) ListAvailablePaymentMethods(ctx context.Context, merchantCode string, params GetPaymentMethodsParams) (*GetPaymentMethodsResponse, error) {
-	path := fmt.Sprintf("/v0.1/merchants/%v/payment-methods", merchantCode)
-
-	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
-	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
-	}
-
-	resp, err := s.client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error sending request: %v", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
-
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	}
-
-	var v GetPaymentMethodsResponse
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+	if err := dec.Decode(&v); err != nil {
 		return nil, fmt.Errorf("decode response: %s", err.Error())
 	}
 

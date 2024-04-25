@@ -128,12 +128,6 @@ type CreateCustomerBody struct {
 	PersonalDetails *PersonalDetails `json:"personal_details,omitempty"`
 }
 
-// UpdateCustomer request body.
-type UpdateCustomerBody struct {
-	// Personal details for the customer.
-	PersonalDetails *PersonalDetails `json:"personal_details,omitempty"`
-}
-
 // ListPaymentInstrumentsResponse is the type definition for a ListPaymentInstrumentsResponse.
 type ListPaymentInstrumentsResponse []PaymentInstrumentResponse
 
@@ -155,6 +149,12 @@ type CreatePaymentInstrumentBodyType string
 const (
 	CreatePaymentInstrumentBodyTypeCard CreatePaymentInstrumentBodyType = "card"
 )
+
+// UpdateCustomer request body.
+type UpdateCustomerBody struct {
+	// Personal details for the customer.
+	PersonalDetails *PersonalDetails `json:"personal_details,omitempty"`
+}
 
 // DeactivatePaymentInstrumentResponse is the type definition for a DeactivatePaymentInstrumentResponse.
 type DeactivatePaymentInstrumentResponse struct {
@@ -198,90 +198,7 @@ func (s *CustomersService) Create(ctx context.Context, body CreateCustomerBody) 
 	}
 
 	var v Customer
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
-}
-
-// Get: Retrieve a customer
-// Retrieves an identified saved customer resource through the unique `customer_id` parameter, generated upon customer creation.
-func (s *CustomersService) Get(ctx context.Context, customerId string) (*Customer, error) {
-	path := fmt.Sprintf("/v0.1/customers/%v", customerId)
-
-	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
-	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
-	}
-
-	resp, err := s.client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error sending request: %v", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
-
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	}
-
-	var v Customer
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
-}
-
-// Update: Update a customer
-// Updates an identified saved customer resource's personal details.
-//
-// The request only overwrites the parameters included in the request, all other parameters will remain with their initially assigned values.
-func (s *CustomersService) Update(ctx context.Context, customerId string, body UpdateCustomerBody) (*Customer, error) {
-	buf := new(bytes.Buffer)
-	if err := json.NewEncoder(buf).Encode(body); err != nil {
-		return nil, fmt.Errorf("encoding json body request failed: %v", err)
-	}
-
-	path := fmt.Sprintf("/v0.1/customers/%v", customerId)
-
-	req, err := s.client.NewRequest(ctx, http.MethodPut, path, buf)
-	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
-	}
-
-	resp, err := s.client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error sending request: %v", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
-
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	}
-
-	var v Customer
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+	if err := dec.Decode(&v); err != nil {
 		return nil, fmt.Errorf("decode response: %s", err.Error())
 	}
 
@@ -319,7 +236,7 @@ func (s *CustomersService) ListPaymentInstruments(ctx context.Context, customerI
 	}
 
 	var v ListPaymentInstrumentsResponse
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+	if err := dec.Decode(&v); err != nil {
 		return nil, fmt.Errorf("decode response: %s", err.Error())
 	}
 
@@ -364,7 +281,90 @@ func (s *CustomersService) CreatePaymentInstrument(ctx context.Context, customer
 	}
 
 	var v PaymentInstrumentResponse
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+	if err := dec.Decode(&v); err != nil {
+		return nil, fmt.Errorf("decode response: %s", err.Error())
+	}
+
+	return &v, nil
+}
+
+// Get: Retrieve a customer
+// Retrieves an identified saved customer resource through the unique `customer_id` parameter, generated upon customer creation.
+func (s *CustomersService) Get(ctx context.Context, customerId string) (*Customer, error) {
+	path := fmt.Sprintf("/v0.1/customers/%v", customerId)
+
+	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
+	if err != nil {
+		return nil, fmt.Errorf("error building request: %v", err)
+	}
+
+	resp, err := s.client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 500 {
+		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
+
+	dec := json.NewDecoder(resp.Body)
+	if resp.StatusCode >= 400 {
+		var apiErr APIError
+		if err := dec.Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	}
+
+	var v Customer
+	if err := dec.Decode(&v); err != nil {
+		return nil, fmt.Errorf("decode response: %s", err.Error())
+	}
+
+	return &v, nil
+}
+
+// Update: Update a customer
+// Updates an identified saved customer resource's personal details.
+//
+// The request only overwrites the parameters included in the request, all other parameters will remain with their initially assigned values.
+func (s *CustomersService) Update(ctx context.Context, customerId string, body UpdateCustomerBody) (*Customer, error) {
+	buf := new(bytes.Buffer)
+	if err := json.NewEncoder(buf).Encode(body); err != nil {
+		return nil, fmt.Errorf("encoding json body request failed: %v", err)
+	}
+
+	path := fmt.Sprintf("/v0.1/customers/%v", customerId)
+
+	req, err := s.client.NewRequest(ctx, http.MethodPut, path, buf)
+	if err != nil {
+		return nil, fmt.Errorf("error building request: %v", err)
+	}
+
+	resp, err := s.client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 500 {
+		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
+
+	dec := json.NewDecoder(resp.Body)
+	if resp.StatusCode >= 400 {
+		var apiErr APIError
+		if err := dec.Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	}
+
+	var v Customer
+	if err := dec.Decode(&v); err != nil {
 		return nil, fmt.Errorf("decode response: %s", err.Error())
 	}
 
@@ -402,7 +402,7 @@ func (s *CustomersService) DeactivatePaymentInstrument(ctx context.Context, cust
 	}
 
 	var v DeactivatePaymentInstrumentResponse
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+	if err := dec.Decode(&v); err != nil {
 		return nil, fmt.Errorf("decode response: %s", err.Error())
 	}
 

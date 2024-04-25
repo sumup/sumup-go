@@ -77,7 +77,7 @@ func (s *SubaccountsService) List(ctx context.Context) (*ListSubAccountsResponse
 	}
 
 	var v ListSubAccountsResponse
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+	if err := dec.Decode(&v); err != nil {
 		return nil, fmt.Errorf("decode response: %s", err.Error())
 	}
 
@@ -120,7 +120,7 @@ func (s *SubaccountsService) CreateSubAccount(ctx context.Context, body CreateSu
 	}
 
 	var v Subaccount
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+	if err := dec.Decode(&v); err != nil {
 		return nil, fmt.Errorf("decode response: %s", err.Error())
 	}
 
@@ -158,7 +158,7 @@ func (s *SubaccountsService) Deactivate(ctx context.Context, operatorCode string
 	}
 
 	var v Subaccount
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+	if err := dec.Decode(&v); err != nil {
 		return nil, fmt.Errorf("decode response: %s", err.Error())
 	}
 
@@ -201,7 +201,7 @@ func (s *SubaccountsService) Update(ctx context.Context, operatorCode string, bo
 	}
 
 	var v Subaccount
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+	if err := dec.Decode(&v); err != nil {
 		return nil, fmt.Errorf("decode response: %s", err.Error())
 	}
 

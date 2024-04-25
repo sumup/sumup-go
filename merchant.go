@@ -259,14 +259,6 @@ type MerchantProfile struct {
 
 // MerchantSettings is Merchant settings &#40;like \"payout_type\", \"payout_period\"&#41;
 type MerchantSettings struct {
-	// Adyen company
-	AdyenCompany *string `json:"adyen_company,omitempty"`
-	// Adyen merchant code
-	AdyenMerchantCode *string `json:"adyen_merchant_code,omitempty"`
-	// Adyen password
-	AdyenPassword *string `json:"adyen_password,omitempty"`
-	// Adyen username
-	AdyenUser *string `json:"adyen_user,omitempty"`
 	// Whether merchant will receive daily payout emails
 	DailyPayoutEmail *bool `json:"daily_payout_email,omitempty"`
 	// Whether merchant has gross settlement enabled
@@ -351,11 +343,6 @@ type VatRates struct {
 	Rate *float64 `json:"rate,omitempty"`
 }
 
-// GetAccountParams are query parameters for GetAccount
-type GetAccountParams struct {
-	Include *[]string `json:"include[],omitempty"`
-}
-
 // ListBankAccountsParams are query parameters for ListBankAccounts
 type ListBankAccountsParams struct {
 	Primary *bool `json:"primary,omitempty"`
@@ -364,12 +351,17 @@ type ListBankAccountsParams struct {
 // ListBankAccountsResponse is the type definition for a ListBankAccountsResponse.
 type ListBankAccountsResponse []BankAccount
 
+// GetAccountParams are query parameters for GetAccount
+type GetAccountParams struct {
+	Include *[]string `json:"include[],omitempty"`
+}
+
 type MerchantService service
 
-// Get: Retrieve a profile
-// Returns user profile information.
-func (s *MerchantService) Get(ctx context.Context, params GetAccountParams) (*MerchantAccount, error) {
-	path := fmt.Sprintf("/v0.1/me")
+// GetPersonalProfile: Retrieve a personal profile
+// Retrieves personal profile data.
+func (s *MerchantService) GetPersonalProfile(ctx context.Context) (*PersonalProfile, error) {
+	path := fmt.Sprintf("/v0.1/me/personal-profile")
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
 	if err != nil {
@@ -396,122 +388,8 @@ func (s *MerchantService) Get(ctx context.Context, params GetAccountParams) (*Me
 		return nil, &apiErr
 	}
 
-	var v MerchantAccount
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
-}
-
-// GetMerchantProfile: Retrieve a merchant profile
-// Retrieves merchant profile data.
-func (s *MerchantService) GetMerchantProfile(ctx context.Context) (*MerchantProfile, error) {
-	path := fmt.Sprintf("/v0.1/me/merchant-profile")
-
-	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
-	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
-	}
-
-	resp, err := s.client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error sending request: %v", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
-
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	}
-
-	var v MerchantProfile
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
-}
-
-// ListBankAccounts: List bank accounts
-// Retrives bank accounts of the merchant.
-func (s *MerchantService) ListBankAccounts(ctx context.Context, params ListBankAccountsParams) (*ListBankAccountsResponse, error) {
-	path := fmt.Sprintf("/v0.1/me/merchant-profile/bank-accounts")
-
-	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
-	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
-	}
-
-	resp, err := s.client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error sending request: %v", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
-
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	}
-
-	var v ListBankAccountsResponse
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
-}
-
-// GetDoingBusinessAs: Retrieve DBA
-// Retrieves Doing Business As profile.
-func (s *MerchantService) GetDoingBusinessAs(ctx context.Context) (*DoingBusinessAs, error) {
-	path := fmt.Sprintf("/v0.1/me/merchant-profile/doing-business-as")
-
-	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
-	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
-	}
-
-	resp, err := s.client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error sending request: %v", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
-
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	}
-
-	var v DoingBusinessAs
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+	var v PersonalProfile
+	if err := dec.Decode(&v); err != nil {
 		return nil, fmt.Errorf("decode response: %s", err.Error())
 	}
 
@@ -549,17 +427,17 @@ func (s *MerchantService) GetSettings(ctx context.Context) (*MerchantSettings, e
 	}
 
 	var v MerchantSettings
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+	if err := dec.Decode(&v); err != nil {
 		return nil, fmt.Errorf("decode response: %s", err.Error())
 	}
 
 	return &v, nil
 }
 
-// GetPersonalProfile: Retrieve a personal profile
-// Retrieves personal profile data.
-func (s *MerchantService) GetPersonalProfile(ctx context.Context) (*PersonalProfile, error) {
-	path := fmt.Sprintf("/v0.1/me/personal-profile")
+// GetDoingBusinessAs: Retrieve DBA
+// Retrieves Doing Business As profile.
+func (s *MerchantService) GetDoingBusinessAs(ctx context.Context) (*DoingBusinessAs, error) {
+	path := fmt.Sprintf("/v0.1/me/merchant-profile/doing-business-as")
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
 	if err != nil {
@@ -586,8 +464,122 @@ func (s *MerchantService) GetPersonalProfile(ctx context.Context) (*PersonalProf
 		return nil, &apiErr
 	}
 
-	var v PersonalProfile
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+	var v DoingBusinessAs
+	if err := dec.Decode(&v); err != nil {
+		return nil, fmt.Errorf("decode response: %s", err.Error())
+	}
+
+	return &v, nil
+}
+
+// ListBankAccounts: List bank accounts
+// Retrives bank accounts of the merchant.
+func (s *MerchantService) ListBankAccounts(ctx context.Context, params ListBankAccountsParams) (*ListBankAccountsResponse, error) {
+	path := fmt.Sprintf("/v0.1/me/merchant-profile/bank-accounts")
+
+	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
+	if err != nil {
+		return nil, fmt.Errorf("error building request: %v", err)
+	}
+
+	resp, err := s.client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 500 {
+		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
+
+	dec := json.NewDecoder(resp.Body)
+	if resp.StatusCode >= 400 {
+		var apiErr APIError
+		if err := dec.Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	}
+
+	var v ListBankAccountsResponse
+	if err := dec.Decode(&v); err != nil {
+		return nil, fmt.Errorf("decode response: %s", err.Error())
+	}
+
+	return &v, nil
+}
+
+// GetMerchantProfile: Retrieve a merchant profile
+// Retrieves merchant profile data.
+func (s *MerchantService) GetMerchantProfile(ctx context.Context) (*MerchantProfile, error) {
+	path := fmt.Sprintf("/v0.1/me/merchant-profile")
+
+	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
+	if err != nil {
+		return nil, fmt.Errorf("error building request: %v", err)
+	}
+
+	resp, err := s.client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 500 {
+		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
+
+	dec := json.NewDecoder(resp.Body)
+	if resp.StatusCode >= 400 {
+		var apiErr APIError
+		if err := dec.Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	}
+
+	var v MerchantProfile
+	if err := dec.Decode(&v); err != nil {
+		return nil, fmt.Errorf("decode response: %s", err.Error())
+	}
+
+	return &v, nil
+}
+
+// Get: Retrieve a profile
+// Returns user profile information.
+func (s *MerchantService) Get(ctx context.Context, params GetAccountParams) (*MerchantAccount, error) {
+	path := fmt.Sprintf("/v0.1/me")
+
+	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
+	if err != nil {
+		return nil, fmt.Errorf("error building request: %v", err)
+	}
+
+	resp, err := s.client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 500 {
+		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
+
+	dec := json.NewDecoder(resp.Body)
+	if resp.StatusCode >= 400 {
+		var apiErr APIError
+		if err := dec.Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	}
+
+	var v MerchantAccount
+	if err := dec.Decode(&v); err != nil {
 		return nil, fmt.Errorf("decode response: %s", err.Error())
 	}
 

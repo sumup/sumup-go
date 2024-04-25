@@ -92,30 +92,6 @@ type Event struct {
 	Type *EventType `json:"type,omitempty"`
 }
 
-// FinancialTransaction is the type definition for a FinancialTransaction.
-type FinancialTransaction struct {
-	Amount            *float64                  `json:"amount,omitempty"`
-	Currency          *string                   `json:"currency,omitempty"`
-	ExternalReference *string                   `json:"external_reference,omitempty"`
-	Id                *string                   `json:"id,omitempty"`
-	Timestamp         *string                   `json:"timestamp,omitempty"`
-	TransactionCode   *string                   `json:"transaction_code,omitempty"`
-	Type              *FinancialTransactionType `json:"type,omitempty"`
-}
-
-type FinancialTransactionType string
-
-const (
-	FinancialTransactionTypeChargeBack       FinancialTransactionType = "CHARGE_BACK"
-	FinancialTransactionTypeDdReturn         FinancialTransactionType = "DD_RETURN"
-	FinancialTransactionTypeDdReturnReversal FinancialTransactionType = "DD_RETURN_REVERSAL"
-	FinancialTransactionTypeRefund           FinancialTransactionType = "REFUND"
-	FinancialTransactionTypeSale             FinancialTransactionType = "SALE"
-)
-
-// FinancialTransactions is the type definition for a FinancialTransactions.
-type FinancialTransactions []FinancialTransaction
-
 // HorizontalAccuracy is Indication of the precision of the geographical position received from the payment terminal.
 type HorizontalAccuracy float64
 
@@ -474,32 +450,6 @@ const (
 	TransactionMixinHistoryPayoutPlanTrueInstallment        TransactionMixinHistoryPayoutPlan = "TRUE_INSTALLMENT"
 )
 
-// ListFinancialTransactionsParams are query parameters for ListFinancialTransactions
-type ListFinancialTransactionsParams struct {
-	EndDate   time.Time `json:"end_date"`
-	Format    *string   `json:"format,omitempty"`
-	Limit     *int      `json:"limit,omitempty"`
-	Order     *string   `json:"order,omitempty"`
-	StartDate time.Time `json:"start_date"`
-}
-
-// RefundTransaction request body.
-type RefundTransactionBody struct {
-	// Amount to be refunded. Eligible amount can't exceed the amount of the transaction and varies based on country and currency. If you do not specify a value, the system performs a full refund of the transaction.
-	Amount *float64 `json:"amount,omitempty"`
-}
-
-// RefundTransactionResponse is the type definition for a RefundTransactionResponse.
-type RefundTransactionResponse struct {
-}
-
-// GetTransactionParams are query parameters for GetTransaction
-type GetTransactionParams struct {
-	Id              *string `json:"id,omitempty"`
-	InternalId      *string `json:"internal_id,omitempty"`
-	TransactionCode *string `json:"transaction_code,omitempty"`
-}
-
 // ListTransactionsParams are query parameters for ListTransactions
 type ListTransactionsParams struct {
 	ChangesSince    *time.Time `json:"changes_since,omitempty"`
@@ -522,12 +472,29 @@ type ListTransactionsResponse struct {
 	Links *[]Link               `json:"links,omitempty"`
 }
 
+// GetTransactionParams are query parameters for GetTransaction
+type GetTransactionParams struct {
+	Id              *string `json:"id,omitempty"`
+	InternalId      *string `json:"internal_id,omitempty"`
+	TransactionCode *string `json:"transaction_code,omitempty"`
+}
+
+// RefundTransaction request body.
+type RefundTransactionBody struct {
+	// Amount to be refunded. Eligible amount can't exceed the amount of the transaction and varies based on country and currency. If you do not specify a value, the system performs a full refund of the transaction.
+	Amount *float64 `json:"amount,omitempty"`
+}
+
+// RefundTransactionResponse is the type definition for a RefundTransactionResponse.
+type RefundTransactionResponse struct {
+}
+
 type TransactionsService service
 
-// List: List financial transactions
-// Lists a less detailed history of all transactions associated with the merchant profile.
-func (s *TransactionsService) List(ctx context.Context, params ListFinancialTransactionsParams) (*FinancialTransactions, error) {
-	path := fmt.Sprintf("/v0.1/me/financials/transactions")
+// ListDetailed: List transactions
+// Lists detailed history of all transactions associated with the merchant profile.
+func (s *TransactionsService) ListDetailed(ctx context.Context, params ListTransactionsParams) (*ListTransactionsResponse, error) {
+	path := fmt.Sprintf("/v0.1/me/transactions/history")
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
 	if err != nil {
@@ -554,51 +521,8 @@ func (s *TransactionsService) List(ctx context.Context, params ListFinancialTran
 		return nil, &apiErr
 	}
 
-	var v FinancialTransactions
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
-}
-
-// Refund: Refund a transaction
-// Refunds an identified transaction either in full or partially.
-func (s *TransactionsService) Refund(ctx context.Context, txnId string, body RefundTransactionBody) (*RefundTransactionResponse, error) {
-	buf := new(bytes.Buffer)
-	if err := json.NewEncoder(buf).Encode(body); err != nil {
-		return nil, fmt.Errorf("encoding json body request failed: %v", err)
-	}
-
-	path := fmt.Sprintf("/v0.1/me/refund/%v", txnId)
-
-	req, err := s.client.NewRequest(ctx, http.MethodPost, path, buf)
-	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
-	}
-
-	resp, err := s.client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error sending request: %v", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
-
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	}
-
-	var v RefundTransactionResponse
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+	var v ListTransactionsResponse
+	if err := dec.Decode(&v); err != nil {
 		return nil, fmt.Errorf("decode response: %s", err.Error())
 	}
 
@@ -641,19 +565,24 @@ func (s *TransactionsService) Get(ctx context.Context, params GetTransactionPara
 	}
 
 	var v TransactionFull
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+	if err := dec.Decode(&v); err != nil {
 		return nil, fmt.Errorf("decode response: %s", err.Error())
 	}
 
 	return &v, nil
 }
 
-// ListDetailed: List transactions
-// Lists detailed history of all transactions associated with the merchant profile.
-func (s *TransactionsService) ListDetailed(ctx context.Context, params ListTransactionsParams) (*ListTransactionsResponse, error) {
-	path := fmt.Sprintf("/v0.1/me/transactions/history")
+// Refund: Refund a transaction
+// Refunds an identified transaction either in full or partially.
+func (s *TransactionsService) Refund(ctx context.Context, txnId string, body RefundTransactionBody) (*RefundTransactionResponse, error) {
+	buf := new(bytes.Buffer)
+	if err := json.NewEncoder(buf).Encode(body); err != nil {
+		return nil, fmt.Errorf("encoding json body request failed: %v", err)
+	}
 
-	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
+	path := fmt.Sprintf("/v0.1/me/refund/%v", txnId)
+
+	req, err := s.client.NewRequest(ctx, http.MethodPost, path, buf)
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -678,8 +607,8 @@ func (s *TransactionsService) ListDetailed(ctx context.Context, params ListTrans
 		return nil, &apiErr
 	}
 
-	var v ListTransactionsResponse
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+	var v RefundTransactionResponse
+	if err := dec.Decode(&v); err != nil {
 		return nil, fmt.Errorf("decode response: %s", err.Error())
 	}
 

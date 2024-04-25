@@ -9,7 +9,7 @@
 
 _**IMPORTANT:** This SDK is under heavy development and subject to breaking changes._
 
-The Golang SDK for SumUp [API](https://developer.sumup.com).
+The Golang SDK for the SumUp [API](https://developer.sumup.com).
 
 ## Installation
 

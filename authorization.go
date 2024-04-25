@@ -31,19 +31,6 @@ const (
 	AuthTokenGrantTypeRefreshToken      AuthTokenGrantType = "refresh_token"
 )
 
-// AuthorizeParams are query parameters for Authorize
-type AuthorizeParams struct {
-	ClientId     *string `json:"client_id,omitempty"`
-	RedirectUri  *string `json:"redirect_uri,omitempty"`
-	ResponseType *string `json:"response_type,omitempty"`
-	Scope        *string `json:"scope,omitempty"`
-	State        *string `json:"state,omitempty"`
-}
-
-// AuthorizeResponse is the type definition for a AuthorizeResponse.
-type AuthorizeResponse struct {
-}
-
 // CreateToken request body.
 type CreateTokenBody struct {
 	// The client ID of your application that was generated when you [registered it](https://developer.sumup.com/docs/register-app).
@@ -80,45 +67,20 @@ type CreateTokenResponse struct {
 	TokenType *string `json:"token_type,omitempty"`
 }
 
-type AuthorizationService service
-
-// Authorize: Request authorization from users
-// Request authorization from users and grant your application access to resources associated with the user's profile.
-func (s *AuthorizationService) Authorize(ctx context.Context, params AuthorizeParams) (*AuthorizeResponse, error) {
-	path := fmt.Sprintf("/authorize")
-
-	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
-	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
-	}
-
-	resp, err := s.client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error sending request: %v", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
-
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	}
-
-	var v AuthorizeResponse
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
+// AuthorizeParams are query parameters for Authorize
+type AuthorizeParams struct {
+	ClientId     *string `json:"client_id,omitempty"`
+	RedirectUri  *string `json:"redirect_uri,omitempty"`
+	ResponseType *string `json:"response_type,omitempty"`
+	Scope        *string `json:"scope,omitempty"`
+	State        *string `json:"state,omitempty"`
 }
+
+// AuthorizeResponse is the type definition for a AuthorizeResponse.
+type AuthorizeResponse struct {
+}
+
+type AuthorizationService service
 
 // CreateToken: Generate a token
 // Generate a token or a refresh token
@@ -156,7 +118,45 @@ func (s *AuthorizationService) CreateToken(ctx context.Context, body CreateToken
 	}
 
 	var v CreateTokenResponse
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+	if err := dec.Decode(&v); err != nil {
+		return nil, fmt.Errorf("decode response: %s", err.Error())
+	}
+
+	return &v, nil
+}
+
+// Authorize: Request authorization from users
+// Request authorization from users and grant your application access to resources associated with the user's profile.
+func (s *AuthorizationService) Authorize(ctx context.Context, params AuthorizeParams) (*AuthorizeResponse, error) {
+	path := fmt.Sprintf("/authorize")
+
+	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
+	if err != nil {
+		return nil, fmt.Errorf("error building request: %v", err)
+	}
+
+	resp, err := s.client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 500 {
+		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
+
+	dec := json.NewDecoder(resp.Body)
+	if resp.StatusCode >= 400 {
+		var apiErr APIError
+		if err := dec.Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	}
+
+	var v AuthorizeResponse
+	if err := dec.Decode(&v); err != nil {
 		return nil, fmt.Errorf("decode response: %s", err.Error())
 	}
 
