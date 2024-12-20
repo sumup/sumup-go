@@ -12,41 +12,11 @@ import (
 
 // CardResponse is Details of the payment card.
 type CardResponse struct {
-	// Three-digit card verification value (security code) of the payment card.
-	Cvv *string `json:"cvv,omitempty"`
-	// Month from the expiration time of the payment card. Accepted format is `MM`.
-	ExpiryMonth *CardResponseExpiryMonth `json:"expiry_month,omitempty"`
-	// Year from the expiration time of the payment card. Accepted formats are `YY` and `YYYY`.
-	ExpiryYear *string `json:"expiry_year,omitempty"`
 	// Last 4 digits of the payment card number.
 	Last4Digits *string `json:"last_4_digits,omitempty"`
-	// Name of the cardholder as it appears on the payment card.
-	Name *string `json:"name,omitempty"`
-	// Number of the payment card (without spaces).
-	Number *string `json:"number,omitempty"`
 	// Issuing card network of the payment card.
 	Type *CardResponseType `json:"type,omitempty"`
-	// Required five-digit ZIP code. Applicable only to merchant users in the USA.
-	ZipCode *string `json:"zip_code,omitempty"`
 }
-
-// Month from the expiration time of the payment card. Accepted format is `MM`.
-type CardResponseExpiryMonth string
-
-const (
-	CardResponseExpiryMonth01 CardResponseExpiryMonth = "01"
-	CardResponseExpiryMonth02 CardResponseExpiryMonth = "02"
-	CardResponseExpiryMonth03 CardResponseExpiryMonth = "03"
-	CardResponseExpiryMonth04 CardResponseExpiryMonth = "04"
-	CardResponseExpiryMonth05 CardResponseExpiryMonth = "05"
-	CardResponseExpiryMonth06 CardResponseExpiryMonth = "06"
-	CardResponseExpiryMonth07 CardResponseExpiryMonth = "07"
-	CardResponseExpiryMonth08 CardResponseExpiryMonth = "08"
-	CardResponseExpiryMonth09 CardResponseExpiryMonth = "09"
-	CardResponseExpiryMonth10 CardResponseExpiryMonth = "10"
-	CardResponseExpiryMonth11 CardResponseExpiryMonth = "11"
-	CardResponseExpiryMonth12 CardResponseExpiryMonth = "12"
-)
 
 // Issuing card network of the payment card.
 type CardResponseType string
@@ -159,7 +129,7 @@ type TransactionEvent struct {
 	EventType *EventType `json:"event_type,omitempty"`
 	// Unique ID of the transaction event.
 	Id *EventId `json:"id,omitempty"`
-	// Consequtive number of the installment that is paid. Applicable only payout events, i.e. `event_type = PAYOUT`.
+	// Consecutive number of the installment that is paid. Applicable only payout events, i.e. `event_type = PAYOUT`.
 	InstallmentNumber *int `json:"installment_number,omitempty"`
 	// Status of the transaction event.
 	Status *EventStatus `json:"status,omitempty"`
@@ -399,6 +369,8 @@ type TransactionHistory struct {
 	Amount *float64 `json:"amount,omitempty"`
 	// Issuing card network of the payment card used for the transaction.
 	CardType *TransactionHistoryCardType `json:"card_type,omitempty"`
+	// Client-specific ID of the transaction.
+	ClientTransactionId *string `json:"client_transaction_id,omitempty"`
 	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported currency values are enumerated above.
 	Currency *Currency `json:"currency,omitempty"`
 	// Unique ID of the transaction.
@@ -479,6 +451,35 @@ type GetTransactionParams struct {
 	TransactionCode *string `json:"transaction_code,omitempty"`
 }
 
+// ListTransactionsV21Params are query parameters for ListTransactionsV21
+type ListTransactionsV21Params struct {
+	ChangesSince    *time.Time `json:"changes_since,omitempty"`
+	Limit           *int       `json:"limit,omitempty"`
+	NewestRef       *string    `json:"newest_ref,omitempty"`
+	NewestTime      *time.Time `json:"newest_time,omitempty"`
+	OldestRef       *string    `json:"oldest_ref,omitempty"`
+	OldestTime      *time.Time `json:"oldest_time,omitempty"`
+	Order           *string    `json:"order,omitempty"`
+	PaymentTypes    *[]string  `json:"payment_types,omitempty"`
+	Statuses        *[]string  `json:"statuses,omitempty"`
+	TransactionCode *string    `json:"transaction_code,omitempty"`
+	Types           *[]string  `json:"types,omitempty"`
+	Users           *[]string  `json:"users,omitempty"`
+}
+
+// ListTransactionsV21Response is the type definition for a ListTransactionsV21Response.
+type ListTransactionsV21Response struct {
+	Items *[]TransactionHistory `json:"items,omitempty"`
+	Links *[]Link               `json:"links,omitempty"`
+}
+
+// GetTransactionV21Params are query parameters for GetTransactionV21
+type GetTransactionV21Params struct {
+	Id              *string `json:"id,omitempty"`
+	InternalId      *string `json:"internal_id,omitempty"`
+	TransactionCode *string `json:"transaction_code,omitempty"`
+}
+
 // RefundTransaction request body.
 type RefundTransactionBody struct {
 	// Amount to be refunded. Eligible amount can't exceed the amount of the transaction and varies based on country and currency. If you do not specify a value, the system performs a full refund of the transaction.
@@ -491,9 +492,9 @@ type RefundTransactionResponse struct {
 
 type TransactionsService service
 
-// ListDetailed: List transactions
+// ListDeprecated: List transactions (deprecated)
 // Lists detailed history of all transactions associated with the merchant profile.
-func (s *TransactionsService) ListDetailed(ctx context.Context, params ListTransactionsParams) (*ListTransactionsResponse, error) {
+func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListTransactionsParams) (*ListTransactionsResponse, error) {
 	path := fmt.Sprintf("/v0.1/me/transactions/history")
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
@@ -529,6 +530,87 @@ func (s *TransactionsService) ListDetailed(ctx context.Context, params ListTrans
 	return &v, nil
 }
 
+// GetDeprecated: Retrieve a transaction (deprecated)
+// Retrieves the full details of an identified transaction. The transaction resource is identified by a query parameter and *one* of following parameters is required:
+//   - `id`
+//   - `internal_id`
+//   - `transaction_code`
+//   - `foreign_transaction_id`
+//   - `client_transaction_id`
+func (s *TransactionsService) GetDeprecated(ctx context.Context, params GetTransactionParams) (*TransactionFull, error) {
+	path := fmt.Sprintf("/v0.1/me/transactions")
+
+	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
+	if err != nil {
+		return nil, fmt.Errorf("error building request: %v", err)
+	}
+
+	resp, err := s.client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 500 {
+		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
+
+	dec := json.NewDecoder(resp.Body)
+	if resp.StatusCode >= 400 {
+		var apiErr APIError
+		if err := dec.Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	}
+
+	var v TransactionFull
+	if err := dec.Decode(&v); err != nil {
+		return nil, fmt.Errorf("decode response: %s", err.Error())
+	}
+
+	return &v, nil
+}
+
+// List: List transactions
+// Lists detailed history of all transactions associated with the merchant profile.
+func (s *TransactionsService) List(ctx context.Context, merchantCode string, params ListTransactionsV21Params) (*ListTransactionsV21Response, error) {
+	path := fmt.Sprintf("/v2.1/merchants/%v/transactions/history", merchantCode)
+
+	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
+	if err != nil {
+		return nil, fmt.Errorf("error building request: %v", err)
+	}
+
+	resp, err := s.client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 500 {
+		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
+
+	dec := json.NewDecoder(resp.Body)
+	if resp.StatusCode >= 400 {
+		var apiErr APIError
+		if err := dec.Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	}
+
+	var v ListTransactionsV21Response
+	if err := dec.Decode(&v); err != nil {
+		return nil, fmt.Errorf("decode response: %s", err.Error())
+	}
+
+	return &v, nil
+}
+
 // Get: Retrieve a transaction
 // Retrieves the full details of an identified transaction. The transaction resource is identified by a query parameter and *one* of following parameters is required:
 //   - `id`
@@ -536,8 +618,8 @@ func (s *TransactionsService) ListDetailed(ctx context.Context, params ListTrans
 //   - `transaction_code`
 //   - `foreign_transaction_id`
 //   - `client_transaction_id`
-func (s *TransactionsService) Get(ctx context.Context, params GetTransactionParams) (*TransactionFull, error) {
-	path := fmt.Sprintf("/v0.1/me/transactions")
+func (s *TransactionsService) Get(ctx context.Context, merchantCode string, params GetTransactionV21Params) (*TransactionFull, error) {
+	path := fmt.Sprintf("/v2.1/merchants/%v/transactions", merchantCode)
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
 	if err != nil {

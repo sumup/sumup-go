@@ -10,6 +10,10 @@ import (
 	"time"
 )
 
+// Attributes is Object attributes that modifiable only by SumUp applications.
+type Attributes struct {
+}
+
 // Invite is Pending invitation for membership.
 type Invite struct {
 	// Email address of the invited user.
@@ -17,32 +21,41 @@ type Invite struct {
 	ExpiresAt time.Time `json:"expires_at"`
 }
 
-// Member is A member is user within speicfic resource identified by resource id, resource type, and associated roles.
+// Member is A member is user within specific resource identified by resource id, resource type, and associated roles.
 type Member struct {
-	CreatedAt time.Time `json:"created_at"`
+	// Object attributes that modifiable only by SumUp applications.
+	Attributes *Attributes `json:"attributes,omitempty"`
+	CreatedAt  time.Time   `json:"created_at"`
 	// ID of the member.
 	Id string `json:"id"`
 	// Pending invitation for membership.
 	Invite *Invite `json:"invite,omitempty"`
+	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always submit whole metadata.
+	Metadata *Metadata `json:"metadata,omitempty"`
 	// User's permissions.
 	Permissions []string `json:"permissions"`
 	// User's roles.
-	Roles     []string     `json:"roles"`
-	Status    MemberStatus `json:"status"`
-	UpdatedAt time.Time    `json:"updated_at"`
+	Roles     []string         `json:"roles"`
+	Status    MembershipStatus `json:"status"`
+	UpdatedAt time.Time        `json:"updated_at"`
 	// User information.
-	User *MemberUser `json:"user,omitempty"`
+	User *MembershipUser `json:"user,omitempty"`
 }
 
-type MemberStatus string
+type MembershipStatus string
 
 const (
-	MemberStatusAccepted MemberStatus = "accepted"
-	MemberStatusPending  MemberStatus = "pending"
+	MembershipStatusAccepted MembershipStatus = "accepted"
+	MembershipStatusDisabled MembershipStatus = "disabled"
+	MembershipStatusExpired  MembershipStatus = "expired"
+	MembershipStatusPending  MembershipStatus = "pending"
+	MembershipStatusUnknown  MembershipStatus = "unknown"
 )
 
-// MemberUser is User information.
-type MemberUser struct {
+// MembershipUser is User information.
+type MembershipUser struct {
+	// Classic identifiers of the user.
+	Classic *MembershipUserClassic `json:"classic,omitempty"`
 	// Time when the user has been disabled. Applies only to virtual users (`virtual_user: true`).
 	DisabledAt *time.Time `json:"disabled_at,omitempty"`
 	// End-User's preferred e-mail address. Its value MUST conform to the RFC 5322 [RFC5322] addr-spec syntax. The RP MUST NOT rely upon this value being unique, for unique identification use ID instead.
@@ -51,34 +64,74 @@ type MemberUser struct {
 	Id string `json:"id"`
 	// True if the user has enabled MFA on login.
 	MfaOnLoginEnabled bool `json:"mfa_on_login_enabled"`
+	// User's preferred name. Used for display purposes only.
+	Nickname *string `json:"nickname,omitempty"`
+	// URL of the End-User's profile picture. This URL refers to an image file (for example, a PNG, JPEG, or GIF image file), rather than to a Web page containing an image.
+	Picture *string `json:"picture,omitempty"`
 	// True if the user is a virtual user (operator).
 	VirtualUser bool `json:"virtual_user"`
 }
 
+// MembershipUserClassic is Classic identifiers of the user.
+type MembershipUserClassic struct {
+	UserId int `json:"user_id"`
+}
+
+// Metadata is Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always submit whole metadata.
+type Metadata struct {
+}
+
 // ListMerchantMembersParams are query parameters for ListMerchantMembers
 type ListMerchantMembersParams struct {
-	Email  *string `json:"email,omitempty"`
-	Limit  *int    `json:"limit,omitempty"`
-	Offset *int    `json:"offset,omitempty"`
+	Email  *string           `json:"email,omitempty"`
+	Limit  *int              `json:"limit,omitempty"`
+	Offset *int              `json:"offset,omitempty"`
+	Roles  *[]string         `json:"roles,omitempty"`
+	Scroll *bool             `json:"scroll,omitempty"`
+	Status *MembershipStatus `json:"status,omitempty"`
 }
 
 // ListMerchantMembersResponse is the type definition for a ListMerchantMembersResponse.
 type ListMerchantMembersResponse struct {
 	Items      []Member `json:"items"`
-	TotalCount int      `json:"total_count"`
+	TotalCount *int     `json:"total_count,omitempty"`
 }
 
 // AddMerchantMember request body.
 type AddMerchantMemberBody struct {
+	// Object attributes that modifiable only by SumUp applications.
+	Attributes *Attributes `json:"attributes,omitempty"`
 	// Email address of the member to add.
 	Email string `json:"email"`
+	// True if the user is managed by the merchant. In this case, we'll created a virtual user with the provided password and nickname.
+	IsManagedUser *bool `json:"is_managed_user,omitempty"`
+	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always submit whole metadata.
+	Metadata *Metadata `json:"metadata,omitempty"`
+	// Nickname of the member to add. Only used if `is_managed_user` is true. Used for display purposes only.
+	Nickname *string `json:"nickname,omitempty"`
+	// Password of the member to add. Only used if `is_managed_user` is true.
+	Password *string `json:"password,omitempty"`
 	// List of roles to assign to the new member.
 	Roles []string `json:"roles"`
 }
 
 // UpdateMerchantMember request body.
 type UpdateMerchantMemberBody struct {
-	Roles []string `json:"roles"`
+	// Object attributes that modifiable only by SumUp applications.
+	Attributes *Attributes `json:"attributes,omitempty"`
+	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always submit whole metadata.
+	Metadata *Metadata `json:"metadata,omitempty"`
+	Roles    *[]string `json:"roles,omitempty"`
+	// Allows you to update user data of managed users.
+	User *UpdateMerchantMemberBodyUser `json:"user,omitempty"`
+}
+
+// UpdateMerchantMemberBodyUser is Allows you to update user data of managed users.
+type UpdateMerchantMemberBodyUser struct {
+	// User's preferred name. Used for display purposes only.
+	Nickname *string `json:"nickname,omitempty"`
+	// Password of the member to add. Only used if `is_managed_user` is true.
+	Password *string `json:"password,omitempty"`
 }
 
 type MembersService service
@@ -237,38 +290,43 @@ func (s *MembersService) GetMerchantMember(ctx context.Context, merchantCode str
 
 // UpdateMerchantMember: Update merchant member
 // Update assigned roles of the member.
-func (s *MembersService) UpdateMerchantMember(ctx context.Context, merchantCode string, memberId string, body UpdateMerchantMemberBody) error {
+func (s *MembersService) UpdateMerchantMember(ctx context.Context, merchantCode string, memberId string, body UpdateMerchantMemberBody) (*Member, error) {
 	buf := new(bytes.Buffer)
 	if err := json.NewEncoder(buf).Encode(body); err != nil {
-		return fmt.Errorf("encoding json body request failed: %v", err)
+		return nil, fmt.Errorf("encoding json body request failed: %v", err)
 	}
 
 	path := fmt.Sprintf("/v0.1/merchants/%v/members/%v", merchantCode, memberId)
 
 	req, err := s.client.NewRequest(ctx, http.MethodPut, path, buf)
 	if err != nil {
-		return fmt.Errorf("error building request: %v", err)
+		return nil, fmt.Errorf("error building request: %v", err)
 	}
 
 	resp, err := s.client.Do(req)
 	if err != nil {
-		return fmt.Errorf("error sending request: %v", err)
+		return nil, fmt.Errorf("error sending request: %v", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode >= 500 {
-		return fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
 
 	dec := json.NewDecoder(resp.Body)
 	if resp.StatusCode >= 400 {
 		var apiErr APIError
 		if err := dec.Decode(&apiErr); err != nil {
-			return fmt.Errorf("read error response: %s", err.Error())
+			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
-		return &apiErr
+		return nil, &apiErr
 	}
 
-	return nil
+	var v Member
+	if err := dec.Decode(&v); err != nil {
+		return nil, fmt.Errorf("decode response: %s", err.Error())
+	}
+
+	return &v, nil
 }

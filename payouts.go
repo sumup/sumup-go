@@ -84,7 +84,7 @@ func (s *PayoutsService) List(ctx context.Context, params ListPayoutsParams) (*F
 	}
 
 	var v FinancialPayouts
-	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+	if err := dec.Decode(&v); err != nil {
 		return nil, fmt.Errorf("decode response: %s", err.Error())
 	}
 

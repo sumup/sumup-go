@@ -113,7 +113,7 @@ type BankAccount struct {
 	CreatedAt *string `json:"created_at,omitempty"`
 	// IBAN
 	Iban *string `json:"iban,omitempty"`
-	// The primary bank account is the one used for settlements
+	// The primary bank account is the one used for payouts
 	Primary *bool `json:"primary,omitempty"`
 	// Status in the verification process
 	Status *string `json:"status,omitempty"`
@@ -207,7 +207,6 @@ type MerchantAccount struct {
 	IsMigratedPaylevenBr *bool `json:"is_migrated_payleven_br,omitempty"`
 	// Account's merchant profile
 	MerchantProfile *MerchantProfile `json:"merchant_profile,omitempty"`
-	Operators       *Operators       `json:"operators,omitempty"`
 	// User permissions
 	Permissions *Permissions `json:"permissions,omitempty"`
 	// Account's personal profile.
@@ -225,7 +224,7 @@ type MerchantProfile struct {
 	CompanyName *string `json:"company_name,omitempty"`
 	// Company registration number
 	CompanyRegistrationNumber *string `json:"company_registration_number,omitempty"`
-	// Merchant country isocode &#40;for internal usage only&#41;
+	// Merchant country code formatted according to [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) &#40;for internal usage only&#41;
 	Country *string `json:"country,omitempty"`
 	// Doing Business As information
 	DoingBusinessAs *DoingBusinessAs `json:"doing_business_as,omitempty"`
@@ -295,14 +294,17 @@ const (
 	MerchantSettingsMotoPaymentUnavailable MerchantSettingsMotoPayment = "UNAVAILABLE"
 )
 
-// Operator is the type definition for a Operator.
-type Operator struct {
-	// Username of the operator
-	Username *string `json:"username,omitempty"`
+// Permissions is User permissions
+type Permissions struct {
+	// Create MOTO payments
+	CreateMotoPayments *bool `json:"create_moto_payments,omitempty"`
+	// Create referral
+	CreateReferral *bool `json:"create_referral,omitempty"`
+	// Can view full merchant transaction history
+	FullTransactionHistoryView *bool `json:"full_transaction_history_view,omitempty"`
+	// Refund transactions
+	RefundTransactions *bool `json:"refund_transactions,omitempty"`
 }
-
-// Operators is the type definition for a Operators.
-type Operators []Operator
 
 // PersonalProfile is Account's personal profile.
 type PersonalProfile struct {
@@ -355,6 +357,14 @@ type ListBankAccountsResponse []BankAccount
 type GetAccountParams struct {
 	Include *[]string `json:"include[],omitempty"`
 }
+
+// ListBankAccountsV11Params are query parameters for ListBankAccountsV11
+type ListBankAccountsV11Params struct {
+	Primary *bool `json:"primary,omitempty"`
+}
+
+// ListBankAccountsV11Response is the type definition for a ListBankAccountsV11Response.
+type ListBankAccountsV11Response []BankAccount
 
 type MerchantService service
 
@@ -472,9 +482,9 @@ func (s *MerchantService) GetDoingBusinessAs(ctx context.Context) (*DoingBusines
 	return &v, nil
 }
 
-// ListBankAccounts: List bank accounts
-// Retrives bank accounts of the merchant.
-func (s *MerchantService) ListBankAccounts(ctx context.Context, params ListBankAccountsParams) (*ListBankAccountsResponse, error) {
+// ListBankAccountsDeprecated: List bank accounts (deprecated)
+// Retrieves bank accounts of the merchant.
+func (s *MerchantService) ListBankAccountsDeprecated(ctx context.Context, params ListBankAccountsParams) (*ListBankAccountsResponse, error) {
 	path := fmt.Sprintf("/v0.1/me/merchant-profile/bank-accounts")
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
@@ -579,6 +589,44 @@ func (s *MerchantService) Get(ctx context.Context, params GetAccountParams) (*Me
 	}
 
 	var v MerchantAccount
+	if err := dec.Decode(&v); err != nil {
+		return nil, fmt.Errorf("decode response: %s", err.Error())
+	}
+
+	return &v, nil
+}
+
+// ListBankAccounts: List bank accounts
+// Retrieves bank accounts of the merchant.
+func (s *MerchantService) ListBankAccounts(ctx context.Context, merchantCode string, params ListBankAccountsV11Params) (*ListBankAccountsV11Response, error) {
+	path := fmt.Sprintf("/v1.1/merchants/%v/bank-accounts", merchantCode)
+
+	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
+	if err != nil {
+		return nil, fmt.Errorf("error building request: %v", err)
+	}
+
+	resp, err := s.client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 500 {
+		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
+
+	dec := json.NewDecoder(resp.Body)
+	if resp.StatusCode >= 400 {
+		var apiErr APIError
+		if err := dec.Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	}
+
+	var v ListBankAccountsV11Response
 	if err := dec.Decode(&v); err != nil {
 		return nil, fmt.Errorf("decode response: %s", err.Error())
 	}

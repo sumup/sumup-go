@@ -10,6 +10,64 @@ import (
 	"time"
 )
 
+// Card is __Required when payment type is `card`.__ Details of the payment card.
+type Card struct {
+	// Three or four-digit card verification value (security code) of the payment card.
+	Cvv string `json:"cvv"`
+	// Month from the expiration time of the payment card. Accepted format is `MM`.
+	ExpiryMonth CardExpiryMonth `json:"expiry_month"`
+	// Year from the expiration time of the payment card. Accepted formats are `YY` and `YYYY`.
+	ExpiryYear string `json:"expiry_year"`
+	// Last 4 digits of the payment card number.
+	Last4Digits string `json:"last_4_digits"`
+	// Name of the cardholder as it appears on the payment card.
+	Name string `json:"name"`
+	// Number of the payment card (without spaces).
+	Number string `json:"number"`
+	// Issuing card network of the payment card.
+	Type CardType `json:"type"`
+	// Required five-digit ZIP code. Applicable only to merchant users in the USA.
+	ZipCode *string `json:"zip_code,omitempty"`
+}
+
+// Month from the expiration time of the payment card. Accepted format is `MM`.
+type CardExpiryMonth string
+
+const (
+	CardExpiryMonth01 CardExpiryMonth = "01"
+	CardExpiryMonth02 CardExpiryMonth = "02"
+	CardExpiryMonth03 CardExpiryMonth = "03"
+	CardExpiryMonth04 CardExpiryMonth = "04"
+	CardExpiryMonth05 CardExpiryMonth = "05"
+	CardExpiryMonth06 CardExpiryMonth = "06"
+	CardExpiryMonth07 CardExpiryMonth = "07"
+	CardExpiryMonth08 CardExpiryMonth = "08"
+	CardExpiryMonth09 CardExpiryMonth = "09"
+	CardExpiryMonth10 CardExpiryMonth = "10"
+	CardExpiryMonth11 CardExpiryMonth = "11"
+	CardExpiryMonth12 CardExpiryMonth = "12"
+)
+
+// Issuing card network of the payment card.
+type CardType string
+
+const (
+	CardTypeAmex         CardType = "AMEX"
+	CardTypeCup          CardType = "CUP"
+	CardTypeDiners       CardType = "DINERS"
+	CardTypeDiscover     CardType = "DISCOVER"
+	CardTypeElo          CardType = "ELO"
+	CardTypeElv          CardType = "ELV"
+	CardTypeHipercard    CardType = "HIPERCARD"
+	CardTypeJcb          CardType = "JCB"
+	CardTypeMaestro      CardType = "MAESTRO"
+	CardTypeMastercard   CardType = "MASTERCARD"
+	CardTypeUnknown      CardType = "UNKNOWN"
+	CardTypeVisa         CardType = "VISA"
+	CardTypeVisaElectron CardType = "VISA_ELECTRON"
+	CardTypeVisaVpay     CardType = "VISA_VPAY"
+)
+
 // Checkout is Details of the payment checkout.
 type Checkout struct {
 	// Amount of the payment.
@@ -293,7 +351,7 @@ type CheckoutProcessMixin struct {
 	CustomerId *string `json:"customer_id,omitempty"`
 	// Number of installments for deferred payments. Available only to merchant users in Brazil.
 	Installments *int `json:"installments,omitempty"`
-	// Mandate is passed when a card is to be tokenised
+	// Mandate is passed when a card is to be tokenized
 	Mandate     *MandatePayload                 `json:"mandate,omitempty"`
 	PaymentType CheckoutProcessMixinPaymentType `json:"payment_type"`
 	// __Required when using a tokenized card to process a checkout.__ Unique token identifying the saved payment card for a customer.
@@ -443,7 +501,17 @@ type DetailsErrorFailedConstraint struct {
 	Reference *string `json:"reference,omitempty"`
 }
 
-// MandatePayload is Mandate is passed when a card is to be tokenised
+// ErrorExtended is the type definition for a ErrorExtended.
+type ErrorExtended struct {
+	// Platform code for the error.
+	ErrorCode *string `json:"error_code,omitempty"`
+	// Short description of the error.
+	Message *string `json:"message,omitempty"`
+	// Parameter name (with relative location) to which the error applies. Parameters from embedded resources are displayed using dot notation. For example, `card.name` refers to the `name` parameter embedded in the `card` object.
+	Param *string `json:"param,omitempty"`
+}
+
+// MandatePayload is Mandate is passed when a card is to be tokenized
 type MandatePayload struct {
 	// Indicates the mandate type
 	Type MandatePayloadType `json:"type"`
@@ -774,7 +842,7 @@ type ProcessCheckoutBody struct {
 	CustomerId *string `json:"customer_id,omitempty"`
 	// Number of installments for deferred payments. Available only to merchant users in Brazil.
 	Installments *int `json:"installments,omitempty"`
-	// Mandate is passed when a card is to be tokenised
+	// Mandate is passed when a card is to be tokenized
 	Mandate     *MandatePayload                `json:"mandate,omitempty"`
 	PaymentType ProcessCheckoutBodyPaymentType `json:"payment_type"`
 	// __Required when using a tokenized card to process a checkout.__ Unique token identifying the saved payment card for a customer.
