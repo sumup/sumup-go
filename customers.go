@@ -34,25 +34,6 @@ type Customer struct {
 	PersonalDetails *PersonalDetails `json:"personal_details,omitempty"`
 }
 
-// PaymentInstrumentCard is Details of the payment card that is saved as a payment instrument.
-type PaymentInstrumentCard struct {
-	// Indicates whether the payment instrument is active and can be used for payments. To deactivate it, send a `DELETE` request to the resource endpoint.
-	Active bool `json:"active"`
-	// __Required when payment type is `card`.__ Details of the payment card.
-	Card Card `json:"card"`
-	// Unique token identifying the saved payment card for a customer.
-	Token string `json:"token"`
-	// Type of the payment instrument.
-	Type PaymentInstrumentCardType `json:"type"`
-}
-
-// Type of the payment instrument.
-type PaymentInstrumentCardType string
-
-const (
-	PaymentInstrumentCardTypeCard PaymentInstrumentCardType = "card"
-)
-
 // PaymentInstrumentResponse is Payment Instrument Response
 type PaymentInstrumentResponse struct {
 	// Indicates whether the payment instrument is active and can be used for payments. To deactivate it, send a `DELETE` request to the resource endpoint.
@@ -130,25 +111,6 @@ type CreateCustomerBody struct {
 
 // ListPaymentInstrumentsResponse is the type definition for a ListPaymentInstrumentsResponse.
 type ListPaymentInstrumentsResponse []PaymentInstrumentResponse
-
-// CreatePaymentInstrument request body.
-type CreatePaymentInstrumentBody struct {
-	// Indicates whether the payment instrument is active and can be used for payments. To deactivate it, send a `DELETE` request to the resource endpoint.
-	Active bool `json:"active"`
-	// __Required when payment type is `card`.__ Details of the payment card.
-	Card Card `json:"card"`
-	// Unique token identifying the saved payment card for a customer.
-	Token string `json:"token"`
-	// Type of the payment instrument.
-	Type CreatePaymentInstrumentBodyType `json:"type"`
-}
-
-// Type of the payment instrument.
-type CreatePaymentInstrumentBodyType string
-
-const (
-	CreatePaymentInstrumentBodyTypeCard CreatePaymentInstrumentBodyType = "card"
-)
 
 // UpdateCustomer request body.
 type UpdateCustomerBody struct {
@@ -236,51 +198,6 @@ func (s *CustomersService) ListPaymentInstruments(ctx context.Context, customerI
 	}
 
 	var v ListPaymentInstrumentsResponse
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
-}
-
-// CreatePaymentInstrument: Create a payment instrument
-// Creates and activates a new payment instrument resource by saving a payment card for an identified customer. Implement to improve customer experience by skipping the step of entering payment instrument details.
-//
-// The token created via this endpoint **can not** be used for recurring payments by merchants operating within the EU. For more information visit our [recurring payments guide](https://developer.sumup.com/docs/recurring-payments/).
-func (s *CustomersService) CreatePaymentInstrument(ctx context.Context, customerId string, body CreatePaymentInstrumentBody) (*PaymentInstrumentResponse, error) {
-	buf := new(bytes.Buffer)
-	if err := json.NewEncoder(buf).Encode(body); err != nil {
-		return nil, fmt.Errorf("encoding json body request failed: %v", err)
-	}
-
-	path := fmt.Sprintf("/v0.1/customers/%v/payment-instruments", customerId)
-
-	req, err := s.client.NewRequest(ctx, http.MethodPost, path, buf)
-	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
-	}
-
-	resp, err := s.client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error sending request: %v", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
-
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	}
-
-	var v PaymentInstrumentResponse
 	if err := dec.Decode(&v); err != nil {
 		return nil, fmt.Errorf("decode response: %s", err.Error())
 	}

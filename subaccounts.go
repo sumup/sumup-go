@@ -10,45 +10,92 @@ import (
 	"time"
 )
 
-// Subaccount is the type definition for a Subaccount.
-type Subaccount struct {
-	// Creation date of the operator
-	CreatedAt string `json:"created_at"`
-	// True if the subaccount is disabled.
-	Disabled bool `json:"disabled"`
-	// ID of the sub-account
-	Id float64 `json:"id"`
-	// User permissions
-	Permissions Permissions `json:"permissions"`
-	UpdatedAt   time.Time   `json:"updated_at"`
-	// Username of the operator
-	Username string `json:"username"`
+// CompatError is Error
+type CompatError struct {
+	ErrorCode string `json:"error_code"`
+	Message   string `json:"message"`
+}
+
+// Operator is the type definition for a Operator.
+type Operator struct {
+	AccountType OperatorAccountType `json:"account_type"`
+	CreatedAt   time.Time           `json:"created_at"`
+	Disabled    bool                `json:"disabled"`
+	Id          int                 `json:"id"`
+	Nickname    *string             `json:"nickname,omitempty"`
+	Permissions OperatorPermissions `json:"permissions"`
+	UpdatedAt   time.Time           `json:"updated_at"`
+	Username    string              `json:"username"`
+}
+
+type OperatorAccountType string
+
+const (
+	OperatorAccountTypeNormal   OperatorAccountType = "normal"
+	OperatorAccountTypeOperator OperatorAccountType = "operator"
+)
+
+// OperatorPermissions is the type definition for a OperatorPermissions.
+type OperatorPermissions struct {
+	Admin                      bool `json:"admin"`
+	CreateMotoPayments         bool `json:"create_moto_payments"`
+	CreateReferral             bool `json:"create_referral"`
+	FullTransactionHistoryView bool `json:"full_transaction_history_view"`
+	RefundTransactions         bool `json:"refund_transactions"`
+}
+
+// ListSubAccountsParams are query parameters for ListSubAccounts
+type ListSubAccountsParams struct {
+	IncludePrimary *bool   `json:"include_primary,omitempty"`
+	Query          *string `json:"query,omitempty"`
 }
 
 // ListSubAccountsResponse is the type definition for a ListSubAccountsResponse.
-type ListSubAccountsResponse []Subaccount
+type ListSubAccountsResponse []Operator
 
 // CreateSubAccount request body.
 type CreateSubAccountBody struct {
-	// Password
+	Nickname    *string                          `json:"nickname,omitempty"`
+	Password    string                           `json:"password"`
+	Permissions *CreateSubAccountBodyPermissions `json:"permissions,omitempty"`
+	Username    string                           `json:"username"`
+}
+
+// CreateSubAccountBodyPermissions is the type definition for a CreateSubAccountBodyPermissions.
+type CreateSubAccountBodyPermissions struct {
+	CreateMotoPayments         *bool `json:"create_moto_payments,omitempty"`
+	CreateReferral             *bool `json:"create_referral,omitempty"`
+	FullTransactionHistoryView *bool `json:"full_transaction_history_view,omitempty"`
+	RefundTransactions         *bool `json:"refund_transactions,omitempty"`
+}
+
+// CompatChangeOperatorsPassword request body.
+type CompatChangeOperatorsPasswordBody struct {
 	Password *string `json:"password,omitempty"`
-	// Username of the new sub-account. Must be a valid email address.
-	Username *string `json:"username,omitempty"`
 }
 
 // UpdateSubAccount request body.
 type UpdateSubAccountBody struct {
-	// Password
-	Password *string `json:"password,omitempty"`
-	// Username of the new sub-account. Must be a valid email address.
-	Username *string `json:"username,omitempty"`
+	Disabled    *bool                            `json:"disabled,omitempty"`
+	Nickname    *string                          `json:"nickname,omitempty"`
+	Password    *string                          `json:"password,omitempty"`
+	Permissions *UpdateSubAccountBodyPermissions `json:"permissions,omitempty"`
+	Username    *string                          `json:"username,omitempty"`
+}
+
+// UpdateSubAccountBodyPermissions is the type definition for a UpdateSubAccountBodyPermissions.
+type UpdateSubAccountBodyPermissions struct {
+	CreateMotoPayments         *bool `json:"create_moto_payments,omitempty"`
+	CreateReferral             *bool `json:"create_referral,omitempty"`
+	FullTransactionHistoryView *bool `json:"full_transaction_history_view,omitempty"`
+	RefundTransactions         *bool `json:"refund_transactions,omitempty"`
 }
 
 type SubaccountsService service
 
-// List: List subaccounts
-
-func (s *SubaccountsService) List(ctx context.Context) (*ListSubAccountsResponse, error) {
+// ListSubAccounts: List operators.
+// Returns list of operators for currently authorized user's merchant.
+func (s *SubaccountsService) ListSubAccounts(ctx context.Context, params ListSubAccountsParams) (*ListSubAccountsResponse, error) {
 	path := fmt.Sprintf("/v0.1/me/accounts")
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
@@ -84,9 +131,9 @@ func (s *SubaccountsService) List(ctx context.Context) (*ListSubAccountsResponse
 	return &v, nil
 }
 
-// CreateSubAccount: Create a subaccount
-
-func (s *SubaccountsService) CreateSubAccount(ctx context.Context, body CreateSubAccountBody) (*Subaccount, error) {
+// CreateSubAccount: Create operator.
+// Creates new operator for currently authorized users' merchant.
+func (s *SubaccountsService) CreateSubAccount(ctx context.Context, body CreateSubAccountBody) (*Operator, error) {
 	buf := new(bytes.Buffer)
 	if err := json.NewEncoder(buf).Encode(body); err != nil {
 		return nil, fmt.Errorf("encoding json body request failed: %v", err)
@@ -119,7 +166,7 @@ func (s *SubaccountsService) CreateSubAccount(ctx context.Context, body CreateSu
 		return nil, &apiErr
 	}
 
-	var v Subaccount
+	var v Operator
 	if err := dec.Decode(&v); err != nil {
 		return nil, fmt.Errorf("decode response: %s", err.Error())
 	}
@@ -127,53 +174,15 @@ func (s *SubaccountsService) CreateSubAccount(ctx context.Context, body CreateSu
 	return &v, nil
 }
 
-// Deactivate: Deactivate a subaccount
-
-func (s *SubaccountsService) Deactivate(ctx context.Context, operatorCode string) (*Subaccount, error) {
-	path := fmt.Sprintf("/v0.1/me/accounts/%v", operatorCode)
-
-	req, err := s.client.NewRequest(ctx, http.MethodDelete, path, http.NoBody)
-	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
-	}
-
-	resp, err := s.client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error sending request: %v", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
-
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	}
-
-	var v Subaccount
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
-}
-
-// Update: Update a subaccount
-
-func (s *SubaccountsService) Update(ctx context.Context, operatorCode string, body UpdateSubAccountBody) (*Subaccount, error) {
+// CompatChangeOperatorsPassword: Change operators password.
+// Changes operators password, if the operator was disabled they will be unblocked.
+func (s *SubaccountsService) CompatChangeOperatorsPassword(ctx context.Context, operatorId int, body CompatChangeOperatorsPasswordBody) (*Operator, error) {
 	buf := new(bytes.Buffer)
 	if err := json.NewEncoder(buf).Encode(body); err != nil {
 		return nil, fmt.Errorf("encoding json body request failed: %v", err)
 	}
 
-	path := fmt.Sprintf("/v0.1/me/accounts/%v", operatorCode)
+	path := fmt.Sprintf("/v0.1/me/accounts/%v/reset", operatorId)
 
 	req, err := s.client.NewRequest(ctx, http.MethodPut, path, buf)
 	if err != nil {
@@ -200,7 +209,164 @@ func (s *SubaccountsService) Update(ctx context.Context, operatorCode string, bo
 		return nil, &apiErr
 	}
 
-	var v Subaccount
+	var v Operator
+	if err := dec.Decode(&v); err != nil {
+		return nil, fmt.Errorf("decode response: %s", err.Error())
+	}
+
+	return &v, nil
+}
+
+// CompatDisableOperator: Disable operator.
+
+func (s *SubaccountsService) CompatDisableOperator(ctx context.Context, operatorId int) (*Operator, error) {
+	path := fmt.Sprintf("/v0.1/me/accounts/%v/disable", operatorId)
+
+	req, err := s.client.NewRequest(ctx, http.MethodPost, path, http.NoBody)
+	if err != nil {
+		return nil, fmt.Errorf("error building request: %v", err)
+	}
+
+	resp, err := s.client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 500 {
+		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
+
+	dec := json.NewDecoder(resp.Body)
+	if resp.StatusCode >= 400 {
+		var apiErr APIError
+		if err := dec.Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	}
+
+	var v Operator
+	if err := dec.Decode(&v); err != nil {
+		return nil, fmt.Errorf("decode response: %s", err.Error())
+	}
+
+	return &v, nil
+}
+
+// DeactivateSubAccount: Disable operator.
+
+func (s *SubaccountsService) DeactivateSubAccount(ctx context.Context, operatorId int) (*Operator, error) {
+	path := fmt.Sprintf("/v0.1/me/accounts/%v", operatorId)
+
+	req, err := s.client.NewRequest(ctx, http.MethodDelete, path, http.NoBody)
+	if err != nil {
+		return nil, fmt.Errorf("error building request: %v", err)
+	}
+
+	resp, err := s.client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 500 {
+		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
+
+	dec := json.NewDecoder(resp.Body)
+	if resp.StatusCode >= 400 {
+		var apiErr APIError
+		if err := dec.Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	}
+
+	var v Operator
+	if err := dec.Decode(&v); err != nil {
+		return nil, fmt.Errorf("decode response: %s", err.Error())
+	}
+
+	return &v, nil
+}
+
+// CompatGetOperator: Get operator
+// Returns specific operator.
+func (s *SubaccountsService) CompatGetOperator(ctx context.Context, operatorId int) (*Operator, error) {
+	path := fmt.Sprintf("/v0.1/me/accounts/%v", operatorId)
+
+	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
+	if err != nil {
+		return nil, fmt.Errorf("error building request: %v", err)
+	}
+
+	resp, err := s.client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 500 {
+		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
+
+	dec := json.NewDecoder(resp.Body)
+	if resp.StatusCode >= 400 {
+		var apiErr APIError
+		if err := dec.Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	}
+
+	var v Operator
+	if err := dec.Decode(&v); err != nil {
+		return nil, fmt.Errorf("decode response: %s", err.Error())
+	}
+
+	return &v, nil
+}
+
+// UpdateSubAccount: Update operator.
+// Updates operator. If the operator was disabled and their password is updated they will be unblocked.
+func (s *SubaccountsService) UpdateSubAccount(ctx context.Context, operatorId int, body UpdateSubAccountBody) (*Operator, error) {
+	buf := new(bytes.Buffer)
+	if err := json.NewEncoder(buf).Encode(body); err != nil {
+		return nil, fmt.Errorf("encoding json body request failed: %v", err)
+	}
+
+	path := fmt.Sprintf("/v0.1/me/accounts/%v", operatorId)
+
+	req, err := s.client.NewRequest(ctx, http.MethodPut, path, buf)
+	if err != nil {
+		return nil, fmt.Errorf("error building request: %v", err)
+	}
+
+	resp, err := s.client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 500 {
+		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
+
+	dec := json.NewDecoder(resp.Body)
+	if resp.StatusCode >= 400 {
+		var apiErr APIError
+		if err := dec.Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	}
+
+	var v Operator
 	if err := dec.Decode(&v); err != nil {
 		return nil, fmt.Errorf("decode response: %s", err.Error())
 	}

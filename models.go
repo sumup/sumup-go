@@ -8,64 +8,6 @@ import (
 // AmountEvent is Amount of the event.
 type AmountEvent float64
 
-// Card is __Required when payment type is `card`.__ Details of the payment card.
-type Card struct {
-	// Three or four-digit card verification value (security code) of the payment card.
-	Cvv string `json:"cvv"`
-	// Month from the expiration time of the payment card. Accepted format is `MM`.
-	ExpiryMonth CardExpiryMonth `json:"expiry_month"`
-	// Year from the expiration time of the payment card. Accepted formats are `YY` and `YYYY`.
-	ExpiryYear string `json:"expiry_year"`
-	// Last 4 digits of the payment card number.
-	Last4Digits string `json:"last_4_digits"`
-	// Name of the cardholder as it appears on the payment card.
-	Name string `json:"name"`
-	// Number of the payment card (without spaces).
-	Number string `json:"number"`
-	// Issuing card network of the payment card.
-	Type CardType `json:"type"`
-	// Required five-digit ZIP code. Applicable only to merchant users in the USA.
-	ZipCode *string `json:"zip_code,omitempty"`
-}
-
-// Month from the expiration time of the payment card. Accepted format is `MM`.
-type CardExpiryMonth string
-
-const (
-	CardExpiryMonth01 CardExpiryMonth = "01"
-	CardExpiryMonth02 CardExpiryMonth = "02"
-	CardExpiryMonth03 CardExpiryMonth = "03"
-	CardExpiryMonth04 CardExpiryMonth = "04"
-	CardExpiryMonth05 CardExpiryMonth = "05"
-	CardExpiryMonth06 CardExpiryMonth = "06"
-	CardExpiryMonth07 CardExpiryMonth = "07"
-	CardExpiryMonth08 CardExpiryMonth = "08"
-	CardExpiryMonth09 CardExpiryMonth = "09"
-	CardExpiryMonth10 CardExpiryMonth = "10"
-	CardExpiryMonth11 CardExpiryMonth = "11"
-	CardExpiryMonth12 CardExpiryMonth = "12"
-)
-
-// Issuing card network of the payment card.
-type CardType string
-
-const (
-	CardTypeAmex         CardType = "AMEX"
-	CardTypeCup          CardType = "CUP"
-	CardTypeDiners       CardType = "DINERS"
-	CardTypeDiscover     CardType = "DISCOVER"
-	CardTypeElo          CardType = "ELO"
-	CardTypeElv          CardType = "ELV"
-	CardTypeHipercard    CardType = "HIPERCARD"
-	CardTypeJcb          CardType = "JCB"
-	CardTypeMaestro      CardType = "MAESTRO"
-	CardTypeMastercard   CardType = "MASTERCARD"
-	CardTypeUnknown      CardType = "UNKNOWN"
-	CardTypeVisa         CardType = "VISA"
-	CardTypeVisaElectron CardType = "VISA_ELECTRON"
-	CardTypeVisaVpay     CardType = "VISA_VPAY"
-)
-
 // Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported currency values are enumerated above.
 type Currency string
 
@@ -93,16 +35,6 @@ type Error struct {
 	ErrorCode *string `json:"error_code,omitempty"`
 	// Short description of the error.
 	Message *string `json:"message,omitempty"`
-}
-
-// ErrorExtended is the type definition for a ErrorExtended.
-type ErrorExtended struct {
-	// Platform code for the error.
-	ErrorCode *string `json:"error_code,omitempty"`
-	// Short description of the error.
-	Message *string `json:"message,omitempty"`
-	// Parameter name (with relative location) to which the error applies. Parameters from embedded resources are displayed using dot notation. For example, `card.name` refers to the `name` parameter embedded in the `card` object.
-	Param *string `json:"param,omitempty"`
 }
 
 // ErrorForbidden is Error message for forbidden requests.
@@ -148,18 +80,6 @@ type MandateResponse struct {
 	Status *string `json:"status,omitempty"`
 	// Indicates the mandate type
 	Type *string `json:"type,omitempty"`
-}
-
-// Permissions is User permissions
-type Permissions struct {
-	// Create MOTO payments
-	CreateMotoPayments *bool `json:"create_moto_payments,omitempty"`
-	// Create referral
-	CreateReferral *bool `json:"create_referral,omitempty"`
-	// Can view full merchant transaction history
-	FullTransactionHistoryView *bool `json:"full_transaction_history_view,omitempty"`
-	// Refund transactions
-	RefundTransactions *bool `json:"refund_transactions,omitempty"`
 }
 
 // TimestampEvent is Date and time of the transaction event.
