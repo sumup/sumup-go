@@ -30,3 +30,9 @@ jobs:
       - run: go install golang.org/x/tools/cmd/goimports@latest
 
       - run: gogenitor --out . --specs ./openapi.json
+
+      - uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5 # v9.1.4
+        with:
+          add: .
+          message: "chore: generate code"
+          default_author: github_actions
