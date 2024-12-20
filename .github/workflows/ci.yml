@@ -67,4 +67,4 @@ jobs:
           go-version: ${{ matrix.go }}
 
       - name: Scan for Vulnerabilities in Code
-        uses: Templum/govulncheck-action@6bb063b41d78c53c2fc7f5589828e30ad7c697ee
+        uses: Templum/govulncheck-action@0d775f4f6ef4a13921a2996a136cfe6d0e1faee7
