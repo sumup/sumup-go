@@ -62,6 +62,7 @@ type Client struct {
 	Receipts      *ReceiptsService
 	Subaccounts   *SubaccountsService
 	Transactions  *TransactionsService
+	Readers       *ReadersService
 }
 
 // NewClient creates new SumUp API [Client].
@@ -111,6 +112,7 @@ func (c *Client) populate() {
 	c.Receipts = (*ReceiptsService)(&c.svc)
 	c.Subaccounts = (*SubaccountsService)(&c.svc)
 	c.Transactions = (*TransactionsService)(&c.svc)
+	c.Readers = (*ReadersService)(&c.svc)
 }
 
 func (c *Client) NewRequest(
