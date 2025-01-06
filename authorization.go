@@ -7,9 +7,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 )
 
-// AuthToken is Authorization token flow
+// AuthToken: Authorization token flow
 type AuthToken struct {
 	// The client ID of your application that was generated when you [registered it](https://developer.sumup.com/docs/register-app).
 	ClientId string `json:"client_id"`
@@ -23,7 +24,7 @@ type AuthToken struct {
 	RefreshToken *string `json:"refresh_token,omitempty"`
 }
 
-// The grant type used for obtaining an access token.
+// AuthTokenGrantType: The grant type used for obtaining an access token.
 type AuthTokenGrantType string
 
 const (
@@ -31,7 +32,7 @@ const (
 	AuthTokenGrantTypeRefreshToken      AuthTokenGrantType = "refresh_token"
 )
 
-// CreateToken request body.
+// CreateTokenBody: Authorization token flow
 type CreateTokenBody struct {
 	// The client ID of your application that was generated when you [registered it](https://developer.sumup.com/docs/register-app).
 	ClientId string `json:"client_id"`
@@ -45,7 +46,7 @@ type CreateTokenBody struct {
 	RefreshToken *string `json:"refresh_token,omitempty"`
 }
 
-// The grant type used for obtaining an access token.
+// CreateTokenBodyGrantType: The grant type used for obtaining an access token.
 type CreateTokenBodyGrantType string
 
 const (
@@ -53,8 +54,54 @@ const (
 	CreateTokenBodyGrantTypeRefreshToken      CreateTokenBodyGrantType = "refresh_token"
 )
 
-// CreateTokenResponse is the type definition for a CreateTokenResponse.
-type CreateTokenResponse struct {
+// AuthorizeParams: query parameters for Authorize
+type AuthorizeParams struct {
+	// The client ID of your application that was generated when you [registered it](https://developer.sumup.com/docs/register-app/).
+	ClientId *string
+	// The URI to which the merchant user is redirected after authorizing your application to access their user's profile
+	// data and to which the authorization code is sent. The value must match exactly one of the [registered URIs](https://developer.sumup.com/docs/register-app#3-create-oauth-client-credentials)
+	// for your application.
+	RedirectUri *string
+	// The type of the expected response. The value must be `code` to indicate that you expect to receive an authorization
+	// code.
+	ResponseType *string
+	// A space-separated list of scopes for which you request authorization. If you don't specify any scopes in
+	// the request, your application will be granted authorization for the default scopes.
+	Scope *string
+	// A unique local state that can be used for correlating requests and responses and for preventing [cross-site request
+	// forgery](https://tools.ietf.org/html/rfc6749#section-10.12).
+	State *string
+}
+
+// QueryValues converts [AuthorizeParams] into [url.Values].
+func (p *AuthorizeParams) QueryValues() url.Values {
+	q := make(url.Values)
+
+	if p.ClientId != nil {
+		q.Set("client_id", *p.ClientId)
+	}
+
+	if p.RedirectUri != nil {
+		q.Set("redirect_uri", *p.RedirectUri)
+	}
+
+	if p.ResponseType != nil {
+		q.Set("response_type", *p.ResponseType)
+	}
+
+	if p.Scope != nil {
+		q.Set("scope", *p.Scope)
+	}
+
+	if p.State != nil {
+		q.Set("state", *p.State)
+	}
+
+	return q
+}
+
+// CreateToken200Response is a schema definition.
+type CreateToken200Response struct {
 	// The access token that you need to use in your requests to the SumUp API.
 	AccessToken *string `json:"access_token,omitempty"`
 	// The validity of the access token in seconds.
@@ -67,24 +114,15 @@ type CreateTokenResponse struct {
 	TokenType *string `json:"token_type,omitempty"`
 }
 
-// AuthorizeParams are query parameters for Authorize
-type AuthorizeParams struct {
-	ClientId     *string `json:"client_id,omitempty"`
-	RedirectUri  *string `json:"redirect_uri,omitempty"`
-	ResponseType *string `json:"response_type,omitempty"`
-	Scope        *string `json:"scope,omitempty"`
-	State        *string `json:"state,omitempty"`
-}
-
-// AuthorizeResponse is the type definition for a AuthorizeResponse.
-type AuthorizeResponse struct {
+// Authorize200Response is a schema definition.
+type Authorize200Response struct {
 }
 
 type AuthorizationService service
 
 // CreateToken: Generate a token
 // Generate a token or a refresh token
-func (s *AuthorizationService) CreateToken(ctx context.Context, body CreateTokenBody) (*CreateTokenResponse, error) {
+func (s *AuthorizationService) CreateToken(ctx context.Context, body CreateTokenBody) (*CreateToken200Response, error) {
 	buf := new(bytes.Buffer)
 	if err := json.NewEncoder(buf).Encode(body); err != nil {
 		return nil, fmt.Errorf("encoding json body request failed: %v", err)
@@ -103,37 +141,36 @@ func (s *AuthorizationService) CreateToken(ctx context.Context, body CreateToken
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v CreateToken200Response
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusBadRequest:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	var v CreateTokenResponse
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
 }
 
 // Authorize: Request authorization from users
 // Request authorization from users and grant your application access to resources associated with the user's profile.
-func (s *AuthorizationService) Authorize(ctx context.Context, params AuthorizeParams) (*AuthorizeResponse, error) {
+func (s *AuthorizationService) Authorize(ctx context.Context, params AuthorizeParams) (*Authorize200Response, error) {
 	path := fmt.Sprintf("/authorize")
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
+	req.URL.RawQuery = params.QueryValues().Encode()
 
 	resp, err := s.client.Do(req)
 	if err != nil {
@@ -141,24 +178,15 @@ func (s *AuthorizationService) Authorize(ctx context.Context, params AuthorizePa
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
-
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v Authorize200Response
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}
 
-		return nil, &apiErr
+		return &v, nil
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	var v AuthorizeResponse
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
 }

@@ -6,9 +6,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
+	"strconv"
 )
 
-// Account is Profile information.
+// Account: Profile information.
 type Account struct {
 	// The role of the user.
 	Type *AccountType `json:"type,omitempty"`
@@ -16,7 +18,7 @@ type Account struct {
 	Username *string `json:"username,omitempty"`
 }
 
-// The role of the user.
+// AccountType: The role of the user.
 type AccountType string
 
 const (
@@ -24,12 +26,12 @@ const (
 	AccountTypeOperator AccountType = "operator"
 )
 
-// AddressWithDetails is Details of the registered address.
+// AddressWithDetails: Details of the registered address.
 type AddressWithDetails struct {
 	// Address line 1
-	AddressLine1 *string `json:"address_line1,omitempty"`
+	AddressLine1 *string `json:"address_line_1,omitempty"`
 	// Address line 2
-	AddressLine2 *string `json:"address_line2,omitempty"`
+	AddressLine2 *string `json:"address_line_2,omitempty"`
 	// City
 	City *string `json:"city,omitempty"`
 	// undefined
@@ -58,7 +60,7 @@ type AddressWithDetails struct {
 	TimeoffsetDetails *TimeoffsetDetails `json:"timeoffset_details,omitempty"`
 }
 
-// AppSettings is Mobile app settings
+// AppSettings: Mobile app settings
 type AppSettings struct {
 	// Advanced mode.
 	AdvancedMode *string `json:"advanced_mode,omitempty"`
@@ -94,7 +96,7 @@ type AppSettings struct {
 	Tipping *string `json:"tipping,omitempty"`
 }
 
-// BankAccount is the type definition for a BankAccount.
+// BankAccount is a schema definition.
 type BankAccount struct {
 	// Account category - business or personal
 	AccountCategory   *string `json:"account_category,omitempty"`
@@ -121,7 +123,7 @@ type BankAccount struct {
 	Swift *string `json:"swift,omitempty"`
 }
 
-// BusinessOwner is the type definition for a BusinessOwner.
+// BusinessOwner is a schema definition.
 type BusinessOwner struct {
 	// Date of birth
 	DateOfBirth *string `json:"date_of_birth,omitempty"`
@@ -137,10 +139,10 @@ type BusinessOwner struct {
 	Ownership *float64 `json:"ownership,omitempty"`
 }
 
-// BusinessOwners is Business owners information.
+// BusinessOwners: Business owners information.
 type BusinessOwners []BusinessOwner
 
-// CountryDetails is Country Details
+// CountryDetails: Country Details
 type CountryDetails struct {
 	// Currency ISO 4217 code
 	Currency *string `json:"currency,omitempty"`
@@ -152,7 +154,7 @@ type CountryDetails struct {
 	NativeName *string `json:"native_name,omitempty"`
 }
 
-// DoingBusinessAs is Doing Business As information
+// DoingBusinessAs: Doing Business As information
 type DoingBusinessAs struct {
 	Address *DoingBusinessAsAddress `json:"address,omitempty"`
 	// Doing business as name
@@ -167,12 +169,12 @@ type DoingBusinessAs struct {
 	Website *string `json:"website,omitempty"`
 }
 
-// DoingBusinessAsAddress is the type definition for a DoingBusinessAsAddress.
+// DoingBusinessAsAddress is a schema definition.
 type DoingBusinessAsAddress struct {
 	// Address line 1
-	AddressLine1 *string `json:"address_line1,omitempty"`
+	AddressLine1 *string `json:"address_line_1,omitempty"`
 	// Address line 2
-	AddressLine2 *string `json:"address_line2,omitempty"`
+	AddressLine2 *string `json:"address_line_2,omitempty"`
 	// City
 	City *string `json:"city,omitempty"`
 	// Country ISO 3166-1 code
@@ -185,7 +187,7 @@ type DoingBusinessAsAddress struct {
 	RegionName *string `json:"region_name,omitempty"`
 }
 
-// LegalType is Id of the legal type of the merchant profile
+// LegalType: Id of the legal type of the merchant profile
 type LegalType struct {
 	// Legal type short description
 	Description *string `json:"description,omitempty"`
@@ -197,7 +199,7 @@ type LegalType struct {
 	SoleTrader *bool `json:"sole_trader,omitempty"`
 }
 
-// MerchantAccount is Details of the merchant account.
+// MerchantAccount: Details of the merchant account.
 type MerchantAccount struct {
 	// Profile information.
 	Account *Account `json:"account,omitempty"`
@@ -213,7 +215,7 @@ type MerchantAccount struct {
 	PersonalProfile *PersonalProfile `json:"personal_profile,omitempty"`
 }
 
-// MerchantProfile is Account's merchant profile
+// MerchantProfile: Account's merchant profile
 type MerchantProfile struct {
 	// Details of the registered address.
 	Address      *AddressWithDetails `json:"address,omitempty"`
@@ -224,7 +226,8 @@ type MerchantProfile struct {
 	CompanyName *string `json:"company_name,omitempty"`
 	// Company registration number
 	CompanyRegistrationNumber *string `json:"company_registration_number,omitempty"`
-	// Merchant country code formatted according to [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) &#40;for internal usage only&#41;
+	// Merchant country code formatted according to [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) &#40;for
+	// internal usage only&#41;
 	Country *string `json:"country,omitempty"`
 	// Doing Business As information
 	DoingBusinessAs *DoingBusinessAs `json:"doing_business_as,omitempty"`
@@ -256,7 +259,7 @@ type MerchantProfile struct {
 	Website *string `json:"website,omitempty"`
 }
 
-// MerchantSettings is Merchant settings &#40;like \"payout_type\", \"payout_period\"&#41;
+// MerchantSettings: Merchant settings &#40;like \"payout_type\", \"payout_period\"&#41;
 type MerchantSettings struct {
 	// Whether merchant will receive daily payout emails
 	DailyPayoutEmail *bool `json:"daily_payout_email,omitempty"`
@@ -284,7 +287,7 @@ type MerchantSettings struct {
 	TaxEnabled *bool `json:"tax_enabled,omitempty"`
 }
 
-// Whether merchant can make MOTO payments
+// MerchantSettingsMotoPayment: Whether merchant can make MOTO payments
 type MerchantSettingsMotoPayment string
 
 const (
@@ -294,7 +297,7 @@ const (
 	MerchantSettingsMotoPaymentUnavailable MerchantSettingsMotoPayment = "UNAVAILABLE"
 )
 
-// Permissions is User permissions
+// Permissions: User permissions
 type Permissions struct {
 	// Create MOTO payments
 	CreateMotoPayments *bool `json:"create_moto_payments,omitempty"`
@@ -306,7 +309,7 @@ type Permissions struct {
 	RefundTransactions *bool `json:"refund_transactions,omitempty"`
 }
 
-// PersonalProfile is Account's personal profile.
+// PersonalProfile: Account's personal profile.
 type PersonalProfile struct {
 	// Details of the registered address.
 	Address  *AddressWithDetails `json:"address,omitempty"`
@@ -321,7 +324,7 @@ type PersonalProfile struct {
 	MobilePhone *string `json:"mobile_phone,omitempty"`
 }
 
-// TimeoffsetDetails is TimeOffset Details
+// TimeoffsetDetails: TimeOffset Details
 type TimeoffsetDetails struct {
 	// Daylight Saving Time
 	Dst *bool `json:"dst,omitempty"`
@@ -331,7 +334,7 @@ type TimeoffsetDetails struct {
 	PostCode *string `json:"post_code,omitempty"`
 }
 
-// VatRates is Merchant VAT rates
+// VatRates: Merchant VAT rates
 type VatRates struct {
 	// Country ISO code
 	Country *string `json:"country,omitempty"`
@@ -345,26 +348,65 @@ type VatRates struct {
 	Rate *float64 `json:"rate,omitempty"`
 }
 
-// ListBankAccountsParams are query parameters for ListBankAccounts
+// ListBankAccountsParams: query parameters for ListBankAccounts
 type ListBankAccountsParams struct {
-	Primary *bool `json:"primary,omitempty"`
+	// If true only the primary bank account (the one used for payouts) will be returned.
+	Primary *bool
 }
 
-// ListBankAccountsResponse is the type definition for a ListBankAccountsResponse.
-type ListBankAccountsResponse []BankAccount
+// QueryValues converts [ListBankAccountsParams] into [url.Values].
+func (p *ListBankAccountsParams) QueryValues() url.Values {
+	q := make(url.Values)
 
-// GetAccountParams are query parameters for GetAccount
+	if p.Primary != nil {
+		q.Set("primary", strconv.FormatBool(*p.Primary))
+	}
+
+	return q
+}
+
+// GetAccountParams: query parameters for GetAccount
 type GetAccountParams struct {
-	Include *[]string `json:"include[],omitempty"`
+	// A list of additional information you want to receive for the user. By default only personal and merchant profile
+	// information will be returned.
+	Include *[]string
 }
 
-// ListBankAccountsV11Params are query parameters for ListBankAccountsV11
+// QueryValues converts [GetAccountParams] into [url.Values].
+func (p *GetAccountParams) QueryValues() url.Values {
+	q := make(url.Values)
+
+	if p.Include != nil {
+		for _, v := range *p.Include {
+			q.Add("include[]", v)
+		}
+	}
+
+	return q
+}
+
+// ListBankAccountsV11Params: query parameters for ListBankAccountsV11
 type ListBankAccountsV11Params struct {
-	Primary *bool `json:"primary,omitempty"`
+	// If true only the primary bank account (the one used for payouts) will be returned.
+	Primary *bool
 }
 
-// ListBankAccountsV11Response is the type definition for a ListBankAccountsV11Response.
-type ListBankAccountsV11Response []BankAccount
+// QueryValues converts [ListBankAccountsV11Params] into [url.Values].
+func (p *ListBankAccountsV11Params) QueryValues() url.Values {
+	q := make(url.Values)
+
+	if p.Primary != nil {
+		q.Set("primary", strconv.FormatBool(*p.Primary))
+	}
+
+	return q
+}
+
+// ListBankAccounts200Response is a schema definition.
+type ListBankAccounts200Response []BankAccount
+
+// ListBankAccountsV11200Response is a schema definition.
+type ListBankAccountsV11200Response []BankAccount
 
 type MerchantService service
 
@@ -384,26 +426,24 @@ func (s *MerchantService) GetPersonalProfile(ctx context.Context) (*PersonalProf
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v PersonalProfile
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusUnauthorized:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	var v PersonalProfile
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
 }
 
 // GetSettings: Get settings
@@ -422,26 +462,31 @@ func (s *MerchantService) GetSettings(ctx context.Context) (*MerchantSettings, e
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v MerchantSettings
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusUnauthorized:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
-	}
+	case http.StatusForbidden:
+		var apiErr ErrorForbidden
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
 
-	var v MerchantSettings
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
+		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	return &v, nil
 }
 
 // GetDoingBusinessAs: Retrieve DBA
@@ -460,37 +505,36 @@ func (s *MerchantService) GetDoingBusinessAs(ctx context.Context) (*DoingBusines
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v DoingBusinessAs
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusUnauthorized:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	var v DoingBusinessAs
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
 }
 
-// ListBankAccountsDeprecated: List bank accounts (deprecated)
+// ListBankAccountsDeprecated: List bank accounts
 // Retrieves bank accounts of the merchant.
-func (s *MerchantService) ListBankAccountsDeprecated(ctx context.Context, params ListBankAccountsParams) (*ListBankAccountsResponse, error) {
+func (s *MerchantService) ListBankAccountsDeprecated(ctx context.Context, params ListBankAccountsParams) (*ListBankAccounts200Response, error) {
 	path := fmt.Sprintf("/v0.1/me/merchant-profile/bank-accounts")
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
+	req.URL.RawQuery = params.QueryValues().Encode()
 
 	resp, err := s.client.Do(req)
 	if err != nil {
@@ -498,26 +542,31 @@ func (s *MerchantService) ListBankAccountsDeprecated(ctx context.Context, params
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v ListBankAccounts200Response
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusUnauthorized:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
-	}
+	case http.StatusForbidden:
+		var apiErr ErrorForbidden
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
 
-	var v ListBankAccountsResponse
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
+		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	return &v, nil
 }
 
 // GetMerchantProfile: Retrieve a merchant profile
@@ -536,26 +585,31 @@ func (s *MerchantService) GetMerchantProfile(ctx context.Context) (*MerchantProf
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v MerchantProfile
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusUnauthorized:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
-	}
+	case http.StatusForbidden:
+		var apiErr ErrorForbidden
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
 
-	var v MerchantProfile
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
+		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	return &v, nil
 }
 
 // Get: Retrieve a profile
@@ -567,6 +621,7 @@ func (s *MerchantService) Get(ctx context.Context, params GetAccountParams) (*Me
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
+	req.URL.RawQuery = params.QueryValues().Encode()
 
 	resp, err := s.client.Do(req)
 	if err != nil {
@@ -574,37 +629,36 @@ func (s *MerchantService) Get(ctx context.Context, params GetAccountParams) (*Me
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v MerchantAccount
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusUnauthorized:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	var v MerchantAccount
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
 }
 
 // ListBankAccounts: List bank accounts
 // Retrieves bank accounts of the merchant.
-func (s *MerchantService) ListBankAccounts(ctx context.Context, merchantCode string, params ListBankAccountsV11Params) (*ListBankAccountsV11Response, error) {
+func (s *MerchantService) ListBankAccounts(ctx context.Context, merchantCode string, params ListBankAccountsV11Params) (*ListBankAccountsV11200Response, error) {
 	path := fmt.Sprintf("/v1.1/merchants/%v/bank-accounts", merchantCode)
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
+	req.URL.RawQuery = params.QueryValues().Encode()
 
 	resp, err := s.client.Do(req)
 	if err != nil {
@@ -612,24 +666,29 @@ func (s *MerchantService) ListBankAccounts(ctx context.Context, merchantCode str
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v ListBankAccountsV11200Response
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusUnauthorized:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
-	}
+	case http.StatusForbidden:
+		var apiErr ErrorForbidden
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
 
-	var v ListBankAccountsV11Response
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
+		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	return &v, nil
 }
