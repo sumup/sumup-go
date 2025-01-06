@@ -10,23 +10,23 @@ import (
 	"time"
 )
 
-// Address is Profile's personal address information.
+// Address: Profile's personal address information.
 type Address struct {
 	// City name from the address.
 	City *string `json:"city,omitempty"`
 	// Two letter country code formatted according to [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
 	Country string `json:"country"`
 	// First line of the address with details of the street name and number.
-	Line1 *string `json:"line1,omitempty"`
+	Line1 *string `json:"line_1,omitempty"`
 	// Second line of the address with details of the building, unit, apartment, and floor numbers.
-	Line2 *string `json:"line2,omitempty"`
+	Line2 *string `json:"line_2,omitempty"`
 	// Postal code from the address.
 	PostalCode *string `json:"postal_code,omitempty"`
 	// State name or abbreviation from the address.
 	State *string `json:"state,omitempty"`
 }
 
-// Customer is the type definition for a Customer.
+// Customer is a schema definition.
 type Customer struct {
 	// Unique ID of the customer.
 	CustomerId string `json:"customer_id"`
@@ -34,9 +34,12 @@ type Customer struct {
 	PersonalDetails *PersonalDetails `json:"personal_details,omitempty"`
 }
 
-// PaymentInstrumentResponse is Payment Instrument Response
+// PaymentInstrumentResponse: Payment Instrument Response
 type PaymentInstrumentResponse struct {
-	// Indicates whether the payment instrument is active and can be used for payments. To deactivate it, send a `DELETE` request to the resource endpoint.
+	// Indicates whether the payment instrument is active and can be used for payments. To deactivate it, send a
+	// `DELETE` request to the resource endpoint.
+	// Read only
+	// Default: true
 	Active *bool `json:"active,omitempty"`
 	// Details of the payment card.
 	Card *PaymentInstrumentResponseCard `json:"card,omitempty"`
@@ -45,20 +48,26 @@ type PaymentInstrumentResponse struct {
 	// Created mandate
 	Mandate *MandateResponse `json:"mandate,omitempty"`
 	// Unique token identifying the saved payment card for a customer.
+	// Read only
 	Token *string `json:"token,omitempty"`
 	// Type of the payment instrument.
 	Type *PaymentInstrumentResponseType `json:"type,omitempty"`
 }
 
-// PaymentInstrumentResponseCard is Details of the payment card.
+// PaymentInstrumentResponseCard: Details of the payment card.
 type PaymentInstrumentResponseCard struct {
 	// Last 4 digits of the payment card number.
+	// Read only
+	// Min length: 4
+	// Max length: 4
 	Last4Digits *string `json:"last_4_digits,omitempty"`
 	// Issuing card network of the payment card.
+	// Read only
 	Type *PaymentInstrumentResponseCardType `json:"type,omitempty"`
 }
 
-// Issuing card network of the payment card.
+// PaymentInstrumentResponseCardType: Issuing card network of the payment card.
+// Read only
 type PaymentInstrumentResponseCardType string
 
 const (
@@ -78,18 +87,19 @@ const (
 	PaymentInstrumentResponseCardTypeVisaVpay     PaymentInstrumentResponseCardType = "VISA_VPAY"
 )
 
-// Type of the payment instrument.
+// PaymentInstrumentResponseType: Type of the payment instrument.
 type PaymentInstrumentResponseType string
 
 const (
 	PaymentInstrumentResponseTypeCard PaymentInstrumentResponseType = "card"
 )
 
-// PersonalDetails is Personal details for the customer.
+// PersonalDetails: Personal details for the customer.
 type PersonalDetails struct {
 	// Profile's personal address information.
 	Address *Address `json:"address,omitempty"`
 	// Date of birth of the customer.
+	// Format: date
 	Birthdate *time.Time `json:"birthdate,omitempty"`
 	// Email address of the customer.
 	Email *string `json:"email,omitempty"`
@@ -101,7 +111,7 @@ type PersonalDetails struct {
 	Phone *string `json:"phone,omitempty"`
 }
 
-// CreateCustomer request body.
+// CreateCustomerBody is a schema definition.
 type CreateCustomerBody struct {
 	// Unique ID of the customer.
 	CustomerId string `json:"customer_id"`
@@ -109,17 +119,17 @@ type CreateCustomerBody struct {
 	PersonalDetails *PersonalDetails `json:"personal_details,omitempty"`
 }
 
-// ListPaymentInstrumentsResponse is the type definition for a ListPaymentInstrumentsResponse.
-type ListPaymentInstrumentsResponse []PaymentInstrumentResponse
-
-// UpdateCustomer request body.
+// UpdateCustomerBody is a schema definition.
 type UpdateCustomerBody struct {
 	// Personal details for the customer.
 	PersonalDetails *PersonalDetails `json:"personal_details,omitempty"`
 }
 
-// DeactivatePaymentInstrumentResponse is the type definition for a DeactivatePaymentInstrumentResponse.
-type DeactivatePaymentInstrumentResponse struct {
+// ListPaymentInstruments200Response is a schema definition.
+type ListPaymentInstruments200Response []PaymentInstrumentResponse
+
+// DeactivatePaymentInstrument204Response is a schema definition.
+type DeactivatePaymentInstrument204Response struct {
 }
 
 type CustomersService service
@@ -145,31 +155,43 @@ func (s *CustomersService) Create(ctx context.Context, body CreateCustomerBody) 
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusCreated:
+		var v Customer
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusUnauthorized:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
-	}
+	case http.StatusForbidden:
+		var apiErr ErrorForbidden
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
 
-	var v Customer
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
+		return nil, &apiErr
+	case http.StatusConflict:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
 
-	return &v, nil
+		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
 }
 
 // ListPaymentInstruments: List payment instruments
 // Lists all payment instrument resources that are saved for an identified customer.
-func (s *CustomersService) ListPaymentInstruments(ctx context.Context, customerId string) (*ListPaymentInstrumentsResponse, error) {
+func (s *CustomersService) ListPaymentInstruments(ctx context.Context, customerId string) (*ListPaymentInstruments200Response, error) {
 	path := fmt.Sprintf("/v0.1/customers/%v/payment-instruments", customerId)
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
@@ -183,30 +205,43 @@ func (s *CustomersService) ListPaymentInstruments(ctx context.Context, customerI
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v ListPaymentInstruments200Response
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusUnauthorized:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
-	}
+	case http.StatusForbidden:
+		var apiErr ErrorForbidden
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
 
-	var v ListPaymentInstrumentsResponse
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
+		return nil, &apiErr
+	case http.StatusNotFound:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
 
-	return &v, nil
+		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
 }
 
 // Get: Retrieve a customer
-// Retrieves an identified saved customer resource through the unique `customer_id` parameter, generated upon customer creation.
+// Retrieves an identified saved customer resource through the unique `customer_id` parameter, generated upon
+// customer creation.
 func (s *CustomersService) Get(ctx context.Context, customerId string) (*Customer, error) {
 	path := fmt.Sprintf("/v0.1/customers/%v", customerId)
 
@@ -221,32 +256,45 @@ func (s *CustomersService) Get(ctx context.Context, customerId string) (*Custome
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v Customer
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusUnauthorized:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
-	}
+	case http.StatusForbidden:
+		var apiErr ErrorForbidden
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
 
-	var v Customer
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
+		return nil, &apiErr
+	case http.StatusNotFound:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
 
-	return &v, nil
+		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
 }
 
 // Update: Update a customer
 // Updates an identified saved customer resource's personal details.
 //
-// The request only overwrites the parameters included in the request, all other parameters will remain with their initially assigned values.
+// The request only overwrites the parameters included in the request, all other parameters will remain with
+// their initially assigned values.
 func (s *CustomersService) Update(ctx context.Context, customerId string, body UpdateCustomerBody) (*Customer, error) {
 	buf := new(bytes.Buffer)
 	if err := json.NewEncoder(buf).Encode(body); err != nil {
@@ -266,31 +314,43 @@ func (s *CustomersService) Update(ctx context.Context, customerId string, body U
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v Customer
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusUnauthorized:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
-	}
+	case http.StatusForbidden:
+		var apiErr ErrorForbidden
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
 
-	var v Customer
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
+		return nil, &apiErr
+	case http.StatusNotFound:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
 
-	return &v, nil
+		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
 }
 
 // DeactivatePaymentInstrument: Deactivate a payment instrument
 // Deactivates an identified card payment instrument resource for a customer.
-func (s *CustomersService) DeactivatePaymentInstrument(ctx context.Context, customerId string, token string) (*DeactivatePaymentInstrumentResponse, error) {
+func (s *CustomersService) DeactivatePaymentInstrument(ctx context.Context, customerId string, token string) (*DeactivatePaymentInstrument204Response, error) {
 	path := fmt.Sprintf("/v0.1/customers/%v/payment-instruments/%v", customerId, token)
 
 	req, err := s.client.NewRequest(ctx, http.MethodDelete, path, http.NoBody)
@@ -304,24 +364,36 @@ func (s *CustomersService) DeactivatePaymentInstrument(ctx context.Context, cust
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusNoContent:
+		var v DeactivatePaymentInstrument204Response
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusUnauthorized:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
-	}
+	case http.StatusForbidden:
+		var apiErr ErrorForbidden
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
 
-	var v DeactivatePaymentInstrumentResponse
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
+		return nil, &apiErr
+	case http.StatusNotFound:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
 
-	return &v, nil
+		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
 }

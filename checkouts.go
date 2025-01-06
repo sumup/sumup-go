@@ -7,30 +7,49 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
+	"strconv"
 	"time"
 )
 
-// Card is __Required when payment type is `card`.__ Details of the payment card.
+// Card: __Required when payment type is `card`.__ Details of the payment card.
 type Card struct {
 	// Three or four-digit card verification value (security code) of the payment card.
+	// Write only
+	// Min length: 3
+	// Max length: 4
 	Cvv string `json:"cvv"`
 	// Month from the expiration time of the payment card. Accepted format is `MM`.
+	// Write only
 	ExpiryMonth CardExpiryMonth `json:"expiry_month"`
 	// Year from the expiration time of the payment card. Accepted formats are `YY` and `YYYY`.
+	// Write only
+	// Min length: 2
+	// Max length: 4
 	ExpiryYear string `json:"expiry_year"`
 	// Last 4 digits of the payment card number.
+	// Read only
+	// Min length: 4
+	// Max length: 4
 	Last4Digits string `json:"last_4_digits"`
 	// Name of the cardholder as it appears on the payment card.
+	// Write only
 	Name string `json:"name"`
 	// Number of the payment card (without spaces).
+	// Write only
 	Number string `json:"number"`
 	// Issuing card network of the payment card.
+	// Read only
 	Type CardType `json:"type"`
 	// Required five-digit ZIP code. Applicable only to merchant users in the USA.
+	// Write only
+	// Min length: 5
+	// Max length: 5
 	ZipCode *string `json:"zip_code,omitempty"`
 }
 
-// Month from the expiration time of the payment card. Accepted format is `MM`.
+// CardExpiryMonth: Month from the expiration time of the payment card. Accepted format is `MM`.
+// Write only
 type CardExpiryMonth string
 
 const (
@@ -48,7 +67,8 @@ const (
 	CardExpiryMonth12 CardExpiryMonth = "12"
 )
 
-// Issuing card network of the payment card.
+// CardType: Issuing card network of the payment card.
+// Read only
 type CardType string
 
 const (
@@ -68,39 +88,48 @@ const (
 	CardTypeVisaVpay     CardType = "VISA_VPAY"
 )
 
-// Checkout is Details of the payment checkout.
+// Checkout: Details of the payment checkout.
 type Checkout struct {
 	// Amount of the payment.
 	Amount *float64 `json:"amount,omitempty"`
 	// Unique ID of the payment checkout specified by the client application when creating the checkout resource.
+	// Max length: 90
 	CheckoutReference *string `json:"checkout_reference,omitempty"`
-	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported currency values are enumerated above.
+	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
+	// currency values are enumerated above.
 	Currency *Currency `json:"currency,omitempty"`
-	// Unique identification of a customer. If specified, the checkout session and payment instrument are associated with the referenced customer.
+	// Unique identification of a customer. If specified, the checkout session and payment instrument are associated with
+	// the referenced customer.
 	CustomerId *string `json:"customer_id,omitempty"`
 	// Date and time of the creation of the payment checkout. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
 	Date *time.Time `json:"date,omitempty"`
-	// Short description of the checkout visible in the SumUp dashboard. The description can contribute to reporting, allowing easier identification of a checkout.
+	// Short description of the checkout visible in the SumUp dashboard. The description can contribute to reporting, allowing
+	// easier identification of a checkout.
 	Description *string `json:"description,omitempty"`
 	// Unique ID of the checkout resource.
+	// Read only
 	Id *string `json:"id,omitempty"`
 	// Created mandate
 	Mandate *MandateResponse `json:"mandate,omitempty"`
 	// Unique identifying code of the merchant profile.
 	MerchantCode *string `json:"merchant_code,omitempty"`
 	// Email address of the registered user (merchant) to whom the payment is made.
+	// Format: email
 	PayToEmail *string `json:"pay_to_email,omitempty"`
 	// URL to which the SumUp platform sends the processing status of the payment checkout.
+	// Format: uri
 	ReturnUrl *string `json:"return_url,omitempty"`
 	// Current status of the checkout.
 	Status *CheckoutStatus `json:"status,omitempty"`
 	// List of transactions related to the payment.
+	// Unique items only
 	Transactions *[]CheckoutTransaction `json:"transactions,omitempty"`
-	// Date and time of the checkout expiration before which the client application needs to send a processing request. If no value is present, the checkout does not have an expiration time.
+	// Date and time of the checkout expiration before which the client application needs to send a processing request.
+	// If no value is present, the checkout does not have an expiration time.
 	ValidUntil *time.Time `json:"valid_until,omitempty"`
 }
 
-// Current status of the checkout.
+// CheckoutStatus: Current status of the checkout.
 type CheckoutStatus string
 
 const (
@@ -109,46 +138,21 @@ const (
 	CheckoutStatusPending CheckoutStatus = "PENDING"
 )
 
-// Payment type used for the transaction.
-type CheckoutTransactionPaymentType string
-
-const (
-	CheckoutTransactionPaymentTypeBoleto    CheckoutTransactionPaymentType = "BOLETO"
-	CheckoutTransactionPaymentTypeEcom      CheckoutTransactionPaymentType = "ECOM"
-	CheckoutTransactionPaymentTypeRecurring CheckoutTransactionPaymentType = "RECURRING"
-)
-
-// Current status of the transaction.
-type CheckoutTransactionStatus string
-
-const (
-	CheckoutTransactionStatusCancelled  CheckoutTransactionStatus = "CANCELLED"
-	CheckoutTransactionStatusFailed     CheckoutTransactionStatus = "FAILED"
-	CheckoutTransactionStatusPending    CheckoutTransactionStatus = "PENDING"
-	CheckoutTransactionStatusSuccessful CheckoutTransactionStatus = "SUCCESSFUL"
-)
-
-// Entry mode of the payment details.
-type CheckoutTransactionEntryMode string
-
-const (
-	CheckoutTransactionEntryModeBoleto        CheckoutTransactionEntryMode = "BOLETO"
-	CheckoutTransactionEntryModeCustomerEntry CheckoutTransactionEntryMode = "CUSTOMER_ENTRY"
-)
-
-// CheckoutTransaction is the type definition for a CheckoutTransaction.
+// CheckoutTransaction is a schema definition.
 type CheckoutTransaction struct {
 	// Total amount of the transaction.
 	Amount *float64 `json:"amount,omitempty"`
 	// Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
 	AuthCode *string `json:"auth_code,omitempty"`
-	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported currency values are enumerated above.
+	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
+	// currency values are enumerated above.
 	Currency *Currency `json:"currency,omitempty"`
 	// Entry mode of the payment details.
 	EntryMode *CheckoutTransactionEntryMode `json:"entry_mode,omitempty"`
 	// Unique ID of the transaction.
 	Id *string `json:"id,omitempty"`
 	// Current number of the installment for deferred payments.
+	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Internal unique ID of the transaction on the SumUp platform.
 	InternalId *int `json:"internal_id,omitempty"`
@@ -168,45 +172,93 @@ type CheckoutTransaction struct {
 	VatAmount *float64 `json:"vat_amount,omitempty"`
 }
 
-// CheckoutCreateRequest is Details of the payment checkout.
+// CheckoutTransactionPaymentType: Payment type used for the transaction.
+type CheckoutTransactionPaymentType string
+
+const (
+	CheckoutTransactionPaymentTypeBoleto    CheckoutTransactionPaymentType = "BOLETO"
+	CheckoutTransactionPaymentTypeEcom      CheckoutTransactionPaymentType = "ECOM"
+	CheckoutTransactionPaymentTypeRecurring CheckoutTransactionPaymentType = "RECURRING"
+)
+
+// CheckoutTransactionStatus: Current status of the transaction.
+type CheckoutTransactionStatus string
+
+const (
+	CheckoutTransactionStatusCancelled  CheckoutTransactionStatus = "CANCELLED"
+	CheckoutTransactionStatusFailed     CheckoutTransactionStatus = "FAILED"
+	CheckoutTransactionStatusPending    CheckoutTransactionStatus = "PENDING"
+	CheckoutTransactionStatusSuccessful CheckoutTransactionStatus = "SUCCESSFUL"
+)
+
+// CheckoutTransactionEntryMode: Entry mode of the payment details.
+type CheckoutTransactionEntryMode string
+
+const (
+	CheckoutTransactionEntryModeBoleto        CheckoutTransactionEntryMode = "BOLETO"
+	CheckoutTransactionEntryModeCustomerEntry CheckoutTransactionEntryMode = "CUSTOMER_ENTRY"
+)
+
+// CheckoutCreateRequest: Details of the payment checkout.
 type CheckoutCreateRequest struct {
 	// Amount of the payment.
 	Amount float64 `json:"amount"`
 	// Unique ID of the payment checkout specified by the client application when creating the checkout resource.
+	// Max length: 90
 	CheckoutReference string `json:"checkout_reference"`
-	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported currency values are enumerated above.
+	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
+	// currency values are enumerated above.
 	Currency Currency `json:"currency"`
-	// Unique identification of a customer. If specified, the checkout session and payment instrument are associated with the referenced customer.
+	// Unique identification of a customer. If specified, the checkout session and payment instrument are associated with
+	// the referenced customer.
 	CustomerId *string `json:"customer_id,omitempty"`
 	// Date and time of the creation of the payment checkout. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
+	//
+	// Read only
 	Date *time.Time `json:"date,omitempty"`
-	// Short description of the checkout visible in the SumUp dashboard. The description can contribute to reporting, allowing easier identification of a checkout.
+	// Short description of the checkout visible in the SumUp dashboard. The description can contribute to reporting, allowing
+	// easier identification of a checkout.
 	Description *string `json:"description,omitempty"`
 	// Unique ID of the checkout resource.
+	// Read only
 	Id *string `json:"id,omitempty"`
 	// Unique identifying code of the merchant profile.
 	MerchantCode string `json:"merchant_code"`
-	// Email address of the registered user (merchant) to whom the payment is made. It is highly recommended to use `merchant_code` instead of `pay_to_email`.
+	// Email address of the registered user (merchant) to whom the payment is made. It is highly recommended to
+	// use `merchant_code` instead of `pay_to_email`.
+	// Format: email
 	PayToEmail *string `json:"pay_to_email,omitempty"`
 	// Alternative payment method name
 	PaymentType *string `json:"payment_type,omitempty"`
 	// Object containing personal details about the payer, typical for __Boleto__ checkouts
 	PersonalDetails *CheckoutCreateRequestPersonalDetails `json:"personal_details,omitempty"`
 	// Purpose of the checkout.
+	// Default: CHECKOUT
 	Purpose *CheckoutCreateRequestPurpose `json:"purpose,omitempty"`
-	// __Required__ for [APMs](https://developer.sumup.com/online-payments/apm/introduction) and __recommended__ for card payments. Refers to a url where the end user is redirected once the payment processing completes. If not specified, the [Payment Widget](https://developer.sumup.com/online-payments/tools/card-widget) renders [3DS challenge](https://developer.sumup.com/online-payments/features/3ds) within an iframe instead of performing a full-page redirect.
+	// __Required__ for [APMs](https://developer.sumup.com/online-payments/apm/introduction) and __recommended__ for
+	// card payments. Refers to a url where the end user is redirected once the payment processing completes. If
+	// not specified, the [Payment Widget](https://developer.sumup.com/online-payments/tools/card-widget) renders [3DS
+	// challenge](https://developer.sumup.com/online-payments/features/3ds) within an iframe instead of performing a
+	// full-page redirect.
 	RedirectUrl *string `json:"redirect_url,omitempty"`
 	// URL to which the SumUp platform sends the processing status of the payment checkout.
+	// Format: uri
 	ReturnUrl *string `json:"return_url,omitempty"`
 	// Current status of the checkout.
+	// Read only
 	Status *CheckoutCreateRequestStatus `json:"status,omitempty"`
 	// List of transactions related to the payment.
+	// Read only
+	// Unique items only
 	Transactions *[]CheckoutCreateRequestTransaction `json:"transactions,omitempty"`
-	// Date and time of the checkout expiration before which the client application needs to send a processing request. If no value is present, the checkout does not have an expiration time.
+	// Date and time of the checkout expiration before which the client application needs to send a processing request.
+	// If no value is present, the checkout does not have an expiration time.
+	// Read only
 	ValidUntil *time.Time `json:"valid_until,omitempty"`
 }
 
-// CheckoutCreateRequestPersonalDetails is Object containing personal details about the payer, typical for __Boleto__ checkouts
+// CheckoutCreateRequestPersonalDetails: Object containing personal details about the payer, typical for __Boleto__
+// checkouts
 type CheckoutCreateRequestPersonalDetails struct {
 	// Payer's address information
 	Address *CheckoutCreateRequestPersonalDetailsAddress `json:"address,omitempty"`
@@ -220,7 +272,7 @@ type CheckoutCreateRequestPersonalDetails struct {
 	TaxId *string `json:"tax_id,omitempty"`
 }
 
-// CheckoutCreateRequestPersonalDetailsAddress is Payer's address information
+// CheckoutCreateRequestPersonalDetailsAddress: Payer's address information
 type CheckoutCreateRequestPersonalDetailsAddress struct {
 	// Payer's city
 	City *string `json:"city,omitempty"`
@@ -228,13 +280,16 @@ type CheckoutCreateRequestPersonalDetailsAddress struct {
 	Country *string `json:"country,omitempty"`
 	// Field for address details
 	Line1 *string `json:"line_1,omitempty"`
-	// Payer's postal code. Must be eight digits long, however an optional dash could be applied after the 5th digit ([more information about the format available here](https://en.wikipedia.org/wiki/List_of_postal_codes_in_Brazil)). Both options are accepted as correct.
+	// Payer's postal code. Must be eight digits long, however an optional dash could be applied after the 5th digit
+	// ([more information about the format available here](https://en.wikipedia.org/wiki/List_of_postal_codes_in_Brazil)). Both
+	// options are accepted as correct.
+	// Pattern: ^\d{5}-?\d{3}$
 	PostalCode *string `json:"postal_code,omitempty"`
 	// Payer's state code
 	State *CheckoutCreateRequestPersonalDetailsAddressState `json:"state,omitempty"`
 }
 
-// Payer's state code
+// CheckoutCreateRequestPersonalDetailsAddressState: Payer's state code
 type CheckoutCreateRequestPersonalDetailsAddressState string
 
 const (
@@ -267,7 +322,8 @@ const (
 	CheckoutCreateRequestPersonalDetailsAddressStateTo CheckoutCreateRequestPersonalDetailsAddressState = "TO"
 )
 
-// Purpose of the checkout.
+// CheckoutCreateRequestPurpose: Purpose of the checkout.
+// Default: CHECKOUT
 type CheckoutCreateRequestPurpose string
 
 const (
@@ -275,7 +331,8 @@ const (
 	CheckoutCreateRequestPurposeSetupRecurringPayment CheckoutCreateRequestPurpose = "SETUP_RECURRING_PAYMENT"
 )
 
-// Current status of the checkout.
+// CheckoutCreateRequestStatus: Current status of the checkout.
+// Read only
 type CheckoutCreateRequestStatus string
 
 const (
@@ -284,46 +341,21 @@ const (
 	CheckoutCreateRequestStatusPending CheckoutCreateRequestStatus = "PENDING"
 )
 
-// Payment type used for the transaction.
-type CheckoutCreateRequestTransactionPaymentType string
-
-const (
-	CheckoutCreateRequestTransactionPaymentTypeBoleto    CheckoutCreateRequestTransactionPaymentType = "BOLETO"
-	CheckoutCreateRequestTransactionPaymentTypeEcom      CheckoutCreateRequestTransactionPaymentType = "ECOM"
-	CheckoutCreateRequestTransactionPaymentTypeRecurring CheckoutCreateRequestTransactionPaymentType = "RECURRING"
-)
-
-// Current status of the transaction.
-type CheckoutCreateRequestTransactionStatus string
-
-const (
-	CheckoutCreateRequestTransactionStatusCancelled  CheckoutCreateRequestTransactionStatus = "CANCELLED"
-	CheckoutCreateRequestTransactionStatusFailed     CheckoutCreateRequestTransactionStatus = "FAILED"
-	CheckoutCreateRequestTransactionStatusPending    CheckoutCreateRequestTransactionStatus = "PENDING"
-	CheckoutCreateRequestTransactionStatusSuccessful CheckoutCreateRequestTransactionStatus = "SUCCESSFUL"
-)
-
-// Entry mode of the payment details.
-type CheckoutCreateRequestTransactionEntryMode string
-
-const (
-	CheckoutCreateRequestTransactionEntryModeBoleto        CheckoutCreateRequestTransactionEntryMode = "BOLETO"
-	CheckoutCreateRequestTransactionEntryModeCustomerEntry CheckoutCreateRequestTransactionEntryMode = "CUSTOMER_ENTRY"
-)
-
-// CheckoutCreateRequestTransaction is the type definition for a CheckoutCreateRequestTransaction.
+// CheckoutCreateRequestTransaction is a schema definition.
 type CheckoutCreateRequestTransaction struct {
 	// Total amount of the transaction.
 	Amount *float64 `json:"amount,omitempty"`
 	// Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
 	AuthCode *string `json:"auth_code,omitempty"`
-	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported currency values are enumerated above.
+	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
+	// currency values are enumerated above.
 	Currency *Currency `json:"currency,omitempty"`
 	// Entry mode of the payment details.
 	EntryMode *CheckoutCreateRequestTransactionEntryMode `json:"entry_mode,omitempty"`
 	// Unique ID of the transaction.
 	Id *string `json:"id,omitempty"`
 	// Current number of the installment for deferred payments.
+	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Internal unique ID of the transaction on the SumUp platform.
 	InternalId *int `json:"internal_id,omitempty"`
@@ -343,21 +375,52 @@ type CheckoutCreateRequestTransaction struct {
 	VatAmount *float64 `json:"vat_amount,omitempty"`
 }
 
-// CheckoutProcessMixin is Details of the payment instrument for processing the checkout.
+// CheckoutCreateRequestTransactionPaymentType: Payment type used for the transaction.
+type CheckoutCreateRequestTransactionPaymentType string
+
+const (
+	CheckoutCreateRequestTransactionPaymentTypeBoleto    CheckoutCreateRequestTransactionPaymentType = "BOLETO"
+	CheckoutCreateRequestTransactionPaymentTypeEcom      CheckoutCreateRequestTransactionPaymentType = "ECOM"
+	CheckoutCreateRequestTransactionPaymentTypeRecurring CheckoutCreateRequestTransactionPaymentType = "RECURRING"
+)
+
+// CheckoutCreateRequestTransactionStatus: Current status of the transaction.
+type CheckoutCreateRequestTransactionStatus string
+
+const (
+	CheckoutCreateRequestTransactionStatusCancelled  CheckoutCreateRequestTransactionStatus = "CANCELLED"
+	CheckoutCreateRequestTransactionStatusFailed     CheckoutCreateRequestTransactionStatus = "FAILED"
+	CheckoutCreateRequestTransactionStatusPending    CheckoutCreateRequestTransactionStatus = "PENDING"
+	CheckoutCreateRequestTransactionStatusSuccessful CheckoutCreateRequestTransactionStatus = "SUCCESSFUL"
+)
+
+// CheckoutCreateRequestTransactionEntryMode: Entry mode of the payment details.
+type CheckoutCreateRequestTransactionEntryMode string
+
+const (
+	CheckoutCreateRequestTransactionEntryModeBoleto        CheckoutCreateRequestTransactionEntryMode = "BOLETO"
+	CheckoutCreateRequestTransactionEntryModeCustomerEntry CheckoutCreateRequestTransactionEntryMode = "CUSTOMER_ENTRY"
+)
+
+// CheckoutProcessMixin: Details of the payment instrument for processing the checkout.
 type CheckoutProcessMixin struct {
 	// __Required when payment type is `card`.__ Details of the payment card.
 	Card *Card `json:"card,omitempty"`
 	// __Required when `token` is provided.__ Unique ID of the customer.
 	CustomerId *string `json:"customer_id,omitempty"`
 	// Number of installments for deferred payments. Available only to merchant users in Brazil.
+	// Min: 1
+	// Max: 12
 	Installments *int `json:"installments,omitempty"`
 	// Mandate is passed when a card is to be tokenized
 	Mandate     *MandatePayload                 `json:"mandate,omitempty"`
 	PaymentType CheckoutProcessMixinPaymentType `json:"payment_type"`
-	// __Required when using a tokenized card to process a checkout.__ Unique token identifying the saved payment card for a customer.
+	// __Required when using a tokenized card to process a checkout.__ Unique token identifying the saved payment card
+	// for a customer.
 	Token *string `json:"token,omitempty"`
 }
 
+// CheckoutProcessMixinPaymentType is a schema definition.
 type CheckoutProcessMixinPaymentType string
 
 const (
@@ -368,7 +431,60 @@ const (
 	CheckoutProcessMixinPaymentTypeIdeal      CheckoutProcessMixinPaymentType = "ideal"
 )
 
-// Current status of the checkout.
+// CheckoutSuccess is a schema definition.
+type CheckoutSuccess struct {
+	// Amount of the payment.
+	Amount *float64 `json:"amount,omitempty"`
+	// Unique ID of the payment checkout specified by the client application when creating the checkout resource.
+	// Max length: 90
+	CheckoutReference *string `json:"checkout_reference,omitempty"`
+	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
+	// currency values are enumerated above.
+	Currency *Currency `json:"currency,omitempty"`
+	// Unique identification of a customer. If specified, the checkout session and payment instrument are associated with
+	// the referenced customer.
+	CustomerId *string `json:"customer_id,omitempty"`
+	// Date and time of the creation of the payment checkout. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
+	Date *time.Time `json:"date,omitempty"`
+	// Short description of the checkout visible in the SumUp dashboard. The description can contribute to reporting, allowing
+	// easier identification of a checkout.
+	Description *string `json:"description,omitempty"`
+	// Unique ID of the checkout resource.
+	// Read only
+	Id *string `json:"id,omitempty"`
+	// Created mandate
+	Mandate *MandateResponse `json:"mandate,omitempty"`
+	// Unique identifying code of the merchant profile.
+	MerchantCode *string `json:"merchant_code,omitempty"`
+	// Name of the merchant
+	MerchantName *string `json:"merchant_name,omitempty"`
+	// Email address of the registered user (merchant) to whom the payment is made.
+	// Format: email
+	PayToEmail *string `json:"pay_to_email,omitempty"`
+	// Object containing token information for the specified payment instrument
+	PaymentInstrument *CheckoutSuccessPaymentInstrument `json:"payment_instrument,omitempty"`
+	// Refers to a url where the end user is redirected once the payment processing completes.
+	RedirectUrl *string `json:"redirect_url,omitempty"`
+	// URL to which the SumUp platform sends the processing status of the payment checkout.
+	// Format: uri
+	ReturnUrl *string `json:"return_url,omitempty"`
+	// Current status of the checkout.
+	Status *CheckoutSuccessStatus `json:"status,omitempty"`
+	// Transaction code of the successful transaction with which the payment for the checkout is completed.
+	// Read only
+	TransactionCode *string `json:"transaction_code,omitempty"`
+	// Transaction ID of the successful transaction with which the payment for the checkout is completed.
+	// Read only
+	TransactionId *string `json:"transaction_id,omitempty"`
+	// List of transactions related to the payment.
+	// Unique items only
+	Transactions *[]CheckoutSuccessTransaction `json:"transactions,omitempty"`
+	// Date and time of the checkout expiration before which the client application needs to send a processing request.
+	// If no value is present, the checkout does not have an expiration time.
+	ValidUntil *time.Time `json:"valid_until,omitempty"`
+}
+
+// CheckoutSuccessStatus: Current status of the checkout.
 type CheckoutSuccessStatus string
 
 const (
@@ -377,46 +493,21 @@ const (
 	CheckoutSuccessStatusPending CheckoutSuccessStatus = "PENDING"
 )
 
-// Payment type used for the transaction.
-type CheckoutSuccessTransactionPaymentType string
-
-const (
-	CheckoutSuccessTransactionPaymentTypeBoleto    CheckoutSuccessTransactionPaymentType = "BOLETO"
-	CheckoutSuccessTransactionPaymentTypeEcom      CheckoutSuccessTransactionPaymentType = "ECOM"
-	CheckoutSuccessTransactionPaymentTypeRecurring CheckoutSuccessTransactionPaymentType = "RECURRING"
-)
-
-// Current status of the transaction.
-type CheckoutSuccessTransactionStatus string
-
-const (
-	CheckoutSuccessTransactionStatusCancelled  CheckoutSuccessTransactionStatus = "CANCELLED"
-	CheckoutSuccessTransactionStatusFailed     CheckoutSuccessTransactionStatus = "FAILED"
-	CheckoutSuccessTransactionStatusPending    CheckoutSuccessTransactionStatus = "PENDING"
-	CheckoutSuccessTransactionStatusSuccessful CheckoutSuccessTransactionStatus = "SUCCESSFUL"
-)
-
-// Entry mode of the payment details.
-type CheckoutSuccessTransactionEntryMode string
-
-const (
-	CheckoutSuccessTransactionEntryModeBoleto        CheckoutSuccessTransactionEntryMode = "BOLETO"
-	CheckoutSuccessTransactionEntryModeCustomerEntry CheckoutSuccessTransactionEntryMode = "CUSTOMER_ENTRY"
-)
-
-// CheckoutSuccessTransaction is the type definition for a CheckoutSuccessTransaction.
+// CheckoutSuccessTransaction is a schema definition.
 type CheckoutSuccessTransaction struct {
 	// Total amount of the transaction.
 	Amount *float64 `json:"amount,omitempty"`
 	// Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
 	AuthCode *string `json:"auth_code,omitempty"`
-	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported currency values are enumerated above.
+	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
+	// currency values are enumerated above.
 	Currency *Currency `json:"currency,omitempty"`
 	// Entry mode of the payment details.
 	EntryMode *CheckoutSuccessTransactionEntryMode `json:"entry_mode,omitempty"`
 	// Unique ID of the transaction.
 	Id *string `json:"id,omitempty"`
 	// Current number of the installment for deferred payments.
+	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Internal unique ID of the transaction on the SumUp platform.
 	InternalId *int `json:"internal_id,omitempty"`
@@ -436,55 +527,42 @@ type CheckoutSuccessTransaction struct {
 	VatAmount *float64 `json:"vat_amount,omitempty"`
 }
 
-// CheckoutSuccessPaymentInstrument is Object containing token information for the specified payment instrument
+// CheckoutSuccessTransactionPaymentType: Payment type used for the transaction.
+type CheckoutSuccessTransactionPaymentType string
+
+const (
+	CheckoutSuccessTransactionPaymentTypeBoleto    CheckoutSuccessTransactionPaymentType = "BOLETO"
+	CheckoutSuccessTransactionPaymentTypeEcom      CheckoutSuccessTransactionPaymentType = "ECOM"
+	CheckoutSuccessTransactionPaymentTypeRecurring CheckoutSuccessTransactionPaymentType = "RECURRING"
+)
+
+// CheckoutSuccessTransactionStatus: Current status of the transaction.
+type CheckoutSuccessTransactionStatus string
+
+const (
+	CheckoutSuccessTransactionStatusCancelled  CheckoutSuccessTransactionStatus = "CANCELLED"
+	CheckoutSuccessTransactionStatusFailed     CheckoutSuccessTransactionStatus = "FAILED"
+	CheckoutSuccessTransactionStatusPending    CheckoutSuccessTransactionStatus = "PENDING"
+	CheckoutSuccessTransactionStatusSuccessful CheckoutSuccessTransactionStatus = "SUCCESSFUL"
+)
+
+// CheckoutSuccessTransactionEntryMode: Entry mode of the payment details.
+type CheckoutSuccessTransactionEntryMode string
+
+const (
+	CheckoutSuccessTransactionEntryModeBoleto        CheckoutSuccessTransactionEntryMode = "BOLETO"
+	CheckoutSuccessTransactionEntryModeCustomerEntry CheckoutSuccessTransactionEntryMode = "CUSTOMER_ENTRY"
+)
+
+// CheckoutSuccessPaymentInstrument: Object containing token information for the specified payment instrument
 type CheckoutSuccessPaymentInstrument struct {
 	// Token value
 	Token *string `json:"token,omitempty"`
 }
 
-// CheckoutSuccess is the type definition for a CheckoutSuccess.
-type CheckoutSuccess struct {
-	// Amount of the payment.
-	Amount *float64 `json:"amount,omitempty"`
-	// Unique ID of the payment checkout specified by the client application when creating the checkout resource.
-	CheckoutReference *string `json:"checkout_reference,omitempty"`
-	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported currency values are enumerated above.
-	Currency *Currency `json:"currency,omitempty"`
-	// Unique identification of a customer. If specified, the checkout session and payment instrument are associated with the referenced customer.
-	CustomerId *string `json:"customer_id,omitempty"`
-	// Date and time of the creation of the payment checkout. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
-	Date *time.Time `json:"date,omitempty"`
-	// Short description of the checkout visible in the SumUp dashboard. The description can contribute to reporting, allowing easier identification of a checkout.
-	Description *string `json:"description,omitempty"`
-	// Unique ID of the checkout resource.
-	Id *string `json:"id,omitempty"`
-	// Created mandate
-	Mandate *MandateResponse `json:"mandate,omitempty"`
-	// Unique identifying code of the merchant profile.
-	MerchantCode *string `json:"merchant_code,omitempty"`
-	// Name of the merchant
-	MerchantName *string `json:"merchant_name,omitempty"`
-	// Email address of the registered user (merchant) to whom the payment is made.
-	PayToEmail *string `json:"pay_to_email,omitempty"`
-	// Object containing token information for the specified payment instrument
-	PaymentInstrument *CheckoutSuccessPaymentInstrument `json:"payment_instrument,omitempty"`
-	// Refers to a url where the end user is redirected once the payment processing completes.
-	RedirectUrl *string `json:"redirect_url,omitempty"`
-	// URL to which the SumUp platform sends the processing status of the payment checkout.
-	ReturnUrl *string `json:"return_url,omitempty"`
-	// Current status of the checkout.
-	Status *CheckoutSuccessStatus `json:"status,omitempty"`
-	// Transaction code of the successful transaction with which the payment for the checkout is completed.
-	TransactionCode *string `json:"transaction_code,omitempty"`
-	// Transaction ID of the successful transaction with which the payment for the checkout is completed.
-	TransactionId *string `json:"transaction_id,omitempty"`
-	// List of transactions related to the payment.
-	Transactions *[]CheckoutSuccessTransaction `json:"transactions,omitempty"`
-	// Date and time of the checkout expiration before which the client application needs to send a processing request. If no value is present, the checkout does not have an expiration time.
-	ValidUntil *time.Time `json:"valid_until,omitempty"`
-}
+var _ error = (*DetailsError)(nil)
 
-// DetailsError is Error message structure.
+// DetailsError: Error message structure.
 type DetailsError struct {
 	// Details of the error.
 	Details           *string                         `json:"details,omitempty"`
@@ -495,23 +573,35 @@ type DetailsError struct {
 	Title *string `json:"title,omitempty"`
 }
 
-// DetailsErrorFailedConstraint is the type definition for a DetailsErrorFailedConstraint.
+// DetailsErrorFailedConstraint is a schema definition.
 type DetailsErrorFailedConstraint struct {
 	Message   *string `json:"message,omitempty"`
 	Reference *string `json:"reference,omitempty"`
 }
 
-// ErrorExtended is the type definition for a ErrorExtended.
+func (e *DetailsError) Error() string {
+	return fmt.Sprintf("details=%v, failed_constraints=%v, status=%v, title=%v", e.Details, e.FailedConstraints, e.Status, e.Title)
+}
+
+var _ error = (*ErrorExtended)(nil)
+
+// ErrorExtended is a schema definition.
 type ErrorExtended struct {
 	// Platform code for the error.
 	ErrorCode *string `json:"error_code,omitempty"`
 	// Short description of the error.
 	Message *string `json:"message,omitempty"`
-	// Parameter name (with relative location) to which the error applies. Parameters from embedded resources are displayed using dot notation. For example, `card.name` refers to the `name` parameter embedded in the `card` object.
+	// Parameter name (with relative location) to which the error applies. Parameters from embedded resources are
+	// displayed using dot notation. For example, `card.name` refers to the `name` parameter embedded in the `card`
+	// object.
 	Param *string `json:"param,omitempty"`
 }
 
-// MandatePayload is Mandate is passed when a card is to be tokenized
+func (e *ErrorExtended) Error() string {
+	return fmt.Sprintf("error_code=%v, message=%v, param=%v", e.ErrorCode, e.Message, e.Param)
+}
+
+// MandatePayload: Mandate is passed when a card is to be tokenized
 type MandatePayload struct {
 	// Indicates the mandate type
 	Type MandatePayloadType `json:"type"`
@@ -521,60 +611,72 @@ type MandatePayload struct {
 	UserIp *string `json:"user_ip,omitempty"`
 }
 
-// Indicates the mandate type
+// MandatePayloadType: Indicates the mandate type
 type MandatePayloadType string
 
 const (
 	MandatePayloadTypeRecurrent MandatePayloadType = "recurrent"
 )
 
-// ListCheckoutsParams are query parameters for ListCheckouts
-type ListCheckoutsParams struct {
-	CheckoutReference *string `json:"checkout_reference,omitempty"`
-}
-
-// ListCheckoutsResponse is the type definition for a ListCheckoutsResponse.
-type ListCheckoutsResponse []CheckoutSuccess
-
-// CreateCheckout request body.
+// CreateCheckoutBody: Details of the payment checkout.
 type CreateCheckoutBody struct {
 	// Amount of the payment.
 	Amount float64 `json:"amount"`
 	// Unique ID of the payment checkout specified by the client application when creating the checkout resource.
+	// Max length: 90
 	CheckoutReference string `json:"checkout_reference"`
-	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported currency values are enumerated above.
+	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
+	// currency values are enumerated above.
 	Currency Currency `json:"currency"`
-	// Unique identification of a customer. If specified, the checkout session and payment instrument are associated with the referenced customer.
+	// Unique identification of a customer. If specified, the checkout session and payment instrument are associated with
+	// the referenced customer.
 	CustomerId *string `json:"customer_id,omitempty"`
 	// Date and time of the creation of the payment checkout. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
+	//
+	// Read only
 	Date *time.Time `json:"date,omitempty"`
-	// Short description of the checkout visible in the SumUp dashboard. The description can contribute to reporting, allowing easier identification of a checkout.
+	// Short description of the checkout visible in the SumUp dashboard. The description can contribute to reporting, allowing
+	// easier identification of a checkout.
 	Description *string `json:"description,omitempty"`
 	// Unique ID of the checkout resource.
+	// Read only
 	Id *string `json:"id,omitempty"`
 	// Unique identifying code of the merchant profile.
 	MerchantCode string `json:"merchant_code"`
-	// Email address of the registered user (merchant) to whom the payment is made. It is highly recommended to use `merchant_code` instead of `pay_to_email`.
+	// Email address of the registered user (merchant) to whom the payment is made. It is highly recommended to
+	// use `merchant_code` instead of `pay_to_email`.
+	// Format: email
 	PayToEmail *string `json:"pay_to_email,omitempty"`
 	// Alternative payment method name
 	PaymentType *string `json:"payment_type,omitempty"`
 	// Object containing personal details about the payer, typical for __Boleto__ checkouts
 	PersonalDetails *CreateCheckoutBodyPersonalDetails `json:"personal_details,omitempty"`
 	// Purpose of the checkout.
+	// Default: CHECKOUT
 	Purpose *CreateCheckoutBodyPurpose `json:"purpose,omitempty"`
-	// __Required__ for [APMs](https://developer.sumup.com/online-payments/apm/introduction) and __recommended__ for card payments. Refers to a url where the end user is redirected once the payment processing completes. If not specified, the [Payment Widget](https://developer.sumup.com/online-payments/tools/card-widget) renders [3DS challenge](https://developer.sumup.com/online-payments/features/3ds) within an iframe instead of performing a full-page redirect.
+	// __Required__ for [APMs](https://developer.sumup.com/online-payments/apm/introduction) and __recommended__ for
+	// card payments. Refers to a url where the end user is redirected once the payment processing completes. If
+	// not specified, the [Payment Widget](https://developer.sumup.com/online-payments/tools/card-widget) renders [3DS
+	// challenge](https://developer.sumup.com/online-payments/features/3ds) within an iframe instead of performing a
+	// full-page redirect.
 	RedirectUrl *string `json:"redirect_url,omitempty"`
 	// URL to which the SumUp platform sends the processing status of the payment checkout.
+	// Format: uri
 	ReturnUrl *string `json:"return_url,omitempty"`
 	// Current status of the checkout.
+	// Read only
 	Status *CreateCheckoutBodyStatus `json:"status,omitempty"`
 	// List of transactions related to the payment.
+	// Read only
+	// Unique items only
 	Transactions *[]CreateCheckoutBodyTransaction `json:"transactions,omitempty"`
-	// Date and time of the checkout expiration before which the client application needs to send a processing request. If no value is present, the checkout does not have an expiration time.
+	// Date and time of the checkout expiration before which the client application needs to send a processing request.
+	// If no value is present, the checkout does not have an expiration time.
+	// Read only
 	ValidUntil *time.Time `json:"valid_until,omitempty"`
 }
 
-// CreateCheckoutBodyPersonalDetails is Object containing personal details about the payer, typical for __Boleto__ checkouts
+// CreateCheckoutBodyPersonalDetails: Object containing personal details about the payer, typical for __Boleto__ checkouts
 type CreateCheckoutBodyPersonalDetails struct {
 	// Payer's address information
 	Address *CreateCheckoutBodyPersonalDetailsAddress `json:"address,omitempty"`
@@ -588,7 +690,7 @@ type CreateCheckoutBodyPersonalDetails struct {
 	TaxId *string `json:"tax_id,omitempty"`
 }
 
-// CreateCheckoutBodyPersonalDetailsAddress is Payer's address information
+// CreateCheckoutBodyPersonalDetailsAddress: Payer's address information
 type CreateCheckoutBodyPersonalDetailsAddress struct {
 	// Payer's city
 	City *string `json:"city,omitempty"`
@@ -596,13 +698,16 @@ type CreateCheckoutBodyPersonalDetailsAddress struct {
 	Country *string `json:"country,omitempty"`
 	// Field for address details
 	Line1 *string `json:"line_1,omitempty"`
-	// Payer's postal code. Must be eight digits long, however an optional dash could be applied after the 5th digit ([more information about the format available here](https://en.wikipedia.org/wiki/List_of_postal_codes_in_Brazil)). Both options are accepted as correct.
+	// Payer's postal code. Must be eight digits long, however an optional dash could be applied after the 5th digit
+	// ([more information about the format available here](https://en.wikipedia.org/wiki/List_of_postal_codes_in_Brazil)). Both
+	// options are accepted as correct.
+	// Pattern: ^\d{5}-?\d{3}$
 	PostalCode *string `json:"postal_code,omitempty"`
 	// Payer's state code
 	State *CreateCheckoutBodyPersonalDetailsAddressState `json:"state,omitempty"`
 }
 
-// Payer's state code
+// CreateCheckoutBodyPersonalDetailsAddressState: Payer's state code
 type CreateCheckoutBodyPersonalDetailsAddressState string
 
 const (
@@ -635,7 +740,8 @@ const (
 	CreateCheckoutBodyPersonalDetailsAddressStateTo CreateCheckoutBodyPersonalDetailsAddressState = "TO"
 )
 
-// Purpose of the checkout.
+// CreateCheckoutBodyPurpose: Purpose of the checkout.
+// Default: CHECKOUT
 type CreateCheckoutBodyPurpose string
 
 const (
@@ -643,7 +749,8 @@ const (
 	CreateCheckoutBodyPurposeSetupRecurringPayment CreateCheckoutBodyPurpose = "SETUP_RECURRING_PAYMENT"
 )
 
-// Current status of the checkout.
+// CreateCheckoutBodyStatus: Current status of the checkout.
+// Read only
 type CreateCheckoutBodyStatus string
 
 const (
@@ -652,46 +759,21 @@ const (
 	CreateCheckoutBodyStatusPending CreateCheckoutBodyStatus = "PENDING"
 )
 
-// Payment type used for the transaction.
-type CreateCheckoutBodyTransactionPaymentType string
-
-const (
-	CreateCheckoutBodyTransactionPaymentTypeBoleto    CreateCheckoutBodyTransactionPaymentType = "BOLETO"
-	CreateCheckoutBodyTransactionPaymentTypeEcom      CreateCheckoutBodyTransactionPaymentType = "ECOM"
-	CreateCheckoutBodyTransactionPaymentTypeRecurring CreateCheckoutBodyTransactionPaymentType = "RECURRING"
-)
-
-// Current status of the transaction.
-type CreateCheckoutBodyTransactionStatus string
-
-const (
-	CreateCheckoutBodyTransactionStatusCancelled  CreateCheckoutBodyTransactionStatus = "CANCELLED"
-	CreateCheckoutBodyTransactionStatusFailed     CreateCheckoutBodyTransactionStatus = "FAILED"
-	CreateCheckoutBodyTransactionStatusPending    CreateCheckoutBodyTransactionStatus = "PENDING"
-	CreateCheckoutBodyTransactionStatusSuccessful CreateCheckoutBodyTransactionStatus = "SUCCESSFUL"
-)
-
-// Entry mode of the payment details.
-type CreateCheckoutBodyTransactionEntryMode string
-
-const (
-	CreateCheckoutBodyTransactionEntryModeBoleto        CreateCheckoutBodyTransactionEntryMode = "BOLETO"
-	CreateCheckoutBodyTransactionEntryModeCustomerEntry CreateCheckoutBodyTransactionEntryMode = "CUSTOMER_ENTRY"
-)
-
-// CreateCheckoutBodyTransaction is the type definition for a CreateCheckoutBodyTransaction.
+// CreateCheckoutBodyTransaction is a schema definition.
 type CreateCheckoutBodyTransaction struct {
 	// Total amount of the transaction.
 	Amount *float64 `json:"amount,omitempty"`
 	// Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
 	AuthCode *string `json:"auth_code,omitempty"`
-	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported currency values are enumerated above.
+	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
+	// currency values are enumerated above.
 	Currency *Currency `json:"currency,omitempty"`
 	// Entry mode of the payment details.
 	EntryMode *CreateCheckoutBodyTransactionEntryMode `json:"entry_mode,omitempty"`
 	// Unique ID of the transaction.
 	Id *string `json:"id,omitempty"`
 	// Current number of the installment for deferred payments.
+	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Internal unique ID of the transaction on the SumUp platform.
 	InternalId *int `json:"internal_id,omitempty"`
@@ -711,144 +793,52 @@ type CreateCheckoutBodyTransaction struct {
 	VatAmount *float64 `json:"vat_amount,omitempty"`
 }
 
-// GetPaymentMethodsParams are query parameters for GetPaymentMethods
-type GetPaymentMethodsParams struct {
-	Amount   *float64 `json:"amount,omitempty"`
-	Currency *string  `json:"currency,omitempty"`
-}
-
-// GetPaymentMethodsResponse is the type definition for a GetPaymentMethodsResponse.
-type GetPaymentMethodsResponse struct {
-	AvailablePaymentMethods *[]GetPaymentMethodsResponseAvailablePaymentMethod `json:"available_payment_methods,omitempty"`
-}
-
-// GetPaymentMethodsResponseAvailablePaymentMethod is the type definition for a GetPaymentMethodsResponseAvailablePaymentMethod.
-type GetPaymentMethodsResponseAvailablePaymentMethod struct {
-	// The ID of the payment method.
-	Id string `json:"id"`
-}
-
-// DeactivateCheckoutResponse is Details of the deleted checkout.
-type DeactivateCheckoutResponse struct {
-	// Amount of the payment.
-	Amount *float64 `json:"amount,omitempty"`
-	// Unique ID of the payment checkout specified by the client application when creating the checkout resource.
-	CheckoutReference *string `json:"checkout_reference,omitempty"`
-	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported currency values are enumerated above.
-	Currency *Currency `json:"currency,omitempty"`
-	// Date and time of the creation of the payment checkout. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
-	Date *time.Time `json:"date,omitempty"`
-	// Short description of the checkout visible in the SumUp dashboard. The description can contribute to reporting, allowing easier identification of a checkout.
-	Description *string `json:"description,omitempty"`
-	// Unique ID of the checkout resource.
-	Id *string `json:"id,omitempty"`
-	// Unique identifying code of the merchant profile.
-	MerchantCode *string `json:"merchant_code,omitempty"`
-	// The merchant's country
-	MerchantCountry *string `json:"merchant_country,omitempty"`
-	// Merchant name
-	MerchantName *string `json:"merchant_name,omitempty"`
-	// Email address of the registered user (merchant) to whom the payment is made. It is highly recommended to use `merchant_code` instead of `pay_to_email`.
-	PayToEmail *string `json:"pay_to_email,omitempty"`
-	// Purpose of the checkout creation initially
-	Purpose *DeactivateCheckoutResponsePurpose `json:"purpose,omitempty"`
-	// Current status of the checkout.
-	Status *DeactivateCheckoutResponseStatus `json:"status,omitempty"`
-	// List of transactions related to the payment.
-	Transactions *[]DeactivateCheckoutResponseTransaction `json:"transactions,omitempty"`
-	// Date and time of the checkout expiration before which the client application needs to send a processing request. If no value is present, the checkout does not have an expiration time.
-	ValidUntil *time.Time `json:"valid_until,omitempty"`
-}
-
-// Purpose of the checkout creation initially
-type DeactivateCheckoutResponsePurpose string
+// CreateCheckoutBodyTransactionPaymentType: Payment type used for the transaction.
+type CreateCheckoutBodyTransactionPaymentType string
 
 const (
-	DeactivateCheckoutResponsePurposeCheckout              DeactivateCheckoutResponsePurpose = "CHECKOUT"
-	DeactivateCheckoutResponsePurposeSetupRecurringPayment DeactivateCheckoutResponsePurpose = "SETUP_RECURRING_PAYMENT"
+	CreateCheckoutBodyTransactionPaymentTypeBoleto    CreateCheckoutBodyTransactionPaymentType = "BOLETO"
+	CreateCheckoutBodyTransactionPaymentTypeEcom      CreateCheckoutBodyTransactionPaymentType = "ECOM"
+	CreateCheckoutBodyTransactionPaymentTypeRecurring CreateCheckoutBodyTransactionPaymentType = "RECURRING"
 )
 
-// Current status of the checkout.
-type DeactivateCheckoutResponseStatus string
+// CreateCheckoutBodyTransactionStatus: Current status of the transaction.
+type CreateCheckoutBodyTransactionStatus string
 
 const (
-	DeactivateCheckoutResponseStatusExpired DeactivateCheckoutResponseStatus = "EXPIRED"
+	CreateCheckoutBodyTransactionStatusCancelled  CreateCheckoutBodyTransactionStatus = "CANCELLED"
+	CreateCheckoutBodyTransactionStatusFailed     CreateCheckoutBodyTransactionStatus = "FAILED"
+	CreateCheckoutBodyTransactionStatusPending    CreateCheckoutBodyTransactionStatus = "PENDING"
+	CreateCheckoutBodyTransactionStatusSuccessful CreateCheckoutBodyTransactionStatus = "SUCCESSFUL"
 )
 
-// Payment type used for the transaction.
-type DeactivateCheckoutResponseTransactionPaymentType string
+// CreateCheckoutBodyTransactionEntryMode: Entry mode of the payment details.
+type CreateCheckoutBodyTransactionEntryMode string
 
 const (
-	DeactivateCheckoutResponseTransactionPaymentTypeBoleto    DeactivateCheckoutResponseTransactionPaymentType = "BOLETO"
-	DeactivateCheckoutResponseTransactionPaymentTypeEcom      DeactivateCheckoutResponseTransactionPaymentType = "ECOM"
-	DeactivateCheckoutResponseTransactionPaymentTypeRecurring DeactivateCheckoutResponseTransactionPaymentType = "RECURRING"
+	CreateCheckoutBodyTransactionEntryModeBoleto        CreateCheckoutBodyTransactionEntryMode = "BOLETO"
+	CreateCheckoutBodyTransactionEntryModeCustomerEntry CreateCheckoutBodyTransactionEntryMode = "CUSTOMER_ENTRY"
 )
 
-// Current status of the transaction.
-type DeactivateCheckoutResponseTransactionStatus string
-
-const (
-	DeactivateCheckoutResponseTransactionStatusCancelled  DeactivateCheckoutResponseTransactionStatus = "CANCELLED"
-	DeactivateCheckoutResponseTransactionStatusFailed     DeactivateCheckoutResponseTransactionStatus = "FAILED"
-	DeactivateCheckoutResponseTransactionStatusPending    DeactivateCheckoutResponseTransactionStatus = "PENDING"
-	DeactivateCheckoutResponseTransactionStatusSuccessful DeactivateCheckoutResponseTransactionStatus = "SUCCESSFUL"
-)
-
-// Entry mode of the payment details.
-type DeactivateCheckoutResponseTransactionEntryMode string
-
-const (
-	DeactivateCheckoutResponseTransactionEntryModeBoleto        DeactivateCheckoutResponseTransactionEntryMode = "BOLETO"
-	DeactivateCheckoutResponseTransactionEntryModeCustomerEntry DeactivateCheckoutResponseTransactionEntryMode = "CUSTOMER_ENTRY"
-)
-
-// DeactivateCheckoutResponseTransaction is the type definition for a DeactivateCheckoutResponseTransaction.
-type DeactivateCheckoutResponseTransaction struct {
-	// Total amount of the transaction.
-	Amount *float64 `json:"amount,omitempty"`
-	// Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
-	AuthCode *string `json:"auth_code,omitempty"`
-	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported currency values are enumerated above.
-	Currency *Currency `json:"currency,omitempty"`
-	// Entry mode of the payment details.
-	EntryMode *DeactivateCheckoutResponseTransactionEntryMode `json:"entry_mode,omitempty"`
-	// Unique ID of the transaction.
-	Id *string `json:"id,omitempty"`
-	// Current number of the installment for deferred payments.
-	InstallmentsCount *int `json:"installments_count,omitempty"`
-	// Internal unique ID of the transaction on the SumUp platform.
-	InternalId *int `json:"internal_id,omitempty"`
-	// Unique code of the registered merchant to whom the payment is made.
-	MerchantCode *string `json:"merchant_code,omitempty"`
-	// Payment type used for the transaction.
-	PaymentType *DeactivateCheckoutResponseTransactionPaymentType `json:"payment_type,omitempty"`
-	// Current status of the transaction.
-	Status *DeactivateCheckoutResponseTransactionStatus `json:"status,omitempty"`
-	// Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
-	Timestamp *time.Time `json:"timestamp,omitempty"`
-	// Amount of the tip (out of the total transaction amount).
-	TipAmount *float64 `json:"tip_amount,omitempty"`
-	// Transaction code returned by the acquirer/processing entity after processing the transaction.
-	TransactionCode *string `json:"transaction_code,omitempty"`
-	// Amount of the applicable VAT (out of the total transaction amount).
-	VatAmount *float64 `json:"vat_amount,omitempty"`
-}
-
-// ProcessCheckout request body.
+// ProcessCheckoutBody: Details of the payment instrument for processing the checkout.
 type ProcessCheckoutBody struct {
 	// __Required when payment type is `card`.__ Details of the payment card.
 	Card *Card `json:"card,omitempty"`
 	// __Required when `token` is provided.__ Unique ID of the customer.
 	CustomerId *string `json:"customer_id,omitempty"`
 	// Number of installments for deferred payments. Available only to merchant users in Brazil.
+	// Min: 1
+	// Max: 12
 	Installments *int `json:"installments,omitempty"`
 	// Mandate is passed when a card is to be tokenized
 	Mandate     *MandatePayload                `json:"mandate,omitempty"`
 	PaymentType ProcessCheckoutBodyPaymentType `json:"payment_type"`
-	// __Required when using a tokenized card to process a checkout.__ Unique token identifying the saved payment card for a customer.
+	// __Required when using a tokenized card to process a checkout.__ Unique token identifying the saved payment card
+	// for a customer.
 	Token *string `json:"token,omitempty"`
 }
 
+// ProcessCheckoutBodyPaymentType is a schema definition.
 type ProcessCheckoutBodyPaymentType string
 
 const (
@@ -859,17 +849,204 @@ const (
 	ProcessCheckoutBodyPaymentTypeIdeal      ProcessCheckoutBodyPaymentType = "ideal"
 )
 
+// ListCheckoutsParams: query parameters for ListCheckouts
+type ListCheckoutsParams struct {
+	// Filters the list of checkout resources by the unique ID of the checkout.
+	CheckoutReference *string
+}
+
+// QueryValues converts [ListCheckoutsParams] into [url.Values].
+func (p *ListCheckoutsParams) QueryValues() url.Values {
+	q := make(url.Values)
+
+	if p.CheckoutReference != nil {
+		q.Set("checkout_reference", *p.CheckoutReference)
+	}
+
+	return q
+}
+
+// GetPaymentMethodsParams: query parameters for GetPaymentMethods
+type GetPaymentMethodsParams struct {
+	// The amount for which the payment methods should be eligible, in major units. Note that currency must also
+	// be provided when filtering by amount.
+	Amount *float64
+	// The currency for which the payment methods should be eligible.
+	Currency *string
+}
+
+// QueryValues converts [GetPaymentMethodsParams] into [url.Values].
+func (p *GetPaymentMethodsParams) QueryValues() url.Values {
+	q := make(url.Values)
+
+	if p.Amount != nil {
+		q.Set("amount", strconv.FormatFloat(*p.Amount, 'f', -1, 64))
+	}
+
+	if p.Currency != nil {
+		q.Set("currency", *p.Currency)
+	}
+
+	return q
+}
+
+// ListCheckouts200Response is a schema definition.
+type ListCheckouts200Response []CheckoutSuccess
+
+// GetPaymentMethods200Response is a schema definition.
+type GetPaymentMethods200Response struct {
+	AvailablePaymentMethods *[]GetPaymentMethods200ResponseAvailablePaymentMethod `json:"available_payment_methods,omitempty"`
+}
+
+// GetPaymentMethods200ResponseAvailablePaymentMethod is a schema definition.
+type GetPaymentMethods200ResponseAvailablePaymentMethod struct {
+	// The ID of the payment method.
+	Id string `json:"id"`
+}
+
+// DeactivateCheckout200Response: Details of the deleted checkout.
+type DeactivateCheckout200Response struct {
+	// Amount of the payment.
+	Amount *float64 `json:"amount,omitempty"`
+	// Unique ID of the payment checkout specified by the client application when creating the checkout resource.
+	// Max length: 90
+	CheckoutReference *string `json:"checkout_reference,omitempty"`
+	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
+	// currency values are enumerated above.
+	Currency *Currency `json:"currency,omitempty"`
+	// Date and time of the creation of the payment checkout. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
+	//
+	// Read only
+	Date *time.Time `json:"date,omitempty"`
+	// Short description of the checkout visible in the SumUp dashboard. The description can contribute to reporting, allowing
+	// easier identification of a checkout.
+	Description *string `json:"description,omitempty"`
+	// Unique ID of the checkout resource.
+	// Read only
+	Id *string `json:"id,omitempty"`
+	// Unique identifying code of the merchant profile.
+	MerchantCode *string `json:"merchant_code,omitempty"`
+	// The merchant's country
+	MerchantCountry *string `json:"merchant_country,omitempty"`
+	// Merchant name
+	MerchantName *string `json:"merchant_name,omitempty"`
+	// Email address of the registered user (merchant) to whom the payment is made. It is highly recommended to
+	// use `merchant_code` instead of `pay_to_email`.
+	// Format: email
+	PayToEmail *string `json:"pay_to_email,omitempty"`
+	// Purpose of the checkout creation initially
+	Purpose *DeactivateCheckout200ResponsePurpose `json:"purpose,omitempty"`
+	// Current status of the checkout.
+	// Read only
+	Status *DeactivateCheckout200ResponseStatus `json:"status,omitempty"`
+	// List of transactions related to the payment.
+	// Read only
+	// Unique items only
+	Transactions *[]DeactivateCheckout200ResponseTransaction `json:"transactions,omitempty"`
+	// Date and time of the checkout expiration before which the client application needs to send a processing request.
+	// If no value is present, the checkout does not have an expiration time.
+	// Read only
+	ValidUntil *time.Time `json:"valid_until,omitempty"`
+}
+
+// DeactivateCheckout200ResponsePurpose: Purpose of the checkout creation initially
+type DeactivateCheckout200ResponsePurpose string
+
+const (
+	DeactivateCheckout200ResponsePurposeCheckout              DeactivateCheckout200ResponsePurpose = "CHECKOUT"
+	DeactivateCheckout200ResponsePurposeSetupRecurringPayment DeactivateCheckout200ResponsePurpose = "SETUP_RECURRING_PAYMENT"
+)
+
+// DeactivateCheckout200ResponseStatus: Current status of the checkout.
+// Read only
+type DeactivateCheckout200ResponseStatus string
+
+const (
+	DeactivateCheckout200ResponseStatusExpired DeactivateCheckout200ResponseStatus = "EXPIRED"
+)
+
+// DeactivateCheckout200ResponseTransaction is a schema definition.
+type DeactivateCheckout200ResponseTransaction struct {
+	// Total amount of the transaction.
+	Amount *float64 `json:"amount,omitempty"`
+	// Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
+	AuthCode *string `json:"auth_code,omitempty"`
+	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
+	// currency values are enumerated above.
+	Currency *Currency `json:"currency,omitempty"`
+	// Entry mode of the payment details.
+	EntryMode *DeactivateCheckout200ResponseTransactionEntryMode `json:"entry_mode,omitempty"`
+	// Unique ID of the transaction.
+	Id *string `json:"id,omitempty"`
+	// Current number of the installment for deferred payments.
+	// Min: 1
+	InstallmentsCount *int `json:"installments_count,omitempty"`
+	// Internal unique ID of the transaction on the SumUp platform.
+	InternalId *int `json:"internal_id,omitempty"`
+	// Unique code of the registered merchant to whom the payment is made.
+	MerchantCode *string `json:"merchant_code,omitempty"`
+	// Payment type used for the transaction.
+	PaymentType *DeactivateCheckout200ResponseTransactionPaymentType `json:"payment_type,omitempty"`
+	// Current status of the transaction.
+	Status *DeactivateCheckout200ResponseTransactionStatus `json:"status,omitempty"`
+	// Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
+	Timestamp *time.Time `json:"timestamp,omitempty"`
+	// Amount of the tip (out of the total transaction amount).
+	TipAmount *float64 `json:"tip_amount,omitempty"`
+	// Transaction code returned by the acquirer/processing entity after processing the transaction.
+	TransactionCode *string `json:"transaction_code,omitempty"`
+	// Amount of the applicable VAT (out of the total transaction amount).
+	VatAmount *float64 `json:"vat_amount,omitempty"`
+}
+
+// DeactivateCheckout200ResponseTransactionPaymentType: Payment type used for the transaction.
+type DeactivateCheckout200ResponseTransactionPaymentType string
+
+const (
+	DeactivateCheckout200ResponseTransactionPaymentTypeBoleto    DeactivateCheckout200ResponseTransactionPaymentType = "BOLETO"
+	DeactivateCheckout200ResponseTransactionPaymentTypeEcom      DeactivateCheckout200ResponseTransactionPaymentType = "ECOM"
+	DeactivateCheckout200ResponseTransactionPaymentTypeRecurring DeactivateCheckout200ResponseTransactionPaymentType = "RECURRING"
+)
+
+// DeactivateCheckout200ResponseTransactionStatus: Current status of the transaction.
+type DeactivateCheckout200ResponseTransactionStatus string
+
+const (
+	DeactivateCheckout200ResponseTransactionStatusCancelled  DeactivateCheckout200ResponseTransactionStatus = "CANCELLED"
+	DeactivateCheckout200ResponseTransactionStatusFailed     DeactivateCheckout200ResponseTransactionStatus = "FAILED"
+	DeactivateCheckout200ResponseTransactionStatusPending    DeactivateCheckout200ResponseTransactionStatus = "PENDING"
+	DeactivateCheckout200ResponseTransactionStatusSuccessful DeactivateCheckout200ResponseTransactionStatus = "SUCCESSFUL"
+)
+
+// DeactivateCheckout200ResponseTransactionEntryMode: Entry mode of the payment details.
+type DeactivateCheckout200ResponseTransactionEntryMode string
+
+const (
+	DeactivateCheckout200ResponseTransactionEntryModeBoleto        DeactivateCheckout200ResponseTransactionEntryMode = "BOLETO"
+	DeactivateCheckout200ResponseTransactionEntryModeCustomerEntry DeactivateCheckout200ResponseTransactionEntryMode = "CUSTOMER_ENTRY"
+)
+
+var _ error = (*ProcessCheckout400Response)(nil)
+
+// ProcessCheckout400Response is a schema definition.
+type ProcessCheckout400Response json.RawMessage
+
+func (e *ProcessCheckout400Response) Error() string {
+	return fmt.Sprintf("")
+}
+
 type CheckoutsService service
 
 // List: List checkouts
 // Lists created checkout resources according to the applied `checkout_reference`.
-func (s *CheckoutsService) List(ctx context.Context, params ListCheckoutsParams) (*ListCheckoutsResponse, error) {
+func (s *CheckoutsService) List(ctx context.Context, params ListCheckoutsParams) (*ListCheckouts200Response, error) {
 	path := fmt.Sprintf("/v0.1/checkouts")
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
+	req.URL.RawQuery = params.QueryValues().Encode()
 
 	resp, err := s.client.Do(req)
 	if err != nil {
@@ -877,30 +1054,29 @@ func (s *CheckoutsService) List(ctx context.Context, params ListCheckoutsParams)
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v ListCheckouts200Response
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusUnauthorized:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	var v ListCheckoutsResponse
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
 }
 
 // Create: Create a checkout
-// Creates a new payment checkout resource. The unique `checkout_reference` created by this request, is used for further manipulation of the checkout.
+// Creates a new payment checkout resource. The unique `checkout_reference` created by this request, is used
+// for further manipulation of the checkout.
 //
 // For 3DS checkouts, add the `redirect_url` parameter to your request body schema.
 //
@@ -924,37 +1100,57 @@ func (s *CheckoutsService) Create(ctx context.Context, body CreateCheckoutBody) 
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusCreated:
+		var v Checkout
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusBadRequest:
+		var apiErr ErrorExtended
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
-	}
+	case http.StatusUnauthorized:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
 
-	var v Checkout
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
+		return nil, &apiErr
+	case http.StatusForbidden:
+		var apiErr ErrorForbidden
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
 
-	return &v, nil
+		return nil, &apiErr
+	case http.StatusConflict:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
 }
 
 // ListAvailablePaymentMethods: Get available payment methods
 // Get payment methods available for the given merchant to use with a checkout.
-func (s *CheckoutsService) ListAvailablePaymentMethods(ctx context.Context, merchantCode string, params GetPaymentMethodsParams) (*GetPaymentMethodsResponse, error) {
+func (s *CheckoutsService) ListAvailablePaymentMethods(ctx context.Context, merchantCode string, params GetPaymentMethodsParams) (*GetPaymentMethods200Response, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/payment-methods", merchantCode)
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
+	req.URL.RawQuery = params.QueryValues().Encode()
 
 	resp, err := s.client.Do(req)
 	if err != nil {
@@ -962,31 +1158,36 @@ func (s *CheckoutsService) ListAvailablePaymentMethods(ctx context.Context, merc
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v GetPaymentMethods200Response
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusBadRequest:
+		var apiErr DetailsError
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
-	}
+	case http.StatusUnauthorized:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
 
-	var v GetPaymentMethodsResponse
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
+		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	return &v, nil
 }
 
 // Deactivate: Deactivate a checkout
 // Deactivates an identified checkout resource. If the checkout has already been processed it can not be deactivated.
-func (s *CheckoutsService) Deactivate(ctx context.Context, id string) (*DeactivateCheckoutResponse, error) {
+func (s *CheckoutsService) Deactivate(ctx context.Context, id string) (*DeactivateCheckout200Response, error) {
 	path := fmt.Sprintf("/v0.1/checkouts/%v", id)
 
 	req, err := s.client.NewRequest(ctx, http.MethodDelete, path, http.NoBody)
@@ -1000,30 +1201,43 @@ func (s *CheckoutsService) Deactivate(ctx context.Context, id string) (*Deactiva
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v DeactivateCheckout200Response
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusUnauthorized:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
-	}
+	case http.StatusNotFound:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
 
-	var v DeactivateCheckoutResponse
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
+		return nil, &apiErr
+	case http.StatusConflict:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
 
-	return &v, nil
+		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
 }
 
 // Get: Retrieve a checkout
-// Retrieves an identified checkout resource. Use this request after processing a checkout to confirm its status and inform the end user respectively.
+// Retrieves an identified checkout resource. Use this request after processing a checkout to confirm its status
+// and inform the end user respectively.
 func (s *CheckoutsService) Get(ctx context.Context, id string) (*CheckoutSuccess, error) {
 	path := fmt.Sprintf("/v0.1/checkouts/%v", id)
 
@@ -1038,30 +1252,36 @@ func (s *CheckoutsService) Get(ctx context.Context, id string) (*CheckoutSuccess
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v CheckoutSuccess
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusUnauthorized:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
-	}
+	case http.StatusNotFound:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
 
-	var v CheckoutSuccess
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
+		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	return &v, nil
 }
 
 // Process: Process a checkout
-// Processing a checkout will attempt to charge the provided payment instrument for the amount of the specified checkout resource initiated in the `Create a checkout` endpoint.
+// Processing a checkout will attempt to charge the provided payment instrument for the amount of the specified checkout
+// resource initiated in the `Create a checkout` endpoint.
 //
 // Follow this request with `Retrieve a checkout` to confirm its status.
 func (s *CheckoutsService) Process(ctx context.Context, id string, body ProcessCheckoutBody) (*CheckoutSuccess, error) {
@@ -1083,24 +1303,43 @@ func (s *CheckoutsService) Process(ctx context.Context, id string, body ProcessC
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v CheckoutSuccess
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusBadRequest:
+		var apiErr ProcessCheckout400Response
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
-	}
+	case http.StatusUnauthorized:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
 
-	var v CheckoutSuccess
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
+		return nil, &apiErr
+	case http.StatusNotFound:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
 
-	return &v, nil
+		return nil, &apiErr
+	case http.StatusConflict:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
 }

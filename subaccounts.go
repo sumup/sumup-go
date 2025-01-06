@@ -7,20 +7,29 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
+	"strconv"
 	"time"
 )
 
-// CompatError is Error
+var _ error = (*CompatError)(nil)
+
+// CompatError: Error
 type CompatError struct {
 	ErrorCode string `json:"error_code"`
 	Message   string `json:"message"`
 }
 
-// Operator is the type definition for a Operator.
+func (e *CompatError) Error() string {
+	return fmt.Sprintf("error_code=%v, message=%v", e.ErrorCode, e.Message)
+}
+
+// Operator is a schema definition.
 type Operator struct {
 	AccountType OperatorAccountType `json:"account_type"`
 	CreatedAt   time.Time           `json:"created_at"`
 	Disabled    bool                `json:"disabled"`
+	// Format: int32
 	Id          int                 `json:"id"`
 	Nickname    *string             `json:"nickname,omitempty"`
 	Permissions OperatorPermissions `json:"permissions"`
@@ -28,6 +37,7 @@ type Operator struct {
 	Username    string              `json:"username"`
 }
 
+// OperatorAccountType is a schema definition.
 type OperatorAccountType string
 
 const (
@@ -35,7 +45,7 @@ const (
 	OperatorAccountTypeOperator OperatorAccountType = "operator"
 )
 
-// OperatorPermissions is the type definition for a OperatorPermissions.
+// OperatorPermissions is a schema definition.
 type OperatorPermissions struct {
 	Admin                      bool `json:"admin"`
 	CreateMotoPayments         bool `json:"create_moto_payments"`
@@ -44,24 +54,17 @@ type OperatorPermissions struct {
 	RefundTransactions         bool `json:"refund_transactions"`
 }
 
-// ListSubAccountsParams are query parameters for ListSubAccounts
-type ListSubAccountsParams struct {
-	IncludePrimary *bool   `json:"include_primary,omitempty"`
-	Query          *string `json:"query,omitempty"`
-}
-
-// ListSubAccountsResponse is the type definition for a ListSubAccountsResponse.
-type ListSubAccountsResponse []Operator
-
-// CreateSubAccount request body.
+// CreateSubAccountBody is a schema definition.
 type CreateSubAccountBody struct {
-	Nickname    *string                          `json:"nickname,omitempty"`
+	Nickname *string `json:"nickname,omitempty"`
+	// Min length: 8
 	Password    string                           `json:"password"`
 	Permissions *CreateSubAccountBodyPermissions `json:"permissions,omitempty"`
-	Username    string                           `json:"username"`
+	// Format: email
+	Username string `json:"username"`
 }
 
-// CreateSubAccountBodyPermissions is the type definition for a CreateSubAccountBodyPermissions.
+// CreateSubAccountBodyPermissions is a schema definition.
 type CreateSubAccountBodyPermissions struct {
 	CreateMotoPayments         *bool `json:"create_moto_payments,omitempty"`
 	CreateReferral             *bool `json:"create_referral,omitempty"`
@@ -69,21 +72,25 @@ type CreateSubAccountBodyPermissions struct {
 	RefundTransactions         *bool `json:"refund_transactions,omitempty"`
 }
 
-// CompatChangeOperatorsPassword request body.
+// CompatChangeOperatorsPasswordBody is a schema definition.
 type CompatChangeOperatorsPasswordBody struct {
+	// Min length: 8
 	Password *string `json:"password,omitempty"`
 }
 
-// UpdateSubAccount request body.
+// UpdateSubAccountBody is a schema definition.
 type UpdateSubAccountBody struct {
-	Disabled    *bool                            `json:"disabled,omitempty"`
-	Nickname    *string                          `json:"nickname,omitempty"`
+	Disabled *bool   `json:"disabled,omitempty"`
+	Nickname *string `json:"nickname,omitempty"`
+	// Min length: 8
 	Password    *string                          `json:"password,omitempty"`
 	Permissions *UpdateSubAccountBodyPermissions `json:"permissions,omitempty"`
-	Username    *string                          `json:"username,omitempty"`
+	// Format: email
+	// Max length: 256
+	Username *string `json:"username,omitempty"`
 }
 
-// UpdateSubAccountBodyPermissions is the type definition for a UpdateSubAccountBodyPermissions.
+// UpdateSubAccountBodyPermissions is a schema definition.
 type UpdateSubAccountBodyPermissions struct {
 	CreateMotoPayments         *bool `json:"create_moto_payments,omitempty"`
 	CreateReferral             *bool `json:"create_referral,omitempty"`
@@ -91,17 +98,47 @@ type UpdateSubAccountBodyPermissions struct {
 	RefundTransactions         *bool `json:"refund_transactions,omitempty"`
 }
 
+// ListSubAccountsParams: query parameters for ListSubAccounts
+type ListSubAccountsParams struct {
+	// If true the list of operators will include also the primary user.
+	IncludePrimary *bool
+	// Search query used to filter users that match given query term.
+	//
+	// Current implementation allow querying only over the email address.
+	// All operators whos email address contains the query string are returned.
+	Query *string
+}
+
+// QueryValues converts [ListSubAccountsParams] into [url.Values].
+func (p *ListSubAccountsParams) QueryValues() url.Values {
+	q := make(url.Values)
+
+	if p.IncludePrimary != nil {
+		q.Set("include_primary", strconv.FormatBool(*p.IncludePrimary))
+	}
+
+	if p.Query != nil {
+		q.Set("query", *p.Query)
+	}
+
+	return q
+}
+
+// ListSubAccounts200Response is a schema definition.
+type ListSubAccounts200Response []Operator
+
 type SubaccountsService service
 
 // ListSubAccounts: List operators.
 // Returns list of operators for currently authorized user's merchant.
-func (s *SubaccountsService) ListSubAccounts(ctx context.Context, params ListSubAccountsParams) (*ListSubAccountsResponse, error) {
+func (s *SubaccountsService) ListSubAccounts(ctx context.Context, params ListSubAccountsParams) (*ListSubAccounts200Response, error) {
 	path := fmt.Sprintf("/v0.1/me/accounts")
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
+	req.URL.RawQuery = params.QueryValues().Encode()
 
 	resp, err := s.client.Do(req)
 	if err != nil {
@@ -109,26 +146,17 @@ func (s *SubaccountsService) ListSubAccounts(ctx context.Context, params ListSub
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
-
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v ListSubAccounts200Response
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}
 
-		return nil, &apiErr
+		return &v, nil
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	var v ListSubAccountsResponse
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
 }
 
 // CreateSubAccount: Create operator.
@@ -152,26 +180,24 @@ func (s *SubaccountsService) CreateSubAccount(ctx context.Context, body CreateSu
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v Operator
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusForbidden:
+		var apiErr CompatError
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	var v Operator
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
 }
 
 // CompatChangeOperatorsPassword: Change operators password.
@@ -195,30 +221,27 @@ func (s *SubaccountsService) CompatChangeOperatorsPassword(ctx context.Context, 
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v Operator
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusBadRequest:
+		var apiErr CompatError
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	var v Operator
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
 }
 
 // CompatDisableOperator: Disable operator.
-
 func (s *SubaccountsService) CompatDisableOperator(ctx context.Context, operatorId int) (*Operator, error) {
 	path := fmt.Sprintf("/v0.1/me/accounts/%v/disable", operatorId)
 
@@ -233,30 +256,20 @@ func (s *SubaccountsService) CompatDisableOperator(ctx context.Context, operator
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
-
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v Operator
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}
 
-		return nil, &apiErr
+		return &v, nil
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	var v Operator
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
 }
 
 // DeactivateSubAccount: Disable operator.
-
 func (s *SubaccountsService) DeactivateSubAccount(ctx context.Context, operatorId int) (*Operator, error) {
 	path := fmt.Sprintf("/v0.1/me/accounts/%v", operatorId)
 
@@ -271,26 +284,17 @@ func (s *SubaccountsService) DeactivateSubAccount(ctx context.Context, operatorI
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
-
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v Operator
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}
 
-		return nil, &apiErr
+		return &v, nil
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	var v Operator
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
 }
 
 // CompatGetOperator: Get operator
@@ -309,26 +313,17 @@ func (s *SubaccountsService) CompatGetOperator(ctx context.Context, operatorId i
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
-
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v Operator
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}
 
-		return nil, &apiErr
+		return &v, nil
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	var v Operator
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
 }
 
 // UpdateSubAccount: Update operator.
@@ -352,24 +347,22 @@ func (s *SubaccountsService) UpdateSubAccount(ctx context.Context, operatorId in
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v Operator
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusBadRequest:
+		var apiErr CompatError
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	var v Operator
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
 }

@@ -6,13 +6,16 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
+	"strconv"
 	"time"
 )
 
-// FinancialPayout is the type definition for a FinancialPayout.
+// FinancialPayout is a schema definition.
 type FinancialPayout struct {
-	Amount          *float64               `json:"amount,omitempty"`
-	Currency        *string                `json:"currency,omitempty"`
+	Amount   *float64 `json:"amount,omitempty"`
+	Currency *string  `json:"currency,omitempty"`
+	// Format: date
 	Date            *time.Time             `json:"date,omitempty"`
 	Fee             *float64               `json:"fee,omitempty"`
 	Id              *int                   `json:"id,omitempty"`
@@ -22,6 +25,7 @@ type FinancialPayout struct {
 	Type            *FinancialPayoutType   `json:"type,omitempty"`
 }
 
+// FinancialPayoutStatus is a schema definition.
 type FinancialPayoutStatus string
 
 const (
@@ -29,6 +33,7 @@ const (
 	FinancialPayoutStatusSuccessful FinancialPayoutStatus = "SUCCESSFUL"
 )
 
+// FinancialPayoutType is a schema definition.
 type FinancialPayoutType string
 
 const (
@@ -39,16 +44,41 @@ const (
 	FinancialPayoutTypeRefundDeduction     FinancialPayoutType = "REFUND_DEDUCTION"
 )
 
-// FinancialPayouts is the type definition for a FinancialPayouts.
+// FinancialPayouts is a schema definition.
 type FinancialPayouts []FinancialPayout
 
-// ListPayoutsParams are query parameters for ListPayouts
+// ListPayoutsParams: query parameters for ListPayouts
 type ListPayoutsParams struct {
-	EndDate   time.Time `json:"end_date"`
-	Format    *string   `json:"format,omitempty"`
-	Limit     *int      `json:"limit,omitempty"`
-	Order     *string   `json:"order,omitempty"`
-	StartDate time.Time `json:"start_date"`
+	// End date (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
+	EndDate time.Time
+	Format  *string
+	Limit   *int
+	Order   *string
+	// Start date (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
+	StartDate time.Time
+}
+
+// QueryValues converts [ListPayoutsParams] into [url.Values].
+func (p *ListPayoutsParams) QueryValues() url.Values {
+	q := make(url.Values)
+
+	q.Set("end_date", p.EndDate.Format(time.DateOnly))
+
+	if p.Format != nil {
+		q.Set("format", *p.Format)
+	}
+
+	if p.Limit != nil {
+		q.Set("limit", strconv.Itoa(*p.Limit))
+	}
+
+	if p.Order != nil {
+		q.Set("order", *p.Order)
+	}
+
+	q.Set("start_date", p.StartDate.Format(time.DateOnly))
+
+	return q
 }
 
 type PayoutsService service
@@ -62,6 +92,7 @@ func (s *PayoutsService) List(ctx context.Context, params ListPayoutsParams) (*F
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
+	req.URL.RawQuery = params.QueryValues().Encode()
 
 	resp, err := s.client.Do(req)
 	if err != nil {
@@ -69,24 +100,22 @@ func (s *PayoutsService) List(ctx context.Context, params ListPayoutsParams) (*F
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v FinancialPayouts
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusUnauthorized:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	var v FinancialPayouts
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
 }
