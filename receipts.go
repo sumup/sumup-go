@@ -6,10 +6,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
+	"strconv"
 	"time"
 )
 
-// Receipt is the type definition for a Receipt.
+// Receipt is a schema definition.
 type Receipt struct {
 	AcquirerData *ReceiptAcquirerData `json:"acquirer_data,omitempty"`
 	EmvData      *ReceiptEmvData      `json:"emv_data,omitempty"`
@@ -19,7 +21,7 @@ type Receipt struct {
 	TransactionData *ReceiptTransaction `json:"transaction_data,omitempty"`
 }
 
-// ReceiptAcquirerData is the type definition for a ReceiptAcquirerData.
+// ReceiptAcquirerData is a schema definition.
 type ReceiptAcquirerData struct {
 	AuthorizationCode *string `json:"authorization_code,omitempty"`
 	LocalTime         *string `json:"local_time,omitempty"`
@@ -27,11 +29,11 @@ type ReceiptAcquirerData struct {
 	Tid               *string `json:"tid,omitempty"`
 }
 
-// ReceiptEmvData is the type definition for a ReceiptEmvData.
+// ReceiptEmvData is a schema definition.
 type ReceiptEmvData struct {
 }
 
-// ReceiptCard is the type definition for a ReceiptCard.
+// ReceiptCard is a schema definition.
 type ReceiptCard struct {
 	// Card last 4 digits.
 	Last4Digits *string `json:"last_4_digits,omitempty"`
@@ -39,11 +41,12 @@ type ReceiptCard struct {
 	Type *string `json:"type,omitempty"`
 }
 
-// ReceiptEvent is the type definition for a ReceiptEvent.
+// ReceiptEvent is a schema definition.
 type ReceiptEvent struct {
 	// Amount of the event.
 	Amount *AmountEvent `json:"amount,omitempty"`
 	// Unique ID of the transaction event.
+	// Format: int64
 	Id        *EventId `json:"id,omitempty"`
 	ReceiptNo *string  `json:"receipt_no,omitempty"`
 	// Status of the transaction event.
@@ -56,13 +59,13 @@ type ReceiptEvent struct {
 	Type *EventType `json:"type,omitempty"`
 }
 
-// ReceiptMerchantData is Receipt merchant data
+// ReceiptMerchantData: Receipt merchant data
 type ReceiptMerchantData struct {
 	Locale          *string                             `json:"locale,omitempty"`
 	MerchantProfile *ReceiptMerchantDataMerchantProfile `json:"merchant_profile,omitempty"`
 }
 
-// ReceiptMerchantDataMerchantProfile is the type definition for a ReceiptMerchantDataMerchantProfile.
+// ReceiptMerchantDataMerchantProfile is a schema definition.
 type ReceiptMerchantDataMerchantProfile struct {
 	Address      *ReceiptMerchantDataMerchantProfileAddress `json:"address,omitempty"`
 	BusinessName *string                                    `json:"business_name,omitempty"`
@@ -70,9 +73,9 @@ type ReceiptMerchantDataMerchantProfile struct {
 	MerchantCode *string                                    `json:"merchant_code,omitempty"`
 }
 
-// ReceiptMerchantDataMerchantProfileAddress is the type definition for a ReceiptMerchantDataMerchantProfileAddress.
+// ReceiptMerchantDataMerchantProfileAddress is a schema definition.
 type ReceiptMerchantDataMerchantProfileAddress struct {
-	AddressLine1      *string `json:"address_line1,omitempty"`
+	AddressLine1      *string `json:"address_line_1,omitempty"`
 	City              *string `json:"city,omitempty"`
 	Country           *string `json:"country,omitempty"`
 	CountryEnName     *string `json:"country_en_name,omitempty"`
@@ -81,7 +84,7 @@ type ReceiptMerchantDataMerchantProfileAddress struct {
 	PostCode          *string `json:"post_code,omitempty"`
 }
 
-// ReceiptTransaction is Transaction information.
+// ReceiptTransaction: Transaction information.
 type ReceiptTransaction struct {
 	// Transaction amount.
 	Amount *string      `json:"amount,omitempty"`
@@ -116,7 +119,7 @@ type ReceiptTransaction struct {
 	VerificationMethod *string `json:"verification_method,omitempty"`
 }
 
-// ReceiptTransactionProduct is the type definition for a ReceiptTransactionProduct.
+// ReceiptTransactionProduct is a schema definition.
 type ReceiptTransactionProduct struct {
 	// Product description.
 	Description *string `json:"description,omitempty"`
@@ -130,7 +133,7 @@ type ReceiptTransactionProduct struct {
 	TotalPrice *float64 `json:"total_price,omitempty"`
 }
 
-// ReceiptTransactionVatRate is the type definition for a ReceiptTransactionVatRate.
+// ReceiptTransactionVatRate is a schema definition.
 type ReceiptTransactionVatRate struct {
 	// Gross
 	Gross *float64 `json:"gross,omitempty"`
@@ -142,10 +145,25 @@ type ReceiptTransactionVatRate struct {
 	Vat *float64 `json:"vat,omitempty"`
 }
 
-// GetReceiptParams are query parameters for GetReceipt
+// GetReceiptParams: query parameters for GetReceipt
 type GetReceiptParams struct {
-	Mid       string `json:"mid"`
-	TxEventId *int   `json:"tx_event_id,omitempty"`
+	// Merchant code.
+	Mid string
+	// The ID of the transaction event (refund).
+	TxEventId *int
+}
+
+// QueryValues converts [GetReceiptParams] into [url.Values].
+func (p *GetReceiptParams) QueryValues() url.Values {
+	q := make(url.Values)
+
+	q.Set("mid", p.Mid)
+
+	if p.TxEventId != nil {
+		q.Set("tx_event_id", strconv.Itoa(*p.TxEventId))
+	}
+
+	return q
 }
 
 type ReceiptsService service
@@ -159,6 +177,7 @@ func (s *ReceiptsService) Get(ctx context.Context, id string, params GetReceiptP
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
+	req.URL.RawQuery = params.QueryValues().Encode()
 
 	resp, err := s.client.Do(req)
 	if err != nil {
@@ -166,24 +185,29 @@ func (s *ReceiptsService) Get(ctx context.Context, id string, params GetReceiptP
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v Receipt
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusBadRequest:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
-	}
+	case http.StatusUnauthorized:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
 
-	var v Receipt
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
+		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	return &v, nil
 }

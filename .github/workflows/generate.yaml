@@ -27,12 +27,12 @@ jobs:
 
       - run: git config --global url."https://x-access-token:${{ secrets.GH_ACTIONS_PAT_2 }}@github.com/".insteadOf "https://github.com/"
 
-      - run: go install github.com/sumup/gogenitor@latest
+      - run: go install github.com/sumup/gogenitor/cmd/sdkgen@latest
 
       # Would be nice to run this from gogenitor but goimports can't be imported as a pkg
       - run: go install golang.org/x/tools/cmd/goimports@latest
 
-      - run: gogenitor --out . --specs ./openapi.json
+      - run: sdkgen generate --mod github.com/sumup/sumup-go --pkg sumup ./openapi.json
 
       - uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5 # v9.1.4
         with:

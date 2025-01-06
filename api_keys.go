@@ -7,25 +7,30 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
+	"strconv"
 	"time"
 )
 
-// Apikey is the type definition for a Apikey.
+// Apikey is a schema definition.
 type Apikey struct {
 	CreatedAt time.Time `json:"created_at"`
 	// Unique identifier of the API Key.
 	Id string `json:"id"`
 	// User-assigned name of the API Key.
 	Name string `json:"name"`
-	// The plaintext value of the API key. This field is returned only in the response to API key creation and is never again available in the plaintext form.
+	// The plaintext value of the API key. This field is returned only in the response to API key creation and is
+	// never again available in the plaintext form.
 	Plaintext *string `json:"plaintext,omitempty"`
 	// Last 8 characters of the API key.
-	Preview   string       `json:"preview"`
+	Preview string `json:"preview"`
+	// Max items: 128
 	Scopes    Oauth2Scopes `json:"scopes"`
 	Type      ApikeyType   `json:"type"`
 	UpdatedAt time.Time    `json:"updated_at"`
 }
 
+// ApikeyType is a schema definition.
 type ApikeyType string
 
 const (
@@ -33,12 +38,13 @@ const (
 	ApikeyTypeSecret ApikeyType = "secret"
 )
 
-// ApikeysList is the type definition for a ApikeysList.
+// ApikeysList is a schema definition.
 type ApikeysList struct {
 	Items      []Apikey `json:"items"`
 	TotalCount int      `json:"total_count"`
 }
 
+// Oauth2Scope is a schema definition.
 type Oauth2Scope string
 
 const (
@@ -61,26 +67,48 @@ const (
 	Oauth2ScopeUserSubaccounts     Oauth2Scope = "user.subaccounts"
 )
 
-// Oauth2Scopes is the type definition for a Oauth2Scopes.
+// Oauth2Scopes is a schema definition.
+// Max items: 128
 type Oauth2Scopes []Oauth2Scope
 
-// ListApikeysParams are query parameters for ListApikeys
-type ListApikeysParams struct {
-	Limit  *int `json:"limit,omitempty"`
-	Offset *int `json:"offset,omitempty"`
-}
-
-// CreateAPIKey request body.
+// CreateApikeyBody is a schema definition.
 type CreateApikeyBody struct {
-	Name   string       `json:"name"`
+	// Max length: 255
+	Name string `json:"name"`
+	// Max items: 128
 	Scopes Oauth2Scopes `json:"scopes"`
 }
 
-// UpdateAPIKey request body.
+// UpdateApikeyBody is a schema definition.
 type UpdateApikeyBody struct {
 	// New name for the API key.
-	Name   string       `json:"name"`
+	// Max length: 255
+	Name string `json:"name"`
+	// Max items: 128
 	Scopes Oauth2Scopes `json:"scopes"`
+}
+
+// ListApikeysParams: query parameters for ListAPIKeys
+type ListApikeysParams struct {
+	// Maximum number of keys to return.
+	Limit *int
+	// Offset of the first key to return.
+	Offset *int
+}
+
+// QueryValues converts [ListApikeysParams] into [url.Values].
+func (p *ListApikeysParams) QueryValues() url.Values {
+	q := make(url.Values)
+
+	if p.Limit != nil {
+		q.Set("limit", strconv.Itoa(*p.Limit))
+	}
+
+	if p.Offset != nil {
+		q.Set("offset", strconv.Itoa(*p.Offset))
+	}
+
+	return q
 }
 
 type ApiKeysService service
@@ -94,6 +122,7 @@ func (s *ApiKeysService) ListApikeys(ctx context.Context, merchantCode string, p
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
+	req.URL.RawQuery = params.QueryValues().Encode()
 
 	resp, err := s.client.Do(req)
 	if err != nil {
@@ -101,26 +130,17 @@ func (s *ApiKeysService) ListApikeys(ctx context.Context, merchantCode string, p
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
-
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v ApikeysList
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}
 
-		return nil, &apiErr
+		return &v, nil
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	var v ApikeysList
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
 }
 
 // CreateApikey: Create an API key
@@ -144,26 +164,17 @@ func (s *ApiKeysService) CreateApikey(ctx context.Context, merchantCode string, 
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
-
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
+	switch resp.StatusCode {
+	case http.StatusCreated:
+		var v Apikey
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}
 
-		return nil, &apiErr
+		return &v, nil
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	var v Apikey
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
 }
 
 // RevokeApikey: Revoke an API key
@@ -182,21 +193,12 @@ func (s *ApiKeysService) RevokeApikey(ctx context.Context, merchantCode string, 
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	switch resp.StatusCode {
+	case http.StatusNoContent:
+		return nil
+	default:
+		return fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
-			return fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return &apiErr
-	}
-
-	return nil
 }
 
 // GetApikey: Retrieve an API Key
@@ -215,26 +217,17 @@ func (s *ApiKeysService) GetApikey(ctx context.Context, merchantCode string, key
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
-
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v Apikey
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}
 
-		return nil, &apiErr
+		return &v, nil
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	var v Apikey
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
 }
 
 // UpdateApikey: Update an API key
@@ -258,19 +251,10 @@ func (s *ApiKeysService) UpdateApikey(ctx context.Context, merchantCode string, 
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	switch resp.StatusCode {
+	case http.StatusNoContent:
+		return nil
+	default:
+		return fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
-			return fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return &apiErr
-	}
-
-	return nil
 }

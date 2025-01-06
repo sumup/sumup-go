@@ -7,18 +7,25 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
+	"strconv"
 	"time"
 )
 
-// CardResponse is Details of the payment card.
+// CardResponse: Details of the payment card.
 type CardResponse struct {
 	// Last 4 digits of the payment card number.
+	// Read only
+	// Min length: 4
+	// Max length: 4
 	Last4Digits *string `json:"last_4_digits,omitempty"`
 	// Issuing card network of the payment card.
+	// Read only
 	Type *CardResponseType `json:"type,omitempty"`
 }
 
-// Issuing card network of the payment card.
+// CardResponseType: Issuing card network of the payment card.
+// Read only
 type CardResponseType string
 
 const (
@@ -38,7 +45,7 @@ const (
 	CardResponseTypeVisaVpay     CardResponseType = "VISA_VPAY"
 )
 
-// Event is the type definition for a Event.
+// Event is a schema definition.
 type Event struct {
 	// Amount of the event.
 	Amount *AmountEvent `json:"amount,omitempty"`
@@ -49,6 +56,7 @@ type Event struct {
 	// Amount of the fee related to the event.
 	FeeAmount *float64 `json:"fee_amount,omitempty"`
 	// Unique ID of the transaction event.
+	// Format: int64
 	Id *EventId `json:"id,omitempty"`
 	// Consecutive number of the installment.
 	InstallmentNumber *int `json:"installment_number,omitempty"`
@@ -62,15 +70,19 @@ type Event struct {
 	Type *EventType `json:"type,omitempty"`
 }
 
-// HorizontalAccuracy is Indication of the precision of the geographical position received from the payment terminal.
+// HorizontalAccuracy: Indication of the precision of the geographical position received from the payment terminal.
 type HorizontalAccuracy float64
 
-// Lat is Latitude value from the coordinates of the payment location (as received from the payment terminal reader).
+// Lat: Latitude value from the coordinates of the payment location (as received from the payment terminal reader).
+//
+// Min: 0
+// Max: 90
 type Lat float64
 
-// Link is Details of a link to a related resource.
+// Link: Details of a link to a related resource.
 type Link struct {
 	// URL for accessing the related resource.
+	// Format: uri
 	Href *string `json:"href,omitempty"`
 	// Specifies the relation to the current resource.
 	Rel *string `json:"rel,omitempty"`
@@ -78,9 +90,10 @@ type Link struct {
 	Type *string `json:"type,omitempty"`
 }
 
-// LinkRefund is the type definition for a LinkRefund.
+// LinkRefund is a schema definition.
 type LinkRefund struct {
 	// URL for accessing the related resource.
+	// Format: uri
 	Href *string `json:"href,omitempty"`
 	// Maximum allowed amount for the refund.
 	MaxAmount *float64 `json:"max_amount,omitempty"`
@@ -92,10 +105,13 @@ type LinkRefund struct {
 	Type *string `json:"type,omitempty"`
 }
 
-// Lon is Longitude value from the coordinates of the payment location (as received from the payment terminal reader).
+// Lon: Longitude value from the coordinates of the payment location (as received from the payment terminal reader).
+//
+// Min: 0
+// Max: 180
 type Lon float64
 
-// Product is Details of the product for which the payment is made.
+// Product: Details of the product for which the payment is made.
 type Product struct {
 	// Name of the product from the merchant's catalog.
 	Name *string `json:"name,omitempty"`
@@ -105,29 +121,36 @@ type Product struct {
 	PriceWithVat *float64 `json:"price_with_vat,omitempty"`
 	// Number of product items for the purchase.
 	Quantity *float64 `json:"quantity,omitempty"`
-	// Amount of the VAT for a single product item (calculated as the product of `price` and `vat_rate`, i.e. `single_vat_amount = price * vat_rate`).
+	// Amount of the VAT for a single product item (calculated as the product of `price` and `vat_rate`, i.e. `single_vat_amount
+	// = price * vat_rate`).
 	SingleVatAmount *float64 `json:"single_vat_amount,omitempty"`
-	// Total price of the product items without VAT (calculated as the product of `price` and `quantity`, i.e. `total_price = price * quantity`).
+	// Total price of the product items without VAT (calculated as the product of `price` and `quantity`, i.e. `total_price
+	// = price * quantity`).
 	TotalPrice *float64 `json:"total_price,omitempty"`
-	// Total price of the product items including VAT (calculated as the product of `price_with_vat` and `quantity`, i.e. `total_with_vat = price_with_vat * quantity`).
+	// Total price of the product items including VAT (calculated as the product of `price_with_vat` and `quantity`, i.e.
+	// `total_with_vat = price_with_vat * quantity`).
 	TotalWithVat *float64 `json:"total_with_vat,omitempty"`
-	// Total VAT amount for the purchase (calculated as the product of `single_vat_amount` and `quantity`, i.e. `vat_amount = single_vat_amount * quantity`).
+	// Total VAT amount for the purchase (calculated as the product of `single_vat_amount` and `quantity`, i.e. `vat_amount
+	// = single_vat_amount * quantity`).
 	VatAmount *float64 `json:"vat_amount,omitempty"`
 	// VAT rate applicable to the product.
 	VatRate *float64 `json:"vat_rate,omitempty"`
 }
 
-// TransactionEvent is Details of a transaction event.
+// TransactionEvent: Details of a transaction event.
 type TransactionEvent struct {
 	// Amount of the event.
 	Amount *AmountEvent `json:"amount,omitempty"`
 	// Date when the transaction event occurred.
+	// Format: date
 	Date *time.Time `json:"date,omitempty"`
 	// Date when the transaction event is due to occur.
+	// Format: date
 	DueDate *time.Time `json:"due_date,omitempty"`
 	// Type of the transaction event.
 	EventType *EventType `json:"event_type,omitempty"`
 	// Unique ID of the transaction event.
+	// Format: int64
 	Id *EventId `json:"id,omitempty"`
 	// Consecutive number of the installment that is paid. Applicable only payout events, i.e. `event_type = PAYOUT`.
 	InstallmentNumber *int `json:"installment_number,omitempty"`
@@ -137,102 +160,7 @@ type TransactionEvent struct {
 	Timestamp *TimestampEvent `json:"timestamp,omitempty"`
 }
 
-// Payment type used for the transaction.
-type TransactionFullPaymentType string
-
-const (
-	TransactionFullPaymentTypeBoleto    TransactionFullPaymentType = "BOLETO"
-	TransactionFullPaymentTypeEcom      TransactionFullPaymentType = "ECOM"
-	TransactionFullPaymentTypeRecurring TransactionFullPaymentType = "RECURRING"
-)
-
-// Current status of the transaction.
-type TransactionFullStatus string
-
-const (
-	TransactionFullStatusCancelled  TransactionFullStatus = "CANCELLED"
-	TransactionFullStatusFailed     TransactionFullStatus = "FAILED"
-	TransactionFullStatusPending    TransactionFullStatus = "PENDING"
-	TransactionFullStatusSuccessful TransactionFullStatus = "SUCCESSFUL"
-)
-
-// Entry mode of the payment details.
-type TransactionFullEntryMode string
-
-const (
-	TransactionFullEntryModeBoleto        TransactionFullEntryMode = "BOLETO"
-	TransactionFullEntryModeCustomerEntry TransactionFullEntryMode = "CUSTOMER_ENTRY"
-)
-
-// Payout plan of the registered user at the time when the transaction was made.
-type TransactionFullPayoutPlan string
-
-const (
-	TransactionFullPayoutPlanAcceleratedInstallment TransactionFullPayoutPlan = "ACCELERATED_INSTALLMENT"
-	TransactionFullPayoutPlanSinglePayment          TransactionFullPayoutPlan = "SINGLE_PAYMENT"
-	TransactionFullPayoutPlanTrueInstallment        TransactionFullPayoutPlan = "TRUE_INSTALLMENT"
-)
-
-// TransactionFullLocation is Details of the payment location as received from the payment terminal.
-type TransactionFullLocation struct {
-	// Indication of the precision of the geographical position received from the payment terminal.
-	HorizontalAccuracy *HorizontalAccuracy `json:"horizontal_accuracy,omitempty"`
-	// Latitude value from the coordinates of the payment location (as received from the payment terminal reader).
-	Lat *Lat `json:"lat,omitempty"`
-	// Longitude value from the coordinates of the payment location (as received from the payment terminal reader).
-	Lon *Lon `json:"lon,omitempty"`
-}
-
-// Payout type for the transaction.
-type TransactionFullPayoutType string
-
-const (
-	TransactionFullPayoutTypeBalance     TransactionFullPayoutType = "BALANCE"
-	TransactionFullPayoutTypeBankAccount TransactionFullPayoutType = "BANK_ACCOUNT"
-	TransactionFullPayoutTypePrepaidCard TransactionFullPayoutType = "PREPAID_CARD"
-)
-
-// Simple name of the payment type.
-type TransactionFullSimplePaymentType string
-
-const (
-	TransactionFullSimplePaymentTypeCash              TransactionFullSimplePaymentType = "CASH"
-	TransactionFullSimplePaymentTypeCcCustomerEntered TransactionFullSimplePaymentType = "CC_CUSTOMER_ENTERED"
-	TransactionFullSimplePaymentTypeCcSignature       TransactionFullSimplePaymentType = "CC_SIGNATURE"
-	TransactionFullSimplePaymentTypeElv               TransactionFullSimplePaymentType = "ELV"
-	TransactionFullSimplePaymentTypeEmv               TransactionFullSimplePaymentType = "EMV"
-	TransactionFullSimplePaymentTypeManualEntry       TransactionFullSimplePaymentType = "MANUAL_ENTRY"
-	TransactionFullSimplePaymentTypeMoto              TransactionFullSimplePaymentType = "MOTO"
-)
-
-// Status generated from the processing status and the latest transaction state.
-type TransactionFullSimpleStatus string
-
-const (
-	TransactionFullSimpleStatusCancelled     TransactionFullSimpleStatus = "CANCELLED"
-	TransactionFullSimpleStatusCancelFailed  TransactionFullSimpleStatus = "CANCEL_FAILED"
-	TransactionFullSimpleStatusChargeback    TransactionFullSimpleStatus = "CHARGEBACK"
-	TransactionFullSimpleStatusFailed        TransactionFullSimpleStatus = "FAILED"
-	TransactionFullSimpleStatusNonCollection TransactionFullSimpleStatus = "NON_COLLECTION"
-	TransactionFullSimpleStatusPaidOut       TransactionFullSimpleStatus = "PAID_OUT"
-	TransactionFullSimpleStatusRefunded      TransactionFullSimpleStatus = "REFUNDED"
-	TransactionFullSimpleStatusRefundFailed  TransactionFullSimpleStatus = "REFUND_FAILED"
-	TransactionFullSimpleStatusSuccessful    TransactionFullSimpleStatus = "SUCCESSFUL"
-)
-
-// Verification method used for the transaction.
-type TransactionFullVerificationMethod string
-
-const (
-	TransactionFullVerificationMethodConfirmationCodeVerified TransactionFullVerificationMethod = "confirmation code verified"
-	TransactionFullVerificationMethodNone                     TransactionFullVerificationMethod = "none"
-	TransactionFullVerificationMethodOfflinePin               TransactionFullVerificationMethod = "offline pin"
-	TransactionFullVerificationMethodOfflinePinSignature      TransactionFullVerificationMethod = "offline pin + signature"
-	TransactionFullVerificationMethodOnlinePin                TransactionFullVerificationMethod = "online pin"
-	TransactionFullVerificationMethodSignature                TransactionFullVerificationMethod = "signature"
-)
-
-// TransactionFull is the type definition for a TransactionFull.
+// TransactionFull is a schema definition.
 type TransactionFull struct {
 	// Total amount of the transaction.
 	Amount *float64 `json:"amount,omitempty"`
@@ -240,29 +168,37 @@ type TransactionFull struct {
 	AuthCode *string `json:"auth_code,omitempty"`
 	// Details of the payment card.
 	Card *CardResponse `json:"card,omitempty"`
-	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported currency values are enumerated above.
+	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
+	// currency values are enumerated above.
 	Currency *Currency `json:"currency,omitempty"`
 	// Entry mode of the payment details.
 	EntryMode *TransactionFullEntryMode `json:"entry_mode,omitempty"`
 	// List of events related to the transaction.
+	// Unique items only
 	Events *[]Event `json:"events,omitempty"`
 	// Indication of the precision of the geographical position received from the payment terminal.
 	HorizontalAccuracy *HorizontalAccuracy `json:"horizontal_accuracy,omitempty"`
 	// Unique ID of the transaction.
 	Id *string `json:"id,omitempty"`
 	// Current number of the installment for deferred payments.
+	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Internal unique ID of the transaction on the SumUp platform.
 	InternalId *int `json:"internal_id,omitempty"`
 	// Latitude value from the coordinates of the payment location (as received from the payment terminal reader).
+	// Min: 0
+	// Max: 90
 	Lat *Lat `json:"lat,omitempty"`
 	// List of hyperlinks for accessing related resources.
+	// Unique items only
 	Links *[]interface{} `json:"links,omitempty"`
 	// Local date and time of the creation of the transaction.
 	LocalTime *time.Time `json:"local_time,omitempty"`
 	// Details of the payment location as received from the payment terminal.
 	Location *TransactionFullLocation `json:"location,omitempty"`
 	// Longitude value from the coordinates of the payment location (as received from the payment terminal reader).
+	// Min: 0
+	// Max: 180
 	Lon *Lon `json:"lon,omitempty"`
 	// Unique code of the registered merchant to whom the payment is made.
 	MerchantCode *string `json:"merchant_code,omitempty"`
@@ -297,6 +233,7 @@ type TransactionFull struct {
 	// List of transaction events related to the transaction.
 	TransactionEvents *[]TransactionEvent `json:"transaction_events,omitempty"`
 	// Email address of the registered user (merchant) to whom the payment is made.
+	// Format: email
 	Username *string `json:"username,omitempty"`
 	// Amount of the applicable VAT (out of the total transaction amount).
 	VatAmount *float64 `json:"vat_amount,omitempty"`
@@ -306,64 +243,106 @@ type TransactionFull struct {
 	VerificationMethod *TransactionFullVerificationMethod `json:"verification_method,omitempty"`
 }
 
-// Payment type used for the transaction.
-type TransactionHistoryPaymentType string
+// TransactionFullPaymentType: Payment type used for the transaction.
+type TransactionFullPaymentType string
 
 const (
-	TransactionHistoryPaymentTypeBoleto    TransactionHistoryPaymentType = "BOLETO"
-	TransactionHistoryPaymentTypeEcom      TransactionHistoryPaymentType = "ECOM"
-	TransactionHistoryPaymentTypeRecurring TransactionHistoryPaymentType = "RECURRING"
+	TransactionFullPaymentTypeBoleto    TransactionFullPaymentType = "BOLETO"
+	TransactionFullPaymentTypeEcom      TransactionFullPaymentType = "ECOM"
+	TransactionFullPaymentTypeRecurring TransactionFullPaymentType = "RECURRING"
 )
 
-// Current status of the transaction.
-type TransactionHistoryStatus string
+// TransactionFullStatus: Current status of the transaction.
+type TransactionFullStatus string
 
 const (
-	TransactionHistoryStatusCancelled  TransactionHistoryStatus = "CANCELLED"
-	TransactionHistoryStatusFailed     TransactionHistoryStatus = "FAILED"
-	TransactionHistoryStatusPending    TransactionHistoryStatus = "PENDING"
-	TransactionHistoryStatusSuccessful TransactionHistoryStatus = "SUCCESSFUL"
+	TransactionFullStatusCancelled  TransactionFullStatus = "CANCELLED"
+	TransactionFullStatusFailed     TransactionFullStatus = "FAILED"
+	TransactionFullStatusPending    TransactionFullStatus = "PENDING"
+	TransactionFullStatusSuccessful TransactionFullStatus = "SUCCESSFUL"
 )
 
-// Payout plan of the registered user at the time when the transaction was made.
-type TransactionHistoryPayoutPlan string
+// TransactionFullEntryMode: Entry mode of the payment details.
+type TransactionFullEntryMode string
 
 const (
-	TransactionHistoryPayoutPlanAcceleratedInstallment TransactionHistoryPayoutPlan = "ACCELERATED_INSTALLMENT"
-	TransactionHistoryPayoutPlanSinglePayment          TransactionHistoryPayoutPlan = "SINGLE_PAYMENT"
-	TransactionHistoryPayoutPlanTrueInstallment        TransactionHistoryPayoutPlan = "TRUE_INSTALLMENT"
+	TransactionFullEntryModeBoleto        TransactionFullEntryMode = "BOLETO"
+	TransactionFullEntryModeCustomerEntry TransactionFullEntryMode = "CUSTOMER_ENTRY"
 )
 
-// Issuing card network of the payment card used for the transaction.
-type TransactionHistoryCardType string
+// TransactionFullPayoutPlan: Payout plan of the registered user at the time when the transaction was made.
+type TransactionFullPayoutPlan string
 
 const (
-	TransactionHistoryCardTypeAmex         TransactionHistoryCardType = "AMEX"
-	TransactionHistoryCardTypeCup          TransactionHistoryCardType = "CUP"
-	TransactionHistoryCardTypeDiners       TransactionHistoryCardType = "DINERS"
-	TransactionHistoryCardTypeDiscover     TransactionHistoryCardType = "DISCOVER"
-	TransactionHistoryCardTypeElo          TransactionHistoryCardType = "ELO"
-	TransactionHistoryCardTypeElv          TransactionHistoryCardType = "ELV"
-	TransactionHistoryCardTypeHipercard    TransactionHistoryCardType = "HIPERCARD"
-	TransactionHistoryCardTypeJcb          TransactionHistoryCardType = "JCB"
-	TransactionHistoryCardTypeMaestro      TransactionHistoryCardType = "MAESTRO"
-	TransactionHistoryCardTypeMastercard   TransactionHistoryCardType = "MASTERCARD"
-	TransactionHistoryCardTypeUnknown      TransactionHistoryCardType = "UNKNOWN"
-	TransactionHistoryCardTypeVisa         TransactionHistoryCardType = "VISA"
-	TransactionHistoryCardTypeVisaElectron TransactionHistoryCardType = "VISA_ELECTRON"
-	TransactionHistoryCardTypeVisaVpay     TransactionHistoryCardType = "VISA_VPAY"
+	TransactionFullPayoutPlanAcceleratedInstallment TransactionFullPayoutPlan = "ACCELERATED_INSTALLMENT"
+	TransactionFullPayoutPlanSinglePayment          TransactionFullPayoutPlan = "SINGLE_PAYMENT"
+	TransactionFullPayoutPlanTrueInstallment        TransactionFullPayoutPlan = "TRUE_INSTALLMENT"
 )
 
-// Type of the transaction for the registered user specified in the `user` property.
-type TransactionHistoryType string
+// TransactionFullLocation: Details of the payment location as received from the payment terminal.
+type TransactionFullLocation struct {
+	// Indication of the precision of the geographical position received from the payment terminal.
+	HorizontalAccuracy *HorizontalAccuracy `json:"horizontal_accuracy,omitempty"`
+	// Latitude value from the coordinates of the payment location (as received from the payment terminal reader).
+	// Min: 0
+	// Max: 90
+	Lat *Lat `json:"lat,omitempty"`
+	// Longitude value from the coordinates of the payment location (as received from the payment terminal reader).
+	// Min: 0
+	// Max: 180
+	Lon *Lon `json:"lon,omitempty"`
+}
+
+// TransactionFullPayoutType: Payout type for the transaction.
+type TransactionFullPayoutType string
 
 const (
-	TransactionHistoryTypeChargeBack TransactionHistoryType = "CHARGE_BACK"
-	TransactionHistoryTypePayment    TransactionHistoryType = "PAYMENT"
-	TransactionHistoryTypeRefund     TransactionHistoryType = "REFUND"
+	TransactionFullPayoutTypeBalance     TransactionFullPayoutType = "BALANCE"
+	TransactionFullPayoutTypeBankAccount TransactionFullPayoutType = "BANK_ACCOUNT"
+	TransactionFullPayoutTypePrepaidCard TransactionFullPayoutType = "PREPAID_CARD"
 )
 
-// TransactionHistory is the type definition for a TransactionHistory.
+// TransactionFullSimplePaymentType: Simple name of the payment type.
+type TransactionFullSimplePaymentType string
+
+const (
+	TransactionFullSimplePaymentTypeCash              TransactionFullSimplePaymentType = "CASH"
+	TransactionFullSimplePaymentTypeCcCustomerEntered TransactionFullSimplePaymentType = "CC_CUSTOMER_ENTERED"
+	TransactionFullSimplePaymentTypeCcSignature       TransactionFullSimplePaymentType = "CC_SIGNATURE"
+	TransactionFullSimplePaymentTypeElv               TransactionFullSimplePaymentType = "ELV"
+	TransactionFullSimplePaymentTypeEmv               TransactionFullSimplePaymentType = "EMV"
+	TransactionFullSimplePaymentTypeManualEntry       TransactionFullSimplePaymentType = "MANUAL_ENTRY"
+	TransactionFullSimplePaymentTypeMoto              TransactionFullSimplePaymentType = "MOTO"
+)
+
+// TransactionFullSimpleStatus: Status generated from the processing status and the latest transaction state.
+type TransactionFullSimpleStatus string
+
+const (
+	TransactionFullSimpleStatusCancelFailed  TransactionFullSimpleStatus = "CANCEL_FAILED"
+	TransactionFullSimpleStatusCancelled     TransactionFullSimpleStatus = "CANCELLED"
+	TransactionFullSimpleStatusChargeback    TransactionFullSimpleStatus = "CHARGEBACK"
+	TransactionFullSimpleStatusFailed        TransactionFullSimpleStatus = "FAILED"
+	TransactionFullSimpleStatusNonCollection TransactionFullSimpleStatus = "NON_COLLECTION"
+	TransactionFullSimpleStatusPaidOut       TransactionFullSimpleStatus = "PAID_OUT"
+	TransactionFullSimpleStatusRefundFailed  TransactionFullSimpleStatus = "REFUND_FAILED"
+	TransactionFullSimpleStatusRefunded      TransactionFullSimpleStatus = "REFUNDED"
+	TransactionFullSimpleStatusSuccessful    TransactionFullSimpleStatus = "SUCCESSFUL"
+)
+
+// TransactionFullVerificationMethod: Verification method used for the transaction.
+type TransactionFullVerificationMethod string
+
+const (
+	TransactionFullVerificationMethodConfirmationCodeVerified TransactionFullVerificationMethod = "confirmation code verified"
+	TransactionFullVerificationMethodNone                     TransactionFullVerificationMethod = "none"
+	TransactionFullVerificationMethodOfflinePin               TransactionFullVerificationMethod = "offline pin"
+	TransactionFullVerificationMethodOfflinePinSignature      TransactionFullVerificationMethod = "offline pin + signature"
+	TransactionFullVerificationMethodOnlinePin                TransactionFullVerificationMethod = "online pin"
+	TransactionFullVerificationMethodSignature                TransactionFullVerificationMethod = "signature"
+)
+
+// TransactionHistory is a schema definition.
 type TransactionHistory struct {
 	// Total amount of the transaction.
 	Amount *float64 `json:"amount,omitempty"`
@@ -371,11 +350,13 @@ type TransactionHistory struct {
 	CardType *TransactionHistoryCardType `json:"card_type,omitempty"`
 	// Client-specific ID of the transaction.
 	ClientTransactionId *string `json:"client_transaction_id,omitempty"`
-	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported currency values are enumerated above.
+	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
+	// currency values are enumerated above.
 	Currency *Currency `json:"currency,omitempty"`
 	// Unique ID of the transaction.
 	Id *string `json:"id,omitempty"`
 	// Current number of the installment for deferred payments.
+	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Payment type used for the transaction.
 	PaymentType *TransactionHistoryPaymentType `json:"payment_type,omitempty"`
@@ -398,10 +379,68 @@ type TransactionHistory struct {
 	// Type of the transaction for the registered user specified in the `user` property.
 	Type *TransactionHistoryType `json:"type,omitempty"`
 	// Email address of the registered user (merchant) to whom the payment is made.
+	// Format: email
 	User *string `json:"user,omitempty"`
 }
 
-// TransactionMixinHistory is the type definition for a TransactionMixinHistory.
+// TransactionHistoryPaymentType: Payment type used for the transaction.
+type TransactionHistoryPaymentType string
+
+const (
+	TransactionHistoryPaymentTypeBoleto    TransactionHistoryPaymentType = "BOLETO"
+	TransactionHistoryPaymentTypeEcom      TransactionHistoryPaymentType = "ECOM"
+	TransactionHistoryPaymentTypeRecurring TransactionHistoryPaymentType = "RECURRING"
+)
+
+// TransactionHistoryStatus: Current status of the transaction.
+type TransactionHistoryStatus string
+
+const (
+	TransactionHistoryStatusCancelled  TransactionHistoryStatus = "CANCELLED"
+	TransactionHistoryStatusFailed     TransactionHistoryStatus = "FAILED"
+	TransactionHistoryStatusPending    TransactionHistoryStatus = "PENDING"
+	TransactionHistoryStatusSuccessful TransactionHistoryStatus = "SUCCESSFUL"
+)
+
+// TransactionHistoryPayoutPlan: Payout plan of the registered user at the time when the transaction was made.
+type TransactionHistoryPayoutPlan string
+
+const (
+	TransactionHistoryPayoutPlanAcceleratedInstallment TransactionHistoryPayoutPlan = "ACCELERATED_INSTALLMENT"
+	TransactionHistoryPayoutPlanSinglePayment          TransactionHistoryPayoutPlan = "SINGLE_PAYMENT"
+	TransactionHistoryPayoutPlanTrueInstallment        TransactionHistoryPayoutPlan = "TRUE_INSTALLMENT"
+)
+
+// TransactionHistoryCardType: Issuing card network of the payment card used for the transaction.
+type TransactionHistoryCardType string
+
+const (
+	TransactionHistoryCardTypeAmex         TransactionHistoryCardType = "AMEX"
+	TransactionHistoryCardTypeCup          TransactionHistoryCardType = "CUP"
+	TransactionHistoryCardTypeDiners       TransactionHistoryCardType = "DINERS"
+	TransactionHistoryCardTypeDiscover     TransactionHistoryCardType = "DISCOVER"
+	TransactionHistoryCardTypeElo          TransactionHistoryCardType = "ELO"
+	TransactionHistoryCardTypeElv          TransactionHistoryCardType = "ELV"
+	TransactionHistoryCardTypeHipercard    TransactionHistoryCardType = "HIPERCARD"
+	TransactionHistoryCardTypeJcb          TransactionHistoryCardType = "JCB"
+	TransactionHistoryCardTypeMaestro      TransactionHistoryCardType = "MAESTRO"
+	TransactionHistoryCardTypeMastercard   TransactionHistoryCardType = "MASTERCARD"
+	TransactionHistoryCardTypeUnknown      TransactionHistoryCardType = "UNKNOWN"
+	TransactionHistoryCardTypeVisa         TransactionHistoryCardType = "VISA"
+	TransactionHistoryCardTypeVisaElectron TransactionHistoryCardType = "VISA_ELECTRON"
+	TransactionHistoryCardTypeVisaVpay     TransactionHistoryCardType = "VISA_VPAY"
+)
+
+// TransactionHistoryType: Type of the transaction for the registered user specified in the `user` property.
+type TransactionHistoryType string
+
+const (
+	TransactionHistoryTypeChargeBack TransactionHistoryType = "CHARGE_BACK"
+	TransactionHistoryTypePayment    TransactionHistoryType = "PAYMENT"
+	TransactionHistoryTypeRefund     TransactionHistoryType = "REFUND"
+)
+
+// TransactionMixinHistory is a schema definition.
 type TransactionMixinHistory struct {
 	// Payout plan of the registered user at the time when the transaction was made.
 	PayoutPlan *TransactionMixinHistoryPayoutPlan `json:"payout_plan,omitempty"`
@@ -413,7 +452,8 @@ type TransactionMixinHistory struct {
 	ProductSummary *string `json:"product_summary,omitempty"`
 }
 
-// Payout plan of the registered user at the time when the transaction was made.
+// TransactionMixinHistoryPayoutPlan: Payout plan of the registered user at the time when the transaction was
+// made.
 type TransactionMixinHistoryPayoutPlan string
 
 const (
@@ -422,85 +462,299 @@ const (
 	TransactionMixinHistoryPayoutPlanTrueInstallment        TransactionMixinHistoryPayoutPlan = "TRUE_INSTALLMENT"
 )
 
-// ListTransactionsParams are query parameters for ListTransactions
-type ListTransactionsParams struct {
-	ChangesSince    *time.Time `json:"changes_since,omitempty"`
-	Limit           *int       `json:"limit,omitempty"`
-	NewestRef       *string    `json:"newest_ref,omitempty"`
-	NewestTime      *time.Time `json:"newest_time,omitempty"`
-	OldestRef       *string    `json:"oldest_ref,omitempty"`
-	OldestTime      *time.Time `json:"oldest_time,omitempty"`
-	Order           *string    `json:"order,omitempty"`
-	PaymentTypes    *[]string  `json:"payment_types,omitempty"`
-	Statuses        *[]string  `json:"statuses,omitempty"`
-	TransactionCode *string    `json:"transaction_code,omitempty"`
-	Types           *[]string  `json:"types,omitempty"`
-	Users           *[]string  `json:"users,omitempty"`
-}
-
-// ListTransactionsResponse is the type definition for a ListTransactionsResponse.
-type ListTransactionsResponse struct {
-	Items *[]TransactionHistory `json:"items,omitempty"`
-	Links *[]Link               `json:"links,omitempty"`
-}
-
-// GetTransactionParams are query parameters for GetTransaction
-type GetTransactionParams struct {
-	Id              *string `json:"id,omitempty"`
-	InternalId      *string `json:"internal_id,omitempty"`
-	TransactionCode *string `json:"transaction_code,omitempty"`
-}
-
-// ListTransactionsV21Params are query parameters for ListTransactionsV21
-type ListTransactionsV21Params struct {
-	ChangesSince    *time.Time `json:"changes_since,omitempty"`
-	Limit           *int       `json:"limit,omitempty"`
-	NewestRef       *string    `json:"newest_ref,omitempty"`
-	NewestTime      *time.Time `json:"newest_time,omitempty"`
-	OldestRef       *string    `json:"oldest_ref,omitempty"`
-	OldestTime      *time.Time `json:"oldest_time,omitempty"`
-	Order           *string    `json:"order,omitempty"`
-	PaymentTypes    *[]string  `json:"payment_types,omitempty"`
-	Statuses        *[]string  `json:"statuses,omitempty"`
-	TransactionCode *string    `json:"transaction_code,omitempty"`
-	Types           *[]string  `json:"types,omitempty"`
-	Users           *[]string  `json:"users,omitempty"`
-}
-
-// ListTransactionsV21Response is the type definition for a ListTransactionsV21Response.
-type ListTransactionsV21Response struct {
-	Items *[]TransactionHistory `json:"items,omitempty"`
-	Links *[]Link               `json:"links,omitempty"`
-}
-
-// GetTransactionV21Params are query parameters for GetTransactionV21
-type GetTransactionV21Params struct {
-	Id              *string `json:"id,omitempty"`
-	InternalId      *string `json:"internal_id,omitempty"`
-	TransactionCode *string `json:"transaction_code,omitempty"`
-}
-
-// RefundTransaction request body.
+// RefundTransactionBody: Optional amount for partial refunds of transactions.
 type RefundTransactionBody struct {
-	// Amount to be refunded. Eligible amount can't exceed the amount of the transaction and varies based on country and currency. If you do not specify a value, the system performs a full refund of the transaction.
+	// Amount to be refunded. Eligible amount can't exceed the amount of the transaction and varies based on country
+	// and currency. If you do not specify a value, the system performs a full refund of the transaction.
 	Amount *float64 `json:"amount,omitempty"`
 }
 
-// RefundTransactionResponse is the type definition for a RefundTransactionResponse.
-type RefundTransactionResponse struct {
+// ListTransactionsParams: query parameters for ListTransactions
+type ListTransactionsParams struct {
+	// Filters the results by the latest modification time of resources and returns only transactions that are modified
+	// *at or after* the specified timestamp (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
+	ChangesSince *time.Time
+	// Specifies the maximum number of results per page. Value must be a positive integer and if not specified, will
+	// return 10 results.
+	Limit *int
+	// Filters the results by the reference ID of transaction events and returns only transactions with events whose
+	// IDs are *smaller* than the specified value. This parameters supersedes the `newest_time` parameter (if both
+	// are provided in the request).
+	NewestRef *string
+	// Filters the results by the creation time of resources and returns only transactions that are created *before*
+	// the specified timestamp (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
+	NewestTime *time.Time
+	// Filters the results by the reference ID of transaction events and returns only transactions with events whose
+	// IDs are *greater* than the specified value. This parameters supersedes the `oldest_time` parameter (if both
+	// are provided in the request).
+	OldestRef *string
+	// Filters the results by the creation time of resources and returns only transactions that are created *at
+	// or after* the specified timestamp (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
+	OldestTime *time.Time
+	// Specifies the order in which the returned results are displayed.
+	Order *string
+	// Filters the returned results by the specified list of payment types used for the transactions.
+	PaymentTypes *[]string
+	// Filters the returned results by the specified list of final statuses of the transactions.
+	Statuses *[]string
+	// Retrieves the transaction resource with the specified transaction code.
+	TransactionCode *string
+	// Filters the returned results by the specified list of transaction types.
+	Types *[]string
+	// Filters the returned results by user email.
+	Users *[]string
+}
+
+// QueryValues converts [ListTransactionsParams] into [url.Values].
+func (p *ListTransactionsParams) QueryValues() url.Values {
+	q := make(url.Values)
+
+	if p.ChangesSince != nil {
+		q.Set("changes_since", p.ChangesSince.Format(time.RFC3339))
+	}
+
+	if p.Limit != nil {
+		q.Set("limit", strconv.Itoa(*p.Limit))
+	}
+
+	if p.NewestRef != nil {
+		q.Set("newest_ref", *p.NewestRef)
+	}
+
+	if p.NewestTime != nil {
+		q.Set("newest_time", p.NewestTime.Format(time.RFC3339))
+	}
+
+	if p.OldestRef != nil {
+		q.Set("oldest_ref", *p.OldestRef)
+	}
+
+	if p.OldestTime != nil {
+		q.Set("oldest_time", p.OldestTime.Format(time.RFC3339))
+	}
+
+	if p.Order != nil {
+		q.Set("order", *p.Order)
+	}
+
+	if p.PaymentTypes != nil {
+		for _, v := range *p.PaymentTypes {
+			q.Add("payment_types", v)
+		}
+	}
+
+	if p.Statuses != nil {
+		for _, v := range *p.Statuses {
+			q.Add("statuses", v)
+		}
+	}
+
+	if p.TransactionCode != nil {
+		q.Set("transaction_code", *p.TransactionCode)
+	}
+
+	if p.Types != nil {
+		for _, v := range *p.Types {
+			q.Add("types", v)
+		}
+	}
+
+	if p.Users != nil {
+		for _, v := range *p.Users {
+			q.Add("users", v)
+		}
+	}
+
+	return q
+}
+
+// GetTransactionParams: query parameters for GetTransaction
+type GetTransactionParams struct {
+	// Retrieves the transaction resource with the specified transaction ID (the `id` parameter in the transaction resource).
+	Id *string
+	// Retrieves the transaction resource with the specified internal transaction ID (the `internal_id` parameter in
+	// the transaction resource).
+	InternalId *string
+	// Retrieves the transaction resource with the specified transaction code.
+	TransactionCode *string
+}
+
+// QueryValues converts [GetTransactionParams] into [url.Values].
+func (p *GetTransactionParams) QueryValues() url.Values {
+	q := make(url.Values)
+
+	if p.Id != nil {
+		q.Set("id", *p.Id)
+	}
+
+	if p.InternalId != nil {
+		q.Set("internal_id", *p.InternalId)
+	}
+
+	if p.TransactionCode != nil {
+		q.Set("transaction_code", *p.TransactionCode)
+	}
+
+	return q
+}
+
+// ListTransactionsV21Params: query parameters for ListTransactionsV2.1
+type ListTransactionsV21Params struct {
+	// Filters the results by the latest modification time of resources and returns only transactions that are modified
+	// *at or after* the specified timestamp (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
+	ChangesSince *time.Time
+	// Specifies the maximum number of results per page. Value must be a positive integer and if not specified, will
+	// return 10 results.
+	Limit *int
+	// Filters the results by the reference ID of transaction events and returns only transactions with events whose
+	// IDs are *smaller* than the specified value. This parameters supersedes the `newest_time` parameter (if both
+	// are provided in the request).
+	NewestRef *string
+	// Filters the results by the creation time of resources and returns only transactions that are created *before*
+	// the specified timestamp (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
+	NewestTime *time.Time
+	// Filters the results by the reference ID of transaction events and returns only transactions with events whose
+	// IDs are *greater* than the specified value. This parameters supersedes the `oldest_time` parameter (if both
+	// are provided in the request).
+	OldestRef *string
+	// Filters the results by the creation time of resources and returns only transactions that are created *at
+	// or after* the specified timestamp (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
+	OldestTime *time.Time
+	// Specifies the order in which the returned results are displayed.
+	Order *string
+	// Filters the returned results by the specified list of payment types used for the transactions.
+	PaymentTypes *[]string
+	// Filters the returned results by the specified list of final statuses of the transactions.
+	Statuses *[]string
+	// Retrieves the transaction resource with the specified transaction code.
+	TransactionCode *string
+	// Filters the returned results by the specified list of transaction types.
+	Types *[]string
+	// Filters the returned results by user email.
+	Users *[]string
+}
+
+// QueryValues converts [ListTransactionsV21Params] into [url.Values].
+func (p *ListTransactionsV21Params) QueryValues() url.Values {
+	q := make(url.Values)
+
+	if p.ChangesSince != nil {
+		q.Set("changes_since", p.ChangesSince.Format(time.RFC3339))
+	}
+
+	if p.Limit != nil {
+		q.Set("limit", strconv.Itoa(*p.Limit))
+	}
+
+	if p.NewestRef != nil {
+		q.Set("newest_ref", *p.NewestRef)
+	}
+
+	if p.NewestTime != nil {
+		q.Set("newest_time", p.NewestTime.Format(time.RFC3339))
+	}
+
+	if p.OldestRef != nil {
+		q.Set("oldest_ref", *p.OldestRef)
+	}
+
+	if p.OldestTime != nil {
+		q.Set("oldest_time", p.OldestTime.Format(time.RFC3339))
+	}
+
+	if p.Order != nil {
+		q.Set("order", *p.Order)
+	}
+
+	if p.PaymentTypes != nil {
+		for _, v := range *p.PaymentTypes {
+			q.Add("payment_types", v)
+		}
+	}
+
+	if p.Statuses != nil {
+		for _, v := range *p.Statuses {
+			q.Add("statuses", v)
+		}
+	}
+
+	if p.TransactionCode != nil {
+		q.Set("transaction_code", *p.TransactionCode)
+	}
+
+	if p.Types != nil {
+		for _, v := range *p.Types {
+			q.Add("types", v)
+		}
+	}
+
+	if p.Users != nil {
+		for _, v := range *p.Users {
+			q.Add("users", v)
+		}
+	}
+
+	return q
+}
+
+// GetTransactionV21Params: query parameters for GetTransactionV2.1
+type GetTransactionV21Params struct {
+	// Retrieves the transaction resource with the specified transaction ID (the `id` parameter in the transaction resource).
+	Id *string
+	// Retrieves the transaction resource with the specified internal transaction ID (the `internal_id` parameter in
+	// the transaction resource).
+	InternalId *string
+	// Retrieves the transaction resource with the specified transaction code.
+	TransactionCode *string
+}
+
+// QueryValues converts [GetTransactionV21Params] into [url.Values].
+func (p *GetTransactionV21Params) QueryValues() url.Values {
+	q := make(url.Values)
+
+	if p.Id != nil {
+		q.Set("id", *p.Id)
+	}
+
+	if p.InternalId != nil {
+		q.Set("internal_id", *p.InternalId)
+	}
+
+	if p.TransactionCode != nil {
+		q.Set("transaction_code", *p.TransactionCode)
+	}
+
+	return q
+}
+
+// ListTransactions200Response is a schema definition.
+type ListTransactions200Response struct {
+	Items *[]TransactionHistory `json:"items,omitempty"`
+	Links *[]Link               `json:"links,omitempty"`
+}
+
+// ListTransactionsV21200Response is a schema definition.
+type ListTransactionsV21200Response struct {
+	Items *[]TransactionHistory `json:"items,omitempty"`
+	Links *[]Link               `json:"links,omitempty"`
+}
+
+// RefundTransaction204Response is a schema definition.
+type RefundTransaction204Response struct {
 }
 
 type TransactionsService service
 
-// ListDeprecated: List transactions (deprecated)
+// ListDeprecated: List transactions
 // Lists detailed history of all transactions associated with the merchant profile.
-func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListTransactionsParams) (*ListTransactionsResponse, error) {
+func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListTransactionsParams) (*ListTransactions200Response, error) {
 	path := fmt.Sprintf("/v0.1/me/transactions/history")
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
+	req.URL.RawQuery = params.QueryValues().Encode()
 
 	resp, err := s.client.Do(req)
 	if err != nil {
@@ -508,30 +762,29 @@ func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListTra
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v ListTransactions200Response
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusUnauthorized:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	var v ListTransactionsResponse
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
 }
 
-// GetDeprecated: Retrieve a transaction (deprecated)
-// Retrieves the full details of an identified transaction. The transaction resource is identified by a query parameter and *one* of following parameters is required:
+// GetDeprecated: Retrieve a transaction
+// Retrieves the full details of an identified transaction. The transaction resource is identified by a query
+// parameter and *one* of following parameters is required:
 //   - `id`
 //   - `internal_id`
 //   - `transaction_code`
@@ -544,6 +797,7 @@ func (s *TransactionsService) GetDeprecated(ctx context.Context, params GetTrans
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
+	req.URL.RawQuery = params.QueryValues().Encode()
 
 	resp, err := s.client.Do(req)
 	if err != nil {
@@ -551,37 +805,43 @@ func (s *TransactionsService) GetDeprecated(ctx context.Context, params GetTrans
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v TransactionFull
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusUnauthorized:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
-	}
+	case http.StatusNotFound:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
 
-	var v TransactionFull
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
+		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	return &v, nil
 }
 
 // List: List transactions
 // Lists detailed history of all transactions associated with the merchant profile.
-func (s *TransactionsService) List(ctx context.Context, merchantCode string, params ListTransactionsV21Params) (*ListTransactionsV21Response, error) {
+func (s *TransactionsService) List(ctx context.Context, merchantCode string, params ListTransactionsV21Params) (*ListTransactionsV21200Response, error) {
 	path := fmt.Sprintf("/v2.1/merchants/%v/transactions/history", merchantCode)
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
+	req.URL.RawQuery = params.QueryValues().Encode()
 
 	resp, err := s.client.Do(req)
 	if err != nil {
@@ -589,30 +849,29 @@ func (s *TransactionsService) List(ctx context.Context, merchantCode string, par
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v ListTransactionsV21200Response
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusUnauthorized:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	var v ListTransactionsV21Response
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
-	}
-
-	return &v, nil
 }
 
 // Get: Retrieve a transaction
-// Retrieves the full details of an identified transaction. The transaction resource is identified by a query parameter and *one* of following parameters is required:
+// Retrieves the full details of an identified transaction. The transaction resource is identified by a query
+// parameter and *one* of following parameters is required:
 //   - `id`
 //   - `internal_id`
 //   - `transaction_code`
@@ -625,6 +884,7 @@ func (s *TransactionsService) Get(ctx context.Context, merchantCode string, para
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
+	req.URL.RawQuery = params.QueryValues().Encode()
 
 	resp, err := s.client.Do(req)
 	if err != nil {
@@ -632,31 +892,36 @@ func (s *TransactionsService) Get(ctx context.Context, merchantCode string, para
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v TransactionFull
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusUnauthorized:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
-	}
+	case http.StatusNotFound:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
 
-	var v TransactionFull
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
+		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	return &v, nil
 }
 
 // Refund: Refund a transaction
 // Refunds an identified transaction either in full or partially.
-func (s *TransactionsService) Refund(ctx context.Context, txnId string, body RefundTransactionBody) (*RefundTransactionResponse, error) {
+func (s *TransactionsService) Refund(ctx context.Context, txnId string, body RefundTransactionBody) (*RefundTransaction204Response, error) {
 	buf := new(bytes.Buffer)
 	if err := json.NewEncoder(buf).Encode(body); err != nil {
 		return nil, fmt.Errorf("encoding json body request failed: %v", err)
@@ -675,24 +940,29 @@ func (s *TransactionsService) Refund(ctx context.Context, txnId string, body Ref
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("invalid response: %d - %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
+	switch resp.StatusCode {
+	case http.StatusNoContent:
+		var v RefundTransaction204Response
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
 
-	dec := json.NewDecoder(resp.Body)
-	if resp.StatusCode >= 400 {
-		var apiErr APIError
-		if err := dec.Decode(&apiErr); err != nil {
+		return &v, nil
+	case http.StatusNotFound:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
-	}
+	case http.StatusConflict:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
 
-	var v RefundTransactionResponse
-	if err := dec.Decode(&v); err != nil {
-		return nil, fmt.Errorf("decode response: %s", err.Error())
+		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
-
-	return &v, nil
 }

@@ -2,13 +2,15 @@
 package sumup
 
 import (
+	"fmt"
 	"time"
 )
 
-// AmountEvent is Amount of the event.
+// AmountEvent: Amount of the event.
 type AmountEvent float64
 
-// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported currency values are enumerated above.
+// Currency: Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount.
+// Currently supported currency values are enumerated above.
 type Currency string
 
 const (
@@ -29,7 +31,9 @@ const (
 	CurrencyUsd Currency = "USD"
 )
 
-// Error is Error message structure.
+var _ error = (*Error)(nil)
+
+// Error: Error message structure.
 type Error struct {
 	// Platform code for the error.
 	ErrorCode *string `json:"error_code,omitempty"`
@@ -37,7 +41,13 @@ type Error struct {
 	Message *string `json:"message,omitempty"`
 }
 
-// ErrorForbidden is Error message for forbidden requests.
+func (e *Error) Error() string {
+	return fmt.Sprintf("error_code=%v, message=%v", e.ErrorCode, e.Message)
+}
+
+var _ error = (*ErrorForbidden)(nil)
+
+// ErrorForbidden: Error message for forbidden requests.
 type ErrorForbidden struct {
 	// Platform code for the error.
 	ErrorCode *string `json:"error_code,omitempty"`
@@ -47,10 +57,15 @@ type ErrorForbidden struct {
 	StatusCode *string `json:"status_code,omitempty"`
 }
 
-// EventId is Unique ID of the transaction event.
+func (e *ErrorForbidden) Error() string {
+	return fmt.Sprintf("error_code=%v, error_message=%v, status_code=%v", e.ErrorCode, e.ErrorMessage, e.StatusCode)
+}
+
+// EventId: Unique ID of the transaction event.
+// Format: int64
 type EventId int64
 
-// Status of the transaction event.
+// EventStatus: Status of the transaction event.
 type EventStatus string
 
 const (
@@ -62,7 +77,7 @@ const (
 	EventStatusSuccessful EventStatus = "SUCCESSFUL"
 )
 
-// Type of the transaction event.
+// EventType: Type of the transaction event.
 type EventType string
 
 const (
@@ -72,7 +87,7 @@ const (
 	EventTypeRefund          EventType = "REFUND"
 )
 
-// MandateResponse is Created mandate
+// MandateResponse: Created mandate
 type MandateResponse struct {
 	// Merchant code which has the mandate
 	MerchantCode *string `json:"merchant_code,omitempty"`
@@ -82,21 +97,23 @@ type MandateResponse struct {
 	Type *string `json:"type,omitempty"`
 }
 
-// TimestampEvent is Date and time of the transaction event.
+// TimestampEvent: Date and time of the transaction event.
 type TimestampEvent string
 
-// TransactionId is Unique ID of the transaction.
+// TransactionId: Unique ID of the transaction.
 type TransactionId string
 
-// TransactionMixinBase is Details of the transaction.
+// TransactionMixinBase: Details of the transaction.
 type TransactionMixinBase struct {
 	// Total amount of the transaction.
 	Amount *float64 `json:"amount,omitempty"`
-	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported currency values are enumerated above.
+	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
+	// currency values are enumerated above.
 	Currency *Currency `json:"currency,omitempty"`
 	// Unique ID of the transaction.
 	Id *string `json:"id,omitempty"`
 	// Current number of the installment for deferred payments.
+	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Payment type used for the transaction.
 	PaymentType *TransactionMixinBasePaymentType `json:"payment_type,omitempty"`
@@ -108,7 +125,7 @@ type TransactionMixinBase struct {
 	TransactionCode *string `json:"transaction_code,omitempty"`
 }
 
-// Payment type used for the transaction.
+// TransactionMixinBasePaymentType: Payment type used for the transaction.
 type TransactionMixinBasePaymentType string
 
 const (
@@ -117,7 +134,7 @@ const (
 	TransactionMixinBasePaymentTypeRecurring TransactionMixinBasePaymentType = "RECURRING"
 )
 
-// Current status of the transaction.
+// TransactionMixinBaseStatus: Current status of the transaction.
 type TransactionMixinBaseStatus string
 
 const (
@@ -127,7 +144,7 @@ const (
 	TransactionMixinBaseStatusSuccessful TransactionMixinBaseStatus = "SUCCESSFUL"
 )
 
-// TransactionMixinCheckout is the type definition for a TransactionMixinCheckout.
+// TransactionMixinCheckout is a schema definition.
 type TransactionMixinCheckout struct {
 	// Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
 	AuthCode *string `json:"auth_code,omitempty"`
@@ -143,10 +160,12 @@ type TransactionMixinCheckout struct {
 	VatAmount *float64 `json:"vat_amount,omitempty"`
 }
 
-// Entry mode of the payment details.
+// TransactionMixinCheckoutEntryMode: Entry mode of the payment details.
 type TransactionMixinCheckoutEntryMode string
 
 const (
 	TransactionMixinCheckoutEntryModeBoleto        TransactionMixinCheckoutEntryMode = "BOLETO"
 	TransactionMixinCheckoutEntryModeCustomerEntry TransactionMixinCheckoutEntryMode = "CUSTOMER_ENTRY"
 )
+
+type SharedService service
