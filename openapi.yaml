@@ -3137,6 +3137,8 @@ paths:
                     If the server returns any other code, the callback will be retried up to 5 times with exponential backoff.
       tags:
         - Readers
+      x-codegen:
+        method_name: create_checkout
       x-permissions:
         - readers_checkout_create
       x-scopes:
@@ -3240,6 +3242,8 @@ paths:
                         example: Gateway Timeout
       tags:
         - Readers
+      x-codegen:
+        method_name: terminate_checkout
       x-permissions:
         - readers_checkout_create
       x-scopes:
