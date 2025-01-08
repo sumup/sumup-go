@@ -47,6 +47,7 @@ type Client struct {
 	Payouts       *PayoutsService
 	Readers       *ReadersService
 	Receipts      *ReceiptsService
+	Shared        *SharedService
 	Subaccounts   *SubaccountsService
 	Transactions  *TransactionsService
 }
