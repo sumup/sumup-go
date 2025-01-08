@@ -47,6 +47,7 @@ type Client struct {
 	Payouts       *PayoutsService
 	Readers       *ReadersService
 	Receipts      *ReceiptsService
+	Shared        *SharedService
 	Subaccounts   *SubaccountsService
 	Transactions  *TransactionsService
 }
@@ -89,6 +90,18 @@ func (c *Client) WithHTTPClient(client *http.Client) *Client {
 
 func (c *Client) populate() {
 	c.svc.client = c
+	c.ApiKeys = (*ApiKeysService)(&c.svc)
+	c.Authorization = (*AuthorizationService)(&c.svc)
+	c.Checkouts = (*CheckoutsService)(&c.svc)
+	c.Customers = (*CustomersService)(&c.svc)
+	c.Members = (*MembersService)(&c.svc)
+	c.Merchant = (*MerchantService)(&c.svc)
+	c.Payouts = (*PayoutsService)(&c.svc)
+	c.Readers = (*ReadersService)(&c.svc)
+	c.Receipts = (*ReceiptsService)(&c.svc)
+	c.Shared = (*SharedService)(&c.svc)
+	c.Subaccounts = (*SubaccountsService)(&c.svc)
+	c.Transactions = (*TransactionsService)(&c.svc)
 }
 
 func (c *Client) NewRequest(

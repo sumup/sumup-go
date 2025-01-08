@@ -490,7 +490,7 @@ func (s *ReadersService) Create(ctx context.Context, merchantCode string, body C
 	}
 }
 
-// CreateReaderTerminate: Create a Reader Terminate action
+// TerminateCheckout: Create a Reader Terminate action
 // Create a Terminate action for a Reader.
 //
 // It stops the current transaction on the target device.
@@ -507,7 +507,7 @@ func (s *ReadersService) Create(ctx context.Context, merchantCode string, body C
 // will be sent as `failed` to the provided URL.
 //
 // **Note**: If the target device is a Solo, it must be in version 3.3.28.0 or higher.
-func (s *ReadersService) CreateReaderTerminate(ctx context.Context, merchantCode string, id string) error {
+func (s *ReadersService) TerminateCheckout(ctx context.Context, merchantCode string, id string) error {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v/terminate", merchantCode, id)
 
 	req, err := s.client.NewRequest(ctx, http.MethodPost, path, http.NoBody)
@@ -557,7 +557,7 @@ func (s *ReadersService) CreateReaderTerminate(ctx context.Context, merchantCode
 	}
 }
 
-// CreateReaderCheckout: Create a Reader Checkout
+// CreateCheckout: Create a Reader Checkout
 // Create a Checkout for a Reader.
 //
 // This process is asynchronous and the actual transaction may take some time to be stared on the device.
@@ -568,7 +568,7 @@ func (s *ReadersService) CreateReaderTerminate(ctx context.Context, merchantCode
 // this time, any other checkout for the same device will be rejected.
 //
 // **Note**: If the target device is a Solo, it must be in version 3.3.24.3 or higher.
-func (s *ReadersService) CreateReaderCheckout(ctx context.Context, merchantCode string, id string, body CreateReaderCheckoutBody) (*CreateReaderCheckout201Response, error) {
+func (s *ReadersService) CreateCheckout(ctx context.Context, merchantCode string, id string, body CreateReaderCheckoutBody) (*CreateReaderCheckout201Response, error) {
 	buf := new(bytes.Buffer)
 	if err := json.NewEncoder(buf).Encode(body); err != nil {
 		return nil, fmt.Errorf("encoding json body request failed: %v", err)
