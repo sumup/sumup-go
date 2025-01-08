@@ -16,7 +16,7 @@ type FinancialPayout struct {
 	Amount   *float64 `json:"amount,omitempty"`
 	Currency *string  `json:"currency,omitempty"`
 	// Format: date
-	Date            *time.Time             `json:"date,omitempty"`
+	Date            *Date                  `json:"date,omitempty"`
 	Fee             *float64               `json:"fee,omitempty"`
 	Id              *int                   `json:"id,omitempty"`
 	Reference       *string                `json:"reference,omitempty"`
@@ -50,12 +50,12 @@ type FinancialPayouts []FinancialPayout
 // ListPayoutsParams: query parameters for ListPayouts
 type ListPayoutsParams struct {
 	// End date (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
-	EndDate time.Time
+	EndDate Date
 	Format  *string
 	Limit   *int
 	Order   *string
 	// Start date (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
-	StartDate time.Time
+	StartDate Date
 }
 
 // QueryValues converts [ListPayoutsParams] into [url.Values].

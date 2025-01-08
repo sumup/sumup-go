@@ -100,7 +100,7 @@ type PersonalDetails struct {
 	Address *Address `json:"address,omitempty"`
 	// Date of birth of the customer.
 	// Format: date
-	Birthdate *time.Time `json:"birthdate,omitempty"`
+	Birthdate *Date `json:"birthdate,omitempty"`
 	// Email address of the customer.
 	Email *string `json:"email,omitempty"`
 	// First name of the customer.

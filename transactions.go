@@ -143,10 +143,10 @@ type TransactionEvent struct {
 	Amount *AmountEvent `json:"amount,omitempty"`
 	// Date when the transaction event occurred.
 	// Format: date
-	Date *time.Time `json:"date,omitempty"`
+	Date *Date `json:"date,omitempty"`
 	// Date when the transaction event is due to occur.
 	// Format: date
-	DueDate *time.Time `json:"due_date,omitempty"`
+	DueDate *Date `json:"due_date,omitempty"`
 	// Type of the transaction event.
 	EventType *EventType `json:"event_type,omitempty"`
 	// Unique ID of the transaction event.
