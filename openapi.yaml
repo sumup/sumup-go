@@ -2475,10 +2475,12 @@ paths:
           description: Merchant not found.
       tags:
         - Members
+      x-codegen:
+        method_name: list
       x-scopes: []
     post:
-      operationId: AddMerchantMember
-      summary: Add member to merchant.
+      operationId: CreateMerchantMember
+      summary: Create a merchant member.
       parameters:
         - name: merchant_code
           in: path
@@ -2539,6 +2541,8 @@ paths:
             Too many invitations sent to that user. The limit is 10 requests per 5 minutes and the Retry-After header is set to the number of minutes until the reset of the limit.
       tags:
         - Members
+      x-codegen:
+        method_name: create
       x-permissions:
         - members_create
       x-scopes: []
@@ -2567,6 +2571,8 @@ paths:
           description: Merchant or member not found.
       tags:
         - Members
+      x-codegen:
+        method_name: delete
       x-permissions:
         - members_delete
       x-scopes: []
@@ -2598,6 +2604,8 @@ paths:
           description: Merchant or member not found.
       tags:
         - Members
+      x-codegen:
+        method_name: get
       x-permissions:
         - members_view
       x-scopes: []
@@ -2664,6 +2672,8 @@ paths:
           description: Cannot update member as some data conflict with existing members.
       tags:
         - Members
+      x-codegen:
+        method_name: update
       x-permissions:
         - members_update
       x-scopes: []
