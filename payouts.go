@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
-	"time"
 )
 
 // FinancialPayout is a schema definition.
@@ -62,7 +61,7 @@ type ListPayoutsParams struct {
 func (p *ListPayoutsParams) QueryValues() url.Values {
 	q := make(url.Values)
 
-	q.Set("end_date", p.EndDate.Format(time.DateOnly))
+	q.Set("end_date", p.EndDate.String())
 
 	if p.Format != nil {
 		q.Set("format", *p.Format)
@@ -76,7 +75,7 @@ func (p *ListPayoutsParams) QueryValues() url.Values {
 		q.Set("order", *p.Order)
 	}
 
-	q.Set("start_date", p.StartDate.Format(time.DateOnly))
+	q.Set("start_date", p.StartDate.String())
 
 	return q
 }
