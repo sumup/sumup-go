@@ -90,8 +90,8 @@ type MembershipUserClassic struct {
 // updating, always submit whole metadata.
 type Metadata map[string]any
 
-// AddMerchantMemberBody is a schema definition.
-type AddMerchantMemberBody struct {
+// CreateMerchantMemberBody is a schema definition.
+type CreateMerchantMemberBody struct {
 	// Object attributes that modifiable only by SumUp applications.
 	Attributes *Attributes `json:"attributes,omitempty"`
 	// Email address of the member to add.
@@ -192,9 +192,9 @@ type ListMerchantMembers200Response struct {
 
 type MembersService service
 
-// ListMerchantMembers: List members
+// List: List members
 // Lists merchant members with their roles and permissions.
-func (s *MembersService) ListMerchantMembers(ctx context.Context, merchantCode string, params ListMerchantMembersParams) (*ListMerchantMembers200Response, error) {
+func (s *MembersService) List(ctx context.Context, merchantCode string, params ListMerchantMembersParams) (*ListMerchantMembers200Response, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/members", merchantCode)
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
@@ -224,8 +224,8 @@ func (s *MembersService) ListMerchantMembers(ctx context.Context, merchantCode s
 	}
 }
 
-// AddMerchantMember: Add member to merchant.
-func (s *MembersService) AddMerchantMember(ctx context.Context, merchantCode string, body AddMerchantMemberBody) (*Member, error) {
+// Create: Create a merchant member.
+func (s *MembersService) Create(ctx context.Context, merchantCode string, body CreateMerchantMemberBody) (*Member, error) {
 	buf := new(bytes.Buffer)
 	if err := json.NewEncoder(buf).Encode(body); err != nil {
 		return nil, fmt.Errorf("encoding json body request failed: %v", err)
@@ -263,9 +263,9 @@ func (s *MembersService) AddMerchantMember(ctx context.Context, merchantCode str
 	}
 }
 
-// DeleteMerchantMember: Delete member
+// Delete: Delete member
 // Deletes member by ID.
-func (s *MembersService) DeleteMerchantMember(ctx context.Context, merchantCode string, memberId string) error {
+func (s *MembersService) Delete(ctx context.Context, merchantCode string, memberId string) error {
 	path := fmt.Sprintf("/v0.1/merchants/%v/members/%v", merchantCode, memberId)
 
 	req, err := s.client.NewRequest(ctx, http.MethodDelete, path, http.NoBody)
@@ -289,9 +289,9 @@ func (s *MembersService) DeleteMerchantMember(ctx context.Context, merchantCode 
 	}
 }
 
-// GetMerchantMember: Get merchant member
+// Get: Get merchant member
 // Returns merchant member details.
-func (s *MembersService) GetMerchantMember(ctx context.Context, merchantCode string, memberId string) (*Member, error) {
+func (s *MembersService) Get(ctx context.Context, merchantCode string, memberId string) (*Member, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/members/%v", merchantCode, memberId)
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
@@ -320,9 +320,9 @@ func (s *MembersService) GetMerchantMember(ctx context.Context, merchantCode str
 	}
 }
 
-// UpdateMerchantMember: Update merchant member
+// Update: Update merchant member
 // Update assigned roles of the member.
-func (s *MembersService) UpdateMerchantMember(ctx context.Context, merchantCode string, memberId string, body UpdateMerchantMemberBody) (*Member, error) {
+func (s *MembersService) Update(ctx context.Context, merchantCode string, memberId string, body UpdateMerchantMemberBody) (*Member, error) {
 	buf := new(bytes.Buffer)
 	if err := json.NewEncoder(buf).Encode(body); err != nil {
 		return nil, fmt.Errorf("encoding json body request failed: %v", err)
