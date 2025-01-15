@@ -38,18 +38,30 @@ type Client struct {
 	// key is the API key or access token used for authorization.
 	key string
 
+	Analytics     *AnalyticsService
 	ApiKeys       *ApiKeysService
+	Attachments   *AttachmentsService
+	Audit         *AuditService
 	Authorization *AuthorizationService
+	Categories    *CategoriesService
 	Checkouts     *CheckoutsService
 	Customers     *CustomersService
+	Expenses      *ExpensesService
+	Export        *ExportService
+	Import        *ImportService
 	Members       *MembersService
 	Merchant      *MerchantService
+	Overview      *OverviewService
+	Payments      *PaymentsService
 	Payouts       *PayoutsService
 	Readers       *ReadersService
 	Receipts      *ReceiptsService
+	Settings      *SettingsService
 	Shared        *SharedService
 	Subaccounts   *SubaccountsService
+	Suppliers     *SuppliersService
 	Transactions  *TransactionsService
+	Vatrates      *VatratesService
 }
 
 // NewClient creates new SumUp API client.
@@ -90,18 +102,30 @@ func (c *Client) WithHTTPClient(client *http.Client) *Client {
 
 func (c *Client) populate() {
 	c.svc.client = c
+	c.Analytics = (*AnalyticsService)(&c.svc)
 	c.ApiKeys = (*ApiKeysService)(&c.svc)
+	c.Attachments = (*AttachmentsService)(&c.svc)
+	c.Audit = (*AuditService)(&c.svc)
 	c.Authorization = (*AuthorizationService)(&c.svc)
+	c.Categories = (*CategoriesService)(&c.svc)
 	c.Checkouts = (*CheckoutsService)(&c.svc)
 	c.Customers = (*CustomersService)(&c.svc)
+	c.Expenses = (*ExpensesService)(&c.svc)
+	c.Export = (*ExportService)(&c.svc)
+	c.Import = (*ImportService)(&c.svc)
 	c.Members = (*MembersService)(&c.svc)
 	c.Merchant = (*MerchantService)(&c.svc)
+	c.Overview = (*OverviewService)(&c.svc)
+	c.Payments = (*PaymentsService)(&c.svc)
 	c.Payouts = (*PayoutsService)(&c.svc)
 	c.Readers = (*ReadersService)(&c.svc)
 	c.Receipts = (*ReceiptsService)(&c.svc)
+	c.Settings = (*SettingsService)(&c.svc)
 	c.Shared = (*SharedService)(&c.svc)
 	c.Subaccounts = (*SubaccountsService)(&c.svc)
+	c.Suppliers = (*SuppliersService)(&c.svc)
 	c.Transactions = (*TransactionsService)(&c.svc)
+	c.Vatrates = (*VatratesService)(&c.svc)
 }
 
 func (c *Client) NewRequest(

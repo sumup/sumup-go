@@ -6,6 +6,191 @@ import (
 	"time"
 )
 
+// SchemasCreateResponse is a schema definition.
+type SchemasCreateResponse struct {
+	Acknowledged *bool  `json:"acknowledged,omitempty"`
+	InsertedId   string `json:"inserted_id"`
+}
+
+// SchemasCurrency: Currency code (ISO 4217)
+type SchemasCurrency string
+
+const (
+	SchemasCurrencyAed SchemasCurrency = "AED"
+	SchemasCurrencyAfn SchemasCurrency = "AFN"
+	SchemasCurrencyAll SchemasCurrency = "ALL"
+	SchemasCurrencyAmd SchemasCurrency = "AMD"
+	SchemasCurrencyAng SchemasCurrency = "ANG"
+	SchemasCurrencyAoa SchemasCurrency = "AOA"
+	SchemasCurrencyAqd SchemasCurrency = "AQD"
+	SchemasCurrencyArs SchemasCurrency = "ARS"
+	SchemasCurrencyAud SchemasCurrency = "AUD"
+	SchemasCurrencyAzn SchemasCurrency = "AZN"
+	SchemasCurrencyBam SchemasCurrency = "BAM"
+	SchemasCurrencyBbd SchemasCurrency = "BBD"
+	SchemasCurrencyBdt SchemasCurrency = "BDT"
+	SchemasCurrencyBgn SchemasCurrency = "BGN"
+	SchemasCurrencyBhd SchemasCurrency = "BHD"
+	SchemasCurrencyBif SchemasCurrency = "BIF"
+	SchemasCurrencyBmd SchemasCurrency = "BMD"
+	SchemasCurrencyBnd SchemasCurrency = "BND"
+	SchemasCurrencyBob SchemasCurrency = "BOB"
+	SchemasCurrencyBrl SchemasCurrency = "BRL"
+	SchemasCurrencyBsd SchemasCurrency = "BSD"
+	SchemasCurrencyBwp SchemasCurrency = "BWP"
+	SchemasCurrencyByr SchemasCurrency = "BYR"
+	SchemasCurrencyBzd SchemasCurrency = "BZD"
+	SchemasCurrencyCad SchemasCurrency = "CAD"
+	SchemasCurrencyCdf SchemasCurrency = "CDF"
+	SchemasCurrencyChf SchemasCurrency = "CHF"
+	SchemasCurrencyClp SchemasCurrency = "CLP"
+	SchemasCurrencyCny SchemasCurrency = "CNY"
+	SchemasCurrencyCop SchemasCurrency = "COP"
+	SchemasCurrencyCrc SchemasCurrency = "CRC"
+	SchemasCurrencyCup SchemasCurrency = "CUP"
+	SchemasCurrencyCve SchemasCurrency = "CVE"
+	SchemasCurrencyCzk SchemasCurrency = "CZK"
+	SchemasCurrencyDjf SchemasCurrency = "DJF"
+	SchemasCurrencyDkk SchemasCurrency = "DKK"
+	SchemasCurrencyDop SchemasCurrency = "DOP"
+	SchemasCurrencyDzd SchemasCurrency = "DZD"
+	SchemasCurrencyEgp SchemasCurrency = "EGP"
+	SchemasCurrencyErn SchemasCurrency = "ERN"
+	SchemasCurrencyEtb SchemasCurrency = "ETB"
+	SchemasCurrencyEur SchemasCurrency = "EUR"
+	SchemasCurrencyFjd SchemasCurrency = "FJD"
+	SchemasCurrencyFkp SchemasCurrency = "FKP"
+	SchemasCurrencyGbp SchemasCurrency = "GBP"
+	SchemasCurrencyGel SchemasCurrency = "GEL"
+	SchemasCurrencyGgp SchemasCurrency = "GGP"
+	SchemasCurrencyGhs SchemasCurrency = "GHS"
+	SchemasCurrencyGip SchemasCurrency = "GIP"
+	SchemasCurrencyGmd SchemasCurrency = "GMD"
+	SchemasCurrencyGnf SchemasCurrency = "GNF"
+	SchemasCurrencyGtq SchemasCurrency = "GTQ"
+	SchemasCurrencyGyd SchemasCurrency = "GYD"
+	SchemasCurrencyHkd SchemasCurrency = "HKD"
+	SchemasCurrencyHnl SchemasCurrency = "HNL"
+	SchemasCurrencyHtg SchemasCurrency = "HTG"
+	SchemasCurrencyHuf SchemasCurrency = "HUF"
+	SchemasCurrencyIdr SchemasCurrency = "IDR"
+	SchemasCurrencyIls SchemasCurrency = "ILS"
+	SchemasCurrencyInr SchemasCurrency = "INR"
+	SchemasCurrencyIqd SchemasCurrency = "IQD"
+	SchemasCurrencyIrr SchemasCurrency = "IRR"
+	SchemasCurrencyIsk SchemasCurrency = "ISK"
+	SchemasCurrencyJmd SchemasCurrency = "JMD"
+	SchemasCurrencyJod SchemasCurrency = "JOD"
+	SchemasCurrencyJpy SchemasCurrency = "JPY"
+	SchemasCurrencyKes SchemasCurrency = "KES"
+	SchemasCurrencyKgs SchemasCurrency = "KGS"
+	SchemasCurrencyKhr SchemasCurrency = "KHR"
+	SchemasCurrencyKmf SchemasCurrency = "KMF"
+	SchemasCurrencyKpw SchemasCurrency = "KPW"
+	SchemasCurrencyKrw SchemasCurrency = "KRW"
+	SchemasCurrencyKwd SchemasCurrency = "KWD"
+	SchemasCurrencyKyd SchemasCurrency = "KYD"
+	SchemasCurrencyKzt SchemasCurrency = "KZT"
+	SchemasCurrencyLak SchemasCurrency = "LAK"
+	SchemasCurrencyLbp SchemasCurrency = "LBP"
+	SchemasCurrencyLkr SchemasCurrency = "LKR"
+	SchemasCurrencyLrd SchemasCurrency = "LRD"
+	SchemasCurrencyLsl SchemasCurrency = "LSL"
+	SchemasCurrencyLyd SchemasCurrency = "LYD"
+	SchemasCurrencyMad SchemasCurrency = "MAD"
+	SchemasCurrencyMdl SchemasCurrency = "MDL"
+	SchemasCurrencyMga SchemasCurrency = "MGA"
+	SchemasCurrencyMkd SchemasCurrency = "MKD"
+	SchemasCurrencyMmk SchemasCurrency = "MMK"
+	SchemasCurrencyMnt SchemasCurrency = "MNT"
+	SchemasCurrencyMop SchemasCurrency = "MOP"
+	SchemasCurrencyMro SchemasCurrency = "MRO"
+	SchemasCurrencyMur SchemasCurrency = "MUR"
+	SchemasCurrencyMvr SchemasCurrency = "MVR"
+	SchemasCurrencyMwk SchemasCurrency = "MWK"
+	SchemasCurrencyMxn SchemasCurrency = "MXN"
+	SchemasCurrencyMyr SchemasCurrency = "MYR"
+	SchemasCurrencyMzn SchemasCurrency = "MZN"
+	SchemasCurrencyNad SchemasCurrency = "NAD"
+	SchemasCurrencyNgn SchemasCurrency = "NGN"
+	SchemasCurrencyNio SchemasCurrency = "NIO"
+	SchemasCurrencyNok SchemasCurrency = "NOK"
+	SchemasCurrencyNpr SchemasCurrency = "NPR"
+	SchemasCurrencyNzd SchemasCurrency = "NZD"
+	SchemasCurrencyOmr SchemasCurrency = "OMR"
+	SchemasCurrencyPab SchemasCurrency = "PAB"
+	SchemasCurrencyPen SchemasCurrency = "PEN"
+	SchemasCurrencyPgk SchemasCurrency = "PGK"
+	SchemasCurrencyPhp SchemasCurrency = "PHP"
+	SchemasCurrencyPkr SchemasCurrency = "PKR"
+	SchemasCurrencyPln SchemasCurrency = "PLN"
+	SchemasCurrencyPyg SchemasCurrency = "PYG"
+	SchemasCurrencyQar SchemasCurrency = "QAR"
+	SchemasCurrencyRon SchemasCurrency = "RON"
+	SchemasCurrencyRsd SchemasCurrency = "RSD"
+	SchemasCurrencyRub SchemasCurrency = "RUB"
+	SchemasCurrencyRwf SchemasCurrency = "RWF"
+	SchemasCurrencySar SchemasCurrency = "SAR"
+	SchemasCurrencySbd SchemasCurrency = "SBD"
+	SchemasCurrencyScr SchemasCurrency = "SCR"
+	SchemasCurrencySdg SchemasCurrency = "SDG"
+	SchemasCurrencySek SchemasCurrency = "SEK"
+	SchemasCurrencySgd SchemasCurrency = "SGD"
+	SchemasCurrencySll SchemasCurrency = "SLL"
+	SchemasCurrencySos SchemasCurrency = "SOS"
+	SchemasCurrencySrd SchemasCurrency = "SRD"
+	SchemasCurrencyStd SchemasCurrency = "STD"
+	SchemasCurrencySyp SchemasCurrency = "SYP"
+	SchemasCurrencySzl SchemasCurrency = "SZL"
+	SchemasCurrencyThb SchemasCurrency = "THB"
+	SchemasCurrencyTjs SchemasCurrency = "TJS"
+	SchemasCurrencyTmt SchemasCurrency = "TMT"
+	SchemasCurrencyTnd SchemasCurrency = "TND"
+	SchemasCurrencyTop SchemasCurrency = "TOP"
+	SchemasCurrencyTry SchemasCurrency = "TRY"
+	SchemasCurrencyTtd SchemasCurrency = "TTD"
+	SchemasCurrencyTwd SchemasCurrency = "TWD"
+	SchemasCurrencyTzs SchemasCurrency = "TZS"
+	SchemasCurrencyUah SchemasCurrency = "UAH"
+	SchemasCurrencyUgx SchemasCurrency = "UGX"
+	SchemasCurrencyUsd SchemasCurrency = "USD"
+	SchemasCurrencyUyu SchemasCurrency = "UYU"
+	SchemasCurrencyUzs SchemasCurrency = "UZS"
+	SchemasCurrencyVef SchemasCurrency = "VEF"
+	SchemasCurrencyVnd SchemasCurrency = "VND"
+	SchemasCurrencyVuv SchemasCurrency = "VUV"
+	SchemasCurrencyWst SchemasCurrency = "WST"
+	SchemasCurrencyXaf SchemasCurrency = "XAF"
+	SchemasCurrencyXcd SchemasCurrency = "XCD"
+	SchemasCurrencyXof SchemasCurrency = "XOF"
+	SchemasCurrencyXpf SchemasCurrency = "XPF"
+	SchemasCurrencyYer SchemasCurrency = "YER"
+	SchemasCurrencyZar SchemasCurrency = "ZAR"
+	SchemasCurrencyZmw SchemasCurrency = "ZMW"
+	SchemasCurrencyZwd SchemasCurrency = "ZWD"
+)
+
+// SchemasDeleteResponse is a schema definition.
+type SchemasDeleteResponse struct {
+	Acknowledged  *bool `json:"acknowledged,omitempty"`
+	MatchedCount  *int  `json:"matched_count,omitempty"`
+	ModifiedCount *int  `json:"modified_count,omitempty"`
+}
+
+// SchemasPaginationResponse is a schema definition.
+type SchemasPaginationResponse struct {
+	Limit  *int `json:"limit,omitempty"`
+	Offset *int `json:"offset,omitempty"`
+	Total  *int `json:"total,omitempty"`
+}
+
+// SchemasUpdateResponse is a schema definition.
+type SchemasUpdateResponse struct {
+	Acknowledged  *bool `json:"acknowledged,omitempty"`
+	MatchedCount  *int  `json:"matched_count,omitempty"`
+	ModifiedCount *int  `json:"modified_count,omitempty"`
+}
+
 // AmountEvent: Amount of the event.
 type AmountEvent float64
 
