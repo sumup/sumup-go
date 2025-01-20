@@ -21,6 +21,10 @@ download:
 	@echo Download go.mod dependencies
 	@go mod download
 
-.PHONE: vulncheck
+.PHONY: vulncheck
 vulncheck: ## Check for Vulnerabilities (make sure you have the tools install: `make install-tools`)
 	govulncheck ./...
+
+.PHONY: generate
+generate: ## Generate latest SDK
+	go-sdk-gen generate --mod github.com/sumup/sumup-go --pkg sumup --name SumUp ./openapi.json
