@@ -2,8 +2,11 @@
 
 # sumup-go
 
+[![Stars](https://img.shields.io/github/stars/sumup/sumup-go?style=social)](https://github.com/sumup/sumup-go/)
 [![Go Reference](https://pkg.go.dev/badge/github.com/sumup/sumup-go.svg)](https://pkg.go.dev/github.com/sumup/sumup-go)
 [![CI Status](https://github.com/sumup/sumup-go/workflows/CI/badge.svg)](https://github.com/sumup/sumup-go/actions/workflows/ci.yml)
+[![License](https://img.shields.io/github/license/sumup/sumup-go)](./LICENSE)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.1%20adopted-ff69b4.svg)](https://github.com/sumup/sumup-go/tree/main/CODE_OF_CONDUCT.md)
 
 </div>
 
