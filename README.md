@@ -74,6 +74,6 @@ client := sumup.NewClient().WithAuth(os.Getenv("SUMUP_KEY"))
 
 Our APIs and their public offering is limited and under heavy development. If you have any questions or inquiries reach out to our support team via the [Contact Form](https://developer.sumup.com/contact/).
 
-For question specifically related to this Golang SDK please use the [Discussions](https://github.com/sumup/sumup-go/discussions) or [Open an Issue](https://github.com/sumup/sumup-go/issues/new).
+For question specifically related to this Golang SDK please [Open an Issue](https://github.com/sumup/sumup-go/issues/new).
 
 `sumup-go` SDK will always support latest 3 version of golang following the Golang [Release Policy](https://go.dev/doc/devel/release).
