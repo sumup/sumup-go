@@ -14,6 +14,8 @@ _**IMPORTANT:** This SDK is under heavy development and subject to breaking chan
 
 The Golang SDK for the SumUp [API](https://developer.sumup.com).
 
+To learn more, check out our [API Reference](https://developer.sumup.com/api) and [Documentation](https://developer.sumup.com).
+
 ## Installation
 
 `sumup-go` is compatible with projects using Go Modules.
