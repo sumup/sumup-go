@@ -15,7 +15,7 @@ env:
   GOLANGCI_LINT_VERSION: v1.62
 
 permissions:
-  contents: read
+  contents: write
   pull-requests: write
 
 jobs:
