@@ -11,7 +11,8 @@ import (
 	"strings"
 )
 
-const version = "0.0.1" // x-release-please-version
+//go:embed .version
+var version string
 
 const (
 	// APIUrl is the URL of our API.
@@ -40,6 +41,7 @@ type Client struct {
 	Authorization *AuthorizationService
 	Checkouts     *CheckoutsService
 	Customers     *CustomersService
+	Expenses      *ExpensesService
 	Members       *MembersService
 	Merchant      *MerchantService
 	Payouts       *PayoutsService
@@ -48,6 +50,7 @@ type Client struct {
 	Shared        *SharedService
 	Subaccounts   *SubaccountsService
 	Transactions  *TransactionsService
+	UiSettings    *UiSettingsService
 }
 
 // NewClient creates new SumUp API client.
@@ -92,6 +95,7 @@ func (c *Client) populate() {
 	c.Authorization = (*AuthorizationService)(&c.svc)
 	c.Checkouts = (*CheckoutsService)(&c.svc)
 	c.Customers = (*CustomersService)(&c.svc)
+	c.Expenses = (*ExpensesService)(&c.svc)
 	c.Members = (*MembersService)(&c.svc)
 	c.Merchant = (*MerchantService)(&c.svc)
 	c.Payouts = (*PayoutsService)(&c.svc)
@@ -100,6 +104,7 @@ func (c *Client) populate() {
 	c.Shared = (*SharedService)(&c.svc)
 	c.Subaccounts = (*SubaccountsService)(&c.svc)
 	c.Transactions = (*TransactionsService)(&c.svc)
+	c.UiSettings = (*UiSettingsService)(&c.svc)
 }
 
 func (c *Client) NewRequest(
