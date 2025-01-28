@@ -81,12 +81,83 @@ func (p *ListPayoutsParams) QueryValues() url.Values {
 	return q
 }
 
+// ListPayoutsV1Params: query parameters for ListPayoutsV1
+type ListPayoutsV1Params struct {
+	// End date (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
+	EndDate Date
+	Format  *string
+	Limit   *int
+	Order   *string
+	// Start date (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
+	StartDate Date
+}
+
+// QueryValues converts [ListPayoutsV1Params] into [url.Values].
+func (p *ListPayoutsV1Params) QueryValues() url.Values {
+	q := make(url.Values)
+
+	q.Set("end_date", p.EndDate.String())
+
+	if p.Format != nil {
+		q.Set("format", *p.Format)
+	}
+
+	if p.Limit != nil {
+		q.Set("limit", strconv.Itoa(*p.Limit))
+	}
+
+	if p.Order != nil {
+		q.Set("order", *p.Order)
+	}
+
+	q.Set("start_date", p.StartDate.String())
+
+	return q
+}
+
 type PayoutsService service
+
+// ListDeprecated: List payouts
+// Lists ordered payouts for the merchant profile.
+func (s *PayoutsService) ListDeprecated(ctx context.Context, params ListPayoutsParams) (*FinancialPayouts, error) {
+	path := fmt.Sprintf("/v0.1/me/financials/payouts")
+
+	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
+	if err != nil {
+		return nil, fmt.Errorf("error building request: %v", err)
+	}
+	req.URL.RawQuery = params.QueryValues().Encode()
+
+	resp, err := s.client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v FinancialPayouts
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
+
+		return &v, nil
+	case http.StatusUnauthorized:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
+}
 
 // List: List payouts
 // Lists ordered payouts for the merchant profile.
-func (s *PayoutsService) List(ctx context.Context, params ListPayoutsParams) (*FinancialPayouts, error) {
-	path := fmt.Sprintf("/v0.1/me/financials/payouts")
+func (s *PayoutsService) List(ctx context.Context, merchantCode string, params ListPayoutsV1Params) (*FinancialPayouts, error) {
+	path := fmt.Sprintf("/v1.0/merchants/%v/payouts", merchantCode)
 
 	req, err := s.client.NewRequest(ctx, http.MethodGet, path, http.NoBody)
 	if err != nil {

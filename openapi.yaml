@@ -67,6 +67,3883 @@ paths:
                 type: object
       tags:
         - Authorization
+  '/expenses/vatrates/{country}':
+    get:
+      operationId: getVatRatesByCountry
+      summary: Get VAT rates
+      description: Returns the VAT rates for a given country
+      parameters:
+        - name: country
+          in: path
+          description: Country code
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-zA-Z]{2}$'
+      responses:
+        '200':
+          description: Response when getting vat rates for a given country
+          content:
+            application/json:
+              example:
+                - defaultTax: false
+                  rate: 0
+                - defaultTax: true
+                  rate: 0.19
+                - defaultTax: false
+                  rate: 0.07
+              schema:
+                description: Response when getting vat rates for a given country
+                type: array
+                items:
+                  properties:
+                    defaultTax:
+                      type: boolean
+                    rate:
+                      description: VAT rate
+                      type: number
+                      maximum: 1
+                      minimum: 0
+                      nullable: true
+                  type: object
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions: []
+      x-scopes: []
+  '/merchants/{merchant_code}/expenses':
+    get:
+      operationId: listAllExpenses
+      summary: List expenses
+      description: List all expenses with pagination and optionally free-text search
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            nullable: true
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+            nullable: true
+        - name: search
+          in: query
+          schema:
+            type: string
+            nullable: true
+        - name: order
+          in: query
+          schema:
+            type: array
+            items:
+              enum:
+                - date
+                - '-date'
+                - number
+                - '-number'
+                - supplierName
+                - '-supplierName'
+                - supplierCountry
+                - '-supplierCountry'
+                - totalGrossAmount
+                - '-totalGrossAmount'
+                - createdAt
+                - '-createdAt'
+              type: string
+            default:
+              - '-date'
+        - name: missing_details
+          in: query
+          schema:
+            type: boolean
+            nullable: true
+        - name: fromDate
+          in: query
+          schema:
+            type: string
+            format: date
+            pattern: '^\d{4}-\d{2}-\d{2}$'
+        - name: toDate
+          in: query
+          schema:
+            type: string
+            format: date
+            pattern: '^\d{4}-\d{2}-\d{2}$'
+        - name: reviewed
+          in: query
+          schema:
+            type: boolean
+            nullable: true
+        - name: personal
+          in: query
+          schema:
+            type: boolean
+            nullable: true
+        - name: paid
+          in: query
+          schema:
+            type: boolean
+            enum:
+              - true
+        - name: unpaid
+          in: query
+          schema:
+            type: boolean
+            enum:
+              - true
+        - name: partial
+          in: query
+          schema:
+            type: boolean
+            enum:
+              - true
+        - name: category_id
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+            nullable: true
+        - name: source_reference
+          in: query
+          schema:
+            type: string
+        - name: source_type
+          in: query
+          schema:
+            type: array
+            items:
+              description: The source type of the expense
+              enum:
+                - manual
+                - ze-card
+                - sumup-bank
+                - ocr
+                - einvoice
+                - import
+              type: string
+            nullable: true
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Response when listing expense data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/.schemas.expense.getList'
+                  pagination:
+                    $ref: '#/components/schemas/.schemas.paginationResponse'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_list
+      x-scopes:
+        - accounting.read
+    post:
+      operationId: newExpense
+      summary: Create expense
+      description: Create a new expense
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: idempotency-key
+          in: header
+          description: A unique key to ensure idempotency of insert operations
+          schema:
+            type: string
+        - name: prefer
+          in: header
+          description: Return the created expense in the response
+          schema:
+            type: string
+            enum:
+              - return=representation
+              - return=minimal
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/.schemas.expense.create'
+      responses:
+        '200':
+          description: Response when creating a new expense
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.createResponse'
+        '201':
+          description: Response when creating a new expense and returning it in the response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.expense.get'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_create
+      x-scopes:
+        - accounting.write
+  '/merchants/{merchant_code}/expenses-attachments':
+    get:
+      operationId: listAllAttachments
+      summary: List attachments
+      description: List all attachments with pagination and optionally free-text search
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            nullable: true
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+            nullable: true
+        - name: search
+          in: query
+          schema:
+            type: string
+            nullable: true
+        - name: order
+          in: query
+          schema:
+            type: array
+            items:
+              enum:
+                - createdAt
+                - '-createdAt'
+                - name
+                - '-name'
+              type: string
+            default:
+              - '-createdAt'
+        - name: expense_id
+          in: query
+          schema:
+            type: string
+        - name: linked
+          in: query
+          schema:
+            type: boolean
+            nullable: true
+        - name: include_public_url
+          in: query
+          schema:
+            type: boolean
+            default: false
+            nullable: true
+        - name: from_created_date
+          in: query
+          schema:
+            type: string
+            format: date
+            pattern: '^\d{4}-\d{2}-\d{2}$'
+        - name: to_created_date
+          in: query
+          schema:
+            type: string
+            format: date
+            pattern: '^\d{4}-\d{2}-\d{2}$'
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Response when listing attachment data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/.schemas.attachment.getWithUrl'
+                  pagination:
+                    $ref: '#/components/schemas/.schemas.paginationResponse'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_attachments_list
+      x-scopes:
+        - accounting.read
+    post:
+      operationId: uploadAttachment
+      summary: Upload attachment
+      description: Upload a single attachment
+      parameters:
+        - name: await
+          in: query
+          description: Whether to wait for the OCR to complete
+          schema:
+            type: boolean
+            default: false
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: content-length
+          in: header
+          required: true
+          schema:
+            type: integer
+            maximum: 5242880
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                eInvoice:
+                  description: Whether the file should be processed as an e-invoice
+                  type: boolean
+                  default: false
+                file:
+                  description: The file to upload
+                  type: string
+                  format: binary
+                ocr:
+                  description: Whether the file should be processed by OCR
+                  type: boolean
+                  default: false
+              required:
+                - file
+      responses:
+        '200':
+          description: Response when successfully uploaded an attachment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.attachment.getWithUrl'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_attachments_create
+      x-scopes:
+        - accounting.write
+  '/merchants/{merchant_code}/expenses-attachments/processing/status/{status}':
+    get:
+      operationId: getAttachmentsByProcessingStatus
+      summary: List attachments by processing status
+      description: List all attachments with a given processing status with pagination
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            nullable: true
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+            nullable: true
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: status
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - pending
+              - completed
+      responses:
+        '200':
+          description: Response when listing attachments data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/.schemas.attachment.get'
+                  pagination:
+                    $ref: '#/components/schemas/.schemas.paginationResponse'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_attachments_list
+      x-scopes:
+        - accounting.read
+  '/merchants/{merchant_code}/expenses-attachments/{id}':
+    delete:
+      operationId: deleteAttachment
+      summary: Delete attachment
+      description: Delete an attachment by it's ID
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Response when successfully deleted an attachment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.deleteResponse'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_attachments_delete
+      x-scopes:
+        - accounting.write
+    get:
+      operationId: getAttachment
+      summary: Get attachment
+      description: Download or get attachment data by it's ID
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Response when getting a single attachment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.attachment.getWithUrl'
+            application/pdf:
+              schema:
+                description: PDF file
+                type: string
+                format: binary
+            application/xml:
+              schema:
+                description: XML file
+                type: string
+                format: binary
+            image/jpeg:
+              schema:
+                description: JPEG image file
+                type: string
+                format: binary
+            image/png:
+              schema:
+                description: PNG image file
+                type: string
+                format: binary
+            text/xml:
+              schema:
+                description: XML file
+                type: string
+                format: binary
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_attachments_view
+      x-scopes:
+        - accounting.read
+  '/merchants/{merchant_code}/expenses-audits':
+    get:
+      operationId: listAllAudits
+      summary: List audits
+      description: List all audit trails
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            nullable: true
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+            nullable: true
+        - name: search
+          in: query
+          schema:
+            type: string
+            nullable: true
+        - name: order
+          in: query
+          schema:
+            type: array
+            items:
+              enum:
+                - createdDate
+                - '-createdDate'
+                - dataId
+                - '-dataId'
+                - method
+                - '-method'
+              type: string
+            default:
+              - '-createdDate'
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Response when listing audit data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/.schemas.audit.get'
+                  pagination:
+                    $ref: '#/components/schemas/.schemas.paginationResponse'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_audits_list
+      x-scopes:
+        - accounting.read
+  '/merchants/{merchant_code}/expenses-audits/users':
+    get:
+      operationId: listAllAuditUsers
+      summary: List audit users
+      description: List all audit trail different users
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            nullable: true
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+            nullable: true
+        - name: search
+          in: query
+          schema:
+            type: string
+            nullable: true
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Response when listing audit data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      properties:
+                        id:
+                          description: The ID of the user
+                          type: string
+                      type: object
+                  pagination:
+                    $ref: '#/components/schemas/.schemas.paginationResponse'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_audits_list
+      x-scopes:
+        - accounting.read
+  '/merchants/{merchant_code}/expenses-audits/users/{id}':
+    get:
+      operationId: listAllAuditsByParamId
+      summary: List audits for user
+      description: List all audit trails for a given user ID
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            nullable: true
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+            nullable: true
+        - name: search
+          in: query
+          schema:
+            type: string
+            nullable: true
+        - name: order
+          in: query
+          schema:
+            type: array
+            items:
+              enum:
+                - createdDate
+                - '-createdDate'
+                - dataId
+                - '-dataId'
+                - method
+                - '-method'
+              type: string
+            default:
+              - '-createdDate'
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Response when listing audit data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/.schemas.audit.get'
+                  pagination:
+                    $ref: '#/components/schemas/.schemas.paginationResponse'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_audits_list
+      x-scopes:
+        - accounting.read
+  '/merchants/{merchant_code}/expenses-audits/{entity}/{id}':
+    get:
+      operationId: listAllEntityAuditsByDataId
+      summary: List audits by dataId
+      description: Get one audit trail by the ID of the entity
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            nullable: true
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+            nullable: true
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: entity
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - expenses
+              - suppliers
+              - categories
+              - settings
+      responses:
+        '200':
+          description: Response when listing audit data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/.schemas.audit.get'
+                  pagination:
+                    $ref: '#/components/schemas/.schemas.paginationResponse'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_audits_list
+      x-scopes:
+        - accounting.read
+  '/merchants/{merchant_code}/expenses-audits/{id}':
+    get:
+      operationId: getOneAudit
+      summary: Get audit
+      description: Get one audit trail by its identification
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Response when listing audit data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.audit.get'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_audits_view
+      x-scopes:
+        - accounting.read
+  '/merchants/{merchant_code}/expenses-categories':
+    get:
+      operationId: getAllCategories
+      summary: List categories
+      description: 'Get all categories (includes default, custom and hidden categories)'
+      parameters:
+        - name: hidden
+          in: query
+          description: 'If true, hidden categories will be included'
+          schema:
+            type: boolean
+            default: false
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            nullable: true
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+            nullable: true
+        - name: search
+          in: query
+          schema:
+            type: string
+            nullable: true
+        - name: order
+          in: query
+          schema:
+            type: array
+            items:
+              enum:
+                - name
+                - '-name'
+              type: string
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/.schemas.category.get'
+                  pagination:
+                    $ref: '#/components/schemas/.schemas.paginationResponse'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_categories_list
+      x-scopes:
+        - accounting.read
+    post:
+      operationId: newCategory
+      summary: Create category
+      description: Create new custom category
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: prefer
+          in: header
+          description: Return the created category in the response
+          schema:
+            type: string
+            enum:
+              - return=representation
+              - return=minimal
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/.schemas.category.create'
+      responses:
+        '200':
+          description: Response when creating a new custom category
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.createResponse'
+        '201':
+          description: Response when creating a new custom category and returning it in the response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.category.get'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_categories_create
+      x-scopes:
+        - accounting.write
+  '/merchants/{merchant_code}/expenses-categories/{id}':
+    delete:
+      operationId: deleteCategory
+      summary: Delete category
+      description: 'Mark a category as deleted (if it was created from a DEFAULT category, the default one will now be visible instead)'
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Response when deleting a category
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.deleteResponse'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_categories_delete
+      x-scopes:
+        - accounting.write
+    get:
+      operationId: getCategoryById
+      summary: Get category
+      description: Get a single category by its ID
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.category.get'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_categories_list
+      x-scopes:
+        - accounting.read
+    patch:
+      operationId: updateCategory
+      summary: Update category
+      description: 'Update an existing category, replacing any provided fields and leaving the rest unchanged'
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/.schemas.category.update'
+      responses:
+        '200':
+          description: Response when updating a category
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.updateResponse'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_categories_update
+      x-scopes:
+        - accounting.write
+  '/merchants/{merchant_code}/expenses-mixpanel/track':
+    post:
+      operationId: trackMixpanel
+      summary: Track mixpanel event
+      description: Track a Mixpanel event with the given event name and properties
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                applicationId:
+                  type: string
+                  enum:
+                    - expense-kafka-connector
+                    - invoices-expenses-ocr
+                    - electronic-expenses-connector
+                eventName:
+                  type: string
+                eventProperties:
+                  description: Event properties are used to track the event in Mixpanel.
+                  type: object
+                  additionalProperties: true
+              additionalProperties: false
+              required:
+                - eventName
+              title: Mixpanel Event
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema: {}
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_list
+      x-scopes:
+        - accounting.write
+  '/merchants/{merchant_code}/expenses-overview/todo/count':
+    get:
+      operationId: getOverviewTodoCount
+      summary: Get overview todo count
+      description: Get a list of ToDo item counts for the overview page
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Response when getting a list of ToDo item counts for the overview page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.overview.todo.count'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_list
+      x-scopes:
+        - accounting.read
+  '/merchants/{merchant_code}/expenses-settings':
+    get:
+      operationId: getSettings
+      summary: Get settings
+      description: Get merchant settings
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Response when getting settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.settings.get'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_list
+      x-scopes:
+        - accounting.read
+    put:
+      operationId: updateSettings
+      summary: Update settings
+      description: Update merchant settings
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/.schemas.settings.update'
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.settings.get'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_create
+      x-scopes:
+        - accounting.write
+  '/merchants/{merchant_code}/expenses-suppliers':
+    get:
+      operationId: listAllSuppliers
+      summary: List suppliers
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            nullable: true
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+            nullable: true
+        - name: country
+          in: query
+          schema:
+            type: string
+            nullable: true
+            pattern: '^[A-Z]{2}$'
+        - name: search
+          in: query
+          schema:
+            type: string
+            nullable: true
+        - name: order
+          in: query
+          schema:
+            type: array
+            items:
+              enum:
+                - name
+                - '-name'
+                - country
+                - '-country'
+                - email
+                - '-email'
+              type: string
+            default:
+              - name
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Response when listing supplier data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/.schemas.supplier.get'
+                  pagination:
+                    $ref: '#/components/schemas/.schemas.paginationResponse'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_suppliers_list
+      x-scopes:
+        - accounting.read
+    post:
+      operationId: newSupplier
+      summary: Create supplier
+      description: Create a new supplier
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: idempotency-key
+          in: header
+          description: A unique key to ensure idempotency of insert operations
+          schema:
+            type: string
+        - name: prefer
+          in: header
+          description: Return the created supplier in the response
+          schema:
+            type: string
+            enum:
+              - return=representation
+              - return=minimal
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/.schemas.supplier.create'
+      responses:
+        '200':
+          description: Response when creating a new supplier
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.createResponse'
+        '201':
+          description: Response when creating a new supplier and returning it in the response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.supplier.get'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_suppliers_create
+      x-scopes:
+        - accounting.write
+  '/merchants/{merchant_code}/expenses-suppliers/overview/{id}':
+    get:
+      operationId: getSupplierOverview
+      summary: Get supplier overview
+      description: Get an overview of a single supplier
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Response when getting a supplier overview
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.supplier.overview.get'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_suppliers_view
+      x-scopes:
+        - accounting.read
+  '/merchants/{merchant_code}/expenses-suppliers/{id}':
+    delete:
+      operationId: deleteSupplier
+      summary: Delete supplier
+      description: Mark a supplier as deleted
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Response when deleting a supplier
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.deleteResponse'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_suppliers_delete
+      x-scopes:
+        - accounting.write
+    get:
+      operationId: getSupplier
+      summary: Get supplier
+      description: Get a single supplier information
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Response when getting a single supplier
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.supplier.get'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_suppliers_view
+      x-scopes:
+        - accounting.read
+    patch:
+      operationId: updateSupplier
+      summary: Edit supplier
+      description: 'Update an existing supplier, replacing any provided fields and leaving the rest unchanged'
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/.schemas.supplier.update'
+      responses:
+        '200':
+          description: Response when updating a supplier
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.updateResponse'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_suppliers_update
+      x-scopes:
+        - accounting.write
+  '/merchants/{merchant_code}/expenses/export/{format}':
+    get:
+      operationId: exportExpenses
+      summary: Export expenses
+      description: Export expenses in multiple formats
+      parameters:
+        - name: fromDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+            pattern: '^\d{4}-\d{2}-\d{2}$'
+        - name: toDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+            pattern: '^\d{4}-\d{2}-\d{2}$'
+        - name: includeReceipts
+          in: query
+          description: Include receipts in the export file
+          schema:
+            type: boolean
+            default: false
+            nullable: true
+        - name: includePersonal
+          in: query
+          description: Include personal expenses in the export file
+          schema:
+            type: boolean
+            default: false
+            nullable: true
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: format
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - csv
+              - xlsx
+              - pdf
+      responses:
+        '200':
+          description: Response when exporting expenses as CSV
+          content:
+            application/pdf:
+              schema:
+                description: PDF document
+                type: string
+                format: binary
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                description: XLSX document
+                type: string
+                format: binary
+            text/csv:
+              schema:
+                description: CSV document
+                type: string
+                format: string
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_export
+      x-scopes:
+        - accounting.read
+  '/merchants/{merchant_code}/expenses/import':
+    post:
+      operationId: importExpenses
+      summary: Import expenses
+      description: Import expenses from a file
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                file:
+                  description: The file to upload
+                  type: string
+                  format: binary
+              required:
+                - file
+      responses:
+        '200':
+          description: Response when importing expenses
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.createManyResponse'
+        '400':
+          description: Response when there is a validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    description: INVALID_IMPORT_ROW
+                    type: string
+                  error:
+                    description: Bad Request
+                    type: string
+                  message:
+                    description: a descriptive message of the validation error
+                    type: string
+                  statusCode:
+                    description: '400'
+                    type: string
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_create
+      x-scopes:
+        - accounting.write
+  '/merchants/{merchant_code}/expenses/import/sample':
+    get:
+      operationId: getImportSample
+      summary: Get import sample
+      description: Get a sample file for importing expenses
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Response when getting a sample import file
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                description: XLSX document
+                type: string
+                format: binary
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_view
+      x-scopes:
+        - accounting.read
+  '/merchants/{merchant_code}/expenses/import/{batchId}':
+    delete:
+      operationId: deleteImportBatch
+      summary: Delete import batch
+      description: Delete a previously imported batch of expenses
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: batchId
+          in: path
+          description: Batch ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Response when deleting an import batch
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.updateResponse'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_delete
+      x-scopes:
+        - accounting.write
+  '/merchants/{merchant_code}/expenses/suppliers/{id}':
+    get:
+      operationId: listAllExpensesBySupplierId
+      summary: Get expenses for supplier
+      description: Returns a list of expenses for a given supplier
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            nullable: true
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+            nullable: true
+        - name: search
+          in: query
+          schema:
+            type: string
+            nullable: true
+        - name: order
+          in: query
+          schema:
+            type: array
+            items:
+              enum:
+                - date
+                - '-date'
+                - number
+                - '-number'
+                - supplierName
+                - '-supplierName'
+                - supplierCountry
+                - '-supplierCountry'
+                - totalGrossAmount
+                - '-totalGrossAmount'
+                - createdAt
+                - '-createdAt'
+              type: string
+            default:
+              - '-date'
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: Supplier ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Response when listing expense data by supplier id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/.schemas.expense.getList'
+                  pagination:
+                    $ref: '#/components/schemas/.schemas.paginationResponse'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_list
+      x-scopes:
+        - accounting.read
+  '/merchants/{merchant_code}/expenses/totals':
+    get:
+      operationId: getExpensesTotalsByCategory
+      summary: Get expenses totals by category
+      description: Get a simple overview of total amount per category on a given time gap
+      parameters:
+        - name: fromDate
+          in: query
+          schema:
+            type: string
+            format: date
+            pattern: '^\d{4}-\d{2}-\d{2}$'
+        - name: toDate
+          in: query
+          schema:
+            type: string
+            format: date
+            pattern: '^\d{4}-\d{2}-\d{2}$'
+        - name: interval
+          in: query
+          schema:
+            type: string
+            enum:
+              - day
+              - weekOfMonth
+              - weekOfYear
+              - month
+              - quarter
+              - year
+        - name: currency
+          in: query
+          schema:
+            $ref: '#/components/schemas/.schemas.currency'
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Response when getting expense totals by category
+          content:
+            application/json:
+              example:
+                currency: EUR
+                totalsByCategories:
+                  - name: Taxes
+                    total: 10000
+                  - name: Marketing
+                    total: 3400
+                totalsOverview:
+                  totalGrossAmount: 13400
+                  totalNetAmount: 10000
+                  totalTaxAmount: 3400
+              schema:
+                description: Response when getting expense totals by category
+                type: object
+                properties:
+                  currency:
+                    $ref: '#/components/schemas/.schemas.currency'
+                  totalsByCategories:
+                    type: array
+                    items:
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        total:
+                          type: integer
+                      type: object
+                  totalsByInterval:
+                    type: array
+                    items:
+                      properties:
+                        interval:
+                          type: object
+                          properties:
+                            day:
+                              type: integer
+                            month:
+                              type: integer
+                            quarter:
+                              type: integer
+                            weekOfMonth:
+                              type: integer
+                            weekOfYear:
+                              type: integer
+                            year:
+                              type: integer
+                        totalGrossAmount:
+                          type: integer
+                        totalNetAmount:
+                          type: integer
+                        totalTaxAmount:
+                          type: integer
+                      type: object
+                  totalsOverview:
+                    type: object
+                    properties:
+                      totalGrossAmount:
+                        type: integer
+                      totalNetAmount:
+                        type: integer
+                      totalTaxAmount:
+                        type: integer
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_list
+      x-scopes:
+        - accounting.read
+  '/merchants/{merchant_code}/expenses/transaction/{id}':
+    get:
+      operationId: getExpenseByTransaction
+      summary: Get expense by transaction id
+      description: Returns a single expense by it's transaction ID
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: Transaction ID
+          required: true
+          schema:
+            type: string
+            example: C29LPKLYPO
+      responses:
+        '200':
+          description: Response when getting a single expense
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.expense.get'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_view
+      x-scopes:
+        - accounting.read
+  '/merchants/{merchant_code}/expenses/{expenseId}/payments/{paymentId}':
+    delete:
+      operationId: deletePayment
+      summary: Delete expense payment
+      description: Remove a payment from an expense
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: paymentId
+          in: path
+          description: payment ID
+          required: true
+          schema:
+            type: string
+        - name: expenseId
+          in: path
+          description: expense ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Response when deleting a payment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.deleteResponse'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_update
+      x-scopes:
+        - accounting.write
+  '/merchants/{merchant_code}/expenses/{expense_id}/payments':
+    patch:
+      operationId: addPayment
+      summary: Create expense payment
+      description: Add new payment to expense
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: expense_id
+          in: path
+          description: expense ID
+          required: true
+          schema:
+            type: string
+        - name: idempotency-key
+          in: header
+          description: A unique key to ensure idempotency of insert operations
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/.schemas.payment.create'
+      responses:
+        '200':
+          description: Response when adding a payment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.updateResponse'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_update
+      x-scopes:
+        - accounting.write
+  '/merchants/{merchant_code}/expenses/{id}':
+    delete:
+      operationId: deleteExpense
+      summary: Delete expense
+      description: Mark a single expense as deleted
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: Expense ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Response when deleting an expense
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.deleteResponse'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_delete
+      x-scopes:
+        - accounting.write
+    get:
+      operationId: getExpense
+      summary: Get expense
+      description: Returns a single expense by it's ID
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: Expense ID
+          required: true
+          schema:
+            type: string
+            example: 5e4a7d1f3c7d6b001b3e2b8b
+      responses:
+        '200':
+          description: Response when getting a single expense
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.expense.get'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_view
+      x-scopes:
+        - accounting.read
+    patch:
+      operationId: updateExpense
+      summary: Update expense
+      description: 'Update an existing expense, replacing any provided fields and leaving the rest unchanged'
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: Expense ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/.schemas.expense.update'
+      responses:
+        '200':
+          description: Response when updating an expense
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/.schemas.updateResponse'
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - Expenses
+      x-permissions:
+        - accounting_expenses_update
+      x-scopes:
+        - accounting.write
+  '/merchants/{merchant_code}/ui-settings':
+    get:
+      operationId: listMerchantUISettings
+      summary: List all ui-settings for a given merchant
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Response when listing UI Settings
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - UI Settings
+      x-permissions:
+        - settings_access
+      x-scopes:
+        - classic
+  '/merchants/{merchant_code}/ui-settings/{flag_name}':
+    delete:
+      operationId: deleteMerchantUISettings
+      summary: Delete UI settings flag for a given merchant
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: flag_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '202':
+          description: Request accepted
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - UI Settings
+      x-permissions:
+        - settings_access
+      x-scopes:
+        - classic
+    get:
+      operationId: getMerchantUISettings
+      summary: Return specific ui-settings for a given merchant
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: flag_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Response when listing UI Settings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  expires_at:
+                    oneOf:
+                      - type: string
+                      - format: date
+                        type: string
+                      - format: date-time
+                        type: string
+                  name:
+                    type: string
+                  value: {}
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - UI Settings
+      x-permissions:
+        - settings_access
+      x-scopes:
+        - classic
+    put:
+      operationId: updateMerchantUISettings
+      summary: Create or update ui settings for a given merchant
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: flag_name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                expires_at:
+                  oneOf:
+                    - format: date
+                      type: string
+                    - format: date-time
+                      type: string
+                value:
+                  description: 'Can be anything: string, number, array, object, etc. (except `null`)'
+              required:
+                - value
+      responses:
+        '201':
+          description: Request created
+        '202':
+          description: Request accepted
+        4XX:
+          description: Request validation error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Bad Request
+                message: Not found
+                statusCode: 400
+              schema:
+                description: Request validation error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                code: ''
+                error: Service Unavailable
+                message: Service Unavailable
+                statusCode: 500
+              schema:
+                description: Internal server error
+                type: object
+                properties:
+                  code:
+                    type: string
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      tags:
+        - UI Settings
+      x-permissions:
+        - settings_access
+      x-scopes:
+        - classic
   /token:
     post:
       operationId: CreateToken
@@ -1664,10 +5541,11 @@ paths:
                     error_message: NOT_AUTHORIZED
               schema:
                 $ref: '#/components/schemas/Error'
+      deprecated: true
       tags:
         - Payouts
       x-codegen:
-        method_name: list
+        method_name: list_deprecated
       x-scopes:
         - user.profile
         - user.profile_readonly
@@ -2477,6 +6355,8 @@ paths:
         - Members
       x-codegen:
         method_name: list
+      x-permissions:
+        - merchant_read
       x-scopes: []
     post:
       operationId: CreateMerchantMember
@@ -3258,6 +7138,86 @@ paths:
         - readers_checkout_create
       x-scopes:
         - readers.write
+  '/v1.0/merchants/{merchant_code}/payouts':
+    get:
+      operationId: ListPayoutsV1
+      summary: List payouts
+      description: Lists ordered payouts for the merchant profile.
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+            example: MC0X0ABC
+        - name: start_date
+          in: query
+          description: 'Start date (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).'
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          description: 'End date (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).'
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: format
+          in: query
+          schema:
+            type: string
+            enum:
+              - json
+              - csv
+        - name: limit
+          in: query
+          schema:
+            type: integer
+        - name: order
+          in: query
+          schema:
+            type: string
+            enum:
+              - desc
+              - asc
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinancialPayouts'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                Invalid_Token:
+                  description: The access token is invalid or has expired.
+                  value:
+                    error_code: NOT_AUTHORIZED
+                    error_message: invalid access token
+                Missing_Token:
+                  description: No access token is provided.
+                  value:
+                    error_code: NOT_AUTHORIZED
+                    message: access token required
+                Not_Authorized_Token:
+                  description: The access token is valid but the application is not authorized.
+                  value:
+                    error_code: NOT_AUTHORIZED
+                    error_message: NOT_AUTHORIZED
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Payouts
+      x-codegen:
+        method_name: list
+      x-scopes:
+        - user.profile
+        - user.profile_readonly
   '/v1.1/merchants/{merchant_code}/bank-accounts':
     get:
       operationId: ListBankAccountsV11
@@ -3628,6 +7588,1390 @@ paths:
         - transactions.history
 components:
   schemas:
+    .schemas.attachment.get:
+      description: File metadata
+      type: object
+      properties:
+        _id:
+          description: The ID of the attachment
+          type: string
+        eInvoice:
+          description: Whether the file should be processed as an e-invoice
+          type: boolean
+          default: false
+        expenseId:
+          description: The ID of the expense this attachment is related to
+          type: string
+        metadata:
+          type: object
+          default:
+            source_type: manual
+          properties:
+            source_reference:
+              description: The source reference of the attachment
+              type: string
+              example: 8ad833be-112e-4977-a838-baaf96a86fc7
+              maxLength: 255
+            source_type:
+              default: manual
+              anyOf:
+                - type: string
+                - description: The source type of the attachment
+                  enum:
+                    - manual
+                    - email
+                  type: string
+        mimeType:
+          anyOf:
+            - type: string
+            - description: The mime type of the file
+              enum:
+                - image/jpeg
+                - image/png
+                - application/pdf
+                - application/xml
+                - text/xml
+              type: string
+        name:
+          description: The name of the file
+          type: string
+          maxLength: 255
+        ocr:
+          description: Whether the file should be processed by OCR
+          type: boolean
+          default: false
+        processingStatus:
+          description: 'The status of the processing, if applicable'
+          type: string
+          enum:
+            - pending
+            - success
+            - error
+        size:
+          description: The size of the file in bytes
+          type: integer
+      title: Attachment response
+    .schemas.attachment.getWithUrl:
+      description: File metadata
+      type: object
+      properties:
+        _id:
+          description: The ID of the attachment
+          type: string
+        eInvoice:
+          description: Whether the file should be processed as an e-invoice
+          type: boolean
+          default: false
+        expenseId:
+          description: The ID of the expense this attachment is related to
+          type: string
+        metadata:
+          type: object
+          default:
+            source_type: manual
+          properties:
+            source_reference:
+              description: The source reference of the attachment
+              type: string
+              example: 8ad833be-112e-4977-a838-baaf96a86fc7
+              maxLength: 255
+            source_type:
+              default: manual
+              anyOf:
+                - type: string
+                - description: The source type of the attachment
+                  enum:
+                    - manual
+                    - email
+                  type: string
+        mimeType:
+          anyOf:
+            - type: string
+            - description: The mime type of the file
+              enum:
+                - image/jpeg
+                - image/png
+                - application/pdf
+                - application/xml
+                - text/xml
+              type: string
+        name:
+          description: The name of the file
+          type: string
+          maxLength: 255
+        ocr:
+          description: Whether the file should be processed by OCR
+          type: boolean
+          default: false
+        processingStatus:
+          description: 'The status of the processing, if applicable'
+          type: string
+          enum:
+            - pending
+            - success
+            - error
+        publicUrl:
+          description: 'A public URL to download the file, which expires after 1 hour'
+          type: string
+        size:
+          description: The size of the file in bytes
+          type: integer
+      title: Attachment response with URL
+    .schemas.audit.get:
+      description: Details of the audit information
+      type: object
+      properties:
+        _id:
+          description: The ID of the audit trail
+          type: string
+        clientId:
+          description: the OAUTH client that issued the JWT token
+          type: string
+        createdAt:
+          description: data of creation
+          type: string
+          format: date-time
+        dataChanged:
+          description: the data that was changed
+          type: object
+        dataId:
+          description: the document identifier of the change
+          type: string
+        entity:
+          description: the entity of the trail
+          type: string
+          enum:
+            - expenses
+            - suppliers
+            - categories
+            - settings
+        expiresAt:
+          description: when this audit trail will be deleted
+          type: string
+          format: date-time
+        ip:
+          description: request IP
+          type: string
+        ips:
+          description: request IPs
+          type: string
+        method:
+          description: http method used
+          type: string
+        reqId:
+          description: request identifier
+          type: string
+        url:
+          description: endpoint used
+          type: string
+        userId:
+          description: user identification
+          type: string
+      title: Audit trail response
+    .schemas.category.create:
+      description: Details of the category
+      type: object
+      properties:
+        description:
+          type: string
+          maxLength: 255
+        hidden:
+          type: boolean
+          default: false
+        name:
+          type: string
+          maxLength: 255
+      additionalProperties: false
+      required:
+        - name
+      title: Category create request
+    .schemas.category.get:
+      description: Details of the category
+      type: object
+      properties:
+        _id:
+          description: The ID of the expense
+          type: string
+        description:
+          type: string
+          maxLength: 255
+        hidden:
+          type: boolean
+          default: false
+        name:
+          type: string
+          maxLength: 255
+        type:
+          description: indicates if the category is a default or custom
+          enum:
+            - CUSTOM
+            - DEFAULT
+      title: Category response
+    .schemas.category.update:
+      description: Details of the category
+      type: object
+      properties:
+        description:
+          type: string
+          maxLength: 255
+        hidden:
+          type: boolean
+        name:
+          type: string
+          maxLength: 255
+      additionalProperties: false
+      title: Category update request
+    .schemas.createManyResponse:
+      type: object
+      properties:
+        acknowledged:
+          type: boolean
+        batchId:
+          type: string
+        insertedCount:
+          type: integer
+      title: CreateManyResponse
+    .schemas.createResponse:
+      type: object
+      properties:
+        acknowledged:
+          type: boolean
+        insertedId:
+          type: string
+      required:
+        - insertedId
+      title: CreateResponse
+    .schemas.currency:
+      description: Currency code (ISO 4217)
+      type: string
+      example: EUR
+      enum:
+        - EUR
+        - AED
+        - AFN
+        - XCD
+        - ALL
+        - AMD
+        - ANG
+        - AOA
+        - AQD
+        - ARS
+        - USD
+        - AUD
+        - AZN
+        - BAM
+        - BBD
+        - BDT
+        - XOF
+        - BGN
+        - BHD
+        - BIF
+        - BMD
+        - BND
+        - BOB
+        - BRL
+        - BSD
+        - INR
+        - NOK
+        - BWP
+        - BYR
+        - BZD
+        - CAD
+        - CDF
+        - XAF
+        - CHF
+        - NZD
+        - CLP
+        - CNY
+        - COP
+        - CRC
+        - CUP
+        - CVE
+        - CZK
+        - DJF
+        - DKK
+        - DOP
+        - DZD
+        - EGP
+        - MAD
+        - ERN
+        - ETB
+        - FJD
+        - FKP
+        - GBP
+        - GEL
+        - GGP
+        - GHS
+        - GIP
+        - GMD
+        - GNF
+        - GTQ
+        - GYD
+        - HKD
+        - HNL
+        - HTG
+        - HUF
+        - IDR
+        - ILS
+        - IQD
+        - IRR
+        - ISK
+        - JMD
+        - JOD
+        - JPY
+        - KES
+        - KGS
+        - KHR
+        - KMF
+        - KPW
+        - KRW
+        - KWD
+        - KYD
+        - KZT
+        - LAK
+        - LBP
+        - LKR
+        - LRD
+        - LSL
+        - LYD
+        - MDL
+        - MGA
+        - MKD
+        - MMK
+        - MNT
+        - MOP
+        - MRO
+        - MUR
+        - MVR
+        - MWK
+        - MXN
+        - MYR
+        - MZN
+        - NAD
+        - XPF
+        - NGN
+        - NIO
+        - NPR
+        - OMR
+        - PAB
+        - PEN
+        - PGK
+        - PHP
+        - PKR
+        - PLN
+        - PYG
+        - QAR
+        - RON
+        - RSD
+        - RUB
+        - RWF
+        - SAR
+        - SBD
+        - SCR
+        - SDG
+        - SEK
+        - SGD
+        - SLL
+        - SOS
+        - SRD
+        - STD
+        - SYP
+        - SZL
+        - THB
+        - TJS
+        - TMT
+        - TND
+        - TOP
+        - TRY
+        - TTD
+        - TWD
+        - TZS
+        - UAH
+        - UGX
+        - UYU
+        - UZS
+        - VEF
+        - VND
+        - VUV
+        - WST
+        - YER
+        - ZAR
+        - ZMW
+        - ZWD
+      title: Currency
+    .schemas.deleteResponse:
+      type: object
+      properties:
+        acknowledged:
+          type: boolean
+        matchedCount:
+          type: integer
+        modifiedCount:
+          type: integer
+      title: DeleteResponse
+    .schemas.expense.create:
+      description: Details of the expense
+      type: object
+      properties:
+        attachments:
+          description: Attachments for the expense (e.g. receipts)
+          type: array
+          items:
+            description: The ID of the attachment
+            type: string
+        details:
+          description: Details of the expense
+          type: object
+          additionalProperties: false
+          properties:
+            currency:
+              $ref: '#/components/schemas/.schemas.currency'
+            date:
+              description: The date when the expense was made
+              type: string
+              format: date
+              pattern: '^\d{4}-\d{2}-\d{2}$'
+            number:
+              description: The number of the expense
+              type: integer
+              minimum: 1
+            supplier:
+              description: Details of the supplier
+              type: object
+              additionalProperties: false
+              properties:
+                address:
+                  description: The address of the supplier
+                  type: string
+                  maxLength: 255
+                country:
+                  description: The country of the supplier
+                  type: string
+                  example: DE
+                  pattern: '^[A-Z]{2}$'
+                email:
+                  description: The email of the supplier
+                  type: string
+                  maxLength: 255
+                id:
+                  description: The ID of the supplier
+                  type: string
+                  nullable: true
+                name:
+                  description: The name of the supplier
+                  type: string
+                  maxLength: 255
+                notes:
+                  description: Observations about the supplier
+                  type: string
+                  maxLength: 4000
+                phone:
+                  description: The phone number of the supplier
+                  type: string
+                  maxLength: 255
+                vatNumber:
+                  description: The VAT number of the supplier
+                  type: string
+                  maxLength: 255
+              required:
+                - name
+          required:
+            - date
+            - supplier
+            - currency
+        lines:
+          description: An array of expense lines
+          type: array
+          items:
+            additionalProperties: false
+            properties:
+              amount:
+                description: 'The gross amount of the expense line in cents (1000 for 10,00)'
+                type: integer
+                example: 1000
+                minimum: 0
+              amountType:
+                type: string
+                enum:
+                  - net
+                  - gross
+              categoryId:
+                description: The ID of the category
+                type: string
+              description:
+                description: A description of the expense line
+                type: string
+                maxLength: 255
+              taxRate:
+                description: The tax rate of the expense line
+                type: number
+                maximum: 1
+                minimum: 0
+                nullable: true
+            required:
+              - description
+              - amountType
+              - amount
+              - categoryId
+            type: object
+          minItems: 1
+        metadata:
+          type: object
+          default: {}
+          additionalProperties: false
+          properties:
+            source_reference:
+              description: The source reference of the expense
+              type: string
+              example: CK9XKYJ5XD
+              maxLength: 255
+            source_type:
+              default: manual
+              anyOf:
+                - type: string
+                - description: The source type of the expense
+                  enum:
+                    - manual
+                    - ze-card
+                    - sumup-bank
+                    - ocr
+                    - einvoice
+                    - import
+                  type: string
+        personal:
+          description: 'Whether the expense is considered personal, and should be excluded from calculations (defaults to false)'
+          type: boolean
+          default: false
+        reviewed:
+          description: 'Whether the expense has been reviewed (defaults to true, only automatic expenses need to be manually reviewed)'
+          type: boolean
+          default: true
+      additionalProperties: false
+      required:
+        - details
+        - lines
+      title: Expense create request
+    .schemas.expense.get:
+      description: Details of the expense
+      type: object
+      properties:
+        _id:
+          description: The ID of the expense
+          type: string
+        attachments:
+          description: Attachments for the expense (e.g. receipts)
+          type: array
+          items:
+            description: The ID of the attachment
+            type: string
+        details:
+          description: Details of the expense
+          type: object
+          properties:
+            currency:
+              $ref: '#/components/schemas/.schemas.currency'
+            date:
+              description: The date when the expense was made
+              type: string
+              format: date
+              pattern: '^\d{4}-\d{2}-\d{2}$'
+            number:
+              description: The number of the expense
+              type: integer
+              minimum: 1
+            supplier:
+              description: Details of the supplier
+              type: object
+              properties:
+                address:
+                  description: The address of the supplier
+                  type: string
+                  maxLength: 255
+                country:
+                  description: The country of the supplier
+                  type: string
+                  example: DE
+                  pattern: '^[A-Z]{2}$'
+                email:
+                  description: The email of the supplier
+                  type: string
+                  maxLength: 255
+                id:
+                  description: The ID of the supplier
+                  type: string
+                  nullable: true
+                name:
+                  description: The name of the supplier
+                  type: string
+                  maxLength: 255
+                notes:
+                  description: Observations about the supplier
+                  type: string
+                  maxLength: 4000
+                phone:
+                  description: The phone number of the supplier
+                  type: string
+                  maxLength: 255
+                vatNumber:
+                  description: The VAT number of the supplier
+                  type: string
+                  maxLength: 255
+        lines:
+          description: An array of expense lines
+          type: array
+          items:
+            properties:
+              amount:
+                description: 'The gross amount of the expense line in cents (1000 for 10,00)'
+                type: integer
+                example: 1000
+                minimum: 0
+              amountType:
+                type: string
+                enum:
+                  - net
+                  - gross
+              categoryId:
+                description: The ID of the category
+                type: string
+              description:
+                description: A description of the expense line
+                type: string
+                maxLength: 255
+              grossAmount:
+                description: 'The gross amount of the expense line in cents (1000 for 10,00)'
+                type: integer
+                example: 1000
+                minimum: 0
+              netAmount:
+                description: 'The net amount of the expense line in cents (1000 for 10,00)'
+                type: integer
+                example: 1000
+                minimum: 0
+              taxAmount:
+                description: 'The tax amount of the expense line in cents (1000 for 10,00)'
+                type: integer
+                example: 1000
+                minimum: 0
+              taxRate:
+                description: The tax rate of the expense line
+                type: number
+                maximum: 1
+                minimum: 0
+                nullable: true
+            type: object
+          minItems: 1
+        metadata:
+          type: object
+          properties:
+            source_reference:
+              description: The source reference of the expense
+              type: string
+              example: CK9XKYJ5XD
+              maxLength: 255
+            source_type:
+              default: manual
+              anyOf:
+                - type: string
+                - description: The source type of the expense
+                  enum:
+                    - manual
+                    - ze-card
+                    - sumup-bank
+                    - ocr
+                    - einvoice
+                    - import
+                  type: string
+        payments:
+          type: object
+          properties:
+            list:
+              description: A list of payments for the expense
+              type: array
+              items:
+                $ref: '#/components/schemas/.schemas.payment.get'
+            unpaidAmount:
+              description: 'The amount of the expense that is still unpaid, this is calculated every-time payments are updated in cents (1000 for 10,00)'
+              type: integer
+        personal:
+          description: 'Whether the expense is considered personal, and should be excluded from calculations (defaults to false)'
+          type: boolean
+          default: false
+        reviewed:
+          description: 'Whether the expense has been reviewed (defaults to true, only automatic expenses need to be manually reviewed)'
+          type: boolean
+          default: true
+        taxGroups:
+          description: An array of tax groups for the expense
+          type: array
+          items:
+            properties:
+              netAmount:
+                description: 'The total net amount of the expense lines with this tax rate in cents (1000 for 10,00)'
+                type: integer
+              taxAmount:
+                description: 'The total tax amount of the expense lines with this tax rate in cents (1000 for 10,00)'
+                type: integer
+              taxRate:
+                description: The tax rate of the expense lines in this group
+                type: number
+                maximum: 1
+                minimum: 0
+                nullable: true
+            type: object
+        totals:
+          description: Totals for the expense
+          type: object
+          properties:
+            grossAmount:
+              description: 'The total gross amount of the expense (sum of all gross amounts) in cents (1000 for 10,00)'
+              type: integer
+            netAmount:
+              description: 'The total net amount of the expense (sum of all net amounts) in cents (1000 for 10,00)'
+              type: integer
+            taxAmount:
+              description: 'The total tax amount of the expense (sum of all tax amounts) in cents (1000 for 10,00)'
+              type: integer
+      title: Expense get one response
+    .schemas.expense.getList:
+      description: Details of the expense
+      type: object
+      properties:
+        _id:
+          description: The ID of the expense
+          type: string
+        attachments:
+          description: Attachments for the expense (e.g. receipts)
+          type: array
+          items:
+            description: The ID of the attachment
+            type: string
+        details:
+          description: Details of the expense
+          type: object
+          properties:
+            currency:
+              $ref: '#/components/schemas/.schemas.currency'
+            date:
+              description: The date when the expense was made
+              type: string
+              format: date
+              pattern: '^\d{4}-\d{2}-\d{2}$'
+            number:
+              description: The number of the expense
+              type: integer
+              minimum: 1
+            supplier:
+              description: Details of the supplier
+              type: object
+              properties:
+                address:
+                  description: The address of the supplier
+                  type: string
+                  maxLength: 255
+                country:
+                  description: The country of the supplier
+                  type: string
+                  example: DE
+                  pattern: '^[A-Z]{2}$'
+                email:
+                  description: The email of the supplier
+                  type: string
+                  maxLength: 255
+                id:
+                  description: The ID of the supplier
+                  type: string
+                  nullable: true
+                name:
+                  description: The name of the supplier
+                  type: string
+                  maxLength: 255
+                notes:
+                  description: Observations about the supplier
+                  type: string
+                  maxLength: 4000
+                phone:
+                  description: The phone number of the supplier
+                  type: string
+                  maxLength: 255
+                vatNumber:
+                  description: The VAT number of the supplier
+                  type: string
+                  maxLength: 255
+        lines:
+          description: An array of expense lines
+          type: array
+          items:
+            properties:
+              amount:
+                description: 'The gross amount of the expense line in cents (1000 for 10,00)'
+                type: integer
+                example: 1000
+                minimum: 0
+              amountType:
+                type: string
+                enum:
+                  - net
+                  - gross
+              categoryId:
+                description: The ID of the category
+                type: string
+              description:
+                description: A description of the expense line
+                type: string
+                maxLength: 255
+              grossAmount:
+                description: 'The gross amount of the expense line in cents (1000 for 10,00)'
+                type: integer
+                example: 1000
+                minimum: 0
+              netAmount:
+                description: 'The net amount of the expense line in cents (1000 for 10,00)'
+                type: integer
+                example: 1000
+                minimum: 0
+              taxAmount:
+                description: 'The tax amount of the expense line in cents (1000 for 10,00)'
+                type: integer
+                example: 1000
+                minimum: 0
+              taxRate:
+                description: The tax rate of the expense line
+                type: number
+                maximum: 1
+                minimum: 0
+                nullable: true
+            type: object
+          minItems: 1
+        metadata:
+          type: object
+          properties:
+            source_reference:
+              description: The source reference of the expense
+              type: string
+              example: CK9XKYJ5XD
+              maxLength: 255
+            source_type:
+              default: manual
+              anyOf:
+                - type: string
+                - description: The source type of the expense
+                  enum:
+                    - manual
+                    - ze-card
+                    - sumup-bank
+                    - ocr
+                    - einvoice
+                    - import
+                  type: string
+        payments:
+          type: object
+          properties:
+            list:
+              description: A list of payments for the expense
+              type: array
+              items:
+                properties:
+                  amount:
+                    description: 'The amount of the payment in cents (1000 for 10,00)'
+                    type: integer
+                  id:
+                    description: The ID of the payment
+                    type: string
+                type: object
+            unpaidAmount:
+              description: 'The amount of the expense that is still unpaid, this is calculated every-time payments are updated in cents (1000 for 10,00)'
+              type: integer
+        personal:
+          description: 'Whether the expense is considered personal, and should be excluded from calculations (defaults to false)'
+          type: boolean
+          default: false
+        reviewed:
+          description: 'Whether the expense has been reviewed (defaults to true, only automatic expenses need to be manually reviewed)'
+          type: boolean
+          default: true
+        taxGroups:
+          description: An array of tax groups for the expense
+          type: array
+          items:
+            properties:
+              netAmount:
+                description: 'The total net amount of the expense lines with this tax rate in cents (1000 for 10,00)'
+                type: integer
+              taxAmount:
+                description: 'The total tax amount of the expense lines with this tax rate in cents (1000 for 10,00)'
+                type: integer
+              taxRate:
+                description: The tax rate of the expense lines in this group
+                type: number
+                maximum: 1
+                minimum: 0
+                nullable: true
+            type: object
+        totals:
+          description: Totals for the expense
+          type: object
+          properties:
+            grossAmount:
+              description: 'The total gross amount of the expense (sum of all gross amounts) in cents (1000 for 10,00)'
+              type: integer
+            netAmount:
+              description: 'The total net amount of the expense (sum of all net amounts) in cents (1000 for 10,00)'
+              type: integer
+            taxAmount:
+              description: 'The total tax amount of the expense (sum of all tax amounts) in cents (1000 for 10,00)'
+              type: integer
+      title: Expense list response
+    .schemas.expense.update:
+      description: Details of the expense
+      type: object
+      properties:
+        attachments:
+          description: Attachments for the expense (e.g. receipts)
+          type: array
+          items:
+            description: The ID of the attachment
+            type: string
+        details:
+          description: Details of the expense
+          type: object
+          additionalProperties: false
+          properties:
+            currency:
+              $ref: '#/components/schemas/.schemas.currency'
+            date:
+              description: The date when the expense was made
+              type: string
+              format: date
+              pattern: '^\d{4}-\d{2}-\d{2}$'
+            number:
+              description: The number of the expense
+              type: integer
+              minimum: 1
+            supplier:
+              description: Details of the supplier
+              type: object
+              additionalProperties: false
+              properties:
+                address:
+                  description: The address of the supplier
+                  type: string
+                  maxLength: 255
+                country:
+                  description: The country of the supplier
+                  type: string
+                  example: DE
+                  pattern: '^[A-Z]{2}$'
+                email:
+                  description: The email of the supplier
+                  type: string
+                  maxLength: 255
+                id:
+                  description: The ID of the supplier
+                  type: string
+                  nullable: true
+                name:
+                  description: The name of the supplier
+                  type: string
+                  maxLength: 255
+                notes:
+                  description: Observations about the supplier
+                  type: string
+                  maxLength: 4000
+                phone:
+                  description: The phone number of the supplier
+                  type: string
+                  maxLength: 255
+                vatNumber:
+                  description: The VAT number of the supplier
+                  type: string
+                  maxLength: 255
+        lines:
+          description: An array of expense lines
+          type: array
+          items:
+            additionalProperties: false
+            properties:
+              amount:
+                description: 'The gross amount of the expense line in cents (1000 for 10,00)'
+                type: integer
+                example: 1000
+                minimum: 0
+              amountType:
+                type: string
+                enum:
+                  - net
+                  - gross
+              categoryId:
+                description: The ID of the category
+                type: string
+              description:
+                description: A description of the expense line
+                type: string
+                maxLength: 255
+              taxRate:
+                description: The tax rate of the expense line
+                type: number
+                maximum: 1
+                minimum: 0
+                nullable: true
+            type: object
+          minItems: 1
+        metadata:
+          type: object
+          additionalProperties: false
+          properties:
+            source_reference:
+              description: The source reference of the expense
+              type: string
+              example: CK9XKYJ5XD
+              maxLength: 255
+            source_type:
+              default: manual
+              anyOf:
+                - type: string
+                - description: The source type of the expense
+                  enum:
+                    - manual
+                    - ze-card
+                    - sumup-bank
+                    - ocr
+                    - einvoice
+                    - import
+                  type: string
+        personal:
+          description: 'Whether the expense is considered personal, and should be excluded from calculations (defaults to false)'
+          type: boolean
+          default: false
+        reviewed:
+          description: 'Whether the expense has been reviewed (defaults to true, only automatic expenses need to be manually reviewed)'
+          type: boolean
+          default: true
+      additionalProperties: false
+      title: Expense update request
+    .schemas.overview.todo.count:
+      type: object
+      properties:
+        attachments:
+          type: object
+          properties:
+            unlinked:
+              type: number
+        expenses:
+          type: object
+          properties:
+            missing_details:
+              type: number
+            unpaid:
+              type: number
+            unreviewed:
+              type: number
+      title: Overview ToDo count response
+    .schemas.paginationResponse:
+      type: object
+      properties:
+        limit:
+          type: integer
+        offset:
+          type: integer
+        total:
+          type: integer
+      title: PaginationResponse
+    .schemas.payment.create:
+      description: A payment for the expense
+      type: object
+      properties:
+        amount:
+          description: 'The amount of the payment in cents (1000 for 10,00)'
+          type: integer
+          example: 1000
+          minimum: 1
+        date:
+          description: The date when the payment was made
+          type: string
+          format: date
+        matchMethod:
+          description: Was this payment manually matched by a merchant or automatically matched by the a service?
+          type: string
+          default: MANUAL
+          enum:
+            - MANUAL
+            - AUTOMATIC
+        notes:
+          description: Notes associated with the payment
+          type: string
+          maxLength: 4000
+          minLength: 1
+        paymentReference:
+          description: The foreign key reference to the payment
+          type: string
+          maxLength: 255
+        paymentSource:
+          description: The source of the payment
+          type: string
+          default: MANUAL
+          enum:
+            - MANUAL
+            - SUMUP_BUSINESS_ACCOUNT
+        paymentType:
+          description: The type of payment
+          type: string
+          default: CASH
+          enum:
+            - CASH
+            - CARD
+            - BANK_TRANSFER
+            - OTHER
+      additionalProperties: false
+      required:
+        - amount
+      title: Payment create request
+    .schemas.payment.get:
+      description: A payment for the expense
+      type: object
+      properties:
+        amount:
+          description: 'The amount of the payment in cents (1000 for 10,00)'
+          type: integer
+          example: 1000
+          minimum: 1
+        date:
+          description: The date when the payment was made
+          type: string
+          format: date
+        id:
+          description: The ID of the payment
+          type: string
+        matchMethod:
+          description: Was this payment manually matched by a merchant or automatically matched by the a service?
+          type: string
+          default: MANUAL
+          enum:
+            - MANUAL
+            - AUTOMATIC
+        notes:
+          description: Notes associated with the payment
+          type: string
+          maxLength: 4000
+          minLength: 1
+        paymentReference:
+          description: The foreign key reference to the payment
+          type: string
+          maxLength: 255
+        paymentSource:
+          description: The source of the payment
+          type: string
+          default: MANUAL
+          enum:
+            - MANUAL
+            - SUMUP_BUSINESS_ACCOUNT
+        paymentType:
+          description: The type of payment
+          type: string
+          default: CASH
+          enum:
+            - CASH
+            - CARD
+            - BANK_TRANSFER
+            - OTHER
+      title: Payment response
+    .schemas.settings.get:
+      type: object
+      properties:
+        incomingReceiptEmailUsername:
+          description: The part before the @ for the incoming email address for expenses
+          type: string
+          pattern: '^[\.A-Za-z0-9_-]{8,20}$'
+      title: Settings response
+    .schemas.settings.update:
+      type: object
+      properties:
+        incomingReceiptEmailUsername:
+          description: The part before the @ for the incoming email address for expenses
+          type: string
+          pattern: '^[\.A-Za-z0-9_-]{8,20}$'
+      additionalProperties: false
+      title: Settings update schema
+    .schemas.supplier.create:
+      description: Details of the supplier
+      type: object
+      properties:
+        address:
+          description: The address of the supplier
+          type: string
+          maxLength: 255
+        country:
+          description: The country of the supplier
+          type: string
+          example: DE
+          pattern: '^[A-Z]{2}$'
+        defaultCategoryId:
+          description: The default category of the supplier
+          type: string
+        email:
+          description: The email of the supplier
+          type: string
+          maxLength: 255
+        name:
+          description: The name of the supplier
+          type: string
+          maxLength: 255
+        notes:
+          description: Observations about the supplier
+          type: string
+          maxLength: 4000
+        phone:
+          description: The phone number of the supplier
+          type: string
+          maxLength: 255
+        vatNumber:
+          description: The VAT number of the supplier
+          type: string
+          maxLength: 255
+      additionalProperties: false
+      required:
+        - name
+        - country
+      title: Supplier create request
+    .schemas.supplier.get:
+      type: object
+      properties:
+        _id:
+          description: The ID of the supplier
+          type: string
+        address:
+          description: The address of the supplier
+          type: string
+          maxLength: 255
+        country:
+          description: The country of the supplier
+          type: string
+          example: DE
+          pattern: '^[A-Z]{2}$'
+        defaultCategoryId:
+          description: The default category of the supplier
+          type: string
+        email:
+          description: The email of the supplier
+          type: string
+          maxLength: 255
+        name:
+          description: The name of the supplier
+          type: string
+          maxLength: 255
+        notes:
+          description: Observations about the supplier
+          type: string
+          maxLength: 4000
+        phone:
+          description: The phone number of the supplier
+          type: string
+          maxLength: 255
+        vatNumber:
+          description: The VAT number of the supplier
+          type: string
+          maxLength: 255
+      title: Supplier response
+    .schemas.supplier.overview.get:
+      description: Details of the supplier
+      type: object
+      properties:
+        _id:
+          description: The ID of the supplier
+          type: string
+        address:
+          description: The address of the supplier
+          type: string
+          maxLength: 255
+        count:
+          description: Total number of expenses
+          type: integer
+        country:
+          description: The country of the supplier
+          type: string
+          example: DE
+          pattern: '^[A-Z]{2}$'
+        defaultCategoryId:
+          description: The default category of the supplier
+          type: string
+        email:
+          description: The email of the supplier
+          type: string
+          maxLength: 255
+        name:
+          description: The name of the supplier
+          type: string
+          maxLength: 255
+        notes:
+          description: Observations about the supplier
+          type: string
+          maxLength: 4000
+        phone:
+          description: The phone number of the supplier
+          type: string
+          maxLength: 255
+        totalGrossAmount:
+          description: 'Total Gross amount of expenses in cents (1000 for 10,00)'
+          type: integer
+        totalNetAmount:
+          description: 'Total Net amount of expenses in cents (1000 for 10,00)'
+          type: integer
+        totalTaxAmount:
+          description: 'Total Tax amount of expenses in cents (1000 for 10,00)'
+          type: integer
+        vatNumber:
+          description: The VAT number of the supplier
+          type: string
+          maxLength: 255
+      title: Supplier overview response
+    .schemas.supplier.update:
+      description: Details of the supplier
+      type: object
+      properties:
+        address:
+          description: The address of the supplier
+          type: string
+          maxLength: 255
+        country:
+          description: The country of the supplier
+          type: string
+          example: DE
+          pattern: '^[A-Z]{2}$'
+        defaultCategoryId:
+          description: The default category of the supplier
+          type: string
+        email:
+          description: The email of the supplier
+          type: string
+          maxLength: 255
+        name:
+          description: The name of the supplier
+          type: string
+          maxLength: 255
+        notes:
+          description: Observations about the supplier
+          type: string
+          maxLength: 4000
+        phone:
+          description: The phone number of the supplier
+          type: string
+          maxLength: 255
+        vatNumber:
+          description: The VAT number of the supplier
+          type: string
+          maxLength: 255
+      additionalProperties: false
+      title: Supplier update request
+    .schemas.updateResponse:
+      type: object
+      properties:
+        acknowledged:
+          type: boolean
+        matchedCount:
+          type: integer
+        modifiedCount:
+          type: integer
+      title: UpdateResponse
     APIKey:
       type: object
       properties:
@@ -6118,6 +11462,7 @@ tags:
     name: API Keys
     x-core-objects:
       - $ref: '#/components/schemas/APIKey'
+  - name: Expenses
   - description: |
       Endpoints for managing merchant sub-accounts (operators).
     name: Subaccounts
@@ -6135,3 +11480,4 @@ tags:
     x-beta: true
     x-core-objects:
       - $ref: '#/components/schemas/Reader'
+  - name: UI Settings
