@@ -11,7 +11,8 @@ import (
 	"strings"
 )
 
-const version = "0.0.1" // x-release-please-version
+//go:embed .version
+var version string
 
 const (
 	// APIUrl is the URL of our API.
