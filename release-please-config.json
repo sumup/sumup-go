@@ -8,6 +8,7 @@
 	"pull-request-title-pattern": "release: ${version}",
 	"versioning": "prerelease",
 	"extra-label": "release",
+	"draft": true,
 	"packages": {
 		".": {
 			"release-type": "go",
