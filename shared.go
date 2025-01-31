@@ -32,8 +32,6 @@ const (
 	CurrencyUsd Currency = "USD"
 )
 
-var _ error = (*Error)(nil)
-
 // Error: Error message structure.
 type Error struct {
 	// Platform code for the error.
@@ -46,7 +44,7 @@ func (e *Error) Error() string {
 	return fmt.Sprintf("error_code=%v, message=%v", e.ErrorCode, e.Message)
 }
 
-var _ error = (*ErrorForbidden)(nil)
+var _ error = (*Error)(nil)
 
 // ErrorForbidden: Error message for forbidden requests.
 type ErrorForbidden struct {
@@ -61,6 +59,8 @@ type ErrorForbidden struct {
 func (e *ErrorForbidden) Error() string {
 	return fmt.Sprintf("error_code=%v, error_message=%v, status_code=%v", e.ErrorCode, e.ErrorMessage, e.StatusCode)
 }
+
+var _ error = (*ErrorForbidden)(nil)
 
 // EventId: Unique ID of the transaction event.
 // Format: int64
