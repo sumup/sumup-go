@@ -598,6 +598,8 @@ type CheckoutSuccessPaymentInstrument struct {
 	Token *string `json:"token,omitempty"`
 }
 
+var _ error = (*DetailsError)(nil)
+
 // DetailsError: Error message structure.
 type DetailsError struct {
 	// Details of the error.
@@ -619,7 +621,7 @@ func (e *DetailsError) Error() string {
 	return fmt.Sprintf("details=%v, failed_constraints=%v, status=%v, title=%v", e.Details, e.FailedConstraints, e.Status, e.Title)
 }
 
-var _ error = (*DetailsError)(nil)
+var _ error = (*ErrorExtended)(nil)
 
 // ErrorExtended is a schema definition.
 type ErrorExtended struct {
@@ -636,8 +638,6 @@ type ErrorExtended struct {
 func (e *ErrorExtended) Error() string {
 	return fmt.Sprintf("error_code=%v, message=%v, param=%v", e.ErrorCode, e.Message, e.Param)
 }
-
-var _ error = (*ErrorExtended)(nil)
 
 // MandatePayload: Mandate is passed when a card is to be tokenized
 type MandatePayload struct {
@@ -1064,34 +1064,13 @@ const (
 	DeactivateCheckout200ResponseTransactionEntryModeCustomerEntry DeactivateCheckout200ResponseTransactionEntryMode = "CUSTOMER_ENTRY"
 )
 
+var _ error = (*ProcessCheckout400Response)(nil)
+
 // ProcessCheckout400Response is a schema definition.
 type ProcessCheckout400Response json.RawMessage
 
 func (e *ProcessCheckout400Response) Error() string {
 	return fmt.Sprintf("")
-}
-
-var _ error = (*ProcessCheckout400Response)(nil)
-
-type ProcessCheckoutResponse struct {
-	CheckoutSuccess  *CheckoutSuccess
-	CheckoutAccepted *CheckoutAccepted
-}
-
-func (r *ProcessCheckoutResponse) AsCheckoutSuccess() (*CheckoutSuccess, bool) {
-	if r.CheckoutSuccess != nil {
-		return r.CheckoutSuccess, true
-	}
-
-	return nil, false
-}
-
-func (r *ProcessCheckoutResponse) AsCheckoutAccepted() (*CheckoutAccepted, bool) {
-	if r.CheckoutAccepted != nil {
-		return r.CheckoutAccepted, true
-	}
-
-	return nil, false
 }
 
 type CheckoutsService service
@@ -1343,7 +1322,7 @@ func (s *CheckoutsService) Get(ctx context.Context, id string) (*CheckoutSuccess
 // resource initiated in the `Create a checkout` endpoint.
 //
 // Follow this request with `Retrieve a checkout` to confirm its status.
-func (s *CheckoutsService) Process(ctx context.Context, id string, body ProcessCheckoutBody) (*ProcessCheckoutResponse, error) {
+func (s *CheckoutsService) Process(ctx context.Context, id string, body ProcessCheckoutBody) (*CheckoutSuccess, error) {
 	buf := new(bytes.Buffer)
 	if err := json.NewEncoder(buf).Encode(body); err != nil {
 		return nil, fmt.Errorf("encoding json body request failed: %v", err)
@@ -1369,18 +1348,14 @@ func (s *CheckoutsService) Process(ctx context.Context, id string, body ProcessC
 			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}
 
-		return &ProcessCheckoutResponse{
-			CheckoutSuccess: &v,
-		}, nil
+		return &v, nil
 	case http.StatusAccepted:
 		var v CheckoutAccepted
 		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
 			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}
 
-		return &ProcessCheckoutResponse{
-			CheckoutAccepted: &v,
-		}, nil
+		return &v, nil
 	case http.StatusBadRequest:
 		var apiErr ProcessCheckout400Response
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {

@@ -273,6 +273,8 @@ type ListReaders200Response struct {
 	Items []Reader `json:"items"`
 }
 
+var _ error = (*CreateReaderTerminate422Response)(nil)
+
 // CreateReaderTerminate422Response is a schema definition.
 type CreateReaderTerminate422Response struct {
 	Errors *CreateReaderTerminate422ResponseErrors `json:"errors,omitempty"`
@@ -285,7 +287,7 @@ func (e *CreateReaderTerminate422Response) Error() string {
 	return fmt.Sprintf("errors=%v", e.Errors)
 }
 
-var _ error = (*CreateReaderTerminate422Response)(nil)
+var _ error = (*CreateReaderTerminate500Response)(nil)
 
 // CreateReaderTerminate500Response is a schema definition.
 type CreateReaderTerminate500Response struct {
@@ -301,7 +303,7 @@ func (e *CreateReaderTerminate500Response) Error() string {
 	return fmt.Sprintf("errors=%v", e.Errors)
 }
 
-var _ error = (*CreateReaderTerminate500Response)(nil)
+var _ error = (*CreateReaderTerminate502Response)(nil)
 
 // CreateReaderTerminate502Response is a schema definition.
 type CreateReaderTerminate502Response struct {
@@ -317,7 +319,7 @@ func (e *CreateReaderTerminate502Response) Error() string {
 	return fmt.Sprintf("errors=%v", e.Errors)
 }
 
-var _ error = (*CreateReaderTerminate502Response)(nil)
+var _ error = (*CreateReaderTerminate504Response)(nil)
 
 // CreateReaderTerminate504Response is a schema definition.
 type CreateReaderTerminate504Response struct {
@@ -333,8 +335,6 @@ func (e *CreateReaderTerminate504Response) Error() string {
 	return fmt.Sprintf("errors=%v", e.Errors)
 }
 
-var _ error = (*CreateReaderTerminate504Response)(nil)
-
 // CreateReaderCheckout201Response is a schema definition.
 type CreateReaderCheckout201Response struct {
 	Data *CreateReaderCheckout201ResponseData `json:"data,omitempty"`
@@ -347,6 +347,8 @@ type CreateReaderCheckout201ResponseData struct {
 	// Format: uuid
 	ClientTransactionId *string `json:"client_transaction_id,omitempty"`
 }
+
+var _ error = (*CreateReaderCheckout400Response)(nil)
 
 // CreateReaderCheckout400Response is a schema definition.
 type CreateReaderCheckout400Response struct {
@@ -362,7 +364,7 @@ func (e *CreateReaderCheckout400Response) Error() string {
 	return fmt.Sprintf("errors=%v", e.Errors)
 }
 
-var _ error = (*CreateReaderCheckout400Response)(nil)
+var _ error = (*CreateReaderCheckout422Response)(nil)
 
 // CreateReaderCheckout422Response is a schema definition.
 type CreateReaderCheckout422Response struct {
@@ -376,7 +378,7 @@ func (e *CreateReaderCheckout422Response) Error() string {
 	return fmt.Sprintf("errors=%v", e.Errors)
 }
 
-var _ error = (*CreateReaderCheckout422Response)(nil)
+var _ error = (*CreateReaderCheckout500Response)(nil)
 
 // CreateReaderCheckout500Response is a schema definition.
 type CreateReaderCheckout500Response struct {
@@ -392,7 +394,7 @@ func (e *CreateReaderCheckout500Response) Error() string {
 	return fmt.Sprintf("errors=%v", e.Errors)
 }
 
-var _ error = (*CreateReaderCheckout500Response)(nil)
+var _ error = (*CreateReaderCheckout502Response)(nil)
 
 // CreateReaderCheckout502Response is a schema definition.
 type CreateReaderCheckout502Response struct {
@@ -408,7 +410,7 @@ func (e *CreateReaderCheckout502Response) Error() string {
 	return fmt.Sprintf("errors=%v", e.Errors)
 }
 
-var _ error = (*CreateReaderCheckout502Response)(nil)
+var _ error = (*CreateReaderCheckout504Response)(nil)
 
 // CreateReaderCheckout504Response is a schema definition.
 type CreateReaderCheckout504Response struct {
@@ -423,8 +425,6 @@ type CreateReaderCheckout504ResponseErrors struct {
 func (e *CreateReaderCheckout504Response) Error() string {
 	return fmt.Sprintf("errors=%v", e.Errors)
 }
-
-var _ error = (*CreateReaderCheckout504Response)(nil)
 
 type ReadersService service
 
