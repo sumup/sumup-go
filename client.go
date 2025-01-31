@@ -11,9 +11,6 @@ import (
 	"strings"
 )
 
-//go:embed .version
-var version string
-
 const (
 	// APIUrl is the URL of our API.
 	APIUrl = "https://api.sumup.com"

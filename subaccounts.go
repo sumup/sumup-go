@@ -13,8 +13,6 @@ import (
 	"time"
 )
 
-var _ error = (*CompatError)(nil)
-
 // CompatError: Error
 type CompatError struct {
 	ErrorCode string `json:"error_code"`
@@ -24,6 +22,8 @@ type CompatError struct {
 func (e *CompatError) Error() string {
 	return fmt.Sprintf("error_code=%v, message=%v", e.ErrorCode, e.Message)
 }
+
+var _ error = (*CompatError)(nil)
 
 // Operator is a schema definition.
 type Operator struct {

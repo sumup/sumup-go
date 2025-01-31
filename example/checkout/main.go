@@ -40,5 +40,11 @@ func main() {
 		return
 	}
 
-	log.Printf("[INFO] checkout processed: id=%q, transaction_id=%q", *checkoutSuccess.Id, string(*(*checkoutSuccess.Transactions)[0].Id))
+	if accepted, ok := checkoutSuccess.AsCheckoutSuccess(); ok {
+		log.Printf("[INFO] checkout success: id=%q, transaction_id=%q", *accepted.Id, *(*accepted.Transactions)[0].Id)
+	}
+
+	if accepted, ok := checkoutSuccess.AsCheckoutAccepted(); ok {
+		log.Printf("[INFO] checkout accepted: redirect_to=%q", *accepted.NextStep.RedirectUrl)
+	}
 }
