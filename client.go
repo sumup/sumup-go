@@ -11,8 +11,6 @@ import (
 	"strings"
 )
 
-const version = "0.0.1" // x-release-please-version
-
 const (
 	// APIUrl is the URL of our API.
 	APIUrl = "https://api.sumup.com"

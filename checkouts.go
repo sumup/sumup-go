@@ -200,6 +200,43 @@ const (
 	CheckoutTransactionEntryModeCustomerEntry CheckoutTransactionEntryMode = "CUSTOMER_ENTRY"
 )
 
+// CheckoutAccepted: 3DS Response
+type CheckoutAccepted struct {
+	// Required action processing 3D Secure payments.
+	NextStep *CheckoutAcceptedNextStep `json:"next_step,omitempty"`
+}
+
+// CheckoutAcceptedNextStep: Required action processing 3D Secure payments.
+type CheckoutAcceptedNextStep struct {
+	// Indicates allowed mechanisms for redirecting an end user. If both values are provided to ensure a redirect takes
+	// place in either.
+	Mechanism *[]CheckoutAcceptedNextStepMechanism `json:"mechanism,omitempty"`
+	// Method used to complete the redirect.
+	Method *string `json:"method,omitempty"`
+	// Contains parameters essential for form redirection. Number of object keys and their content can vary.
+	Payload *CheckoutAcceptedNextStepPayload `json:"payload,omitempty"`
+	// Refers to a url where the end user is redirected once the payment processing completes.
+	RedirectUrl *string `json:"redirect_url,omitempty"`
+	// Where the end user is redirected.
+	Url *string `json:"url,omitempty"`
+}
+
+// CheckoutAcceptedNextStepMechanism is a schema definition.
+type CheckoutAcceptedNextStepMechanism string
+
+const (
+	CheckoutAcceptedNextStepMechanismBrowser CheckoutAcceptedNextStepMechanism = "browser"
+	CheckoutAcceptedNextStepMechanismIframe  CheckoutAcceptedNextStepMechanism = "iframe"
+)
+
+// CheckoutAcceptedNextStepPayload: Contains parameters essential for form redirection. Number of object keys
+// and their content can vary.
+type CheckoutAcceptedNextStepPayload struct {
+	Md      *interface{} `json:"md,omitempty"`
+	PaReq   *interface{} `json:"pa_req,omitempty"`
+	TermUrl *interface{} `json:"term_url,omitempty"`
+}
+
 // CheckoutCreateRequest: Details of the payment checkout.
 type CheckoutCreateRequest struct {
 	// Amount of the payment.
@@ -1307,6 +1344,13 @@ func (s *CheckoutsService) Process(ctx context.Context, id string, body ProcessC
 	switch resp.StatusCode {
 	case http.StatusOK:
 		var v CheckoutSuccess
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
+
+		return &v, nil
+	case http.StatusAccepted:
+		var v CheckoutAccepted
 		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
 			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}

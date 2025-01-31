@@ -824,6 +824,12 @@ paths:
                       url: 'https://r3.girogate.de/ti/simideal'
               schema:
                 $ref: '#/components/schemas/CheckoutSuccess'
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckoutAccepted'
         '400':
           description: Bad Request
           content:
@@ -1664,10 +1670,11 @@ paths:
                     error_message: NOT_AUTHORIZED
               schema:
                 $ref: '#/components/schemas/Error'
+      deprecated: true
       tags:
         - Payouts
       x-codegen:
-        method_name: list
+        method_name: list_deprecated
       x-scopes:
         - user.profile
         - user.profile_readonly
@@ -2247,7 +2254,9 @@ paths:
       tags:
         - API Keys
       x-permissions:
-        - api_keys_list
+        - object_id_param: merchant_code
+          object_type: merchant
+          relation: api_keys_list
       x-scopes:
         - api_keys
     post:
@@ -2288,7 +2297,9 @@ paths:
       tags:
         - API Keys
       x-permissions:
-        - api_keys_create
+        - object_id_param: merchant_code
+          object_type: merchant
+          relation: api_keys_create
       x-scopes:
         - 'api_keys:write'
   '/v0.1/merchants/{merchant_code}/api-keys/{key_id}':
@@ -2316,7 +2327,9 @@ paths:
       tags:
         - API Keys
       x-permissions:
-        - api_keys_delete
+        - object_id_param: merchant_code
+          object_type: merchant
+          relation: api_keys_delete
       x-scopes:
         - 'api_keys:write'
     get:
@@ -2347,7 +2360,9 @@ paths:
       tags:
         - API Keys
       x-permissions:
-        - api_keys_view
+        - object_id_param: merchant_code
+          object_type: merchant
+          relation: api_keys_view
       x-scopes:
         - api_keys
     put:
@@ -2391,7 +2406,9 @@ paths:
       tags:
         - API Keys
       x-permissions:
-        - api_keys_update
+        - object_id_param: merchant_code
+          object_type: merchant
+          relation: api_keys_update
       x-scopes:
         - 'api_keys:write'
   '/v0.1/merchants/{merchant_code}/members':
@@ -2477,6 +2494,10 @@ paths:
         - Members
       x-codegen:
         method_name: list
+      x-permissions:
+        - object_id_param: merchant_code
+          object_type: merchant
+          relation: merchant_read
       x-scopes: []
     post:
       operationId: CreateMerchantMember
@@ -2544,7 +2565,9 @@ paths:
       x-codegen:
         method_name: create
       x-permissions:
-        - members_create
+        - object_id_param: merchant_code
+          object_type: merchant
+          relation: members_create
       x-scopes: []
   '/v0.1/merchants/{merchant_code}/members/{member_id}':
     delete:
@@ -2574,7 +2597,9 @@ paths:
       x-codegen:
         method_name: delete
       x-permissions:
-        - members_delete
+        - object_id_param: merchant_code
+          object_type: merchant
+          relation: members_delete
       x-scopes: []
     get:
       operationId: GetMerchantMember
@@ -2607,7 +2632,9 @@ paths:
       x-codegen:
         method_name: get
       x-permissions:
-        - members_view
+        - object_id_param: merchant_code
+          object_type: merchant
+          relation: members_view
       x-scopes: []
     put:
       operationId: UpdateMerchantMember
@@ -2675,7 +2702,9 @@ paths:
       x-codegen:
         method_name: update
       x-permissions:
-        - members_update
+        - object_id_param: merchant_code
+          object_type: merchant
+          relation: members_update
       x-scopes: []
   '/v0.1/merchants/{merchant_code}/payment-methods':
     get:
@@ -2804,7 +2833,9 @@ paths:
       x-codegen:
         method_name: list
       x-permissions:
-        - readers_list
+        - object_id_param: merchant_code
+          object_type: merchant
+          relation: readers_list
       x-scopes:
         - readers.read
     post:
@@ -2855,7 +2886,9 @@ paths:
       x-codegen:
         method_name: create
       x-permissions:
-        - readers_create
+        - object_id_param: merchant_code
+          object_type: merchant
+          relation: readers_create
       x-scopes:
         - readers.write
   '/v0.1/merchants/{merchant_code}/readers/{id}':
@@ -2885,7 +2918,9 @@ paths:
       tags:
         - Readers
       x-permissions:
-        - readers_delete
+        - object_id_param: merchant_code
+          object_type: merchant
+          relation: readers_delete
       x-scopes:
         - readers.write
     get:
@@ -2942,7 +2977,9 @@ paths:
       x-codegen:
         method_name: get
       x-permissions:
-        - readers_view
+        - object_id_param: merchant_code
+          object_type: merchant
+          relation: readers_view
       x-scopes:
         - readers.read
     patch:
@@ -2987,7 +3024,9 @@ paths:
       x-codegen:
         method_name: update
       x-permissions:
-        - readers_update
+        - object_id_param: merchant_code
+          object_type: merchant
+          relation: readers_update
       x-scopes:
         - readers.write
   '/v0.1/merchants/{merchant_code}/readers/{id}/checkout':
@@ -3258,6 +3297,86 @@ paths:
         - readers_checkout_create
       x-scopes:
         - readers.write
+  '/v1.0/merchants/{merchant_code}/payouts':
+    get:
+      operationId: ListPayoutsV1
+      summary: List payouts
+      description: Lists ordered payouts for the merchant profile.
+      parameters:
+        - name: merchant_code
+          in: path
+          required: true
+          schema:
+            type: string
+            example: MC0X0ABC
+        - name: start_date
+          in: query
+          description: 'Start date (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).'
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          description: 'End date (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).'
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: format
+          in: query
+          schema:
+            type: string
+            enum:
+              - json
+              - csv
+        - name: limit
+          in: query
+          schema:
+            type: integer
+        - name: order
+          in: query
+          schema:
+            type: string
+            enum:
+              - desc
+              - asc
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinancialPayouts'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                Invalid_Token:
+                  description: The access token is invalid or has expired.
+                  value:
+                    error_code: NOT_AUTHORIZED
+                    error_message: invalid access token
+                Missing_Token:
+                  description: No access token is provided.
+                  value:
+                    error_code: NOT_AUTHORIZED
+                    message: access token required
+                Not_Authorized_Token:
+                  description: The access token is valid but the application is not authorized.
+                  value:
+                    error_code: NOT_AUTHORIZED
+                    error_message: NOT_AUTHORIZED
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Payouts
+      x-codegen:
+        method_name: list
+      x-scopes:
+        - user.profile
+        - user.profile_readonly
   '/v1.1/merchants/{merchant_code}/bank-accounts':
     get:
       operationId: ListBankAccountsV11
@@ -4184,6 +4303,44 @@ components:
           example: '2020-02-29T10:56:56+00:00'
           nullable: true
       title: Checkout
+    CheckoutAccepted:
+      description: 3DS Response
+      type: object
+      properties:
+        next_step:
+          description: Required action processing 3D Secure payments.
+          type: object
+          properties:
+            mechanism:
+              description: Indicates allowed mechanisms for redirecting an end user. If both values are provided to ensure a redirect takes place in either.
+              type: array
+              items:
+                enum:
+                  - iframe
+                  - browser
+                type: string
+            method:
+              description: Method used to complete the redirect.
+              type: string
+              example: POST
+            payload:
+              description: Contains parameters essential for form redirection. Number of object keys and their content can vary.
+              type: object
+              properties:
+                MD:
+                  example: b1a536c0-29b9-11eb-adc1-0242ac120002
+                PaReq:
+                  example: eJxVUttu2zAM/RXDr4MjyY5dO6BVuE27FZuDZHGG9VGRmMSFb/Wljff1k9KkF0APPCR1eHQouD6WhfWCbZfXVWyzCbUtrGSt8mof25vs3gltq+tFpURRVxjbI3b2NYfs0CLO1yiHFjmk2HVij1auYrsRW1+F0U4qZxfKwJlur4QTYcQcJoIdc+XO2/poc1gmv/GZw3k216MnLpAL1JytPIiq5yDk883Dgk+DwPV9IGcIJbYPc84o1Ye6lHqu5wVA3tJQiRL5eiiHxlqKscSq76xfeZn3qICciiDroerbkYeuvnYBMLQFP/R9MyOkM9cnCoGYJJAPScvBRJ0mOeaKr/6l08XT6jXN7tx0vvHSbOMtsj1dzB9jIKYDlOiRu1omYyy0WDCj0YxFQE55EKWZzj2f6ee9xdCYEcmnwucEaN9bvaeRR1ehFn9BgMdGr0l3aCvfYyAfem9/GENlrz36ufpTBPTv07r8lm3qpPiOo1y/7u+SJImNzacmw5hrX1wt/kRpABBDQ84bJOf16+jLt/gPhUvGGw==
+                TermUrl:
+                  example: 'https://api.sumup.com/v0.1/checkouts/e552de3b-1777-4c91-bdb8-756967678572/complete_payment'
+            redirect_url:
+              description: Refers to a url where the end user is redirected once the payment processing completes.
+              type: string
+              example: 'https://mysite.com/completed_purchase'
+            url:
+              description: Where the end user is redirected.
+              type: string
+              example: 'https://dummy-3ds-gateway.com/cap?RID=1233&VAA=A'
     CheckoutCreateRequest:
       description: Details of the payment checkout.
       type: object
