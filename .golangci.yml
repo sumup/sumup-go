@@ -1,10 +1,11 @@
 run:
   timeout: 3m
-  skip-dirs-use-default: true
 
 issues:
+  uniq-by-line: true
   max-per-linter: 0
   max-same-issues: 0
+  exclude-dirs-use-default: true
   exclude-rules:
     - path: _test\.go
       linters:
@@ -23,7 +24,6 @@ issues:
         - unparam
 
 output:
-  uniq-by-line: true
   sort-results: true
 
 linters:
@@ -36,7 +36,6 @@ linters:
     - errcheck
     - errorlint
     - exhaustive
-    - exportloopref
     - gocritic
     - gofmt
     - goimports
@@ -44,10 +43,10 @@ linters:
     - goprintffuncname
     - gosec
     - gosimple
+    - gosimple
     - govet
     - ineffassign
     - makezero
-    - megacheck
     - misspell
     - nakedret
     - nakedret
@@ -59,15 +58,13 @@ linters:
     - rowserrcheck
     - sqlclosecheck
     - staticcheck
-    # Disabled until we have proper camel-casing with initialisms
-    # See: https://golangci-lint.run/usage/linters/#stylecheck
-    # - stylecheck
+    - staticcheck
+    - stylecheck
     - typecheck
     - unconvert
     - unparam
     - unused
-    - vet
-    - vetshadow
+    - unused
     - wastedassign
     - whitespace
 
@@ -119,7 +116,6 @@ linters-settings:
   gosimple:
     checks: ["all"]
   govet:
-    check-shadowing: true
     enable-all: true
     disable:
       - fieldalignment
