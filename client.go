@@ -34,18 +34,17 @@ type Client struct {
 	// key is the API key or access token used for authorization.
 	key string
 
-	ApiKeys       *ApiKeysService
-	Authorization *AuthorizationService
-	Checkouts     *CheckoutsService
-	Customers     *CustomersService
-	Members       *MembersService
-	Merchant      *MerchantService
-	Payouts       *PayoutsService
-	Readers       *ReadersService
-	Receipts      *ReceiptsService
-	Shared        *SharedService
-	Subaccounts   *SubaccountsService
-	Transactions  *TransactionsService
+	ApiKeys      *ApiKeysService
+	Checkouts    *CheckoutsService
+	Customers    *CustomersService
+	Members      *MembersService
+	Merchant     *MerchantService
+	Payouts      *PayoutsService
+	Readers      *ReadersService
+	Receipts     *ReceiptsService
+	Shared       *SharedService
+	Subaccounts  *SubaccountsService
+	Transactions *TransactionsService
 }
 
 // NewClient creates new SumUp API client.
@@ -87,7 +86,6 @@ func (c *Client) WithHTTPClient(client *http.Client) *Client {
 func (c *Client) populate() {
 	c.svc.client = c
 	c.ApiKeys = (*ApiKeysService)(&c.svc)
-	c.Authorization = (*AuthorizationService)(&c.svc)
 	c.Checkouts = (*CheckoutsService)(&c.svc)
 	c.Customers = (*CustomersService)(&c.svc)
 	c.Members = (*MembersService)(&c.svc)
