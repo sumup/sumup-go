@@ -49,27 +49,28 @@ import (
 	"os"
 
 	"github.com/sumup/sumup-go"
+	"github.com/sumup/sumup-go/merchant"
 )
 
 func main() {
-	client := sumup.NewClient().WithAuth(os.Getenv("SUMUP_KEY"))
+	client := sumup.NewClient()
 
-	account, err := client.Merchant.GetAccount(context.Background(), sumup.GetAccountParams{})
+	account, err := client.Merchant.GetAccount(context.Background(), merchant.GetAccountParams{})
 	if err != nil {
-		fmt.Printf("get merchant account: %s", err.Error())
+		fmt.Printf("[ERROR] get merchant account: %v\n", err)
 		return
 	}
 
-	fmt.Printf("authorized for merchant %q", *account.MerchantProfile.MerchantCode)
+	fmt.Printf("[INFO] merchant profile: %+v\n", account.MerchantProfile)
 }
 ```
 
 ## Authentication
 
-The easiest form of authenticating with SumUp APIs is using [API keys](https://developer.sumup.com/docs/online-payments/introduction/authorization/#api-keys). You can create API keys in the [API key section](https://developer.sumup.com/protected/api-keys/) of the developer portal. Store them securely and use them with:
+The easiest form of authenticating with SumUp APIs is using [API keys](https://developer.sumup.com/docs/online-payments/introduction/authorization/#api-keys). You can create API keys in the [API key section](https://developer.sumup.com/protected/api-keys/) of the developer portal. Store them securely. The SDK by default loads the API key from `SUMUP_API_KEY` environment variable. Alternatively, provide API key on your own:
 
 ```go
-client := sumup.NewClient().WithAuth(os.Getenv("SUMUP_KEY"))
+client := sumup.NewClient(client.WithAPIKey("sup_sk_LZFWoLyd..."))
 ```
 
 ## Support
