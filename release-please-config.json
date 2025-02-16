@@ -12,7 +12,7 @@
 	"packages": {
 		".": {
 			"release-type": "go",
-			"extra-files": ["client.go"]
+			"extra-files": ["client/client.go"]
 		}
 	}
 }

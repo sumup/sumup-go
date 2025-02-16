@@ -1,4 +1,4 @@
-package main
+package sumup_test
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 	"github.com/sumup/sumup-go/merchant"
 )
 
-func main() {
+func ExampleClient() {
 	client := sumup.NewClient()
 
 	account, err := client.Merchant.Get(context.Background(), merchant.GetAccountParams{})
@@ -17,5 +17,5 @@ func main() {
 		return
 	}
 
-	log.Printf("[INFO] merchant code: %s", *account.MerchantProfile.MerchantCode)
+	log.Printf("[INFO] merchant profile: %+v", *account.MerchantProfile)
 }

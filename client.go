@@ -3,127 +3,50 @@
 package sumup
 
 import (
-	"context"
-	_ "embed"
-	"fmt"
-	"io"
-	"net/http"
-	"strings"
+	"github.com/sumup/sumup-go/api_keys"
+	"github.com/sumup/sumup-go/checkouts"
+	"github.com/sumup/sumup-go/client"
+	"github.com/sumup/sumup-go/customers"
+	"github.com/sumup/sumup-go/members"
+	"github.com/sumup/sumup-go/merchant"
+	"github.com/sumup/sumup-go/payouts"
+	"github.com/sumup/sumup-go/readers"
+	"github.com/sumup/sumup-go/receipts"
+	"github.com/sumup/sumup-go/subaccounts"
+	"github.com/sumup/sumup-go/transactions"
 )
-
-const (
-	// APIUrl is the URL of our API.
-	APIUrl = "https://api.sumup.com"
-)
-
-type service struct {
-	client *Client
-}
 
 type Client struct {
-	// service is the shared service struct re-used for all services.
-	svc service
-
-	// client is the HTTP client used to communicate with the API.
-	client *http.Client
-	// url is the url of the API the requests will be sent to.
-	url string
-	// userAgent is the user-agent header that will be sent with
-	// every request.
-	userAgent string
-	// key is the API key or access token used for authorization.
-	key string
-
-	ApiKeys      *ApiKeysService
-	Checkouts    *CheckoutsService
-	Customers    *CustomersService
-	Members      *MembersService
-	Merchant     *MerchantService
-	Payouts      *PayoutsService
-	Readers      *ReadersService
-	Receipts     *ReceiptsService
-	Shared       *SharedService
-	Subaccounts  *SubaccountsService
-	Transactions *TransactionsService
+	c            *client.Client
+	ApiKeys      *api_keys.ApiKeysService
+	Checkouts    *checkouts.CheckoutsService
+	Customers    *customers.CustomersService
+	Members      *members.MembersService
+	Merchant     *merchant.MerchantService
+	Payouts      *payouts.PayoutsService
+	Readers      *readers.ReadersService
+	Receipts     *receipts.ReceiptsService
+	Subaccounts  *subaccounts.SubaccountsService
+	Transactions *transactions.TransactionsService
 }
 
 // NewClient creates new SumUp API client.
-// To use APIs that require authentication use [Client.WithAuth].
-func NewClient() *Client {
-	c := &Client{
-		client:    http.DefaultClient,
-		userAgent: fmt.Sprintf("sumup/%s", version),
-		url:       APIUrl,
-	}
-	c.populate()
+// The client is by default configured environment variables (`SUMUP_API_KEY`).
+// To override the default configuration use [ClientOption]s.
+func NewClient(opts ...client.ClientOption) *Client {
+	client := client.New(opts...)
+
+	c := &Client{c: client}
+	c.ApiKeys = api_keys.NewApiKeysService(client)
+	c.Checkouts = checkouts.NewCheckoutsService(client)
+	c.Customers = customers.NewCustomersService(client)
+	c.Members = members.NewMembersService(client)
+	c.Merchant = merchant.NewMerchantService(client)
+	c.Payouts = payouts.NewPayoutsService(client)
+	c.Readers = readers.NewReadersService(client)
+	c.Receipts = receipts.NewReceiptsService(client)
+	c.Subaccounts = subaccounts.NewSubaccountsService(client)
+	c.Transactions = transactions.NewTransactionsService(client)
+
 	return c
-}
-
-// WithAuth returns a copy of the client configured with the provided Authorization key.
-func (c *Client) WithAuth(key string) *Client {
-	clone := Client{
-		client:    c.client,
-		url:       APIUrl,
-		userAgent: c.userAgent,
-		key:       key,
-	}
-	clone.populate()
-	return &clone
-}
-
-// WithClient returns a copy of the client configured with the provided http client.
-func (c *Client) WithHTTPClient(client *http.Client) *Client {
-	clone := Client{
-		client:    client,
-		url:       APIUrl,
-		userAgent: c.userAgent,
-		key:       c.key,
-	}
-	clone.populate()
-	return &clone
-}
-
-func (c *Client) populate() {
-	c.svc.client = c
-	c.ApiKeys = (*ApiKeysService)(&c.svc)
-	c.Checkouts = (*CheckoutsService)(&c.svc)
-	c.Customers = (*CustomersService)(&c.svc)
-	c.Members = (*MembersService)(&c.svc)
-	c.Merchant = (*MerchantService)(&c.svc)
-	c.Payouts = (*PayoutsService)(&c.svc)
-	c.Readers = (*ReadersService)(&c.svc)
-	c.Receipts = (*ReceiptsService)(&c.svc)
-	c.Shared = (*SharedService)(&c.svc)
-	c.Subaccounts = (*SubaccountsService)(&c.svc)
-	c.Transactions = (*TransactionsService)(&c.svc)
-}
-
-func (c *Client) NewRequest(
-	ctx context.Context,
-	method, path string,
-	body io.Reader,
-) (*http.Request, error) {
-	if !strings.HasPrefix(path, "/") {
-		path = "/" + path
-	}
-	req, err := http.NewRequestWithContext(
-		ctx,
-		method,
-		c.url+path,
-		body,
-	)
-	if err != nil {
-		return nil, fmt.Errorf("build request: %s", err.Error())
-	}
-
-	req.Header.Add("Authorization", "Bearer "+c.key)
-	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("SumUp-Version", version)
-	req.Header.Add("User-Agent", c.userAgent)
-
-	return req, nil
-}
-
-func (c *Client) Do(req *http.Request) (*http.Response, error) {
-	return c.client.Do(req)
 }
