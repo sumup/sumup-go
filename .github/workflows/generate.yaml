@@ -27,7 +27,7 @@ jobs:
 
       - run: go install github.com/sumup/go-sdk-gen/cmd/go-sdk-gen@latest
 
-      # Would be nice to run this from gogenitor but goimports can't be imported as a pkg
+      # Would be nice to run this from go-sdk-gen but goimports can't be imported as a pkg
       - run: go install golang.org/x/tools/cmd/goimports@latest
 
       - run: go-sdk-gen generate --mod github.com/sumup/sumup-go --pkg sumup  --name SumUp ./openapi.json
