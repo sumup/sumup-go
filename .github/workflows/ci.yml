@@ -51,7 +51,7 @@ jobs:
           go-version: ${{ matrix.go }}
 
       - name: Test
-        run: make test
+        run: go test -v -failfast -race -timeout 10m ./...
 
   vulncheck:
     name: Vulnerabilities check
