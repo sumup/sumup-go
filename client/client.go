@@ -47,7 +47,7 @@ type ClientOption func(c *Client) error
 func New(opts ...ClientOption) *Client {
 	c := &Client{
 		client:    http.DefaultClient,
-		userAgent: fmt.Sprintf("sumup/%s", version),
+		userAgent: fmt.Sprintf("sumup-go/%s", version),
 		url:       APIUrl,
 		key:       os.Getenv("SUMUP_API_KEY"),
 	}
