@@ -2,8 +2,6 @@ run:
   timeout: 3m
 
 issues:
-  uniq-by-line: true
-  max-per-linter: 0
   max-same-issues: 0
   exclude-dirs-use-default: true
   exclude-rules:
@@ -24,6 +22,7 @@ issues:
         - unparam
 
 output:
+  uniq-by-line: true
   sort-results: true
 
 linters:
@@ -63,7 +62,6 @@ linters:
     - typecheck
     - unconvert
     - unparam
-    - unused
     - unused
     - wastedassign
     - whitespace
@@ -106,8 +104,6 @@ linters-settings:
     simplify: true
   goimports:
     local-prefixes: github.com/sumup/portier
-  golint:
-    min-confidence: 0.8
   gomoddirectives:
     replace-local: true
     replace-allow-list:
@@ -133,15 +129,12 @@ linters-settings:
         disabled: true
   nolintlint:
     allow-unused: false
-    allow-leading-space: false
     allow-no-explanation: [noctx]
     require-explanation: true
     require-specific: true
   staticcheck:
     checks: ['all']
   unparam:
-    check-exported: false
-  unused:
     check-exported: false
   whitespace:
     multi-if: false
