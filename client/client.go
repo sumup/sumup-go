@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	version = "0.0.1-beta.2" // x-release-please-version
+	version = "0.0.1-beta.3" // x-release-please-version
 
 	// APIUrl is the URL of our API.
 	APIUrl = "https://api.sumup.com"
