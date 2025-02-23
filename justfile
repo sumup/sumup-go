@@ -1,3 +1,5 @@
+set quiet
+
 _default: _help
 
 _help:
