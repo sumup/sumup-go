@@ -128,7 +128,7 @@ type ListMerchantMembersParams struct {
 	// Indicates to skip count query.
 	Scroll *bool
 	// Filter the returned members by the membership status.
-	Status *MembershipStatus
+	Status *shared.MembershipStatus
 }
 
 // QueryValues converts [ListMerchantMembersParams] into [url.Values].
