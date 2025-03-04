@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.1-beta.3](https://github.com/sumup/sumup-go/compare/v0.0.1-beta.2...v0.0.1-beta.3) (2025-03-04)
+
+
+### Bug Fixes
+
+* **tooling:** release please config ([#52](https://github.com/sumup/sumup-go/issues/52)) ([ae2aff5](https://github.com/sumup/sumup-go/commit/ae2aff5a95629184bdf8681e8a316e06c207fcdb))
+
 ## [0.0.1-beta.2](https://github.com/sumup/sumup-go/compare/v0.0.1-beta.1...v0.0.1-beta.2) (2025-02-16)
 
 
