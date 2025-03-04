@@ -29,14 +29,16 @@ var _ error = (*CompatError)(nil)
 // Operator is a schema definition.
 type Operator struct {
 	AccountType OperatorAccountType `json:"account_type"`
-	CreatedAt   time.Time           `json:"created_at"`
-	Disabled    bool                `json:"disabled"`
+	// The timestamp of when the operator was created.
+	CreatedAt time.Time `json:"created_at"`
+	Disabled  bool      `json:"disabled"`
 	// Format: int32
 	Id          int                 `json:"id"`
 	Nickname    *string             `json:"nickname,omitempty"`
 	Permissions OperatorPermissions `json:"permissions"`
-	UpdatedAt   time.Time           `json:"updated_at"`
-	Username    string              `json:"username"`
+	// The timestamp of when the operator was last updated.
+	UpdatedAt time.Time `json:"updated_at"`
+	Username  string    `json:"username"`
 }
 
 // OperatorAccountType is a schema definition.

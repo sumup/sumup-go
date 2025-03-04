@@ -14,8 +14,11 @@ import (
 	"github.com/sumup/sumup-go/client"
 )
 
-// Apikey is a schema definition.
+// Apikey: An API key is a static token that allows you to authorize with SumUp APIs.
+// Keep your API keys secret and safe. Do not share your API keys or expose them in a publicly accessible areas
+// such as client-side code (browser or apps) or in the GitHub.
 type Apikey struct {
+	// The timestamp of when the API key was created.
 	CreatedAt time.Time `json:"created_at"`
 	// Unique identifier of the API Key.
 	Id string `json:"id"`
@@ -27,9 +30,10 @@ type Apikey struct {
 	// Last 8 characters of the API key.
 	Preview string `json:"preview"`
 	// Max items: 128
-	Scopes    Oauth2Scopes `json:"scopes"`
-	Type      ApikeyType   `json:"type"`
-	UpdatedAt time.Time    `json:"updated_at"`
+	Scopes Oauth2Scopes `json:"scopes"`
+	Type   ApikeyType   `json:"type"`
+	// The timestamp of when the API key was last updated.
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 // ApikeyType is a schema definition.
@@ -40,10 +44,12 @@ const (
 	ApikeyTypeSecret ApikeyType = "secret"
 )
 
-// ApikeysList is a schema definition.
+// ApikeysList: List of API keys.
 type ApikeysList struct {
-	Items      []Apikey `json:"items"`
-	TotalCount int      `json:"total_count"`
+	// List of API keys.
+	Items []Apikey `json:"items"`
+	// Total number of API keys.
+	TotalCount int `json:"total_count"`
 }
 
 // Oauth2Scope is a schema definition.
@@ -75,6 +81,7 @@ type Oauth2Scopes []Oauth2Scope
 
 // CreateApikeyBody is a schema definition.
 type CreateApikeyBody struct {
+	// Name of the API key.
 	// Max length: 255
 	Name string `json:"name"`
 	// Max items: 128
@@ -146,7 +153,7 @@ func (s *ApiKeysService) ListApikeys(ctx context.Context, merchantCode string, p
 }
 
 // CreateApikey: Create an API key
-// Creates a new API key for the user.
+// Create a new API key.
 func (s *ApiKeysService) CreateApikey(ctx context.Context, merchantCode string, body CreateApikeyBody) (*Apikey, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/api-keys", merchantCode)
 
@@ -169,9 +176,9 @@ func (s *ApiKeysService) CreateApikey(ctx context.Context, merchantCode string, 
 	}
 }
 
-// RevokeApikey: Revoke an API key
-// Revokes an API key.
-func (s *ApiKeysService) RevokeApikey(ctx context.Context, merchantCode string, keyId string) error {
+// DeleteApikey: Delete an API key
+// Delete an API key.
+func (s *ApiKeysService) DeleteApikey(ctx context.Context, merchantCode string, keyId string) error {
 	path := fmt.Sprintf("/v0.1/merchants/%v/api-keys/%v", merchantCode, keyId)
 
 	resp, err := s.c.Call(ctx, http.MethodDelete, path)

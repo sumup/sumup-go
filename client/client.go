@@ -15,8 +15,6 @@ import (
 )
 
 const (
-	version = "0.0.1-beta.2" // x-release-please-version
-
 	// APIUrl is the URL of our API.
 	APIUrl = "https://api.sumup.com"
 )
@@ -29,8 +27,8 @@ type client interface {
 type Client struct {
 	// client is the HTTP client used to communicate with the API.
 	client *http.Client
-	// url is the url of the API the requests will be sent to.
-	url string
+	// base is the base url of the API the requests will be sent to.
+	base *url.URL
 	// userAgent is the user-agent header that will be sent with
 	// every request.
 	userAgent string
@@ -45,10 +43,11 @@ type ClientOption func(c *Client) error
 // The client is by default configured with environment variables (e.g. `SUMUP_API_KEY`).
 // To override the default configuration use [ClientOption]s.
 func New(opts ...ClientOption) *Client {
+	baseURL, _ := url.Parse(APIUrl)
 	c := &Client{
 		client:    http.DefaultClient,
-		userAgent: fmt.Sprintf("sumup-go/%s", version),
-		url:       APIUrl,
+		userAgent: fmt.Sprintf("sumup/%s", version),
+		base:      baseURL,
 		key:       os.Getenv("SUMUP_API_KEY"),
 	}
 
@@ -72,6 +71,19 @@ func (c *Client) WithAPIKey(key string) ClientOption {
 func (c *Client) WithHTTPClient(client *http.Client) ClientOption {
 	return func(c *Client) error {
 		c.client = client
+		return nil
+	}
+}
+
+// WithBaseURL returns a [ClientOption] that configures the client with a base URL that the
+// individual API call paths will be resolved against.
+func (c *Client) WithBaseURL(base string) ClientOption {
+	return func(c *Client) error {
+		baseURL, err := url.Parse(base)
+		if err != nil {
+			return err
+		}
+		c.base = baseURL
 		return nil
 	}
 }
@@ -124,7 +136,7 @@ func (c *Client) NewRequest(
 	req, err := http.NewRequestWithContext(
 		ctx,
 		method,
-		c.url+path,
+		c.base.JoinPath(path).String(),
 		body,
 	)
 	if err != nil {
