@@ -11,6 +11,9 @@ import (
 // AmountEvent: Amount of the event.
 type AmountEvent float64
 
+// Attributes: Object attributes that modifiable only by SumUp applications.
+type Attributes map[string]any
+
 // Currency: Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount.
 // Currently supported currency values are enumerated above.
 type Currency string
@@ -89,6 +92,14 @@ const (
 	EventTypeRefund          EventType = "REFUND"
 )
 
+// Invite: Pending invitation for membership.
+type Invite struct {
+	// Email address of the invited user.
+	// Format: email
+	Email     string    `json:"email"`
+	ExpiresAt time.Time `json:"expires_at"`
+}
+
 // MandateResponse: Created mandate
 type MandateResponse struct {
 	// Merchant code which has the mandate
@@ -98,6 +109,21 @@ type MandateResponse struct {
 	// Indicates the mandate type
 	Type *string `json:"type,omitempty"`
 }
+
+// MembershipStatus: The status of the membership.
+type MembershipStatus string
+
+const (
+	MembershipStatusAccepted MembershipStatus = "accepted"
+	MembershipStatusDisabled MembershipStatus = "disabled"
+	MembershipStatusExpired  MembershipStatus = "expired"
+	MembershipStatusPending  MembershipStatus = "pending"
+	MembershipStatusUnknown  MembershipStatus = "unknown"
+)
+
+// Metadata: Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When
+// updating, always submit whole metadata.
+type Metadata map[string]any
 
 // TimestampEvent: Date and time of the transaction event.
 type TimestampEvent string

@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	version = "0.0.1-beta.2" // x-release-please-version
+	version = "0.0.1" // x-release-please-version
 
 	// APIUrl is the URL of our API.
 	APIUrl = "https://api.sumup.com"
@@ -47,7 +47,7 @@ type ClientOption func(c *Client) error
 func New(opts ...ClientOption) *Client {
 	c := &Client{
 		client:    http.DefaultClient,
-		userAgent: fmt.Sprintf("sumup-go/%s", version),
+		userAgent: fmt.Sprintf("sumup/%s", version),
 		url:       APIUrl,
 		key:       os.Getenv("SUMUP_API_KEY"),
 	}

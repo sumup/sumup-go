@@ -13,53 +13,35 @@ import (
 	"time"
 
 	"github.com/sumup/sumup-go/client"
+	"github.com/sumup/sumup-go/shared"
 )
-
-// Attributes: Object attributes that modifiable only by SumUp applications.
-type Attributes map[string]any
-
-// Invite: Pending invitation for membership.
-type Invite struct {
-	// Email address of the invited user.
-	// Format: email
-	Email     string    `json:"email"`
-	ExpiresAt time.Time `json:"expires_at"`
-}
 
 // Member: A member is user within specific resource identified by resource id, resource type, and associated roles.
 type Member struct {
 	// Object attributes that modifiable only by SumUp applications.
-	Attributes *Attributes `json:"attributes,omitempty"`
-	CreatedAt  time.Time   `json:"created_at"`
+	Attributes *shared.Attributes `json:"attributes,omitempty"`
+	// The timestamp of when the member was created.
+	CreatedAt time.Time `json:"created_at"`
 	// ID of the member.
 	Id string `json:"id"`
 	// Pending invitation for membership.
-	Invite *Invite `json:"invite,omitempty"`
+	Invite *shared.Invite `json:"invite,omitempty"`
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
 	// submit whole metadata.
-	Metadata *Metadata `json:"metadata,omitempty"`
+	Metadata *shared.Metadata `json:"metadata,omitempty"`
 	// User's permissions.
 	Permissions []string `json:"permissions"`
 	// User's roles.
-	Roles     []string         `json:"roles"`
-	Status    MembershipStatus `json:"status"`
-	UpdatedAt time.Time        `json:"updated_at"`
-	// User information.
+	Roles []string `json:"roles"`
+	// The status of the membership.
+	Status shared.MembershipStatus `json:"status"`
+	// The timestamp of when the member was last updated.
+	UpdatedAt time.Time `json:"updated_at"`
+	// Information about the user associated with the membership.
 	User *MembershipUser `json:"user,omitempty"`
 }
 
-// MembershipStatus is a schema definition.
-type MembershipStatus string
-
-const (
-	MembershipStatusAccepted MembershipStatus = "accepted"
-	MembershipStatusDisabled MembershipStatus = "disabled"
-	MembershipStatusExpired  MembershipStatus = "expired"
-	MembershipStatusPending  MembershipStatus = "pending"
-	MembershipStatusUnknown  MembershipStatus = "unknown"
-)
-
-// MembershipUser: User information.
+// MembershipUser: Information about the user associated with the membership.
 type MembershipUser struct {
 	// Classic identifiers of the user.
 	Classic *MembershipUserClassic `json:"classic,omitempty"`
@@ -88,14 +70,10 @@ type MembershipUserClassic struct {
 	UserId int `json:"user_id"`
 }
 
-// Metadata: Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When
-// updating, always submit whole metadata.
-type Metadata map[string]any
-
 // CreateMerchantMemberBody is a schema definition.
 type CreateMerchantMemberBody struct {
 	// Object attributes that modifiable only by SumUp applications.
-	Attributes *Attributes `json:"attributes,omitempty"`
+	Attributes *shared.Attributes `json:"attributes,omitempty"`
 	// Email address of the member to add.
 	// Format: email
 	Email string `json:"email"`
@@ -104,7 +82,7 @@ type CreateMerchantMemberBody struct {
 	IsManagedUser *bool `json:"is_managed_user,omitempty"`
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
 	// submit whole metadata.
-	Metadata *Metadata `json:"metadata,omitempty"`
+	Metadata *shared.Metadata `json:"metadata,omitempty"`
 	// Nickname of the member to add. Only used if `is_managed_user` is true. Used for display purposes only.
 	Nickname *string `json:"nickname,omitempty"`
 	// Password of the member to add. Only used if `is_managed_user` is true.
@@ -118,11 +96,11 @@ type CreateMerchantMemberBody struct {
 // UpdateMerchantMemberBody is a schema definition.
 type UpdateMerchantMemberBody struct {
 	// Object attributes that modifiable only by SumUp applications.
-	Attributes *Attributes `json:"attributes,omitempty"`
+	Attributes *shared.Attributes `json:"attributes,omitempty"`
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
 	// submit whole metadata.
-	Metadata *Metadata `json:"metadata,omitempty"`
-	Roles    *[]string `json:"roles,omitempty"`
+	Metadata *shared.Metadata `json:"metadata,omitempty"`
+	Roles    *[]string        `json:"roles,omitempty"`
 	// Allows you to update user data of managed users.
 	User *UpdateMerchantMemberBodyUser `json:"user,omitempty"`
 }
