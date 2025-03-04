@@ -95,7 +95,7 @@ type Meta map[string]any
 
 // Reader: A physical card reader device that can accept in-person payments.
 type Reader struct {
-	// Reader creation timestamp.
+	// The timestamp of when the reader was created.
 	CreatedAt time.Time `json:"created_at"`
 	// Information about the underlying physical device.
 	Device ReaderDevice `json:"device"`
@@ -123,7 +123,7 @@ type Reader struct {
 	// - `paired` - The reader is paired with a merchant account and can be used with SumUp APIs.
 	// - `expired` - The pairing is expired and no longer usable with the account. The resource needs to get recreated
 	Status ReaderStatus `json:"status"`
-	// Reader last-modification timestamp.
+	// The timestamp of when the reader was last updated.
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
