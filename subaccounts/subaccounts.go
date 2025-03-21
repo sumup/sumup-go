@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/sumup/sumup-go/client"
+	"github.com/sumup/sumup-go/shared"
 )
 
 // CompatError: Error
@@ -33,9 +34,10 @@ type Operator struct {
 	CreatedAt time.Time `json:"created_at"`
 	Disabled  bool      `json:"disabled"`
 	// Format: int32
-	Id          int                 `json:"id"`
-	Nickname    *string             `json:"nickname,omitempty"`
-	Permissions OperatorPermissions `json:"permissions"`
+	Id       int     `json:"id"`
+	Nickname *string `json:"nickname,omitempty"`
+	// User permissions
+	Permissions shared.Permissions `json:"permissions"`
 	// The timestamp of when the operator was last updated.
 	UpdatedAt time.Time `json:"updated_at"`
 	Username  string    `json:"username"`
@@ -48,15 +50,6 @@ const (
 	OperatorAccountTypeNormal   OperatorAccountType = "normal"
 	OperatorAccountTypeOperator OperatorAccountType = "operator"
 )
-
-// OperatorPermissions is a schema definition.
-type OperatorPermissions struct {
-	Admin                      bool `json:"admin"`
-	CreateMotoPayments         bool `json:"create_moto_payments"`
-	CreateReferral             bool `json:"create_referral"`
-	FullTransactionHistoryView bool `json:"full_transaction_history_view"`
-	RefundTransactions         bool `json:"refund_transactions"`
-}
 
 // CreateSubAccountBody is a schema definition.
 type CreateSubAccountBody struct {

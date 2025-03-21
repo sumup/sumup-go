@@ -788,6 +788,7 @@ func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListTra
 // GetDeprecated: Retrieve a transaction
 // Retrieves the full details of an identified transaction. The transaction resource is identified by a query
 // parameter and *one* of following parameters is required:
+//
 //   - `id`
 //   - `internal_id`
 //   - `transaction_code`
@@ -863,6 +864,7 @@ func (s *TransactionsService) List(ctx context.Context, merchantCode string, par
 // Get: Retrieve a transaction
 // Retrieves the full details of an identified transaction. The transaction resource is identified by a query
 // parameter and *one* of following parameters is required:
+//
 //   - `id`
 //   - `internal_id`
 //   - `transaction_code`
