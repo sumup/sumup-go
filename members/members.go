@@ -44,6 +44,7 @@ type Member struct {
 // MembershipUser: Information about the user associated with the membership.
 type MembershipUser struct {
 	// Classic identifiers of the user.
+	// Deprecated: this operation is deprecated
 	Classic *MembershipUserClassic `json:"classic,omitempty"`
 	// Time when the user has been disabled. Applies only to virtual users (`virtual_user: true`).
 	DisabledAt *time.Time `json:"disabled_at,omitempty"`
@@ -65,6 +66,7 @@ type MembershipUser struct {
 }
 
 // MembershipUserClassic: Classic identifiers of the user.
+// Deprecated: this operation is deprecated
 type MembershipUserClassic struct {
 	// Format: int32
 	UserId int `json:"user_id"`
