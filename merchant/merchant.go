@@ -214,7 +214,7 @@ type MerchantAccount struct {
 	// Account's merchant profile
 	MerchantProfile *MerchantProfile `json:"merchant_profile,omitempty"`
 	// User permissions
-	Permissions *Permissions `json:"permissions,omitempty"`
+	Permissions *shared.Permissions `json:"permissions,omitempty"`
 	// Account's personal profile.
 	PersonalProfile *PersonalProfile `json:"personal_profile,omitempty"`
 }
@@ -300,18 +300,6 @@ const (
 	MerchantSettingsMotoPaymentOn          MerchantSettingsMotoPayment = "ON"
 	MerchantSettingsMotoPaymentUnavailable MerchantSettingsMotoPayment = "UNAVAILABLE"
 )
-
-// Permissions: User permissions
-type Permissions struct {
-	// Create MOTO payments
-	CreateMotoPayments *bool `json:"create_moto_payments,omitempty"`
-	// Create referral
-	CreateReferral *bool `json:"create_referral,omitempty"`
-	// Can view full merchant transaction history
-	FullTransactionHistoryView *bool `json:"full_transaction_history_view,omitempty"`
-	// Refund transactions
-	RefundTransactions *bool `json:"refund_transactions,omitempty"`
-}
 
 // PersonalProfile: Account's personal profile.
 type PersonalProfile struct {
@@ -522,6 +510,7 @@ func (s *MerchantService) GetDoingBusinessAs(ctx context.Context) (*DoingBusines
 
 // ListBankAccountsDeprecated: List bank accounts
 // Retrieves bank accounts of the merchant.
+// Deprecated: this operation is deprecated
 func (s *MerchantService) ListBankAccountsDeprecated(ctx context.Context, params ListBankAccountsParams) (*ListBankAccounts200Response, error) {
 	path := fmt.Sprintf("/v0.1/me/merchant-profile/bank-accounts")
 

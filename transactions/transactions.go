@@ -756,6 +756,7 @@ func NewTransactionsService(c *client.Client) *TransactionsService {
 
 // ListDeprecated: List transactions
 // Lists detailed history of all transactions associated with the merchant profile.
+// Deprecated: this operation is deprecated
 func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListTransactionsParams) (*ListTransactions200Response, error) {
 	path := fmt.Sprintf("/v0.1/me/transactions/history")
 
@@ -788,11 +789,14 @@ func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListTra
 // GetDeprecated: Retrieve a transaction
 // Retrieves the full details of an identified transaction. The transaction resource is identified by a query
 // parameter and *one* of following parameters is required:
+//
 //   - `id`
 //   - `internal_id`
 //   - `transaction_code`
 //   - `foreign_transaction_id`
 //   - `client_transaction_id`
+//
+// Deprecated: this operation is deprecated
 func (s *TransactionsService) GetDeprecated(ctx context.Context, params GetTransactionParams) (*TransactionFull, error) {
 	path := fmt.Sprintf("/v0.1/me/transactions")
 
@@ -863,6 +867,7 @@ func (s *TransactionsService) List(ctx context.Context, merchantCode string, par
 // Get: Retrieve a transaction
 // Retrieves the full details of an identified transaction. The transaction resource is identified by a query
 // parameter and *one* of following parameters is required:
+//
 //   - `id`
 //   - `internal_id`
 //   - `transaction_code`

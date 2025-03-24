@@ -264,9 +264,9 @@ type CheckoutCreateRequest struct {
 	Id *string `json:"id,omitempty"`
 	// Unique identifying code of the merchant profile.
 	MerchantCode string `json:"merchant_code"`
-	// Email address of the registered user (merchant) to whom the payment is made. It is highly recommended to
-	// use `merchant_code` instead of `pay_to_email`.
+	// Email address of the registered user (merchant) to whom the payment is made.
 	// Format: email
+	// Deprecated: `pay_to_email` is deprecated, use `merchant_code` instead.
 	PayToEmail *string `json:"pay_to_email,omitempty"`
 	// Alternative payment method name
 	PaymentType *string `json:"payment_type,omitempty"`
@@ -683,9 +683,9 @@ type CreateCheckoutBody struct {
 	Id *string `json:"id,omitempty"`
 	// Unique identifying code of the merchant profile.
 	MerchantCode string `json:"merchant_code"`
-	// Email address of the registered user (merchant) to whom the payment is made. It is highly recommended to
-	// use `merchant_code` instead of `pay_to_email`.
+	// Email address of the registered user (merchant) to whom the payment is made.
 	// Format: email
+	// Deprecated: `pay_to_email` is deprecated, use `merchant_code` instead.
 	PayToEmail *string `json:"pay_to_email,omitempty"`
 	// Alternative payment method name
 	PaymentType *string `json:"payment_type,omitempty"`
@@ -970,9 +970,9 @@ type DeactivateCheckout200Response struct {
 	MerchantCountry *string `json:"merchant_country,omitempty"`
 	// Merchant name
 	MerchantName *string `json:"merchant_name,omitempty"`
-	// Email address of the registered user (merchant) to whom the payment is made. It is highly recommended to
-	// use `merchant_code` instead of `pay_to_email`.
+	// Email address of the registered user (merchant) to whom the payment is made.
 	// Format: email
+	// Deprecated: `pay_to_email` is deprecated, use `merchant_code` instead.
 	PayToEmail *string `json:"pay_to_email,omitempty"`
 	// Purpose of the checkout creation initially
 	Purpose *DeactivateCheckout200ResponsePurpose `json:"purpose,omitempty"`

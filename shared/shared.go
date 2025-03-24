@@ -125,6 +125,18 @@ const (
 // updating, always submit whole metadata.
 type Metadata map[string]any
 
+// Permissions: User permissions
+type Permissions struct {
+	// Create MOTO payments
+	CreateMotoPayments *bool `json:"create_moto_payments,omitempty"`
+	// Create referral
+	CreateReferral *bool `json:"create_referral,omitempty"`
+	// Can view full merchant transaction history
+	FullTransactionHistoryView *bool `json:"full_transaction_history_view,omitempty"`
+	// Refund transactions
+	RefundTransactions *bool `json:"refund_transactions,omitempty"`
+}
+
 // TimestampEvent: Date and time of the transaction event.
 type TimestampEvent string
 
