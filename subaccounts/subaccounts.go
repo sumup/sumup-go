@@ -69,12 +69,6 @@ type CreateSubAccountBodyPermissions struct {
 	RefundTransactions         *bool `json:"refund_transactions,omitempty"`
 }
 
-// CompatChangeOperatorsPasswordBody is a schema definition.
-type CompatChangeOperatorsPasswordBody struct {
-	// Min length: 8
-	Password *string `json:"password,omitempty"`
-}
-
 // UpdateSubAccountBody is a schema definition.
 type UpdateSubAccountBody struct {
 	Disabled *bool   `json:"disabled,omitempty"`
@@ -185,65 +179,6 @@ func (s *SubaccountsService) CreateSubAccount(ctx context.Context, body CreateSu
 		}
 
 		return nil, &apiErr
-	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
-}
-
-// CompatChangeOperatorsPassword: Change operators password.
-// Changes operators password, if the operator was disabled they will be unblocked.
-// Deprecated: Subaccounts API is deprecated, to update an user that's a member of your merchant account please
-// use [Update member](https://developer.sumup.com/api/members/update) instead.
-func (s *SubaccountsService) CompatChangeOperatorsPassword(ctx context.Context, operatorId int, body CompatChangeOperatorsPasswordBody) (*Operator, error) {
-	path := fmt.Sprintf("/v0.1/me/accounts/%v/reset", operatorId)
-
-	resp, err := s.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))
-	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
-	}
-	defer resp.Body.Close()
-
-	switch resp.StatusCode {
-	case http.StatusOK:
-		var v Operator
-		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-			return nil, fmt.Errorf("decode response: %s", err.Error())
-		}
-
-		return &v, nil
-	case http.StatusBadRequest:
-		var apiErr CompatError
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
-}
-
-// CompatDisableOperator: Disable operator.
-//
-// Deprecated: Subaccounts API is deprecated, to remove an user that's a member of your merchant account please
-// use [Delete member](https://developer.sumup.com/api/members/delete) instead.
-func (s *SubaccountsService) CompatDisableOperator(ctx context.Context, operatorId int) (*Operator, error) {
-	path := fmt.Sprintf("/v0.1/me/accounts/%v/disable", operatorId)
-
-	resp, err := s.c.Call(ctx, http.MethodPost, path)
-	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
-	}
-	defer resp.Body.Close()
-
-	switch resp.StatusCode {
-	case http.StatusOK:
-		var v Operator
-		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-			return nil, fmt.Errorf("decode response: %s", err.Error())
-		}
-
-		return &v, nil
 	default:
 		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
