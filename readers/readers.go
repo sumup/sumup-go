@@ -100,9 +100,7 @@ type Reader struct {
 	// Information about the underlying physical device.
 	Device ReaderDevice `json:"device"`
 	// Unique identifier of the object.
-	//
 	// Note that this identifies the instance of the physical devices pairing with your SumUp account.
-	//
 	// If you DELETE a reader, and pair the device again, the ID will be different. Do not use this ID to refer to
 	// a physical device.
 	// Min length: 30
@@ -144,25 +142,19 @@ const (
 )
 
 // ReaderId: Unique identifier of the object.
-//
 // Note that this identifies the instance of the physical devices pairing with your SumUp account.
-//
 // If you DELETE a reader, and pair the device again, the ID will be different. Do not use this ID to refer to
 // a physical device.
-//
 // Min length: 30
 // Max length: 30
 type ReaderId string
 
 // ReaderName: Custom human-readable, user-defined name for easier identification of the reader.
-//
 // Max length: 500
 type ReaderName string
 
 // ReaderPairingCode: The pairing code is a 8 or 9 character alphanumeric string that is displayed on a SumUp
-// Device after initiating the pairing.
-// It is used to link the physical device to the created pairing.
-//
+// Device after initiating the pairing. It is used to link the physical device to the created pairing.
 // Min length: 8
 // Max length: 9
 type ReaderPairingCode string
@@ -193,8 +185,7 @@ type CreateReaderBody struct {
 	// Max length: 500
 	Name *ReaderName `json:"name,omitempty"`
 	// The pairing code is a 8 or 9 character alphanumeric string that is displayed on a SumUp Device after initiating
-	// the pairing.
-	// It is used to link the physical device to the created pairing.
+	// the pairing. It is used to link the physical device to the created pairing.
 	// Min length: 8
 	// Max length: 9
 	PairingCode ReaderPairingCode `json:"pairing_code"`
@@ -250,8 +241,9 @@ type UpdateReaderBody struct {
 // GetReaderParams: query parameters for GetReader
 type GetReaderParams struct {
 	// Return the reader only if it has been modified after the specified timestamp given in the headers.
-	//
 	// Timestamps are accepted in the following formats:
+	//
+	//
 	//  - HTTP Standard: [IMF format (RFC 5322)](https://www.rfc-editor.org/rfc/rfc5322#section-3.3), sometimes also
 	// referred to as [RFC 7231](https://www.rfc-editor.org/rfc/rfc7231#section-7.1.1.1).
 	//  - RFC 3339: Used for timestamps in JSON payloads on this API.
@@ -436,7 +428,7 @@ func NewReadersService(c *client.Client) *ReadersService {
 }
 
 // List: List Readers
-// Returns list of all readers of the merchant.
+// List all readers of the merchant.
 func (s *ReadersService) List(ctx context.Context, merchantCode string) (*ListReaders200Response, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers", merchantCode)
 
@@ -460,7 +452,7 @@ func (s *ReadersService) List(ctx context.Context, merchantCode string) (*ListRe
 }
 
 // Create: Create a Reader
-// Create a new reader linked to the merchant account.
+// Create a new Reader for the merchant account.
 func (s *ReadersService) Create(ctx context.Context, merchantCode string, body CreateReaderBody) (*Reader, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers", merchantCode)
 
@@ -614,7 +606,7 @@ func (s *ReadersService) CreateCheckout(ctx context.Context, merchantCode string
 }
 
 // DeleteReader: Delete a reader
-// Deletes a Reader.
+// Delete a reader.
 func (s *ReadersService) DeleteReader(ctx context.Context, merchantCode string, id ReaderId) error {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, id)
 
@@ -633,7 +625,7 @@ func (s *ReadersService) DeleteReader(ctx context.Context, merchantCode string, 
 }
 
 // Get: Retrieve a Reader
-// Gets a Reader.
+// Retrieve a Reader.
 func (s *ReadersService) Get(ctx context.Context, merchantCode string, id ReaderId, params GetReaderParams) (*Reader, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, id)
 
@@ -661,7 +653,7 @@ func (s *ReadersService) Get(ctx context.Context, merchantCode string, id Reader
 }
 
 // Update: Update a Reader
-// Updates a Reader.
+// Update a Reader.
 func (s *ReadersService) Update(ctx context.Context, merchantCode string, id ReaderId, body UpdateReaderBody) error {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, id)
 

@@ -4175,12 +4175,12 @@
       "get": {
         "operationId": "ListAPIKeys",
         "summary": "List API keys",
-        "description": "Returns paginated list of API keys.",
+        "description": "List merchant's API keys.",
         "parameters": [
           {
             "name": "offset",
             "in": "query",
-            "description": "Offset of the first key to return.",
+            "description": "Offset of the first API Key to return.",
             "schema": {
               "type": "integer",
               "example": 0,
@@ -4191,7 +4191,7 @@
           {
             "name": "limit",
             "in": "query",
-            "description": "Maximum number of keys to return.",
+            "description": "Maximum number of API Keys to return.",
             "schema": {
               "type": "integer",
               "example": 10,
@@ -4213,7 +4213,7 @@
         ],
         "responses": {
           "200": {
-            "description": "List of API keys.",
+            "description": "Returns a list of API Key objects.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4236,6 +4236,9 @@
         "tags": [
           "API Keys"
         ],
+        "x-codegen": {
+          "method_name": "list"
+        },
         "x-permissions": [
           {
             "relation": "api_keys_list",
@@ -4290,7 +4293,7 @@
         },
         "responses": {
           "201": {
-            "description": "Created API key.",
+            "description": "Returns the API Key object if the creation succeeded.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4313,6 +4316,9 @@
         "tags": [
           "API Keys"
         ],
+        "x-codegen": {
+          "method_name": "create"
+        },
         "x-permissions": [
           {
             "relation": "api_keys_create",
@@ -4329,7 +4335,7 @@
       "get": {
         "operationId": "GetAPIKey",
         "summary": "Retrieve an API Key",
-        "description": "Gets an API key.",
+        "description": "Retrieve an API key.",
         "parameters": [
           {
             "name": "merchant_code",
@@ -4344,7 +4350,7 @@
           {
             "name": "key_id",
             "in": "path",
-            "description": "Unique identifier of the API key.",
+            "description": "The ID of the API Key to retrieve.",
             "required": true,
             "schema": {
               "type": "string",
@@ -4354,7 +4360,7 @@
         ],
         "responses": {
           "200": {
-            "description": "API key.",
+            "description": "Returns the API Key object for a valid identifier.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4377,6 +4383,9 @@
         "tags": [
           "API Keys"
         ],
+        "x-codegen": {
+          "method_name": "get"
+        },
         "x-permissions": [
           {
             "relation": "api_keys_view",
@@ -4391,7 +4400,7 @@
       "put": {
         "operationId": "UpdateAPIKey",
         "summary": "Update an API key",
-        "description": "Updates an API key.",
+        "description": "Update an API key.",
         "parameters": [
           {
             "name": "merchant_code",
@@ -4406,7 +4415,7 @@
           {
             "name": "key_id",
             "in": "path",
-            "description": "Unique identifier of the API key.",
+            "description": "The ID of the API Key to retrieve.",
             "required": true,
             "schema": {
               "type": "string",
@@ -4441,7 +4450,7 @@
         },
         "responses": {
           "204": {
-            "description": "Successful update."
+            "description": "Returns an empty response if the update succeeded."
           }
         },
         "security": [
@@ -4457,6 +4466,9 @@
         "tags": [
           "API Keys"
         ],
+        "x-codegen": {
+          "method_name": "update"
+        },
         "x-permissions": [
           {
             "relation": "api_keys_update",
@@ -4486,7 +4498,7 @@
           {
             "name": "key_id",
             "in": "path",
-            "description": "Unique identifier of the API key.",
+            "description": "The ID of the API Key to retrieve.",
             "required": true,
             "schema": {
               "type": "string",
@@ -4496,7 +4508,7 @@
         ],
         "responses": {
           "204": {
-            "description": "Successful revocation."
+            "description": "Returns an empty response of the deletion succeeded."
           }
         },
         "security": [
@@ -4512,6 +4524,9 @@
         "tags": [
           "API Keys"
         ],
+        "x-codegen": {
+          "method_name": "delete"
+        },
         "x-permissions": [
           {
             "relation": "api_keys_delete",
@@ -4867,7 +4882,8 @@
     "/v0.1/memberships": {
       "get": {
         "operationId": "ListMemberships",
-        "summary": "List memberships of the current user.",
+        "summary": "List memberships",
+        "description": "List memberships of the current user.",
         "parameters": [
           {
             "name": "offset",
@@ -4915,7 +4931,7 @@
         ],
         "responses": {
           "200": {
-            "description": "List of user's memberships.",
+            "description": "Returns a list of Membership objects.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4962,7 +4978,7 @@
       "get": {
         "operationId": "ListMerchantMembers",
         "summary": "List members",
-        "description": "Lists merchant members with their roles and permissions.\n",
+        "description": "Lists merchant members.",
         "parameters": [
           {
             "name": "offset",
@@ -4978,7 +4994,7 @@
           {
             "name": "limit",
             "in": "query",
-            "description": "Maximum number of member to return.",
+            "description": "Maximum number of members to return.",
             "schema": {
               "type": "integer",
               "example": 10,
@@ -5000,7 +5016,7 @@
           {
             "name": "email",
             "in": "query",
-            "description": "Filter the returned users by email address prefix.",
+            "description": "Filter the returned members by email address prefix.",
             "schema": {
               "type": "string",
               "example": "user"
@@ -5017,7 +5033,7 @@
           {
             "name": "roles",
             "in": "query",
-            "description": "Filter the returned users by role.",
+            "description": "Filter the returned members by role.",
             "schema": {
               "type": "array",
               "items": {
@@ -5034,6 +5050,7 @@
           {
             "name": "merchant_code",
             "in": "path",
+            "description": "Merchant code.",
             "required": true,
             "schema": {
               "type": "string",
@@ -5043,7 +5060,7 @@
         ],
         "responses": {
           "200": {
-            "description": "List of account members.",
+            "description": "Returns a list of Member objects.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5096,11 +5113,13 @@
       },
       "post": {
         "operationId": "CreateMerchantMember",
-        "summary": "Create a merchant member.",
+        "summary": "Create a member",
+        "description": "Create a merchant member.",
         "parameters": [
           {
             "name": "merchant_code",
             "in": "path",
+            "description": "Merchant code.",
             "required": true,
             "schema": {
               "type": "string",
@@ -5119,13 +5138,17 @@
                     "description": "True if the user is managed by the merchant. In this case, we'll created a virtual user with the provided password and nickname.",
                     "type": "boolean"
                   },
+                  "is_service_account": {
+                    "description": "True if the user is a service account. It can later be used to create OAuth2 clients.",
+                    "type": "boolean"
+                  },
                   "email": {
                     "description": "Email address of the member to add.",
                     "type": "string",
                     "format": "email"
                   },
                   "password": {
-                    "description": "Password of the member to add. Only used if `is_managed_user` is true.",
+                    "description": "Password of the member to add. Only used if `is_managed_user` is true. In the case of service accounts, the password is not used and can not be defined by the caller.",
                     "type": "string",
                     "format": "password",
                     "minLength": 8
@@ -5136,7 +5159,7 @@
                     "example": "Test User"
                   },
                   "roles": {
-                    "description": "List of roles to assign to the new member.",
+                    "description": "List of roles to assign to the new member. In the case of service accounts, the roles are predefined.",
                     "type": "array",
                     "items": {
                       "type": "string"
@@ -5159,7 +5182,7 @@
         },
         "responses": {
           "201": {
-            "description": "Member created.",
+            "description": "Returns the Member object if the creation succeeded.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5205,12 +5228,13 @@
     "/v0.1/merchants/{merchant_code}/members/{member_id}": {
       "get": {
         "operationId": "GetMerchantMember",
-        "summary": "Get merchant member",
-        "description": "Returns merchant member details.",
+        "summary": "Retrieve a member",
+        "description": "Retrieve a merchant member.",
         "parameters": [
           {
             "name": "merchant_code",
             "in": "path",
+            "description": "Merchant code.",
             "required": true,
             "schema": {
               "type": "string",
@@ -5220,6 +5244,7 @@
           {
             "name": "member_id",
             "in": "path",
+            "description": "The ID of the member to retrieve.",
             "required": true,
             "schema": {
               "type": "string",
@@ -5229,7 +5254,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Merchant member.",
+            "description": "Returns the Member object for a valid identifier.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5267,12 +5292,13 @@
       },
       "put": {
         "operationId": "UpdateMerchantMember",
-        "summary": "Update merchant member",
-        "description": "Update assigned roles of the member.",
+        "summary": "Update a member",
+        "description": "Update the merchant member.",
         "parameters": [
           {
             "name": "merchant_code",
             "in": "path",
+            "description": "Merchant code.",
             "required": true,
             "schema": {
               "type": "string",
@@ -5282,6 +5308,7 @@
           {
             "name": "member_id",
             "in": "path",
+            "description": "The ID of the member to retrieve.",
             "required": true,
             "schema": {
               "type": "string",
@@ -5332,7 +5359,7 @@
         },
         "responses": {
           "200": {
-            "description": "Member updated.",
+            "description": "Returns the updated Member object if the update succeeded.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5379,12 +5406,13 @@
       },
       "delete": {
         "operationId": "DeleteMerchantMember",
-        "summary": "Delete member",
-        "description": "Deletes member by ID.",
+        "summary": "Delete a member",
+        "description": "Deletes a merchant member.",
         "parameters": [
           {
             "name": "merchant_code",
             "in": "path",
+            "description": "Merchant code.",
             "required": true,
             "schema": {
               "type": "string",
@@ -5394,6 +5422,7 @@
           {
             "name": "member_id",
             "in": "path",
+            "description": "The ID of the member to retrieve.",
             "required": true,
             "schema": {
               "type": "string",
@@ -5403,7 +5432,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Member deleted."
+            "description": "Returns an empty response if the deletion succeeded."
           },
           "404": {
             "description": "Merchant or member not found."
@@ -5433,15 +5462,16 @@
         "x-scopes": []
       }
     },
-    "/v0.1/merchants/{merchant_code}/readers": {
+    "/v0.1/merchants/{merchant_code}/roles": {
       "get": {
-        "operationId": "ListReaders",
-        "summary": "List Readers",
-        "description": "Returns list of all readers of the merchant.\n",
+        "operationId": "ListMerchantRoles",
+        "summary": "List roles",
+        "description": "List merchant's custom roles.",
         "parameters": [
           {
             "name": "merchant_code",
             "in": "path",
+            "description": "Merchant code.",
             "required": true,
             "schema": {
               "type": "string",
@@ -5451,7 +5481,417 @@
         ],
         "responses": {
           "200": {
-            "description": "List of readers\n",
+            "description": "Returns a list of Role objects.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Role"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Merchant not found."
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          },
+          {
+            "oauth2": []
+          }
+        ],
+        "tags": [
+          "Roles"
+        ],
+        "x-codegen": {
+          "method_name": "list"
+        },
+        "x-permissions": [
+          {
+            "relation": "roles_list",
+            "object_type": "merchant",
+            "object_id_param": "merchant_code"
+          }
+        ],
+        "x-scopes": []
+      },
+      "post": {
+        "operationId": "CreateMerchantRole",
+        "summary": "Create a role",
+        "description": "Create a custom role for the merchant. Roles are defined by the set of permissions that they grant to the members that they are assigned to.",
+        "parameters": [
+          {
+            "name": "merchant_code",
+            "in": "path",
+            "description": "Merchant code.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "MC0X0ABC"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "description": "User-defined name of the role.",
+                    "type": "string",
+                    "example": "Senior Shop Manager II"
+                  },
+                  "permissions": {
+                    "description": "User's permissions.",
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": [
+                      "members_list",
+                      "members_read",
+                      "members_view",
+                      "members_write",
+                      "members_delete"
+                    ],
+                    "maxItems": 100
+                  },
+                  "metadata": {
+                    "$ref": "#/components/schemas/Metadata"
+                  },
+                  "description": {
+                    "description": "User-defined description of the role.",
+                    "type": "string",
+                    "example": "Manges the shop and the employees."
+                  }
+                },
+                "required": [
+                  "name",
+                  "permissions"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Returns the Role object after successful custom role creation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Role"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request."
+          },
+          "404": {
+            "description": "Merchant not found."
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          },
+          {
+            "oauth2": []
+          }
+        ],
+        "tags": [
+          "Roles"
+        ],
+        "x-codegen": {
+          "method_name": "create"
+        },
+        "x-permissions": [
+          {
+            "relation": "roles_create",
+            "object_type": "merchant",
+            "object_id_param": "merchant_code"
+          }
+        ],
+        "x-scopes": []
+      }
+    },
+    "/v0.1/merchants/{merchant_code}/roles/{role_id}": {
+      "get": {
+        "operationId": "GetMerchantRole",
+        "summary": "Retrieve a role",
+        "description": "Retrieve a custom role by ID.",
+        "parameters": [
+          {
+            "name": "merchant_code",
+            "in": "path",
+            "description": "Merchant code.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "MC0X0ABC"
+            }
+          },
+          {
+            "name": "role_id",
+            "in": "path",
+            "description": "The ID of the role to retrieve.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "role_WZsm7QTPhVrompscmPhoGTXXcrd58fr9MOhP",
+              "x-go-type": "memberships.RoleID",
+              "x-go-type-import": {
+                "path": "github.com/sumup/identity/apps/portier-backend/internal/domain/memberships"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the Role object for a valid identifier.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Role"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Merchant or role not found."
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          },
+          {
+            "oauth2": []
+          }
+        ],
+        "tags": [
+          "Roles"
+        ],
+        "x-codegen": {
+          "method_name": "get"
+        },
+        "x-permissions": [
+          {
+            "relation": "roles_view",
+            "object_type": "merchant",
+            "object_id_param": "merchant_code"
+          }
+        ],
+        "x-scopes": []
+      },
+      "delete": {
+        "operationId": "DeleteMerchantRole",
+        "summary": "Delete a role",
+        "description": "Delete a custom role.",
+        "parameters": [
+          {
+            "name": "merchant_code",
+            "in": "path",
+            "description": "Merchant code.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "MC0X0ABC"
+            }
+          },
+          {
+            "name": "role_id",
+            "in": "path",
+            "description": "The ID of the role to retrieve.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "role_WZsm7QTPhVrompscmPhoGTXXcrd58fr9MOhP",
+              "x-go-type": "memberships.RoleID",
+              "x-go-type-import": {
+                "path": "github.com/sumup/identity/apps/portier-backend/internal/domain/memberships"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the deleted Role object if the deletion succeeded."
+          },
+          "400": {
+            "description": "Invalid request."
+          },
+          "404": {
+            "description": "Merchant not found."
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          },
+          {
+            "oauth2": []
+          }
+        ],
+        "tags": [
+          "Roles"
+        ],
+        "x-codegen": {
+          "method_name": "delete"
+        },
+        "x-permissions": [
+          {
+            "relation": "roles_delete",
+            "object_type": "merchant",
+            "object_id_param": "merchant_code"
+          }
+        ],
+        "x-scopes": []
+      },
+      "patch": {
+        "operationId": "UpdateMerchantRole",
+        "summary": "Update a role",
+        "description": "Update a custom role.",
+        "parameters": [
+          {
+            "name": "merchant_code",
+            "in": "path",
+            "description": "Merchant code.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "MC0X0ABC"
+            }
+          },
+          {
+            "name": "role_id",
+            "in": "path",
+            "description": "The ID of the role to retrieve.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "role_WZsm7QTPhVrompscmPhoGTXXcrd58fr9MOhP",
+              "x-go-type": "memberships.RoleID",
+              "x-go-type-import": {
+                "path": "github.com/sumup/identity/apps/portier-backend/internal/domain/memberships"
+              }
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "description": "User-defined name of the role.",
+                    "type": "string",
+                    "example": "Senior Shop Manager II"
+                  },
+                  "permissions": {
+                    "description": "User's permissions.",
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": [
+                      "members_list",
+                      "members_read",
+                      "members_view",
+                      "members_write",
+                      "members_delete"
+                    ],
+                    "maxItems": 100
+                  },
+                  "description": {
+                    "description": "User-defined description of the role.",
+                    "type": "string",
+                    "example": "Manges the shop and the employees."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the updated Role object if the update succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Role"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request."
+          },
+          "404": {
+            "description": "Merchant not found."
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          },
+          {
+            "oauth2": []
+          }
+        ],
+        "tags": [
+          "Roles"
+        ],
+        "x-codegen": {
+          "method_name": "update"
+        },
+        "x-permissions": [
+          {
+            "relation": "roles_update",
+            "object_type": "merchant",
+            "object_id_param": "merchant_code"
+          }
+        ],
+        "x-scopes": []
+      }
+    },
+    "/v0.1/merchants/{merchant_code}/readers": {
+      "get": {
+        "operationId": "ListReaders",
+        "summary": "List Readers",
+        "description": "List all readers of the merchant.",
+        "parameters": [
+          {
+            "name": "merchant_code",
+            "in": "path",
+            "description": "Unique identifier of the merchant account.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "MC0X0ABC"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a list Reader objects.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5502,11 +5942,12 @@
       "post": {
         "operationId": "CreateReader",
         "summary": "Create a Reader",
-        "description": "Create a new reader linked to the merchant account.\n",
+        "description": "Create a new Reader for the merchant account.",
         "parameters": [
           {
             "name": "merchant_code",
             "in": "path",
+            "description": "Unique identifier of the merchant account.",
             "required": true,
             "schema": {
               "type": "string",
@@ -5540,7 +5981,7 @@
         },
         "responses": {
           "201": {
-            "description": "The reader got created.\n",
+            "description": "Returns the Reader object if the creation succeeded.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5614,12 +6055,12 @@
       "get": {
         "operationId": "GetReader",
         "summary": "Retrieve a Reader",
-        "description": "Gets a Reader.\n",
+        "description": "Retrieve a Reader.",
         "parameters": [
           {
             "name": "If-Modified-Since",
             "in": "header",
-            "description": "Return the reader only if it has been modified after the specified timestamp given in the headers.\n\nTimestamps are accepted in the following formats:\n - HTTP Standard: [IMF format (RFC 5322)](https://www.rfc-editor.org/rfc/rfc5322#section-3.3), sometimes also referred to as [RFC 7231](https://www.rfc-editor.org/rfc/rfc7231#section-7.1.1.1).\n - RFC 3339: Used for timestamps in JSON payloads on this API.\n",
+            "description": "Return the reader only if it has been modified after the specified timestamp given in the headers.\nTimestamps are accepted in the following formats:\n\n\n - HTTP Standard: [IMF format (RFC 5322)](https://www.rfc-editor.org/rfc/rfc5322#section-3.3), sometimes also referred to as [RFC 7231](https://www.rfc-editor.org/rfc/rfc7231#section-7.1.1.1).\n - RFC 3339: Used for timestamps in JSON payloads on this API.",
             "required": false,
             "schema": {
               "type": "string",
@@ -5640,6 +6081,7 @@
           {
             "name": "merchant_code",
             "in": "path",
+            "description": "Unique identifier of the merchant account.",
             "required": true,
             "schema": {
               "type": "string",
@@ -5649,7 +6091,7 @@
           {
             "name": "id",
             "in": "path",
-            "description": "The unique identifier of the reader.\n",
+            "description": "The unique identifier of the reader.",
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/ReaderID"
@@ -5658,7 +6100,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Reader object got returned.\n",
+            "description": "Returns a Reader object for a valid identifier.\n",
             "content": {
               "application/json": {
                 "schema": {
@@ -5704,11 +6146,12 @@
       "delete": {
         "operationId": "DeleteReader",
         "summary": "Delete a reader",
-        "description": "Deletes a Reader.\n",
+        "description": "Delete a reader.",
         "parameters": [
           {
             "name": "merchant_code",
             "in": "path",
+            "description": "Unique identifier of the merchant account.",
             "required": true,
             "schema": {
               "type": "string",
@@ -5718,7 +6161,7 @@
           {
             "name": "id",
             "in": "path",
-            "description": "The unique identifier of the reader.\n",
+            "description": "The unique identifier of the reader.",
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/ReaderID"
@@ -5727,7 +6170,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The reader got successfully deleted from the merchant account.\n"
+            "description": "Returns an empty response if the deletion succeeded."
           }
         },
         "security": [
@@ -5757,11 +6200,12 @@
       "patch": {
         "operationId": "UpdateReader",
         "summary": "Update a Reader",
-        "description": "Updates a Reader.\n",
+        "description": "Update a Reader.",
         "parameters": [
           {
             "name": "merchant_code",
             "in": "path",
+            "description": "Unique identifier of the merchant account.",
             "required": true,
             "schema": {
               "type": "string",
@@ -5771,7 +6215,7 @@
           {
             "name": "id",
             "in": "path",
-            "description": "The unique identifier of the reader.\n",
+            "description": "The unique identifier of the reader.",
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/ReaderID"
@@ -5798,10 +6242,10 @@
         },
         "responses": {
           "304": {
-            "description": "The update request was successful, but the reader didn't get updated.\n"
+            "description": "The update request was successful, but the reader didn't get updated."
           },
           "403": {
-            "description": "The reader is not linked to the merchant account.\n"
+            "description": "The reader is not linked to the merchant account."
           }
         },
         "security": [
@@ -10127,6 +10571,11 @@
             "type": "boolean",
             "example": false
           },
+          "is_service_account": {
+            "description": "Indicates whether a user is a service account.\n",
+            "type": "boolean",
+            "example": false
+          },
           "feature_previews": {
             "description": "Experimental features that the user has enabled for themselves.\n",
             "type": "object",
@@ -10459,7 +10908,8 @@
             "id": "44ca0f5b-813b-46e1-aee7-e6242010662e",
             "email": "example@sumup.com",
             "mfa_on_login_enabled": true,
-            "virtual_user": false
+            "virtual_user": false,
+            "service_account_user": false
           },
           "status": "accepted"
         },
@@ -10519,6 +10969,11 @@
             "type": "boolean",
             "example": false
           },
+          "service_account_user": {
+            "description": "True if the user is a service account.",
+            "type": "boolean",
+            "example": false
+          },
           "disabled_at": {
             "description": "Time when the user has been disabled. Applies only to virtual users (`virtual_user: true`).",
             "type": "string",
@@ -10543,7 +10998,8 @@
           "id",
           "email",
           "mfa_on_login_enabled",
-          "virtual_user"
+          "virtual_user",
+          "service_account_user"
         ]
       },
       "MembershipUserClassic": {
@@ -10687,7 +11143,7 @@
         "title": "Reader"
       },
       "ReaderID": {
-        "description": "Unique identifier of the object.\n\nNote that this identifies the instance of the physical devices pairing with your SumUp account. \n\nIf you DELETE a reader, and pair the device again, the ID will be different. Do not use this ID to refer to a physical device.\n",
+        "description": "Unique identifier of the object.\nNote that this identifies the instance of the physical devices pairing with your SumUp account.\nIf you DELETE a reader, and pair the device again, the ID will be different. Do not use this ID to refer to a physical device.",
         "type": "string",
         "example": "rdr_3MSAFM23CK82VSTT4BN6RWSQ65",
         "maxLength": 30,
@@ -10698,7 +11154,7 @@
         }
       },
       "ReaderName": {
-        "description": "Custom human-readable, user-defined name for easier identification of the reader.\n",
+        "description": "Custom human-readable, user-defined name for easier identification of the reader.",
         "type": "string",
         "example": "Frontdesk",
         "maxLength": 500
@@ -10739,7 +11195,7 @@
         ]
       },
       "ReaderPairingCode": {
-        "description": "The pairing code is a 8 or 9 character alphanumeric string that is displayed on a SumUp Device after initiating the pairing.\nIt is used to link the physical device to the created pairing.\n",
+        "description": "The pairing code is a 8 or 9 character alphanumeric string that is displayed on a SumUp Device after initiating the pairing. It is used to link the physical device to the created pairing.",
         "type": "string",
         "example": "4WLFDSBF",
         "maxLength": 9,
@@ -11616,7 +12072,7 @@
         }
       },
       "ListMemberships": {
-        "description": "List of user's memberships.",
+        "description": "Returns a list of Membership objects.",
         "content": {
           "application/json": {
             "schema": {
@@ -11642,7 +12098,7 @@
         }
       },
       "ListMembers": {
-        "description": "List of account members.",
+        "description": "Returns a list of Member objects.",
         "content": {
           "application/json": {
             "schema": {
@@ -11667,7 +12123,7 @@
         }
       },
       "ListRoles": {
-        "description": "List of custom roles.",
+        "description": "Returns a list of Role objects.",
         "content": {
           "application/json": {
             "schema": {
@@ -11819,6 +12275,16 @@
       "x-core-objects": [
         {
           "$ref": "#/components/schemas/Membership"
+        }
+      ],
+      "x-beta": true
+    },
+    {
+      "name": "Roles",
+      "description": "Endpoints to manage custom roles. Custom roles allow you to tailor roles from individual permissions to match your needs. Once created, you can assign your custom roles to your merchant account members using the memberships.",
+      "x-core-objects": [
+        {
+          "$ref": "#/components/schemas/Role"
         }
       ],
       "x-beta": true

@@ -127,7 +127,8 @@ func NewMembershipsService(c *client.Client) *MembershipsService {
 	return &MembershipsService{c: c}
 }
 
-// List: List memberships of the current user.
+// List: List memberships
+// List memberships of the current user.
 func (s *MembershipsService) List(ctx context.Context, params ListMembershipsParams) (*ListMemberships200Response, error) {
 	path := fmt.Sprintf("/v0.1/memberships")
 

@@ -61,6 +61,8 @@ type MembershipUser struct {
 	// image file), rather than to a Web page containing an image.
 	// Format: uri
 	Picture *string `json:"picture,omitempty"`
+	// True if the user is a service account.
+	ServiceAccountUser bool `json:"service_account_user"`
 	// True if the user is a virtual user (operator).
 	VirtualUser bool `json:"virtual_user"`
 }
@@ -82,16 +84,19 @@ type CreateMerchantMemberBody struct {
 	// True if the user is managed by the merchant. In this case, we'll created a virtual user with the provided password
 	// and nickname.
 	IsManagedUser *bool `json:"is_managed_user,omitempty"`
+	// True if the user is a service account. It can later be used to create OAuth2 clients.
+	IsServiceAccount *bool `json:"is_service_account,omitempty"`
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
 	// submit whole metadata.
 	Metadata *shared.Metadata `json:"metadata,omitempty"`
 	// Nickname of the member to add. Only used if `is_managed_user` is true. Used for display purposes only.
 	Nickname *string `json:"nickname,omitempty"`
-	// Password of the member to add. Only used if `is_managed_user` is true.
+	// Password of the member to add. Only used if `is_managed_user` is true. In the case of service accounts, the
+	// password is not used and can not be defined by the caller.
 	// Format: password
 	// Min length: 8
 	Password *string `json:"password,omitempty"`
-	// List of roles to assign to the new member.
+	// List of roles to assign to the new member. In the case of service accounts, the roles are predefined.
 	Roles []string `json:"roles"`
 }
 
@@ -119,13 +124,13 @@ type UpdateMerchantMemberBodyUser struct {
 
 // ListMerchantMembersParams: query parameters for ListMerchantMembers
 type ListMerchantMembersParams struct {
-	// Filter the returned users by email address prefix.
+	// Filter the returned members by email address prefix.
 	Email *string
-	// Maximum number of member to return.
+	// Maximum number of members to return.
 	Limit *int
 	// Offset of the first member to return.
 	Offset *int
-	// Filter the returned users by role.
+	// Filter the returned members by role.
 	Roles *[]string
 	// Indicates to skip count query.
 	Scroll *bool
@@ -181,7 +186,7 @@ func NewMembersService(c *client.Client) *MembersService {
 }
 
 // List: List members
-// Lists merchant members with their roles and permissions.
+// Lists merchant members.
 func (s *MembersService) List(ctx context.Context, merchantCode string, params ListMerchantMembersParams) (*ListMerchantMembers200Response, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/members", merchantCode)
 
@@ -206,7 +211,8 @@ func (s *MembersService) List(ctx context.Context, merchantCode string, params L
 	}
 }
 
-// Create: Create a merchant member.
+// Create: Create a member
+// Create a merchant member.
 func (s *MembersService) Create(ctx context.Context, merchantCode string, body CreateMerchantMemberBody) (*Member, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/members", merchantCode)
 
@@ -235,8 +241,8 @@ func (s *MembersService) Create(ctx context.Context, merchantCode string, body C
 	}
 }
 
-// Delete: Delete member
-// Deletes member by ID.
+// Delete: Delete a member
+// Deletes a merchant member.
 func (s *MembersService) Delete(ctx context.Context, merchantCode string, memberId string) error {
 	path := fmt.Sprintf("/v0.1/merchants/%v/members/%v", merchantCode, memberId)
 
@@ -256,8 +262,8 @@ func (s *MembersService) Delete(ctx context.Context, merchantCode string, member
 	}
 }
 
-// Get: Get merchant member
-// Returns merchant member details.
+// Get: Retrieve a member
+// Retrieve a merchant member.
 func (s *MembersService) Get(ctx context.Context, merchantCode string, memberId string) (*Member, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/members/%v", merchantCode, memberId)
 
@@ -282,8 +288,8 @@ func (s *MembersService) Get(ctx context.Context, merchantCode string, memberId 
 	}
 }
 
-// Update: Update merchant member
-// Update assigned roles of the member.
+// Update: Update a member
+// Update the merchant member.
 func (s *MembersService) Update(ctx context.Context, merchantCode string, memberId string, body UpdateMerchantMemberBody) (*Member, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/members/%v", merchantCode, memberId)
 
