@@ -99,9 +99,9 @@ type UpdateApikeyBody struct {
 
 // ListApikeysParams: query parameters for ListAPIKeys
 type ListApikeysParams struct {
-	// Maximum number of keys to return.
+	// Maximum number of API Keys to return.
 	Limit *int
-	// Offset of the first key to return.
+	// Offset of the first API Key to return.
 	Offset *int
 }
 
@@ -128,9 +128,9 @@ func NewApiKeysService(c *client.Client) *ApiKeysService {
 	return &ApiKeysService{c: c}
 }
 
-// ListApikeys: List API keys
-// Returns paginated list of API keys.
-func (s *ApiKeysService) ListApikeys(ctx context.Context, merchantCode string, params ListApikeysParams) (*ApikeysList, error) {
+// List: List API keys
+// List merchant's API keys.
+func (s *ApiKeysService) List(ctx context.Context, merchantCode string, params ListApikeysParams) (*ApikeysList, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/api-keys", merchantCode)
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
@@ -152,9 +152,9 @@ func (s *ApiKeysService) ListApikeys(ctx context.Context, merchantCode string, p
 	}
 }
 
-// CreateApikey: Create an API key
+// Create: Create an API key
 // Create a new API key.
-func (s *ApiKeysService) CreateApikey(ctx context.Context, merchantCode string, body CreateApikeyBody) (*Apikey, error) {
+func (s *ApiKeysService) Create(ctx context.Context, merchantCode string, body CreateApikeyBody) (*Apikey, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/api-keys", merchantCode)
 
 	resp, err := s.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
@@ -176,9 +176,9 @@ func (s *ApiKeysService) CreateApikey(ctx context.Context, merchantCode string, 
 	}
 }
 
-// DeleteApikey: Delete an API key
+// Delete: Delete an API key
 // Delete an API key.
-func (s *ApiKeysService) DeleteApikey(ctx context.Context, merchantCode string, keyId string) error {
+func (s *ApiKeysService) Delete(ctx context.Context, merchantCode string, keyId string) error {
 	path := fmt.Sprintf("/v0.1/merchants/%v/api-keys/%v", merchantCode, keyId)
 
 	resp, err := s.c.Call(ctx, http.MethodDelete, path)
@@ -195,9 +195,9 @@ func (s *ApiKeysService) DeleteApikey(ctx context.Context, merchantCode string, 
 	}
 }
 
-// GetApikey: Retrieve an API Key
-// Gets an API key.
-func (s *ApiKeysService) GetApikey(ctx context.Context, merchantCode string, keyId string) (*Apikey, error) {
+// Get: Retrieve an API Key
+// Retrieve an API key.
+func (s *ApiKeysService) Get(ctx context.Context, merchantCode string, keyId string) (*Apikey, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/api-keys/%v", merchantCode, keyId)
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path)
@@ -219,9 +219,9 @@ func (s *ApiKeysService) GetApikey(ctx context.Context, merchantCode string, key
 	}
 }
 
-// UpdateApikey: Update an API key
-// Updates an API key.
-func (s *ApiKeysService) UpdateApikey(ctx context.Context, merchantCode string, keyId string, body UpdateApikeyBody) error {
+// Update: Update an API key
+// Update an API key.
+func (s *ApiKeysService) Update(ctx context.Context, merchantCode string, keyId string, body UpdateApikeyBody) error {
 	path := fmt.Sprintf("/v0.1/merchants/%v/api-keys/%v", merchantCode, keyId)
 
 	resp, err := s.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))
