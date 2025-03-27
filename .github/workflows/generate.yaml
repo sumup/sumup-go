@@ -21,18 +21,24 @@ jobs:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
 
-      - uses: actions/setup-go@0aaccfd150d50ccaeb58ebd88d36e91967a5f35b # v5.4.0
+      - name: Install Go
+        uses: actions/setup-go@0aaccfd150d50ccaeb58ebd88d36e91967a5f35b # v5.4.0
         with:
-          go-version: '1.22'
-
-      - run: go install github.com/sumup/go-sdk-gen/cmd/go-sdk-gen@latest
+          go-version: '1.24'
 
       # Would be nice to run this from go-sdk-gen but goimports can't be imported as a pkg
       - run: go install golang.org/x/tools/cmd/goimports@latest
+      - run: go install github.com/sumup/go-sdk-gen/cmd/go-sdk-gen@latest
+      - run: go install github.com/princjef/gomarkdoc/cmd/gomarkdoc@latest
 
-      - run: go-sdk-gen generate --mod github.com/sumup/sumup-go --pkg sumup  --name SumUp ./openapi.json
+      - name: Generate SDK
+        run: go-sdk-gen generate --mod github.com/sumup/sumup-go --pkg sumup  --name SumUp ./openapi.json
 
-      - uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5 # v9.1.4
+      - name: Generate docs
+        run: gomarkdoc --output DOCUMENTATION.md ./...
+
+      - name: Commit changes
+        uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5 # v9.1.4
         with:
           add: .
           message: "chore: generate code"
