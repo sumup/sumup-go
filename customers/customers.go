@@ -13,28 +13,12 @@ import (
 	"github.com/sumup/sumup-go/shared"
 )
 
-// Address: Profile's personal address information.
-type Address struct {
-	// City name from the address.
-	City *string `json:"city,omitempty"`
-	// Two letter country code formatted according to [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
-	Country string `json:"country"`
-	// First line of the address with details of the street name and number.
-	Line1 *string `json:"line_1,omitempty"`
-	// Second line of the address with details of the building, unit, apartment, and floor numbers.
-	Line2 *string `json:"line_2,omitempty"`
-	// Postal code from the address.
-	PostalCode *string `json:"postal_code,omitempty"`
-	// State name or abbreviation from the address.
-	State *string `json:"state,omitempty"`
-}
-
 // Customer is a schema definition.
 type Customer struct {
 	// Unique ID of the customer.
 	CustomerId string `json:"customer_id"`
 	// Personal details for the customer.
-	PersonalDetails *PersonalDetails `json:"personal_details,omitempty"`
+	PersonalDetails *shared.PersonalDetails `json:"personal_details,omitempty"`
 }
 
 // PaymentInstrumentResponse: Payment Instrument Response
@@ -97,35 +81,18 @@ const (
 	PaymentInstrumentResponseTypeCard PaymentInstrumentResponseType = "card"
 )
 
-// PersonalDetails: Personal details for the customer.
-type PersonalDetails struct {
-	// Profile's personal address information.
-	Address *Address `json:"address,omitempty"`
-	// Date of birth of the customer.
-	// Format: date
-	Birthdate *shared.Date `json:"birthdate,omitempty"`
-	// Email address of the customer.
-	Email *string `json:"email,omitempty"`
-	// First name of the customer.
-	FirstName *string `json:"first_name,omitempty"`
-	// Last name of the customer.
-	LastName *string `json:"last_name,omitempty"`
-	// Phone number of the customer.
-	Phone *string `json:"phone,omitempty"`
-}
-
 // CreateCustomerBody is a schema definition.
 type CreateCustomerBody struct {
 	// Unique ID of the customer.
 	CustomerId string `json:"customer_id"`
 	// Personal details for the customer.
-	PersonalDetails *PersonalDetails `json:"personal_details,omitempty"`
+	PersonalDetails *shared.PersonalDetails `json:"personal_details,omitempty"`
 }
 
 // UpdateCustomerBody is a schema definition.
 type UpdateCustomerBody struct {
 	// Personal details for the customer.
-	PersonalDetails *PersonalDetails `json:"personal_details,omitempty"`
+	PersonalDetails *shared.PersonalDetails `json:"personal_details,omitempty"`
 }
 
 // ListPaymentInstruments200Response is a schema definition.

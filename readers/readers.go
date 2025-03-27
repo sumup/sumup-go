@@ -241,8 +241,8 @@ type UpdateReaderBody struct {
 // GetReaderParams: query parameters for GetReader
 type GetReaderParams struct {
 	// Return the reader only if it has been modified after the specified timestamp given in the headers.
-	// Timestamps are accepted in the following formats:
 	//
+	// Timestamps are accepted in the following formats:
 	//
 	//  - HTTP Standard: [IMF format (RFC 5322)](https://www.rfc-editor.org/rfc/rfc5322#section-3.3), sometimes also
 	// referred to as [RFC 7231](https://www.rfc-editor.org/rfc/rfc7231#section-7.1.1.1).

@@ -8,6 +8,22 @@ import (
 	"time"
 )
 
+// Address: Profile's personal address information.
+type Address struct {
+	// City name from the address.
+	City *string `json:"city,omitempty"`
+	// Two letter country code formatted according to [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
+	Country *string `json:"country,omitempty"`
+	// First line of the address with details of the street name and number.
+	Line1 *string `json:"line_1,omitempty"`
+	// Second line of the address with details of the building, unit, apartment, and floor numbers.
+	Line2 *string `json:"line_2,omitempty"`
+	// Postal code from the address.
+	PostalCode *string `json:"postal_code,omitempty"`
+	// State name or abbreviation from the address.
+	State *string `json:"state,omitempty"`
+}
+
 // AmountEvent: Amount of the event.
 type AmountEvent float64
 
@@ -135,6 +151,26 @@ type Permissions struct {
 	FullTransactionHistoryView *bool `json:"full_transaction_history_view,omitempty"`
 	// Refund transactions
 	RefundTransactions *bool `json:"refund_transactions,omitempty"`
+}
+
+// PersonalDetails: Personal details for the customer.
+type PersonalDetails struct {
+	// Profile's personal address information.
+	Address *Address `json:"address,omitempty"`
+	// Date of birth of the customer.
+	// Format: date
+	BirthDate *Date `json:"birth_date,omitempty"`
+	// Email address of the customer.
+	Email *string `json:"email,omitempty"`
+	// First name of the customer.
+	FirstName *string `json:"first_name,omitempty"`
+	// Last name of the customer.
+	LastName *string `json:"last_name,omitempty"`
+	// Phone number of the customer.
+	Phone *string `json:"phone,omitempty"`
+	// An identification number user for tax purposes (e.g. CPF)
+	// Max length: 255
+	TaxId *string `json:"tax_id,omitempty"`
 }
 
 // TimestampEvent: Date and time of the transaction event.
