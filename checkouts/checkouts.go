@@ -118,6 +118,7 @@ type Checkout struct {
 	MerchantCode *string `json:"merchant_code,omitempty"`
 	// Email address of the registered user (merchant) to whom the payment is made.
 	// Format: email
+	// Deprecated: `pay_to_email` is deprecated, use `merchant_code` instead.
 	PayToEmail *string `json:"pay_to_email,omitempty"`
 	// URL to which the SumUp platform sends the processing status of the payment checkout.
 	// Format: uri
@@ -268,10 +269,6 @@ type CheckoutCreateRequest struct {
 	// Format: email
 	// Deprecated: `pay_to_email` is deprecated, use `merchant_code` instead.
 	PayToEmail *string `json:"pay_to_email,omitempty"`
-	// Alternative payment method name
-	PaymentType *string `json:"payment_type,omitempty"`
-	// Object containing personal details about the payer, typical for __Boleto__ checkouts
-	PersonalDetails *CheckoutCreateRequestPersonalDetails `json:"personal_details,omitempty"`
 	// Purpose of the checkout.
 	// Default: CHECKOUT
 	Purpose *CheckoutCreateRequestPurpose `json:"purpose,omitempty"`
@@ -293,74 +290,8 @@ type CheckoutCreateRequest struct {
 	Transactions *[]CheckoutCreateRequestTransaction `json:"transactions,omitempty"`
 	// Date and time of the checkout expiration before which the client application needs to send a processing request.
 	// If no value is present, the checkout does not have an expiration time.
-	// Read only
 	ValidUntil *time.Time `json:"valid_until,omitempty"`
 }
-
-// CheckoutCreateRequestPersonalDetails: Object containing personal details about the payer, typical for __Boleto__
-// checkouts
-type CheckoutCreateRequestPersonalDetails struct {
-	// Payer's address information
-	Address *CheckoutCreateRequestPersonalDetailsAddress `json:"address,omitempty"`
-	// Payer's email address
-	Email *string `json:"email,omitempty"`
-	// Payer's first name
-	FirstName *string `json:"first_name,omitempty"`
-	// Payer's last name
-	LastName *string `json:"last_name,omitempty"`
-	// Payer's tax identification number (CPF)
-	TaxId *string `json:"tax_id,omitempty"`
-}
-
-// CheckoutCreateRequestPersonalDetailsAddress: Payer's address information
-type CheckoutCreateRequestPersonalDetailsAddress struct {
-	// Payer's city
-	City *string `json:"city,omitempty"`
-	// Payer's country
-	Country *string `json:"country,omitempty"`
-	// Field for address details
-	Line1 *string `json:"line_1,omitempty"`
-	// Payer's postal code. Must be eight digits long, however an optional dash could be applied after the 5th digit
-	// ([more information about the format available here](https://en.wikipedia.org/wiki/List_of_postal_codes_in_Brazil)). Both
-	// options are accepted as correct.
-	// Pattern: ^\d{5}-?\d{3}$
-	PostalCode *string `json:"postal_code,omitempty"`
-	// Payer's state code
-	State *CheckoutCreateRequestPersonalDetailsAddressState `json:"state,omitempty"`
-}
-
-// CheckoutCreateRequestPersonalDetailsAddressState: Payer's state code
-type CheckoutCreateRequestPersonalDetailsAddressState string
-
-const (
-	CheckoutCreateRequestPersonalDetailsAddressStateAc CheckoutCreateRequestPersonalDetailsAddressState = "AC"
-	CheckoutCreateRequestPersonalDetailsAddressStateAl CheckoutCreateRequestPersonalDetailsAddressState = "AL"
-	CheckoutCreateRequestPersonalDetailsAddressStateAm CheckoutCreateRequestPersonalDetailsAddressState = "AM"
-	CheckoutCreateRequestPersonalDetailsAddressStateAp CheckoutCreateRequestPersonalDetailsAddressState = "AP"
-	CheckoutCreateRequestPersonalDetailsAddressStateBa CheckoutCreateRequestPersonalDetailsAddressState = "BA"
-	CheckoutCreateRequestPersonalDetailsAddressStateCe CheckoutCreateRequestPersonalDetailsAddressState = "CE"
-	CheckoutCreateRequestPersonalDetailsAddressStateDf CheckoutCreateRequestPersonalDetailsAddressState = "DF"
-	CheckoutCreateRequestPersonalDetailsAddressStateEs CheckoutCreateRequestPersonalDetailsAddressState = "ES"
-	CheckoutCreateRequestPersonalDetailsAddressStateGo CheckoutCreateRequestPersonalDetailsAddressState = "GO"
-	CheckoutCreateRequestPersonalDetailsAddressStateMa CheckoutCreateRequestPersonalDetailsAddressState = "MA"
-	CheckoutCreateRequestPersonalDetailsAddressStateMg CheckoutCreateRequestPersonalDetailsAddressState = "MG"
-	CheckoutCreateRequestPersonalDetailsAddressStateMs CheckoutCreateRequestPersonalDetailsAddressState = "MS"
-	CheckoutCreateRequestPersonalDetailsAddressStateMt CheckoutCreateRequestPersonalDetailsAddressState = "MT"
-	CheckoutCreateRequestPersonalDetailsAddressStatePa CheckoutCreateRequestPersonalDetailsAddressState = "PA"
-	CheckoutCreateRequestPersonalDetailsAddressStatePb CheckoutCreateRequestPersonalDetailsAddressState = "PB"
-	CheckoutCreateRequestPersonalDetailsAddressStatePe CheckoutCreateRequestPersonalDetailsAddressState = "PE"
-	CheckoutCreateRequestPersonalDetailsAddressStatePi CheckoutCreateRequestPersonalDetailsAddressState = "PI"
-	CheckoutCreateRequestPersonalDetailsAddressStatePr CheckoutCreateRequestPersonalDetailsAddressState = "PR"
-	CheckoutCreateRequestPersonalDetailsAddressStateRj CheckoutCreateRequestPersonalDetailsAddressState = "RJ"
-	CheckoutCreateRequestPersonalDetailsAddressStateRn CheckoutCreateRequestPersonalDetailsAddressState = "RN"
-	CheckoutCreateRequestPersonalDetailsAddressStateRo CheckoutCreateRequestPersonalDetailsAddressState = "RO"
-	CheckoutCreateRequestPersonalDetailsAddressStateRr CheckoutCreateRequestPersonalDetailsAddressState = "RR"
-	CheckoutCreateRequestPersonalDetailsAddressStateRs CheckoutCreateRequestPersonalDetailsAddressState = "RS"
-	CheckoutCreateRequestPersonalDetailsAddressStateSc CheckoutCreateRequestPersonalDetailsAddressState = "SC"
-	CheckoutCreateRequestPersonalDetailsAddressStateSe CheckoutCreateRequestPersonalDetailsAddressState = "SE"
-	CheckoutCreateRequestPersonalDetailsAddressStateSp CheckoutCreateRequestPersonalDetailsAddressState = "SP"
-	CheckoutCreateRequestPersonalDetailsAddressStateTo CheckoutCreateRequestPersonalDetailsAddressState = "TO"
-)
 
 // CheckoutCreateRequestPurpose: Purpose of the checkout.
 // Default: CHECKOUT
@@ -453,14 +384,17 @@ type CheckoutProcessMixin struct {
 	// Max: 12
 	Installments *int `json:"installments,omitempty"`
 	// Mandate is passed when a card is to be tokenized
-	Mandate     *MandatePayload                 `json:"mandate,omitempty"`
+	Mandate *MandatePayload `json:"mandate,omitempty"`
+	// Describes the payment method used to attempt processing
 	PaymentType CheckoutProcessMixinPaymentType `json:"payment_type"`
+	// Personal details for the customer.
+	PersonalDetails *shared.PersonalDetails `json:"personal_details,omitempty"`
 	// __Required when using a tokenized card to process a checkout.__ Unique token identifying the saved payment card
 	// for a customer.
 	Token *string `json:"token,omitempty"`
 }
 
-// CheckoutProcessMixinPaymentType is a schema definition.
+// CheckoutProcessMixinPaymentType: Describes the payment method used to attempt processing
 type CheckoutProcessMixinPaymentType string
 
 const (
@@ -500,6 +434,7 @@ type CheckoutSuccess struct {
 	MerchantName *string `json:"merchant_name,omitempty"`
 	// Email address of the registered user (merchant) to whom the payment is made.
 	// Format: email
+	// Deprecated: `pay_to_email` is deprecated, use `merchant_code` instead.
 	PayToEmail *string `json:"pay_to_email,omitempty"`
 	// Object containing token information for the specified payment instrument
 	PaymentInstrument *CheckoutSuccessPaymentInstrument `json:"payment_instrument,omitempty"`
@@ -687,10 +622,6 @@ type CreateCheckoutBody struct {
 	// Format: email
 	// Deprecated: `pay_to_email` is deprecated, use `merchant_code` instead.
 	PayToEmail *string `json:"pay_to_email,omitempty"`
-	// Alternative payment method name
-	PaymentType *string `json:"payment_type,omitempty"`
-	// Object containing personal details about the payer, typical for __Boleto__ checkouts
-	PersonalDetails *CreateCheckoutBodyPersonalDetails `json:"personal_details,omitempty"`
 	// Purpose of the checkout.
 	// Default: CHECKOUT
 	Purpose *CreateCheckoutBodyPurpose `json:"purpose,omitempty"`
@@ -712,73 +643,8 @@ type CreateCheckoutBody struct {
 	Transactions *[]CreateCheckoutBodyTransaction `json:"transactions,omitempty"`
 	// Date and time of the checkout expiration before which the client application needs to send a processing request.
 	// If no value is present, the checkout does not have an expiration time.
-	// Read only
 	ValidUntil *time.Time `json:"valid_until,omitempty"`
 }
-
-// CreateCheckoutBodyPersonalDetails: Object containing personal details about the payer, typical for __Boleto__ checkouts
-type CreateCheckoutBodyPersonalDetails struct {
-	// Payer's address information
-	Address *CreateCheckoutBodyPersonalDetailsAddress `json:"address,omitempty"`
-	// Payer's email address
-	Email *string `json:"email,omitempty"`
-	// Payer's first name
-	FirstName *string `json:"first_name,omitempty"`
-	// Payer's last name
-	LastName *string `json:"last_name,omitempty"`
-	// Payer's tax identification number (CPF)
-	TaxId *string `json:"tax_id,omitempty"`
-}
-
-// CreateCheckoutBodyPersonalDetailsAddress: Payer's address information
-type CreateCheckoutBodyPersonalDetailsAddress struct {
-	// Payer's city
-	City *string `json:"city,omitempty"`
-	// Payer's country
-	Country *string `json:"country,omitempty"`
-	// Field for address details
-	Line1 *string `json:"line_1,omitempty"`
-	// Payer's postal code. Must be eight digits long, however an optional dash could be applied after the 5th digit
-	// ([more information about the format available here](https://en.wikipedia.org/wiki/List_of_postal_codes_in_Brazil)). Both
-	// options are accepted as correct.
-	// Pattern: ^\d{5}-?\d{3}$
-	PostalCode *string `json:"postal_code,omitempty"`
-	// Payer's state code
-	State *CreateCheckoutBodyPersonalDetailsAddressState `json:"state,omitempty"`
-}
-
-// CreateCheckoutBodyPersonalDetailsAddressState: Payer's state code
-type CreateCheckoutBodyPersonalDetailsAddressState string
-
-const (
-	CreateCheckoutBodyPersonalDetailsAddressStateAc CreateCheckoutBodyPersonalDetailsAddressState = "AC"
-	CreateCheckoutBodyPersonalDetailsAddressStateAl CreateCheckoutBodyPersonalDetailsAddressState = "AL"
-	CreateCheckoutBodyPersonalDetailsAddressStateAm CreateCheckoutBodyPersonalDetailsAddressState = "AM"
-	CreateCheckoutBodyPersonalDetailsAddressStateAp CreateCheckoutBodyPersonalDetailsAddressState = "AP"
-	CreateCheckoutBodyPersonalDetailsAddressStateBa CreateCheckoutBodyPersonalDetailsAddressState = "BA"
-	CreateCheckoutBodyPersonalDetailsAddressStateCe CreateCheckoutBodyPersonalDetailsAddressState = "CE"
-	CreateCheckoutBodyPersonalDetailsAddressStateDf CreateCheckoutBodyPersonalDetailsAddressState = "DF"
-	CreateCheckoutBodyPersonalDetailsAddressStateEs CreateCheckoutBodyPersonalDetailsAddressState = "ES"
-	CreateCheckoutBodyPersonalDetailsAddressStateGo CreateCheckoutBodyPersonalDetailsAddressState = "GO"
-	CreateCheckoutBodyPersonalDetailsAddressStateMa CreateCheckoutBodyPersonalDetailsAddressState = "MA"
-	CreateCheckoutBodyPersonalDetailsAddressStateMg CreateCheckoutBodyPersonalDetailsAddressState = "MG"
-	CreateCheckoutBodyPersonalDetailsAddressStateMs CreateCheckoutBodyPersonalDetailsAddressState = "MS"
-	CreateCheckoutBodyPersonalDetailsAddressStateMt CreateCheckoutBodyPersonalDetailsAddressState = "MT"
-	CreateCheckoutBodyPersonalDetailsAddressStatePa CreateCheckoutBodyPersonalDetailsAddressState = "PA"
-	CreateCheckoutBodyPersonalDetailsAddressStatePb CreateCheckoutBodyPersonalDetailsAddressState = "PB"
-	CreateCheckoutBodyPersonalDetailsAddressStatePe CreateCheckoutBodyPersonalDetailsAddressState = "PE"
-	CreateCheckoutBodyPersonalDetailsAddressStatePi CreateCheckoutBodyPersonalDetailsAddressState = "PI"
-	CreateCheckoutBodyPersonalDetailsAddressStatePr CreateCheckoutBodyPersonalDetailsAddressState = "PR"
-	CreateCheckoutBodyPersonalDetailsAddressStateRj CreateCheckoutBodyPersonalDetailsAddressState = "RJ"
-	CreateCheckoutBodyPersonalDetailsAddressStateRn CreateCheckoutBodyPersonalDetailsAddressState = "RN"
-	CreateCheckoutBodyPersonalDetailsAddressStateRo CreateCheckoutBodyPersonalDetailsAddressState = "RO"
-	CreateCheckoutBodyPersonalDetailsAddressStateRr CreateCheckoutBodyPersonalDetailsAddressState = "RR"
-	CreateCheckoutBodyPersonalDetailsAddressStateRs CreateCheckoutBodyPersonalDetailsAddressState = "RS"
-	CreateCheckoutBodyPersonalDetailsAddressStateSc CreateCheckoutBodyPersonalDetailsAddressState = "SC"
-	CreateCheckoutBodyPersonalDetailsAddressStateSe CreateCheckoutBodyPersonalDetailsAddressState = "SE"
-	CreateCheckoutBodyPersonalDetailsAddressStateSp CreateCheckoutBodyPersonalDetailsAddressState = "SP"
-	CreateCheckoutBodyPersonalDetailsAddressStateTo CreateCheckoutBodyPersonalDetailsAddressState = "TO"
-)
 
 // CreateCheckoutBodyPurpose: Purpose of the checkout.
 // Default: CHECKOUT
@@ -871,14 +737,17 @@ type ProcessCheckoutBody struct {
 	// Max: 12
 	Installments *int `json:"installments,omitempty"`
 	// Mandate is passed when a card is to be tokenized
-	Mandate     *MandatePayload                `json:"mandate,omitempty"`
+	Mandate *MandatePayload `json:"mandate,omitempty"`
+	// Describes the payment method used to attempt processing
 	PaymentType ProcessCheckoutBodyPaymentType `json:"payment_type"`
+	// Personal details for the customer.
+	PersonalDetails *shared.PersonalDetails `json:"personal_details,omitempty"`
 	// __Required when using a tokenized card to process a checkout.__ Unique token identifying the saved payment card
 	// for a customer.
 	Token *string `json:"token,omitempty"`
 }
 
-// ProcessCheckoutBodyPaymentType is a schema definition.
+// ProcessCheckoutBodyPaymentType: Describes the payment method used to attempt processing
 type ProcessCheckoutBodyPaymentType string
 
 const (
