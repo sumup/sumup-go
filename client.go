@@ -3,7 +3,6 @@
 package sumup
 
 import (
-	"github.com/sumup/sumup-go/api_keys"
 	"github.com/sumup/sumup-go/checkouts"
 	"github.com/sumup/sumup-go/client"
 	"github.com/sumup/sumup-go/customers"
@@ -20,7 +19,6 @@ import (
 
 type Client struct {
 	c            *client.Client
-	ApiKeys      *api_keys.ApiKeysService
 	Checkouts    *checkouts.CheckoutsService
 	Customers    *customers.CustomersService
 	Members      *members.MembersService
@@ -41,7 +39,6 @@ func NewClient(opts ...client.ClientOption) *Client {
 	client := client.New(opts...)
 
 	c := &Client{c: client}
-	c.ApiKeys = api_keys.NewApiKeysService(client)
 	c.Checkouts = checkouts.NewCheckoutsService(client)
 	c.Customers = customers.NewCustomersService(client)
 	c.Members = members.NewMembersService(client)
