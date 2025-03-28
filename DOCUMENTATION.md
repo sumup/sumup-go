@@ -31,7 +31,6 @@ var OAuth2Endpoint = oauth2.Endpoint{
 
 ```go
 type Client struct {
-    ApiKeys      *api_keys.ApiKeysService
     Checkouts    *checkouts.CheckoutsService
     Customers    *customers.CustomersService
     Members      *members.MembersService
