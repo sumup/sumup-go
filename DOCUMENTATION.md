@@ -5545,7 +5545,7 @@ func NewSubaccountsService(c *client.Client) *SubaccountsService
 func (s *SubaccountsService) CompatGetOperator(ctx context.Context, operatorId int) (*Operator, error)
 ```
 
-CompatGetOperator: Get operator Returns specific operator. Deprecated: Subaccounts API is deprecated, to get an user that's a member of your merchant account please use \[Get member\]\(https://developer.sumup.com/api/members/get\) instead.
+CompatGetOperator: Retrieve an operator Returns specific operator. Deprecated: Subaccounts API is deprecated, to get an user that's a member of your merchant account please use \[Get member\]\(https://developer.sumup.com/api/members/get\) instead.
 
 <a name="SubaccountsService.CreateSubAccount"></a>
 ### func \(\*SubaccountsService\) CreateSubAccount
@@ -5554,7 +5554,7 @@ CompatGetOperator: Get operator Returns specific operator. Deprecated: Subaccoun
 func (s *SubaccountsService) CreateSubAccount(ctx context.Context, body CreateSubAccountBody) (*Operator, error)
 ```
 
-CreateSubAccount: Create operator. Creates new operator for currently authorized users' merchant. Deprecated: Subaccounts API is deprecated, to create an user in your merchant account please use \[Create member\]\(https://developer.sumup.com/api/members/create\) instead.
+CreateSubAccount: Create an operator Creates new operator for currently authorized users' merchant. Deprecated: Subaccounts API is deprecated, to create an user in your merchant account please use \[Create member\]\(https://developer.sumup.com/api/members/create\) instead.
 
 <a name="SubaccountsService.DeactivateSubAccount"></a>
 ### func \(\*SubaccountsService\) DeactivateSubAccount
@@ -5563,7 +5563,7 @@ CreateSubAccount: Create operator. Creates new operator for currently authorized
 func (s *SubaccountsService) DeactivateSubAccount(ctx context.Context, operatorId int) (*Operator, error)
 ```
 
-DeactivateSubAccount: Disable operator.
+DeactivateSubAccount: Disable an operator
 
 Deprecated: Subaccounts API is deprecated, to remove an user that's a member of your merchant account please use \[Delete member\]\(https://developer.sumup.com/api/members/delete\) instead.
 
@@ -5574,7 +5574,7 @@ Deprecated: Subaccounts API is deprecated, to remove an user that's a member of 
 func (s *SubaccountsService) ListSubAccounts(ctx context.Context, params ListSubAccountsParams) (*ListSubAccounts200Response, error)
 ```
 
-ListSubAccounts: List operators. Returns list of operators for currently authorized user's merchant. Deprecated: Subaccounts API is deprecated, to list users in your merchant account please use \[List members\]\(https://developer.sumup.com/api/members/list\) instead.
+ListSubAccounts: List operators Returns list of operators for currently authorized user's merchant. Deprecated: Subaccounts API is deprecated, to list users in your merchant account please use \[List members\]\(https://developer.sumup.com/api/members/list\) instead.
 
 <a name="SubaccountsService.UpdateSubAccount"></a>
 ### func \(\*SubaccountsService\) UpdateSubAccount
@@ -5583,7 +5583,7 @@ ListSubAccounts: List operators. Returns list of operators for currently authori
 func (s *SubaccountsService) UpdateSubAccount(ctx context.Context, operatorId int, body UpdateSubAccountBody) (*Operator, error)
 ```
 
-UpdateSubAccount: Update operator. Updates operator. If the operator was disabled and their password is updated they will be unblocked. Deprecated: Subaccounts API is deprecated, to update an user that's a member of your merchant account please use \[Update member\]\(https://developer.sumup.com/api/members/update\) instead.
+UpdateSubAccount: Update an operator Updates operator. If the operator was disabled and their password is updated they will be unblocked. Deprecated: Subaccounts API is deprecated, to update an user that's a member of your merchant account please use \[Update member\]\(https://developer.sumup.com/api/members/update\) instead.
 
 <a name="UpdateSubAccountBody"></a>
 ## type UpdateSubAccountBody
