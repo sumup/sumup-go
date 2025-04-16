@@ -654,21 +654,26 @@ func (s *ReadersService) Get(ctx context.Context, merchantCode string, id Reader
 
 // Update: Update a Reader
 // Update a Reader.
-func (s *ReadersService) Update(ctx context.Context, merchantCode string, id ReaderId, body UpdateReaderBody) error {
+func (s *ReadersService) Update(ctx context.Context, merchantCode string, id ReaderId, body UpdateReaderBody) (*Reader, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, id)
 
 	resp, err := s.c.Call(ctx, http.MethodPatch, path, client.WithJSONBody(body))
 	if err != nil {
-		return fmt.Errorf("error building request: %v", err)
+		return nil, fmt.Errorf("error building request: %v", err)
 	}
 	defer resp.Body.Close()
 
 	switch resp.StatusCode {
-	case http.StatusNotModified:
-		return errors.New("The update request was successful, but the reader didn't get updated.")
+	case http.StatusOK:
+		var v Reader
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
+
+		return &v, nil
 	case http.StatusForbidden:
-		return errors.New("The reader is not linked to the merchant account.")
+		return nil, errors.New("The reader is not linked to the merchant account.")
 	default:
-		return fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
 }

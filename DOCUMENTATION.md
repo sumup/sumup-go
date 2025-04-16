@@ -3647,7 +3647,7 @@ import "github.com/sumup/sumup-go/readers"
   - [func \(s \*ReadersService\) Get\(ctx context.Context, merchantCode string, id ReaderId, params GetReaderParams\) \(\*Reader, error\)](<#ReadersService.Get>)
   - [func \(s \*ReadersService\) List\(ctx context.Context, merchantCode string\) \(\*ListReaders200Response, error\)](<#ReadersService.List>)
   - [func \(s \*ReadersService\) TerminateCheckout\(ctx context.Context, merchantCode string, id string\) error](<#ReadersService.TerminateCheckout>)
-  - [func \(s \*ReadersService\) Update\(ctx context.Context, merchantCode string, id ReaderId, body UpdateReaderBody\) error](<#ReadersService.Update>)
+  - [func \(s \*ReadersService\) Update\(ctx context.Context, merchantCode string, id ReaderId, body UpdateReaderBody\) \(\*Reader, error\)](<#ReadersService.Update>)
 - [type UpdateReaderBody](<#UpdateReaderBody>)
 
 
@@ -4390,7 +4390,7 @@ If a transaction is successfully terminated and \`return\_url\` was provided on 
 ### func \(\*ReadersService\) Update
 
 ```go
-func (s *ReadersService) Update(ctx context.Context, merchantCode string, id ReaderId, body UpdateReaderBody) error
+func (s *ReadersService) Update(ctx context.Context, merchantCode string, id ReaderId, body UpdateReaderBody) (*Reader, error)
 ```
 
 Update: Update a Reader Update a Reader.
