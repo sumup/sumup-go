@@ -32,6 +32,6 @@ generate: # Generate latest SDK
 
 .PHONY: install-tools
 install-tools: # Install development dependencies
-	command -v go-sdk-gen >/dev/null 2>&1 || go install github.com/sumup/go-sdk-gen@latest
-	command -v gomarkdoc >/dev/null 2>&1 || go install github.com/princjef/gomarkdoc/cmd/gomarkdoc@latest
-	command -v govulncheck >/dev/null 2>&1 || go install golang.org/x/vuln/cmd/govulncheck@latest
+	go install github.com/sumup/go-sdk-gen/cmd/go-sdk-gen@latest
+	go install github.com/princjef/gomarkdoc/cmd/gomarkdoc@latest
+	go install golang.org/x/vuln/cmd/govulncheck@latest
