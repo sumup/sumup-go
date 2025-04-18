@@ -1,50 +1,85 @@
 package main
 
 import (
-	"context"
+	"embed"
+	"fmt"
+	"html/template"
 	"log"
+	"net/http"
+	"os"
+	"strconv"
+
+	gonanoid "github.com/matoous/go-nanoid/v2"
 
 	"github.com/sumup/sumup-go"
 	"github.com/sumup/sumup-go/checkouts"
 )
 
+var (
+	//go:embed templates
+	templatesFs embed.FS
+	templates   *template.Template
+)
+
+func init() {
+	templates = template.Must(template.ParseFS(templatesFs, "templates/*.html"))
+}
+
 func main() {
-	ctx := context.Background()
+	merchantCode := os.Getenv("SUMUP_MERCHANT_CODE")
 	client := sumup.NewClient()
 
-	checkout, err := client.Checkouts.Create(ctx, checkouts.CreateCheckoutBody{
-		Amount:            123,
-		CheckoutReference: "TX000001",
-		Currency:          "EUR",
-		MerchantCode:      "MK0001",
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		templates.ExecuteTemplate(w, "index.html", nil)
 	})
-	if err != nil {
-		log.Printf("[ERROR] create checkout: %v", err)
-		return
-	}
+	http.HandleFunc("/create-checkout", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			return
+		}
 
-	log.Printf("[INFO] checkout created: id=%q, amount=%v, currency=%q", *checkout.Id, *checkout.Amount, string(*checkout.Currency))
+		rawAmount := r.FormValue("amount")
+		amount, err := strconv.ParseFloat(rawAmount, 64)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Invalid amount %q: %v.", rawAmount, err), http.StatusBadRequest)
+			return
+		}
 
-	checkoutSuccess, err := client.Checkouts.Process(ctx, *checkout.Id, checkouts.ProcessCheckoutBody{
-		Card: &checkouts.Card{
-			Cvv:         "123",
-			ExpiryMonth: "12",
-			ExpiryYear:  "2023",
-			Name:        "Boaty McBoatface",
-			Number:      "4200000000000042",
-		},
-		PaymentType: checkouts.ProcessCheckoutBodyPaymentTypeCard,
+		checkoutReference := gonanoid.Must()
+		description := "Test Payment"
+		checkout, err := client.Checkouts.Create(r.Context(), checkouts.CreateCheckoutBody{
+			Amount:            amount,
+			CheckoutReference: checkoutReference,
+			Currency:          "EUR",
+			MerchantCode:      merchantCode,
+			Description:       &description,
+		})
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Failed to create checkout: %v.", err), http.StatusInternalServerError)
+			return
+		}
+
+		data := struct {
+			CheckoutID string
+		}{
+			CheckoutID: *checkout.Id,
+		}
+
+		templates.ExecuteTemplate(w, "checkout.html", data)
 	})
-	if err != nil {
-		log.Printf("[ERROR] process checkout: %v", err)
-		return
-	}
+	http.HandleFunc("/payment-result", func(w http.ResponseWriter, r *http.Request) {
+		status := r.URL.Query().Get("status")
+		message := r.URL.Query().Get("message")
 
-	if accepted, ok := checkoutSuccess.AsCheckoutSuccess(); ok {
-		log.Printf("[INFO] checkout success: id=%q, transaction_id=%q", *accepted.Id, *(*accepted.Transactions)[0].Id)
-	}
+		templates.ExecuteTemplate(w, "result.html", struct {
+			Status  string
+			Message string
+		}{
+			Status:  status,
+			Message: message,
+		})
+	})
 
-	if accepted, ok := checkoutSuccess.AsCheckoutAccepted(); ok {
-		log.Printf("[INFO] checkout accepted: redirect_to=%q", *accepted.NextStep.RedirectUrl)
-	}
+	fmt.Println("Server started at http://localhost:8080")
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
