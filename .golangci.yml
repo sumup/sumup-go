@@ -1,141 +1,25 @@
-run:
-  timeout: 3m
-
+version: "2"
+linters:
+  default: standard
 issues:
   max-same-issues: 0
-  exclude-dirs-use-default: true
-  exclude-rules:
-    - path: _test\.go
-      linters:
-        - bodyclose
-        - dupl
-        - errcheck
-        - errorlint
-        - funlen
-        - goconst
-        - gocyclo
-        - goerr113
-        - gosec
-        - lll
-        - noctx
-        - prealloc
-        - unparam
-
-output:
+  max-issues-per-linter: 0
   uniq-by-line: true
-  sort-results: true
-
-linters:
-  disable-all: true
+formatters:
   enable:
-    - asciicheck
-    - bodyclose
-    - depguard
-    - durationcheck
-    - errcheck
-    - errorlint
-    - exhaustive
-    - gocritic
     - gofmt
     - goimports
-    - gomoddirectives
-    - goprintffuncname
-    - gosec
-    - gosimple
-    - gosimple
-    - govet
-    - ineffassign
-    - makezero
-    - misspell
-    - nakedret
-    - nakedret
-    - nilerr
-    - noctx
-    - nolintlint
-    - prealloc
-    - revive
-    - rowserrcheck
-    - sqlclosecheck
-    - staticcheck
-    - staticcheck
-    - stylecheck
-    - typecheck
-    - unconvert
-    - unparam
-    - unused
-    - wastedassign
-    - whitespace
-
-linters-settings:
-  depguard:
-    rules:
-      main:
-        deny:
-          - pkg: github.com/pkg/errors
-            desc: Use "errors" from std lib instead.
-  errorlint:
-    errorf: true
-    asserts: false
-    comparison: true
-  errcheck:
-    check-type-assertions: true
-    check-blank: false
-  exhaustive:
-    default-signifies-exhaustive: true
-  gci:
-    sections:
-      - standard
-      - default
-      - prefix(github.com/sumup/portier)
-      - dot
-    skip-generated: false
-  gocritic:
-    disabled-checks:
-      - sloppyReassign
-      - whyNoLint
-    enabled-tags:
-      - diagnostic
-      - style
-      - performance
-    settings:
-      hugeParam:
-        sizeThreshold: 512
-  gofmt:
-    simplify: true
-  goimports:
-    local-prefixes: github.com/sumup/portier
-  gomoddirectives:
-    replace-local: true
-    replace-allow-list:
-      - github.com/sumup/portier-migrate
-      - github.com/sqlc-dev/sqlc
-  gosimple:
-    checks: ["all"]
-  govet:
-    enable-all: true
-    disable:
-      - fieldalignment
-  nakedret:
-    max-func-lines: 10
-  misspell:
-    locale: US
-  prealloc:
-    simple: true
-    range-loops: true
-    for-loops: false
-  revive:
-    rules:
-      - name: blank-imports
-        disabled: true
-  nolintlint:
-    allow-unused: false
-    allow-no-explanation: [noctx]
-    require-explanation: true
-    require-specific: true
-  staticcheck:
-    checks: ['all']
-  unparam:
-    check-exported: false
-  whitespace:
-    multi-if: false
-    multi-func: false
+  settings:
+    gci:
+      sections:
+        - standard
+        - default
+        - prefix(github.com/sumup/sumup-go)
+        - dot
+    gofmt:
+      simplify: true
+    goimports:
+      local-prefixes:
+        - github.com/sumup/sumup-go
+  exclusions:
+    generated: lax
