@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.1-beta.5](https://github.com/sumup/sumup-go/compare/v0.0.1-beta.4...v0.0.1-beta.5) (2025-05-08)
+
+
+### Bug Fixes
+
+* **ci:** set generate workflow permissions ([#78](https://github.com/sumup/sumup-go/issues/78)) ([e83722f](https://github.com/sumup/sumup-go/commit/e83722ff3774d62e78af8129e0a2985b579a9403))
+
 ## [0.0.1-beta.4](https://github.com/sumup/sumup-go/compare/v0.0.1-beta.3...v0.0.1-beta.4) (2025-03-04)
 
 
