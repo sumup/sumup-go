@@ -98,10 +98,6 @@ type UpdateCustomerBody struct {
 // ListPaymentInstruments200Response is a schema definition.
 type ListPaymentInstruments200Response []PaymentInstrumentResponse
 
-// DeactivatePaymentInstrument204Response is a schema definition.
-type DeactivatePaymentInstrument204Response struct {
-}
-
 type CustomersService struct {
 	c *client.Client
 }
@@ -296,45 +292,40 @@ func (s *CustomersService) Update(ctx context.Context, customerId string, body U
 
 // DeactivatePaymentInstrument: Deactivate a payment instrument
 // Deactivates an identified card payment instrument resource for a customer.
-func (s *CustomersService) DeactivatePaymentInstrument(ctx context.Context, customerId string, token string) (*DeactivatePaymentInstrument204Response, error) {
+func (s *CustomersService) DeactivatePaymentInstrument(ctx context.Context, customerId string, token string) error {
 	path := fmt.Sprintf("/v0.1/customers/%v/payment-instruments/%v", customerId, token)
 
 	resp, err := s.c.Call(ctx, http.MethodDelete, path)
 	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
+		return fmt.Errorf("error building request: %v", err)
 	}
 	defer resp.Body.Close()
 
 	switch resp.StatusCode {
 	case http.StatusNoContent:
-		var v DeactivatePaymentInstrument204Response
-		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-			return nil, fmt.Errorf("decode response: %s", err.Error())
-		}
-
-		return &v, nil
+		return nil
 	case http.StatusUnauthorized:
 		var apiErr shared.Error
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
+			return fmt.Errorf("read error response: %s", err.Error())
 		}
 
-		return nil, &apiErr
+		return &apiErr
 	case http.StatusForbidden:
 		var apiErr shared.ErrorForbidden
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
+			return fmt.Errorf("read error response: %s", err.Error())
 		}
 
-		return nil, &apiErr
+		return &apiErr
 	case http.StatusNotFound:
 		var apiErr shared.Error
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
+			return fmt.Errorf("read error response: %s", err.Error())
 		}
 
-		return nil, &apiErr
+		return &apiErr
 	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		return fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
 }

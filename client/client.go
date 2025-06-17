@@ -59,7 +59,7 @@ func New(opts ...ClientOption) *Client {
 }
 
 // WithAPIKey returns a [ClientOption] that configures the client with an API key for authorization.
-func (c *Client) WithAPIKey(key string) ClientOption {
+func WithAPIKey(key string) ClientOption {
 	return func(c *Client) error {
 		c.key = key
 		return nil
@@ -68,7 +68,7 @@ func (c *Client) WithAPIKey(key string) ClientOption {
 
 // WithClient returns a [ClientOption] that configures the client to use a specific http client
 // for underlying requests.
-func (c *Client) WithHTTPClient(client *http.Client) ClientOption {
+func WithClient(client *http.Client) ClientOption {
 	return func(c *Client) error {
 		c.client = client
 		return nil
@@ -77,7 +77,7 @@ func (c *Client) WithHTTPClient(client *http.Client) ClientOption {
 
 // WithBaseURL returns a [ClientOption] that configures the client with a base URL that the
 // individual API call paths will be resolved against.
-func (c *Client) WithBaseURL(base string) ClientOption {
+func WithBaseURL(base string) ClientOption {
 	return func(c *Client) error {
 		baseURL, err := url.Parse(base)
 		if err != nil {
