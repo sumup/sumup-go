@@ -75,250 +75,6 @@ func NewClient(opts ...client.ClientOption) *Client
 
 NewClient creates new SumUp API client. The client is by default configured environment variables \(\`SUMUP\_API\_KEY\`\). To override the default configuration use \[ClientOption\]s.
 
-# api\_keys
-
-```go
-import "github.com/sumup/sumup-go/api_keys"
-```
-
-## Index
-
-- [type ApiKeysService](<#ApiKeysService>)
-  - [func NewApiKeysService\(c \*client.Client\) \*ApiKeysService](<#NewApiKeysService>)
-  - [func \(s \*ApiKeysService\) Create\(ctx context.Context, merchantCode string, body CreateApikeyBody\) \(\*Apikey, error\)](<#ApiKeysService.Create>)
-  - [func \(s \*ApiKeysService\) Delete\(ctx context.Context, merchantCode string, keyId string\) error](<#ApiKeysService.Delete>)
-  - [func \(s \*ApiKeysService\) Get\(ctx context.Context, merchantCode string, keyId string\) \(\*Apikey, error\)](<#ApiKeysService.Get>)
-  - [func \(s \*ApiKeysService\) List\(ctx context.Context, merchantCode string, params ListApikeysParams\) \(\*ApikeysList, error\)](<#ApiKeysService.List>)
-  - [func \(s \*ApiKeysService\) Update\(ctx context.Context, merchantCode string, keyId string, body UpdateApikeyBody\) error](<#ApiKeysService.Update>)
-- [type Apikey](<#Apikey>)
-- [type ApikeyType](<#ApikeyType>)
-- [type ApikeysList](<#ApikeysList>)
-- [type CreateApikeyBody](<#CreateApikeyBody>)
-- [type ListApikeysParams](<#ListApikeysParams>)
-  - [func \(p \*ListApikeysParams\) QueryValues\(\) url.Values](<#ListApikeysParams.QueryValues>)
-- [type Oauth2Scope](<#Oauth2Scope>)
-- [type Oauth2Scopes](<#Oauth2Scopes>)
-- [type UpdateApikeyBody](<#UpdateApikeyBody>)
-
-
-<a name="ApiKeysService"></a>
-## type [ApiKeysService](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L123-L125>)
-
-
-
-```go
-type ApiKeysService struct {
-    // contains filtered or unexported fields
-}
-```
-
-<a name="NewApiKeysService"></a>
-### func [NewApiKeysService](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L127>)
-
-```go
-func NewApiKeysService(c *client.Client) *ApiKeysService
-```
-
-
-
-<a name="ApiKeysService.Create"></a>
-### func \(\*ApiKeysService\) [Create](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L157>)
-
-```go
-func (s *ApiKeysService) Create(ctx context.Context, merchantCode string, body CreateApikeyBody) (*Apikey, error)
-```
-
-Create: Create an API key Create a new API key.
-
-<a name="ApiKeysService.Delete"></a>
-### func \(\*ApiKeysService\) [Delete](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L181>)
-
-```go
-func (s *ApiKeysService) Delete(ctx context.Context, merchantCode string, keyId string) error
-```
-
-Delete: Delete an API key Delete an API key.
-
-<a name="ApiKeysService.Get"></a>
-### func \(\*ApiKeysService\) [Get](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L200>)
-
-```go
-func (s *ApiKeysService) Get(ctx context.Context, merchantCode string, keyId string) (*Apikey, error)
-```
-
-Get: Retrieve an API Key Retrieve an API key.
-
-<a name="ApiKeysService.List"></a>
-### func \(\*ApiKeysService\) [List](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L133>)
-
-```go
-func (s *ApiKeysService) List(ctx context.Context, merchantCode string, params ListApikeysParams) (*ApikeysList, error)
-```
-
-List: List API keys List merchant's API keys.
-
-<a name="ApiKeysService.Update"></a>
-### func \(\*ApiKeysService\) [Update](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L224>)
-
-```go
-func (s *ApiKeysService) Update(ctx context.Context, merchantCode string, keyId string, body UpdateApikeyBody) error
-```
-
-Update: Update an API key Update an API key.
-
-<a name="Apikey"></a>
-## type [Apikey](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L20-L37>)
-
-Apikey: An API key is a static token that allows you to authorize with SumUp APIs. Keep your API keys secret and safe. Do not share your API keys or expose them in a publicly accessible areas such as client\-side code \(browser or apps\) or in the GitHub.
-
-```go
-type Apikey struct {
-    // The timestamp of when the API key was created.
-    CreatedAt time.Time `json:"created_at"`
-    // Unique identifier of the API Key.
-    Id  string `json:"id"`
-    // User-assigned name of the API Key.
-    Name string `json:"name"`
-    // The plaintext value of the API key. This field is returned only in the response to API key creation and is
-    // never again available in the plaintext form.
-    Plaintext *string `json:"plaintext,omitempty"`
-    // Last 8 characters of the API key.
-    Preview string `json:"preview"`
-    // Max items: 128
-    Scopes Oauth2Scopes `json:"scopes"`
-    Type   ApikeyType   `json:"type"`
-    // The timestamp of when the API key was last updated.
-    UpdatedAt time.Time `json:"updated_at"`
-}
-```
-
-<a name="ApikeyType"></a>
-## type [ApikeyType](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L40>)
-
-ApikeyType is a schema definition.
-
-```go
-type ApikeyType string
-```
-
-<a name="ApikeyTypePublic"></a>
-
-```go
-const (
-    ApikeyTypePublic ApikeyType = "public"
-    ApikeyTypeSecret ApikeyType = "secret"
-)
-```
-
-<a name="ApikeysList"></a>
-## type [ApikeysList](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L48-L53>)
-
-ApikeysList: List of API keys.
-
-```go
-type ApikeysList struct {
-    // List of API keys.
-    Items []Apikey `json:"items"`
-    // Total number of API keys.
-    TotalCount int `json:"total_count"`
-}
-```
-
-<a name="CreateApikeyBody"></a>
-## type [CreateApikeyBody](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L83-L89>)
-
-CreateApikeyBody is a schema definition.
-
-```go
-type CreateApikeyBody struct {
-    // Name of the API key.
-    // Max length: 255
-    Name string `json:"name"`
-    // Max items: 128
-    Scopes Oauth2Scopes `json:"scopes"`
-}
-```
-
-<a name="ListApikeysParams"></a>
-## type [ListApikeysParams](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L101-L106>)
-
-ListApikeysParams: query parameters for ListAPIKeys
-
-```go
-type ListApikeysParams struct {
-    // Maximum number of API Keys to return.
-    Limit *int
-    // Offset of the first API Key to return.
-    Offset *int
-}
-```
-
-<a name="ListApikeysParams.QueryValues"></a>
-### func \(\*ListApikeysParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L109>)
-
-```go
-func (p *ListApikeysParams) QueryValues() url.Values
-```
-
-QueryValues converts [ListApikeysParams](<#ListApikeysParams>) into \[url.Values\].
-
-<a name="Oauth2Scope"></a>
-## type [Oauth2Scope](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L56>)
-
-Oauth2Scope is a schema definition.
-
-```go
-type Oauth2Scope string
-```
-
-<a name="Oauth2ScopeAccountingRead"></a>
-
-```go
-const (
-    Oauth2ScopeAccountingRead      Oauth2Scope = "accounting.read"
-    Oauth2ScopeAccountingWrite     Oauth2Scope = "accounting.write"
-    Oauth2ScopeEmail               Oauth2Scope = "email"
-    Oauth2ScopeInvoicesRead        Oauth2Scope = "invoices.read"
-    Oauth2ScopeInvoicesWrite       Oauth2Scope = "invoices.write"
-    Oauth2ScopePaymentInstruments  Oauth2Scope = "payment_instruments"
-    Oauth2ScopePayments            Oauth2Scope = "payments"
-    Oauth2ScopeProducts            Oauth2Scope = "products"
-    Oauth2ScopeProfile             Oauth2Scope = "profile"
-    Oauth2ScopeReadersRead         Oauth2Scope = "readers.read"
-    Oauth2ScopeReadersWrite        Oauth2Scope = "readers.write"
-    Oauth2ScopeTransactionsHistory Oauth2Scope = "transactions.history"
-    Oauth2ScopeUserAppSettings     Oauth2Scope = "user.app-settings"
-    Oauth2ScopeUserPayoutSettings  Oauth2Scope = "user.payout-settings"
-    Oauth2ScopeUserProfile         Oauth2Scope = "user.profile"
-    Oauth2ScopeUserProfileReadonly Oauth2Scope = "user.profile_readonly"
-    Oauth2ScopeUserSubaccounts     Oauth2Scope = "user.subaccounts"
-)
-```
-
-<a name="Oauth2Scopes"></a>
-## type [Oauth2Scopes](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L80>)
-
-Oauth2Scopes is a schema definition. Max items: 128
-
-```go
-type Oauth2Scopes []Oauth2Scope
-```
-
-<a name="UpdateApikeyBody"></a>
-## type [UpdateApikeyBody](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L92-L98>)
-
-UpdateApikeyBody is a schema definition.
-
-```go
-type UpdateApikeyBody struct {
-    // New name for the API key.
-    // Max length: 255
-    Name string `json:"name"`
-    // Max items: 128
-    Scopes Oauth2Scopes `json:"scopes"`
-}
-```
-
 # checkouts
 
 ```go
@@ -5768,12 +5524,16 @@ func (p *GetTransactionParams) QueryValues() url.Values
 QueryValues converts [GetTransactionParams](<#GetTransactionParams>) into \[url.Values\].
 
 <a name="GetTransactionV21Params"></a>
-## type [GetTransactionV21Params](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L704-L712>)
+## type [GetTransactionV21Params](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L704-L716>)
 
 GetTransactionV21Params: query parameters for GetTransactionV2.1
 
 ```go
 type GetTransactionV21Params struct {
+    // Client transaction id.
+    ClientTransactionId *string
+    // External/foreign transaction id (passed by clients).
+    ForeignTransactionId *string
     // Retrieves the transaction resource with the specified transaction ID (the `id` parameter in the transaction resource).
     Id  *string
     // Retrieves the transaction resource with the specified internal transaction ID (the `internal_id` parameter in
@@ -5785,7 +5545,7 @@ type GetTransactionV21Params struct {
 ```
 
 <a name="GetTransactionV21Params.QueryValues"></a>
-### func \(\*GetTransactionV21Params\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L715>)
+### func \(\*GetTransactionV21Params\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L719>)
 
 ```go
 func (p *GetTransactionV21Params) QueryValues() url.Values
@@ -5852,7 +5612,7 @@ type LinkRefund struct {
 ```
 
 <a name="ListTransactions200Response"></a>
-## type [ListTransactions200Response](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L734-L737>)
+## type [ListTransactions200Response](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L746-L749>)
 
 ListTransactions200Response is a schema definition.
 
@@ -5915,7 +5675,7 @@ func (p *ListTransactionsParams) QueryValues() url.Values
 QueryValues converts [ListTransactionsParams](<#ListTransactionsParams>) into \[url.Values\].
 
 <a name="ListTransactionsV21200Response"></a>
-## type [ListTransactionsV21200Response](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L740-L743>)
+## type [ListTransactionsV21200Response](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L752-L755>)
 
 ListTransactionsV21200Response is a schema definition.
 
@@ -6528,7 +6288,7 @@ const (
 ```
 
 <a name="TransactionsService"></a>
-## type [TransactionsService](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L745-L747>)
+## type [TransactionsService](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L757-L759>)
 
 
 
@@ -6539,7 +6299,7 @@ type TransactionsService struct {
 ```
 
 <a name="NewTransactionsService"></a>
-### func [NewTransactionsService](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L749>)
+### func [NewTransactionsService](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L761>)
 
 ```go
 func NewTransactionsService(c *client.Client) *TransactionsService
@@ -6548,7 +6308,7 @@ func NewTransactionsService(c *client.Client) *TransactionsService
 
 
 <a name="TransactionsService.Get"></a>
-### func \(\*TransactionsService\) [Get](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L872>)
+### func \(\*TransactionsService\) [Get](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L884>)
 
 ```go
 func (s *TransactionsService) Get(ctx context.Context, merchantCode string, params GetTransactionV21Params) (*TransactionFull, error)
@@ -6563,7 +6323,7 @@ Get: Retrieve a transaction Retrieves the full details of an identified transact
 - \`client\_transaction\_id\`
 
 <a name="TransactionsService.GetDeprecated"></a>
-### func \(\*TransactionsService\) [GetDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L796>)
+### func \(\*TransactionsService\) [GetDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L808>)
 
 ```go
 func (s *TransactionsService) GetDeprecated(ctx context.Context, params GetTransactionParams) (*TransactionFull, error)
@@ -6580,7 +6340,7 @@ GetDeprecated: Retrieve a transaction Retrieves the full details of an identifie
 Deprecated: this operation is deprecated
 
 <a name="TransactionsService.List"></a>
-### func \(\*TransactionsService\) [List](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L834>)
+### func \(\*TransactionsService\) [List](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L846>)
 
 ```go
 func (s *TransactionsService) List(ctx context.Context, merchantCode string, params ListTransactionsV21Params) (*ListTransactionsV21200Response, error)
@@ -6589,7 +6349,7 @@ func (s *TransactionsService) List(ctx context.Context, merchantCode string, par
 List: List transactions Lists detailed history of all transactions associated with the merchant profile.
 
 <a name="TransactionsService.ListDeprecated"></a>
-### func \(\*TransactionsService\) [ListDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L756>)
+### func \(\*TransactionsService\) [ListDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L768>)
 
 ```go
 func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListTransactionsParams) (*ListTransactions200Response, error)
@@ -6598,7 +6358,7 @@ func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListTra
 ListDeprecated: List transactions Lists detailed history of all transactions associated with the merchant profile. Deprecated: this operation is deprecated
 
 <a name="TransactionsService.Refund"></a>
-### func \(\*TransactionsService\) [Refund](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L910>)
+### func \(\*TransactionsService\) [Refund](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L922>)
 
 ```go
 func (s *TransactionsService) Refund(ctx context.Context, txnId string, body RefundTransactionBody) error

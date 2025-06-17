@@ -702,6 +702,10 @@ func (p *ListTransactionsV21Params) QueryValues() url.Values {
 
 // GetTransactionV21Params: query parameters for GetTransactionV2.1
 type GetTransactionV21Params struct {
+	// Client transaction id.
+	ClientTransactionId *string
+	// External/foreign transaction id (passed by clients).
+	ForeignTransactionId *string
 	// Retrieves the transaction resource with the specified transaction ID (the `id` parameter in the transaction resource).
 	Id *string
 	// Retrieves the transaction resource with the specified internal transaction ID (the `internal_id` parameter in
@@ -714,6 +718,14 @@ type GetTransactionV21Params struct {
 // QueryValues converts [GetTransactionV21Params] into [url.Values].
 func (p *GetTransactionV21Params) QueryValues() url.Values {
 	q := make(url.Values)
+
+	if p.ClientTransactionId != nil {
+		q.Set("client_transaction_id", *p.ClientTransactionId)
+	}
+
+	if p.ForeignTransactionId != nil {
+		q.Set("foreign_transaction_id", *p.ForeignTransactionId)
+	}
 
 	if p.Id != nil {
 		q.Set("id", *p.Id)
