@@ -742,10 +742,6 @@ type ListTransactionsV21200Response struct {
 	Links *[]Link               `json:"links,omitempty"`
 }
 
-// RefundTransaction204Response is a schema definition.
-type RefundTransaction204Response struct {
-}
-
 type TransactionsService struct {
 	c *client.Client
 }
@@ -911,38 +907,33 @@ func (s *TransactionsService) Get(ctx context.Context, merchantCode string, para
 
 // Refund: Refund a transaction
 // Refunds an identified transaction either in full or partially.
-func (s *TransactionsService) Refund(ctx context.Context, txnId string, body RefundTransactionBody) (*RefundTransaction204Response, error) {
+func (s *TransactionsService) Refund(ctx context.Context, txnId string, body RefundTransactionBody) error {
 	path := fmt.Sprintf("/v0.1/me/refund/%v", txnId)
 
 	resp, err := s.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
 	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
+		return fmt.Errorf("error building request: %v", err)
 	}
 	defer resp.Body.Close()
 
 	switch resp.StatusCode {
 	case http.StatusNoContent:
-		var v RefundTransaction204Response
-		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-			return nil, fmt.Errorf("decode response: %s", err.Error())
-		}
-
-		return &v, nil
+		return nil
 	case http.StatusNotFound:
 		var apiErr shared.Error
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
+			return fmt.Errorf("read error response: %s", err.Error())
 		}
 
-		return nil, &apiErr
+		return &apiErr
 	case http.StatusConflict:
 		var apiErr shared.Error
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
+			return fmt.Errorf("read error response: %s", err.Error())
 		}
 
-		return nil, &apiErr
+		return &apiErr
 	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		return fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
 }

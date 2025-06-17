@@ -1899,10 +1899,10 @@ import "github.com/sumup/sumup-go/client"
   - [func \(c \*Client\) Call\(ctx context.Context, method, path string, opts ...RequestOption\) \(\*http.Response, error\)](<#Client.Call>)
   - [func \(c \*Client\) Do\(req \*http.Request\) \(\*http.Response, error\)](<#Client.Do>)
   - [func \(c \*Client\) NewRequest\(ctx context.Context, method, path string, body io.Reader\) \(\*http.Request, error\)](<#Client.NewRequest>)
-  - [func \(c \*Client\) WithAPIKey\(key string\) ClientOption](<#Client.WithAPIKey>)
-  - [func \(c \*Client\) WithBaseURL\(base string\) ClientOption](<#Client.WithBaseURL>)
-  - [func \(c \*Client\) WithHTTPClient\(client \*http.Client\) ClientOption](<#Client.WithHTTPClient>)
 - [type ClientOption](<#ClientOption>)
+  - [func WithAPIKey\(key string\) ClientOption](<#WithAPIKey>)
+  - [func WithBaseURL\(base string\) ClientOption](<#WithBaseURL>)
+  - [func WithClient\(client \*http.Client\) ClientOption](<#WithClient>)
 - [type RequestOption](<#RequestOption>)
   - [func WithHTTPClient\(client \*http.Client\) RequestOption](<#WithHTTPClient>)
   - [func WithHeader\(key, value string\) RequestOption](<#WithHeader>)
@@ -1970,33 +1970,6 @@ NewRequest returns a new \[http.Request\] given a method, URL, and optional body
 
 NewRequest returns a Request suitable for use with [Client.Do](<#Client.Do>).
 
-<a name="Client.WithAPIKey"></a>
-### func \(\*Client\) WithAPIKey
-
-```go
-func (c *Client) WithAPIKey(key string) ClientOption
-```
-
-WithAPIKey returns a [ClientOption](<#ClientOption>) that configures the client with an API key for authorization.
-
-<a name="Client.WithBaseURL"></a>
-### func \(\*Client\) WithBaseURL
-
-```go
-func (c *Client) WithBaseURL(base string) ClientOption
-```
-
-WithBaseURL returns a [ClientOption](<#ClientOption>) that configures the client with a base URL that the individual API call paths will be resolved against.
-
-<a name="Client.WithHTTPClient"></a>
-### func \(\*Client\) WithHTTPClient
-
-```go
-func (c *Client) WithHTTPClient(client *http.Client) ClientOption
-```
-
-WithClient returns a [ClientOption](<#ClientOption>) that configures the client to use a specific http client for underlying requests.
-
 <a name="ClientOption"></a>
 ## type ClientOption
 
@@ -2005,6 +1978,33 @@ ClientOption is an option for the SumUp API client.
 ```go
 type ClientOption func(c *Client) error
 ```
+
+<a name="WithAPIKey"></a>
+### func WithAPIKey
+
+```go
+func WithAPIKey(key string) ClientOption
+```
+
+WithAPIKey returns a [ClientOption](<#ClientOption>) that configures the client with an API key for authorization.
+
+<a name="WithBaseURL"></a>
+### func WithBaseURL
+
+```go
+func WithBaseURL(base string) ClientOption
+```
+
+WithBaseURL returns a [ClientOption](<#ClientOption>) that configures the client with a base URL that the individual API call paths will be resolved against.
+
+<a name="WithClient"></a>
+### func WithClient
+
+```go
+func WithClient(client *http.Client) ClientOption
+```
+
+WithClient returns a [ClientOption](<#ClientOption>) that configures the client to use a specific http client for underlying requests.
 
 <a name="RequestOption"></a>
 ## type RequestOption
@@ -2064,11 +2064,10 @@ import "github.com/sumup/sumup-go/customers"
 - [type CustomersService](<#CustomersService>)
   - [func NewCustomersService\(c \*client.Client\) \*CustomersService](<#NewCustomersService>)
   - [func \(s \*CustomersService\) Create\(ctx context.Context, body CreateCustomerBody\) \(\*Customer, error\)](<#CustomersService.Create>)
-  - [func \(s \*CustomersService\) DeactivatePaymentInstrument\(ctx context.Context, customerId string, token string\) \(\*DeactivatePaymentInstrument204Response, error\)](<#CustomersService.DeactivatePaymentInstrument>)
+  - [func \(s \*CustomersService\) DeactivatePaymentInstrument\(ctx context.Context, customerId string, token string\) error](<#CustomersService.DeactivatePaymentInstrument>)
   - [func \(s \*CustomersService\) Get\(ctx context.Context, customerId string\) \(\*Customer, error\)](<#CustomersService.Get>)
   - [func \(s \*CustomersService\) ListPaymentInstruments\(ctx context.Context, customerId string\) \(\*ListPaymentInstruments200Response, error\)](<#CustomersService.ListPaymentInstruments>)
   - [func \(s \*CustomersService\) Update\(ctx context.Context, customerId string, body UpdateCustomerBody\) \(\*Customer, error\)](<#CustomersService.Update>)
-- [type DeactivatePaymentInstrument204Response](<#DeactivatePaymentInstrument204Response>)
 - [type ListPaymentInstruments200Response](<#ListPaymentInstruments200Response>)
 - [type PaymentInstrumentResponse](<#PaymentInstrumentResponse>)
 - [type PaymentInstrumentResponseCard](<#PaymentInstrumentResponseCard>)
@@ -2138,7 +2137,7 @@ Create: Create a customer Creates a new saved customer resource which you can la
 ### func \(\*CustomersService\) DeactivatePaymentInstrument
 
 ```go
-func (s *CustomersService) DeactivatePaymentInstrument(ctx context.Context, customerId string, token string) (*DeactivatePaymentInstrument204Response, error)
+func (s *CustomersService) DeactivatePaymentInstrument(ctx context.Context, customerId string, token string) error
 ```
 
 DeactivatePaymentInstrument: Deactivate a payment instrument Deactivates an identified card payment instrument resource for a customer.
@@ -2171,16 +2170,6 @@ func (s *CustomersService) Update(ctx context.Context, customerId string, body U
 Update: Update a customer Updates an identified saved customer resource's personal details.
 
 The request only overwrites the parameters included in the request, all other parameters will remain with their initially assigned values.
-
-<a name="DeactivatePaymentInstrument204Response"></a>
-## type DeactivatePaymentInstrument204Response
-
-DeactivatePaymentInstrument204Response is a schema definition.
-
-```go
-type DeactivatePaymentInstrument204Response struct {
-}
-```
 
 <a name="ListPaymentInstruments200Response"></a>
 ## type ListPaymentInstruments200Response
@@ -5644,7 +5633,6 @@ import "github.com/sumup/sumup-go/transactions"
   - [func \(p \*ListTransactionsV21Params\) QueryValues\(\) url.Values](<#ListTransactionsV21Params.QueryValues>)
 - [type Lon](<#Lon>)
 - [type Product](<#Product>)
-- [type RefundTransaction204Response](<#RefundTransaction204Response>)
 - [type RefundTransactionBody](<#RefundTransactionBody>)
 - [type TransactionEvent](<#TransactionEvent>)
 - [type TransactionFull](<#TransactionFull>)
@@ -5671,7 +5659,7 @@ import "github.com/sumup/sumup-go/transactions"
   - [func \(s \*TransactionsService\) GetDeprecated\(ctx context.Context, params GetTransactionParams\) \(\*TransactionFull, error\)](<#TransactionsService.GetDeprecated>)
   - [func \(s \*TransactionsService\) List\(ctx context.Context, merchantCode string, params ListTransactionsV21Params\) \(\*ListTransactionsV21200Response, error\)](<#TransactionsService.List>)
   - [func \(s \*TransactionsService\) ListDeprecated\(ctx context.Context, params ListTransactionsParams\) \(\*ListTransactions200Response, error\)](<#TransactionsService.ListDeprecated>)
-  - [func \(s \*TransactionsService\) Refund\(ctx context.Context, txnId string, body RefundTransactionBody\) \(\*RefundTransaction204Response, error\)](<#TransactionsService.Refund>)
+  - [func \(s \*TransactionsService\) Refund\(ctx context.Context, txnId string, body RefundTransactionBody\) error](<#TransactionsService.Refund>)
 
 
 <a name="CardResponse"></a>
@@ -6029,16 +6017,6 @@ type Product struct {
     VatAmount *float64 `json:"vat_amount,omitempty"`
     // VAT rate applicable to the product.
     VatRate *float64 `json:"vat_rate,omitempty"`
-}
-```
-
-<a name="RefundTransaction204Response"></a>
-## type RefundTransaction204Response
-
-RefundTransaction204Response is a schema definition.
-
-```go
-type RefundTransaction204Response struct {
 }
 ```
 
@@ -6623,7 +6601,7 @@ ListDeprecated: List transactions Lists detailed history of all transactions ass
 ### func \(\*TransactionsService\) Refund
 
 ```go
-func (s *TransactionsService) Refund(ctx context.Context, txnId string, body RefundTransactionBody) (*RefundTransaction204Response, error)
+func (s *TransactionsService) Refund(ctx context.Context, txnId string, body RefundTransactionBody) error
 ```
 
 Refund: Refund a transaction Refunds an identified transaction either in full or partially.
