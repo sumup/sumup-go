@@ -25,7 +25,7 @@ var OAuth2Endpoint = oauth2.Endpoint{
 ```
 
 <a name="Client"></a>
-## type Client
+## type [Client](<https://github.com/sumup/sumup-go/blob/main/client.go#L20-L33>)
 
 
 
@@ -67,7 +67,7 @@ log.Printf("[INFO] merchant profile: %+v", *account.MerchantProfile)
 </details>
 
 <a name="NewClient"></a>
-### func NewClient
+### func [NewClient](<https://github.com/sumup/sumup-go/blob/main/client.go#L38>)
 
 ```go
 func NewClient(opts ...client.ClientOption) *Client
@@ -102,7 +102,7 @@ import "github.com/sumup/sumup-go/api_keys"
 
 
 <a name="ApiKeysService"></a>
-## type ApiKeysService
+## type [ApiKeysService](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L123-L125>)
 
 
 
@@ -113,7 +113,7 @@ type ApiKeysService struct {
 ```
 
 <a name="NewApiKeysService"></a>
-### func NewApiKeysService
+### func [NewApiKeysService](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L127>)
 
 ```go
 func NewApiKeysService(c *client.Client) *ApiKeysService
@@ -122,7 +122,7 @@ func NewApiKeysService(c *client.Client) *ApiKeysService
 
 
 <a name="ApiKeysService.Create"></a>
-### func \(\*ApiKeysService\) Create
+### func \(\*ApiKeysService\) [Create](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L157>)
 
 ```go
 func (s *ApiKeysService) Create(ctx context.Context, merchantCode string, body CreateApikeyBody) (*Apikey, error)
@@ -131,7 +131,7 @@ func (s *ApiKeysService) Create(ctx context.Context, merchantCode string, body C
 Create: Create an API key Create a new API key.
 
 <a name="ApiKeysService.Delete"></a>
-### func \(\*ApiKeysService\) Delete
+### func \(\*ApiKeysService\) [Delete](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L181>)
 
 ```go
 func (s *ApiKeysService) Delete(ctx context.Context, merchantCode string, keyId string) error
@@ -140,7 +140,7 @@ func (s *ApiKeysService) Delete(ctx context.Context, merchantCode string, keyId 
 Delete: Delete an API key Delete an API key.
 
 <a name="ApiKeysService.Get"></a>
-### func \(\*ApiKeysService\) Get
+### func \(\*ApiKeysService\) [Get](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L200>)
 
 ```go
 func (s *ApiKeysService) Get(ctx context.Context, merchantCode string, keyId string) (*Apikey, error)
@@ -149,7 +149,7 @@ func (s *ApiKeysService) Get(ctx context.Context, merchantCode string, keyId str
 Get: Retrieve an API Key Retrieve an API key.
 
 <a name="ApiKeysService.List"></a>
-### func \(\*ApiKeysService\) List
+### func \(\*ApiKeysService\) [List](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L133>)
 
 ```go
 func (s *ApiKeysService) List(ctx context.Context, merchantCode string, params ListApikeysParams) (*ApikeysList, error)
@@ -158,7 +158,7 @@ func (s *ApiKeysService) List(ctx context.Context, merchantCode string, params L
 List: List API keys List merchant's API keys.
 
 <a name="ApiKeysService.Update"></a>
-### func \(\*ApiKeysService\) Update
+### func \(\*ApiKeysService\) [Update](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L224>)
 
 ```go
 func (s *ApiKeysService) Update(ctx context.Context, merchantCode string, keyId string, body UpdateApikeyBody) error
@@ -167,7 +167,7 @@ func (s *ApiKeysService) Update(ctx context.Context, merchantCode string, keyId 
 Update: Update an API key Update an API key.
 
 <a name="Apikey"></a>
-## type Apikey
+## type [Apikey](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L20-L37>)
 
 Apikey: An API key is a static token that allows you to authorize with SumUp APIs. Keep your API keys secret and safe. Do not share your API keys or expose them in a publicly accessible areas such as client\-side code \(browser or apps\) or in the GitHub.
 
@@ -193,7 +193,7 @@ type Apikey struct {
 ```
 
 <a name="ApikeyType"></a>
-## type ApikeyType
+## type [ApikeyType](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L40>)
 
 ApikeyType is a schema definition.
 
@@ -211,7 +211,7 @@ const (
 ```
 
 <a name="ApikeysList"></a>
-## type ApikeysList
+## type [ApikeysList](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L48-L53>)
 
 ApikeysList: List of API keys.
 
@@ -225,7 +225,7 @@ type ApikeysList struct {
 ```
 
 <a name="CreateApikeyBody"></a>
-## type CreateApikeyBody
+## type [CreateApikeyBody](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L83-L89>)
 
 CreateApikeyBody is a schema definition.
 
@@ -240,7 +240,7 @@ type CreateApikeyBody struct {
 ```
 
 <a name="ListApikeysParams"></a>
-## type ListApikeysParams
+## type [ListApikeysParams](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L101-L106>)
 
 ListApikeysParams: query parameters for ListAPIKeys
 
@@ -254,7 +254,7 @@ type ListApikeysParams struct {
 ```
 
 <a name="ListApikeysParams.QueryValues"></a>
-### func \(\*ListApikeysParams\) QueryValues
+### func \(\*ListApikeysParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L109>)
 
 ```go
 func (p *ListApikeysParams) QueryValues() url.Values
@@ -263,7 +263,7 @@ func (p *ListApikeysParams) QueryValues() url.Values
 QueryValues converts [ListApikeysParams](<#ListApikeysParams>) into \[url.Values\].
 
 <a name="Oauth2Scope"></a>
-## type Oauth2Scope
+## type [Oauth2Scope](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L56>)
 
 Oauth2Scope is a schema definition.
 
@@ -296,7 +296,7 @@ const (
 ```
 
 <a name="Oauth2Scopes"></a>
-## type Oauth2Scopes
+## type [Oauth2Scopes](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L80>)
 
 Oauth2Scopes is a schema definition. Max items: 128
 
@@ -305,7 +305,7 @@ type Oauth2Scopes []Oauth2Scope
 ```
 
 <a name="UpdateApikeyBody"></a>
-## type UpdateApikeyBody
+## type [UpdateApikeyBody](<https://github.com/sumup/sumup-go/blob/main/api_keys/api_keys.go#L92-L98>)
 
 UpdateApikeyBody is a schema definition.
 
@@ -402,7 +402,7 @@ import "github.com/sumup/sumup-go/checkouts"
 
 
 <a name="Card"></a>
-## type Card
+## type [Card](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L19-L52>)
 
 Card: \_\_Required when payment type is \`card\`.\_\_ Details of the payment card.
 
@@ -444,7 +444,7 @@ type Card struct {
 ```
 
 <a name="CardExpiryMonth"></a>
-## type CardExpiryMonth
+## type [CardExpiryMonth](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L56>)
 
 CardExpiryMonth: Month from the expiration time of the payment card. Accepted format is \`MM\`. Write only
 
@@ -472,7 +472,7 @@ const (
 ```
 
 <a name="CardType"></a>
-## type CardType
+## type [CardType](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L75>)
 
 CardType: Issuing card network of the payment card. Read only
 
@@ -502,7 +502,7 @@ const (
 ```
 
 <a name="Checkout"></a>
-## type Checkout
+## type [Checkout](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L95-L134>)
 
 Checkout: Details of the payment checkout.
 
@@ -550,7 +550,7 @@ type Checkout struct {
 ```
 
 <a name="CheckoutAccepted"></a>
-## type CheckoutAccepted
+## type [CheckoutAccepted](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L207-L210>)
 
 CheckoutAccepted: 3DS Response
 
@@ -562,7 +562,7 @@ type CheckoutAccepted struct {
 ```
 
 <a name="CheckoutAcceptedNextStep"></a>
-## type CheckoutAcceptedNextStep
+## type [CheckoutAcceptedNextStep](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L213-L225>)
 
 CheckoutAcceptedNextStep: Required action processing 3D Secure payments.
 
@@ -583,7 +583,7 @@ type CheckoutAcceptedNextStep struct {
 ```
 
 <a name="CheckoutAcceptedNextStepMechanism"></a>
-## type CheckoutAcceptedNextStepMechanism
+## type [CheckoutAcceptedNextStepMechanism](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L228>)
 
 CheckoutAcceptedNextStepMechanism is a schema definition.
 
@@ -601,7 +601,7 @@ const (
 ```
 
 <a name="CheckoutAcceptedNextStepPayload"></a>
-## type CheckoutAcceptedNextStepPayload
+## type [CheckoutAcceptedNextStepPayload](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L237-L241>)
 
 CheckoutAcceptedNextStepPayload: Contains parameters essential for form redirection. Number of object keys and their content can vary.
 
@@ -614,7 +614,7 @@ type CheckoutAcceptedNextStepPayload struct {
 ```
 
 <a name="CheckoutCreateRequest"></a>
-## type CheckoutCreateRequest
+## type [CheckoutCreateRequest](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L244-L294>)
 
 CheckoutCreateRequest: Details of the payment checkout.
 
@@ -673,7 +673,7 @@ type CheckoutCreateRequest struct {
 ```
 
 <a name="CheckoutCreateRequestPurpose"></a>
-## type CheckoutCreateRequestPurpose
+## type [CheckoutCreateRequestPurpose](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L298>)
 
 CheckoutCreateRequestPurpose: Purpose of the checkout. Default: CHECKOUT
 
@@ -691,7 +691,7 @@ const (
 ```
 
 <a name="CheckoutCreateRequestStatus"></a>
-## type CheckoutCreateRequestStatus
+## type [CheckoutCreateRequestStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L307>)
 
 CheckoutCreateRequestStatus: Current status of the checkout. Read only
 
@@ -710,7 +710,7 @@ const (
 ```
 
 <a name="CheckoutCreateRequestTransaction"></a>
-## type CheckoutCreateRequestTransaction
+## type [CheckoutCreateRequestTransaction](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L316-L347>)
 
 CheckoutCreateRequestTransaction is a schema definition.
 
@@ -750,7 +750,7 @@ type CheckoutCreateRequestTransaction struct {
 ```
 
 <a name="CheckoutCreateRequestTransactionEntryMode"></a>
-## type CheckoutCreateRequestTransactionEntryMode
+## type [CheckoutCreateRequestTransactionEntryMode](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L369>)
 
 CheckoutCreateRequestTransactionEntryMode: Entry mode of the payment details.
 
@@ -768,7 +768,7 @@ const (
 ```
 
 <a name="CheckoutCreateRequestTransactionPaymentType"></a>
-## type CheckoutCreateRequestTransactionPaymentType
+## type [CheckoutCreateRequestTransactionPaymentType](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L350>)
 
 CheckoutCreateRequestTransactionPaymentType: Payment type used for the transaction.
 
@@ -787,7 +787,7 @@ const (
 ```
 
 <a name="CheckoutCreateRequestTransactionStatus"></a>
-## type CheckoutCreateRequestTransactionStatus
+## type [CheckoutCreateRequestTransactionStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L359>)
 
 CheckoutCreateRequestTransactionStatus: Current status of the transaction.
 
@@ -807,7 +807,7 @@ const (
 ```
 
 <a name="CheckoutProcessMixin"></a>
-## type CheckoutProcessMixin
+## type [CheckoutProcessMixin](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L377-L395>)
 
 CheckoutProcessMixin: Details of the payment instrument for processing the checkout.
 
@@ -834,7 +834,7 @@ type CheckoutProcessMixin struct {
 ```
 
 <a name="CheckoutProcessMixinPaymentType"></a>
-## type CheckoutProcessMixinPaymentType
+## type [CheckoutProcessMixinPaymentType](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L398>)
 
 CheckoutProcessMixinPaymentType: Describes the payment method used to attempt processing
 
@@ -855,7 +855,7 @@ const (
 ```
 
 <a name="CheckoutStatus"></a>
-## type CheckoutStatus
+## type [CheckoutStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L137>)
 
 CheckoutStatus: Current status of the checkout.
 
@@ -874,7 +874,7 @@ const (
 ```
 
 <a name="CheckoutSuccess"></a>
-## type CheckoutSuccess
+## type [CheckoutSuccess](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L409-L460>)
 
 CheckoutSuccess is a schema definition.
 
@@ -934,7 +934,7 @@ type CheckoutSuccess struct {
 ```
 
 <a name="CheckoutSuccessPaymentInstrument"></a>
-## type CheckoutSuccessPaymentInstrument
+## type [CheckoutSuccessPaymentInstrument](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L533-L536>)
 
 CheckoutSuccessPaymentInstrument: Object containing token information for the specified payment instrument
 
@@ -946,7 +946,7 @@ type CheckoutSuccessPaymentInstrument struct {
 ```
 
 <a name="CheckoutSuccessStatus"></a>
-## type CheckoutSuccessStatus
+## type [CheckoutSuccessStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L463>)
 
 CheckoutSuccessStatus: Current status of the checkout.
 
@@ -965,7 +965,7 @@ const (
 ```
 
 <a name="CheckoutSuccessTransaction"></a>
-## type CheckoutSuccessTransaction
+## type [CheckoutSuccessTransaction](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L472-L503>)
 
 CheckoutSuccessTransaction is a schema definition.
 
@@ -1005,7 +1005,7 @@ type CheckoutSuccessTransaction struct {
 ```
 
 <a name="CheckoutSuccessTransactionEntryMode"></a>
-## type CheckoutSuccessTransactionEntryMode
+## type [CheckoutSuccessTransactionEntryMode](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L525>)
 
 CheckoutSuccessTransactionEntryMode: Entry mode of the payment details.
 
@@ -1023,7 +1023,7 @@ const (
 ```
 
 <a name="CheckoutSuccessTransactionPaymentType"></a>
-## type CheckoutSuccessTransactionPaymentType
+## type [CheckoutSuccessTransactionPaymentType](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L506>)
 
 CheckoutSuccessTransactionPaymentType: Payment type used for the transaction.
 
@@ -1042,7 +1042,7 @@ const (
 ```
 
 <a name="CheckoutSuccessTransactionStatus"></a>
-## type CheckoutSuccessTransactionStatus
+## type [CheckoutSuccessTransactionStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L515>)
 
 CheckoutSuccessTransactionStatus: Current status of the transaction.
 
@@ -1062,7 +1062,7 @@ const (
 ```
 
 <a name="CheckoutTransaction"></a>
-## type CheckoutTransaction
+## type [CheckoutTransaction](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L146-L177>)
 
 CheckoutTransaction is a schema definition.
 
@@ -1102,7 +1102,7 @@ type CheckoutTransaction struct {
 ```
 
 <a name="CheckoutTransactionEntryMode"></a>
-## type CheckoutTransactionEntryMode
+## type [CheckoutTransactionEntryMode](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L199>)
 
 CheckoutTransactionEntryMode: Entry mode of the payment details.
 
@@ -1120,7 +1120,7 @@ const (
 ```
 
 <a name="CheckoutTransactionPaymentType"></a>
-## type CheckoutTransactionPaymentType
+## type [CheckoutTransactionPaymentType](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L180>)
 
 CheckoutTransactionPaymentType: Payment type used for the transaction.
 
@@ -1139,7 +1139,7 @@ const (
 ```
 
 <a name="CheckoutTransactionStatus"></a>
-## type CheckoutTransactionStatus
+## type [CheckoutTransactionStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L189>)
 
 CheckoutTransactionStatus: Current status of the transaction.
 
@@ -1159,7 +1159,7 @@ const (
 ```
 
 <a name="CheckoutsService"></a>
-## type CheckoutsService
+## type [CheckoutsService](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L968-L970>)
 
 
 
@@ -1170,7 +1170,7 @@ type CheckoutsService struct {
 ```
 
 <a name="NewCheckoutsService"></a>
-### func NewCheckoutsService
+### func [NewCheckoutsService](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L972>)
 
 ```go
 func NewCheckoutsService(c *client.Client) *CheckoutsService
@@ -1179,7 +1179,7 @@ func NewCheckoutsService(c *client.Client) *CheckoutsService
 
 
 <a name="CheckoutsService.Create"></a>
-### func \(\*CheckoutsService\) Create
+### func \(\*CheckoutsService\) [Create](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L1014>)
 
 ```go
 func (s *CheckoutsService) Create(ctx context.Context, body CreateCheckoutBody) (*Checkout, error)
@@ -1192,7 +1192,7 @@ For 3DS checkouts, add the \`redirect\_url\` parameter to your request body sche
 Follow by processing a checkout to charge the provided payment instrument.
 
 <a name="CheckoutsService.Deactivate"></a>
-### func \(\*CheckoutsService\) Deactivate
+### func \(\*CheckoutsService\) [Deactivate](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L1104>)
 
 ```go
 func (s *CheckoutsService) Deactivate(ctx context.Context, id string) (*DeactivateCheckout200Response, error)
@@ -1201,7 +1201,7 @@ func (s *CheckoutsService) Deactivate(ctx context.Context, id string) (*Deactiva
 Deactivate: Deactivate a checkout Deactivates an identified checkout resource. If the checkout has already been processed it can not be deactivated.
 
 <a name="CheckoutsService.Get"></a>
-### func \(\*CheckoutsService\) Get
+### func \(\*CheckoutsService\) [Get](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L1150>)
 
 ```go
 func (s *CheckoutsService) Get(ctx context.Context, id string) (*CheckoutSuccess, error)
@@ -1210,7 +1210,7 @@ func (s *CheckoutsService) Get(ctx context.Context, id string) (*CheckoutSuccess
 Get: Retrieve a checkout Retrieves an identified checkout resource. Use this request after processing a checkout to confirm its status and inform the end user respectively.
 
 <a name="CheckoutsService.List"></a>
-### func \(\*CheckoutsService\) List
+### func \(\*CheckoutsService\) [List](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L978>)
 
 ```go
 func (s *CheckoutsService) List(ctx context.Context, params ListCheckoutsParams) (*ListCheckouts200Response, error)
@@ -1219,7 +1219,7 @@ func (s *CheckoutsService) List(ctx context.Context, params ListCheckoutsParams)
 List: List checkouts Lists created checkout resources according to the applied \`checkout\_reference\`.
 
 <a name="CheckoutsService.ListAvailablePaymentMethods"></a>
-### func \(\*CheckoutsService\) ListAvailablePaymentMethods
+### func \(\*CheckoutsService\) [ListAvailablePaymentMethods](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L1066>)
 
 ```go
 func (s *CheckoutsService) ListAvailablePaymentMethods(ctx context.Context, merchantCode string, params GetPaymentMethodsParams) (*GetPaymentMethods200Response, error)
@@ -1228,7 +1228,7 @@ func (s *CheckoutsService) ListAvailablePaymentMethods(ctx context.Context, merc
 ListAvailablePaymentMethods: Get available payment methods Get payment methods available for the given merchant to use with a checkout.
 
 <a name="CheckoutsService.Process"></a>
-### func \(\*CheckoutsService\) Process
+### func \(\*CheckoutsService\) [Process](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L1191>)
 
 ```go
 func (s *CheckoutsService) Process(ctx context.Context, id string, body ProcessCheckoutBody) (*ProcessCheckoutResponse, error)
@@ -1239,7 +1239,7 @@ Process: Process a checkout Processing a checkout will attempt to charge the pro
 Follow this request with \`Retrieve a checkout\` to confirm its status.
 
 <a name="CreateCheckoutBody"></a>
-## type CreateCheckoutBody
+## type [CreateCheckoutBody](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L597-L647>)
 
 CreateCheckoutBody: Details of the payment checkout.
 
@@ -1298,7 +1298,7 @@ type CreateCheckoutBody struct {
 ```
 
 <a name="CreateCheckoutBodyPurpose"></a>
-## type CreateCheckoutBodyPurpose
+## type [CreateCheckoutBodyPurpose](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L651>)
 
 CreateCheckoutBodyPurpose: Purpose of the checkout. Default: CHECKOUT
 
@@ -1316,7 +1316,7 @@ const (
 ```
 
 <a name="CreateCheckoutBodyStatus"></a>
-## type CreateCheckoutBodyStatus
+## type [CreateCheckoutBodyStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L660>)
 
 CreateCheckoutBodyStatus: Current status of the checkout. Read only
 
@@ -1335,7 +1335,7 @@ const (
 ```
 
 <a name="CreateCheckoutBodyTransaction"></a>
-## type CreateCheckoutBodyTransaction
+## type [CreateCheckoutBodyTransaction](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L669-L700>)
 
 CreateCheckoutBodyTransaction is a schema definition.
 
@@ -1375,7 +1375,7 @@ type CreateCheckoutBodyTransaction struct {
 ```
 
 <a name="CreateCheckoutBodyTransactionEntryMode"></a>
-## type CreateCheckoutBodyTransactionEntryMode
+## type [CreateCheckoutBodyTransactionEntryMode](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L722>)
 
 CreateCheckoutBodyTransactionEntryMode: Entry mode of the payment details.
 
@@ -1393,7 +1393,7 @@ const (
 ```
 
 <a name="CreateCheckoutBodyTransactionPaymentType"></a>
-## type CreateCheckoutBodyTransactionPaymentType
+## type [CreateCheckoutBodyTransactionPaymentType](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L703>)
 
 CreateCheckoutBodyTransactionPaymentType: Payment type used for the transaction.
 
@@ -1412,7 +1412,7 @@ const (
 ```
 
 <a name="CreateCheckoutBodyTransactionStatus"></a>
-## type CreateCheckoutBodyTransactionStatus
+## type [CreateCheckoutBodyTransactionStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L712>)
 
 CreateCheckoutBodyTransactionStatus: Current status of the transaction.
 
@@ -1432,7 +1432,7 @@ const (
 ```
 
 <a name="DeactivateCheckout200Response"></a>
-## type DeactivateCheckout200Response
+## type [DeactivateCheckout200Response](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L817-L859>)
 
 DeactivateCheckout200Response: Details of the deleted checkout.
 
@@ -1483,7 +1483,7 @@ type DeactivateCheckout200Response struct {
 ```
 
 <a name="DeactivateCheckout200ResponsePurpose"></a>
-## type DeactivateCheckout200ResponsePurpose
+## type [DeactivateCheckout200ResponsePurpose](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L862>)
 
 DeactivateCheckout200ResponsePurpose: Purpose of the checkout creation initially
 
@@ -1501,7 +1501,7 @@ const (
 ```
 
 <a name="DeactivateCheckout200ResponseStatus"></a>
-## type DeactivateCheckout200ResponseStatus
+## type [DeactivateCheckout200ResponseStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L871>)
 
 DeactivateCheckout200ResponseStatus: Current status of the checkout. Read only
 
@@ -1518,7 +1518,7 @@ const (
 ```
 
 <a name="DeactivateCheckout200ResponseTransaction"></a>
-## type DeactivateCheckout200ResponseTransaction
+## type [DeactivateCheckout200ResponseTransaction](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L878-L909>)
 
 DeactivateCheckout200ResponseTransaction is a schema definition.
 
@@ -1558,7 +1558,7 @@ type DeactivateCheckout200ResponseTransaction struct {
 ```
 
 <a name="DeactivateCheckout200ResponseTransactionEntryMode"></a>
-## type DeactivateCheckout200ResponseTransactionEntryMode
+## type [DeactivateCheckout200ResponseTransactionEntryMode](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L931>)
 
 DeactivateCheckout200ResponseTransactionEntryMode: Entry mode of the payment details.
 
@@ -1576,7 +1576,7 @@ const (
 ```
 
 <a name="DeactivateCheckout200ResponseTransactionPaymentType"></a>
-## type DeactivateCheckout200ResponseTransactionPaymentType
+## type [DeactivateCheckout200ResponseTransactionPaymentType](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L912>)
 
 DeactivateCheckout200ResponseTransactionPaymentType: Payment type used for the transaction.
 
@@ -1595,7 +1595,7 @@ const (
 ```
 
 <a name="DeactivateCheckout200ResponseTransactionStatus"></a>
-## type DeactivateCheckout200ResponseTransactionStatus
+## type [DeactivateCheckout200ResponseTransactionStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L921>)
 
 DeactivateCheckout200ResponseTransactionStatus: Current status of the transaction.
 
@@ -1615,7 +1615,7 @@ const (
 ```
 
 <a name="DetailsError"></a>
-## type DetailsError
+## type [DetailsError](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L539-L547>)
 
 DetailsError: Error message structure.
 
@@ -1632,7 +1632,7 @@ type DetailsError struct {
 ```
 
 <a name="DetailsError.Error"></a>
-### func \(\*DetailsError\) Error
+### func \(\*DetailsError\) [Error](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L555>)
 
 ```go
 func (e *DetailsError) Error() string
@@ -1641,7 +1641,7 @@ func (e *DetailsError) Error() string
 
 
 <a name="DetailsErrorFailedConstraint"></a>
-## type DetailsErrorFailedConstraint
+## type [DetailsErrorFailedConstraint](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L550-L553>)
 
 DetailsErrorFailedConstraint is a schema definition.
 
@@ -1653,7 +1653,7 @@ type DetailsErrorFailedConstraint struct {
 ```
 
 <a name="ErrorExtended"></a>
-## type ErrorExtended
+## type [ErrorExtended](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L562-L571>)
 
 ErrorExtended is a schema definition.
 
@@ -1671,7 +1671,7 @@ type ErrorExtended struct {
 ```
 
 <a name="ErrorExtended.Error"></a>
-### func \(\*ErrorExtended\) Error
+### func \(\*ErrorExtended\) [Error](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L573>)
 
 ```go
 func (e *ErrorExtended) Error() string
@@ -1680,7 +1680,7 @@ func (e *ErrorExtended) Error() string
 
 
 <a name="GetPaymentMethods200Response"></a>
-## type GetPaymentMethods200Response
+## type [GetPaymentMethods200Response](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L806-L808>)
 
 GetPaymentMethods200Response is a schema definition.
 
@@ -1691,7 +1691,7 @@ type GetPaymentMethods200Response struct {
 ```
 
 <a name="GetPaymentMethods200ResponseAvailablePaymentMethod"></a>
-## type GetPaymentMethods200ResponseAvailablePaymentMethod
+## type [GetPaymentMethods200ResponseAvailablePaymentMethod](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L811-L814>)
 
 GetPaymentMethods200ResponseAvailablePaymentMethod is a schema definition.
 
@@ -1703,7 +1703,7 @@ type GetPaymentMethods200ResponseAvailablePaymentMethod struct {
 ```
 
 <a name="GetPaymentMethodsParams"></a>
-## type GetPaymentMethodsParams
+## type [GetPaymentMethodsParams](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L779-L785>)
 
 GetPaymentMethodsParams: query parameters for GetPaymentMethods
 
@@ -1718,7 +1718,7 @@ type GetPaymentMethodsParams struct {
 ```
 
 <a name="GetPaymentMethodsParams.QueryValues"></a>
-### func \(\*GetPaymentMethodsParams\) QueryValues
+### func \(\*GetPaymentMethodsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L788>)
 
 ```go
 func (p *GetPaymentMethodsParams) QueryValues() url.Values
@@ -1727,7 +1727,7 @@ func (p *GetPaymentMethodsParams) QueryValues() url.Values
 QueryValues converts [GetPaymentMethodsParams](<#GetPaymentMethodsParams>) into \[url.Values\].
 
 <a name="ListCheckouts200Response"></a>
-## type ListCheckouts200Response
+## type [ListCheckouts200Response](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L803>)
 
 ListCheckouts200Response is a schema definition.
 
@@ -1736,7 +1736,7 @@ type ListCheckouts200Response []CheckoutSuccess
 ```
 
 <a name="ListCheckoutsParams"></a>
-## type ListCheckoutsParams
+## type [ListCheckoutsParams](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L762-L765>)
 
 ListCheckoutsParams: query parameters for ListCheckouts
 
@@ -1748,7 +1748,7 @@ type ListCheckoutsParams struct {
 ```
 
 <a name="ListCheckoutsParams.QueryValues"></a>
-### func \(\*ListCheckoutsParams\) QueryValues
+### func \(\*ListCheckoutsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L768>)
 
 ```go
 func (p *ListCheckoutsParams) QueryValues() url.Values
@@ -1757,7 +1757,7 @@ func (p *ListCheckoutsParams) QueryValues() url.Values
 QueryValues converts [ListCheckoutsParams](<#ListCheckoutsParams>) into \[url.Values\].
 
 <a name="MandatePayload"></a>
-## type MandatePayload
+## type [MandatePayload](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L580-L587>)
 
 MandatePayload: Mandate is passed when a card is to be tokenized
 
@@ -1773,7 +1773,7 @@ type MandatePayload struct {
 ```
 
 <a name="MandatePayloadType"></a>
-## type MandatePayloadType
+## type [MandatePayloadType](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L590>)
 
 MandatePayloadType: Indicates the mandate type
 
@@ -1790,7 +1790,7 @@ const (
 ```
 
 <a name="ProcessCheckout400Response"></a>
-## type ProcessCheckout400Response
+## type [ProcessCheckout400Response](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L939>)
 
 ProcessCheckout400Response is a schema definition.
 
@@ -1799,7 +1799,7 @@ type ProcessCheckout400Response json.RawMessage
 ```
 
 <a name="ProcessCheckout400Response.Error"></a>
-### func \(\*ProcessCheckout400Response\) Error
+### func \(\*ProcessCheckout400Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L941>)
 
 ```go
 func (e *ProcessCheckout400Response) Error() string
@@ -1808,7 +1808,7 @@ func (e *ProcessCheckout400Response) Error() string
 
 
 <a name="ProcessCheckoutBody"></a>
-## type ProcessCheckoutBody
+## type [ProcessCheckoutBody](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L730-L748>)
 
 ProcessCheckoutBody: Details of the payment instrument for processing the checkout.
 
@@ -1835,7 +1835,7 @@ type ProcessCheckoutBody struct {
 ```
 
 <a name="ProcessCheckoutBodyPaymentType"></a>
-## type ProcessCheckoutBodyPaymentType
+## type [ProcessCheckoutBodyPaymentType](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L751>)
 
 ProcessCheckoutBodyPaymentType: Describes the payment method used to attempt processing
 
@@ -1856,7 +1856,7 @@ const (
 ```
 
 <a name="ProcessCheckoutResponse"></a>
-## type ProcessCheckoutResponse
+## type [ProcessCheckoutResponse](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L947-L950>)
 
 
 
@@ -1868,7 +1868,7 @@ type ProcessCheckoutResponse struct {
 ```
 
 <a name="ProcessCheckoutResponse.AsCheckoutAccepted"></a>
-### func \(\*ProcessCheckoutResponse\) AsCheckoutAccepted
+### func \(\*ProcessCheckoutResponse\) [AsCheckoutAccepted](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L960>)
 
 ```go
 func (r *ProcessCheckoutResponse) AsCheckoutAccepted() (*CheckoutAccepted, bool)
@@ -1877,7 +1877,7 @@ func (r *ProcessCheckoutResponse) AsCheckoutAccepted() (*CheckoutAccepted, bool)
 
 
 <a name="ProcessCheckoutResponse.AsCheckoutSuccess"></a>
-### func \(\*ProcessCheckoutResponse\) AsCheckoutSuccess
+### func \(\*ProcessCheckoutResponse\) [AsCheckoutSuccess](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L952>)
 
 ```go
 func (r *ProcessCheckoutResponse) AsCheckoutSuccess() (*CheckoutSuccess, bool)
@@ -1922,7 +1922,7 @@ const (
 ```
 
 <a name="Client"></a>
-## type Client
+## type [Client](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L27-L37>)
 
 
 
@@ -1933,7 +1933,7 @@ type Client struct {
 ```
 
 <a name="New"></a>
-### func New
+### func [New](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L45>)
 
 ```go
 func New(opts ...ClientOption) *Client
@@ -1942,7 +1942,7 @@ func New(opts ...ClientOption) *Client
 New creates new HTTP API client. The client is by default configured with environment variables \(e.g. \`SUMUP\_API\_KEY\`\). To override the default configuration use \[ClientOption\]s.
 
 <a name="Client.Call"></a>
-### func \(\*Client\) Call
+### func \(\*Client\) [Call](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L97-L99>)
 
 ```go
 func (c *Client) Call(ctx context.Context, method, path string, opts ...RequestOption) (*http.Response, error)
@@ -1951,7 +1951,7 @@ func (c *Client) Call(ctx context.Context, method, path string, opts ...RequestO
 Call executes a SumUp API call. Use \[RequestOption\]s to configure the request.
 
 <a name="Client.Do"></a>
-### func \(\*Client\) Do
+### func \(\*Client\) [Do](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L156>)
 
 ```go
 func (c *Client) Do(req *http.Request) (*http.Response, error)
@@ -1960,7 +1960,7 @@ func (c *Client) Do(req *http.Request) (*http.Response, error)
 Do sends an HTTP request and returns an HTTP response, following policy \(such as redirects, cookies, auth\) as configured on the HTTP client.
 
 <a name="Client.NewRequest"></a>
-### func \(\*Client\) NewRequest
+### func \(\*Client\) [NewRequest](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L129-L131>)
 
 ```go
 func (c *Client) NewRequest(ctx context.Context, method, path string, body io.Reader) (*http.Request, error)
@@ -1971,7 +1971,7 @@ NewRequest returns a new \[http.Request\] given a method, URL, and optional body
 NewRequest returns a Request suitable for use with [Client.Do](<#Client.Do>).
 
 <a name="ClientOption"></a>
-## type ClientOption
+## type [ClientOption](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L40>)
 
 ClientOption is an option for the SumUp API client.
 
@@ -1980,7 +1980,7 @@ type ClientOption func(c *Client) error
 ```
 
 <a name="WithAPIKey"></a>
-### func WithAPIKey
+### func [WithAPIKey](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L62>)
 
 ```go
 func WithAPIKey(key string) ClientOption
@@ -1989,7 +1989,7 @@ func WithAPIKey(key string) ClientOption
 WithAPIKey returns a [ClientOption](<#ClientOption>) that configures the client with an API key for authorization.
 
 <a name="WithBaseURL"></a>
-### func WithBaseURL
+### func [WithBaseURL](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L80>)
 
 ```go
 func WithBaseURL(base string) ClientOption
@@ -1998,7 +1998,7 @@ func WithBaseURL(base string) ClientOption
 WithBaseURL returns a [ClientOption](<#ClientOption>) that configures the client with a base URL that the individual API call paths will be resolved against.
 
 <a name="WithClient"></a>
-### func WithClient
+### func [WithClient](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L71>)
 
 ```go
 func WithClient(client *http.Client) ClientOption
@@ -2007,7 +2007,7 @@ func WithClient(client *http.Client) ClientOption
 WithClient returns a [ClientOption](<#ClientOption>) that configures the client to use a specific http client for underlying requests.
 
 <a name="RequestOption"></a>
-## type RequestOption
+## type [RequestOption](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L166>)
 
 RequestOption is an option for the request made by the SumUp [Client](<#Client>).
 
@@ -2016,7 +2016,7 @@ type RequestOption func(req *request) error
 ```
 
 <a name="WithHTTPClient"></a>
-### func WithHTTPClient
+### func [WithHTTPClient](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L170>)
 
 ```go
 func WithHTTPClient(client *http.Client) RequestOption
@@ -2025,7 +2025,7 @@ func WithHTTPClient(client *http.Client) RequestOption
 WithHTTPClient returns a [RequestOption](<#RequestOption>) that overrides the underlying \[http.Client\] of the service used to make the request.
 
 <a name="WithHeader"></a>
-### func WithHeader
+### func [WithHeader](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L179>)
 
 ```go
 func WithHeader(key, value string) RequestOption
@@ -2034,7 +2034,7 @@ func WithHeader(key, value string) RequestOption
 WithHeader returns a [RequestOption](<#RequestOption>) that sets a header key\-value pair. Any previously set value will be overwritten.
 
 <a name="WithJSONBody"></a>
-### func WithJSONBody
+### func [WithJSONBody](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L187>)
 
 ```go
 func WithJSONBody(v any) RequestOption
@@ -2043,7 +2043,7 @@ func WithJSONBody(v any) RequestOption
 WithBody returns a [RequestOption](<#RequestOption>) that sets the request body as a JSON of the value v.
 
 <a name="WithQueryValues"></a>
-### func WithQueryValues
+### func [WithQueryValues](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L201>)
 
 ```go
 func WithQueryValues(q url.Values) RequestOption
@@ -2077,7 +2077,7 @@ import "github.com/sumup/sumup-go/customers"
 
 
 <a name="CreateCustomerBody"></a>
-## type CreateCustomerBody
+## type [CreateCustomerBody](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L85-L90>)
 
 CreateCustomerBody is a schema definition.
 
@@ -2091,7 +2091,7 @@ type CreateCustomerBody struct {
 ```
 
 <a name="Customer"></a>
-## type Customer
+## type [Customer](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L17-L22>)
 
 Customer is a schema definition.
 
@@ -2105,7 +2105,7 @@ type Customer struct {
 ```
 
 <a name="CustomersService"></a>
-## type CustomersService
+## type [CustomersService](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L101-L103>)
 
 
 
@@ -2116,7 +2116,7 @@ type CustomersService struct {
 ```
 
 <a name="NewCustomersService"></a>
-### func NewCustomersService
+### func [NewCustomersService](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L105>)
 
 ```go
 func NewCustomersService(c *client.Client) *CustomersService
@@ -2125,7 +2125,7 @@ func NewCustomersService(c *client.Client) *CustomersService
 
 
 <a name="CustomersService.Create"></a>
-### func \(\*CustomersService\) Create
+### func \(\*CustomersService\) [Create](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L111>)
 
 ```go
 func (s *CustomersService) Create(ctx context.Context, body CreateCustomerBody) (*Customer, error)
@@ -2134,7 +2134,7 @@ func (s *CustomersService) Create(ctx context.Context, body CreateCustomerBody) 
 Create: Create a customer Creates a new saved customer resource which you can later manipulate and save payment instruments to.
 
 <a name="CustomersService.DeactivatePaymentInstrument"></a>
-### func \(\*CustomersService\) DeactivatePaymentInstrument
+### func \(\*CustomersService\) [DeactivatePaymentInstrument](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L295>)
 
 ```go
 func (s *CustomersService) DeactivatePaymentInstrument(ctx context.Context, customerId string, token string) error
@@ -2143,7 +2143,7 @@ func (s *CustomersService) DeactivatePaymentInstrument(ctx context.Context, cust
 DeactivatePaymentInstrument: Deactivate a payment instrument Deactivates an identified card payment instrument resource for a customer.
 
 <a name="CustomersService.Get"></a>
-### func \(\*CustomersService\) Get
+### func \(\*CustomersService\) [Get](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L202>)
 
 ```go
 func (s *CustomersService) Get(ctx context.Context, customerId string) (*Customer, error)
@@ -2152,7 +2152,7 @@ func (s *CustomersService) Get(ctx context.Context, customerId string) (*Custome
 Get: Retrieve a customer Retrieves an identified saved customer resource through the unique \`customer\_id\` parameter, generated upon customer creation.
 
 <a name="CustomersService.ListPaymentInstruments"></a>
-### func \(\*CustomersService\) ListPaymentInstruments
+### func \(\*CustomersService\) [ListPaymentInstruments](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L156>)
 
 ```go
 func (s *CustomersService) ListPaymentInstruments(ctx context.Context, customerId string) (*ListPaymentInstruments200Response, error)
@@ -2161,7 +2161,7 @@ func (s *CustomersService) ListPaymentInstruments(ctx context.Context, customerI
 ListPaymentInstruments: List payment instruments Lists all payment instrument resources that are saved for an identified customer.
 
 <a name="CustomersService.Update"></a>
-### func \(\*CustomersService\) Update
+### func \(\*CustomersService\) [Update](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L250>)
 
 ```go
 func (s *CustomersService) Update(ctx context.Context, customerId string, body UpdateCustomerBody) (*Customer, error)
@@ -2172,7 +2172,7 @@ Update: Update a customer Updates an identified saved customer resource's person
 The request only overwrites the parameters included in the request, all other parameters will remain with their initially assigned values.
 
 <a name="ListPaymentInstruments200Response"></a>
-## type ListPaymentInstruments200Response
+## type [ListPaymentInstruments200Response](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L99>)
 
 ListPaymentInstruments200Response is a schema definition.
 
@@ -2181,7 +2181,7 @@ type ListPaymentInstruments200Response []PaymentInstrumentResponse
 ```
 
 <a name="PaymentInstrumentResponse"></a>
-## type PaymentInstrumentResponse
+## type [PaymentInstrumentResponse](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L25-L42>)
 
 PaymentInstrumentResponse: Payment Instrument Response
 
@@ -2207,7 +2207,7 @@ type PaymentInstrumentResponse struct {
 ```
 
 <a name="PaymentInstrumentResponseCard"></a>
-## type PaymentInstrumentResponseCard
+## type [PaymentInstrumentResponseCard](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L45-L54>)
 
 PaymentInstrumentResponseCard: Details of the payment card.
 
@@ -2225,7 +2225,7 @@ type PaymentInstrumentResponseCard struct {
 ```
 
 <a name="PaymentInstrumentResponseCardType"></a>
-## type PaymentInstrumentResponseCardType
+## type [PaymentInstrumentResponseCardType](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L58>)
 
 PaymentInstrumentResponseCardType: Issuing card network of the payment card. Read only
 
@@ -2255,7 +2255,7 @@ const (
 ```
 
 <a name="PaymentInstrumentResponseType"></a>
-## type PaymentInstrumentResponseType
+## type [PaymentInstrumentResponseType](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L78>)
 
 PaymentInstrumentResponseType: Type of the payment instrument.
 
@@ -2272,7 +2272,7 @@ const (
 ```
 
 <a name="UpdateCustomerBody"></a>
-## type UpdateCustomerBody
+## type [UpdateCustomerBody](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L93-L96>)
 
 UpdateCustomerBody is a schema definition.
 
@@ -2310,7 +2310,7 @@ import "github.com/sumup/sumup-go/members"
 
 
 <a name="CreateMerchantMemberBody"></a>
-## type CreateMerchantMemberBody
+## type [CreateMerchantMemberBody](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L78-L101>)
 
 CreateMerchantMemberBody is a schema definition.
 
@@ -2342,7 +2342,7 @@ type CreateMerchantMemberBody struct {
 ```
 
 <a name="ListMerchantMembers200Response"></a>
-## type ListMerchantMembers200Response
+## type [ListMerchantMembers200Response](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L175-L178>)
 
 ListMerchantMembers200Response is a schema definition.
 
@@ -2354,7 +2354,7 @@ type ListMerchantMembers200Response struct {
 ```
 
 <a name="ListMerchantMembersParams"></a>
-## type ListMerchantMembersParams
+## type [ListMerchantMembersParams](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L126-L139>)
 
 ListMerchantMembersParams: query parameters for ListMerchantMembers
 
@@ -2376,7 +2376,7 @@ type ListMerchantMembersParams struct {
 ```
 
 <a name="ListMerchantMembersParams.QueryValues"></a>
-### func \(\*ListMerchantMembersParams\) QueryValues
+### func \(\*ListMerchantMembersParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L142>)
 
 ```go
 func (p *ListMerchantMembersParams) QueryValues() url.Values
@@ -2385,7 +2385,7 @@ func (p *ListMerchantMembersParams) QueryValues() url.Values
 QueryValues converts [ListMerchantMembersParams](<#ListMerchantMembersParams>) into \[url.Values\].
 
 <a name="Member"></a>
-## type Member
+## type [Member](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L20-L42>)
 
 Member: A member is user within specific resource identified by resource id, resource type, and associated roles.
 
@@ -2416,7 +2416,7 @@ type Member struct {
 ```
 
 <a name="MembersService"></a>
-## type MembersService
+## type [MembersService](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L180-L182>)
 
 
 
@@ -2427,7 +2427,7 @@ type MembersService struct {
 ```
 
 <a name="NewMembersService"></a>
-### func NewMembersService
+### func [NewMembersService](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L184>)
 
 ```go
 func NewMembersService(c *client.Client) *MembersService
@@ -2436,7 +2436,7 @@ func NewMembersService(c *client.Client) *MembersService
 
 
 <a name="MembersService.Create"></a>
-### func \(\*MembersService\) Create
+### func \(\*MembersService\) [Create](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L216>)
 
 ```go
 func (s *MembersService) Create(ctx context.Context, merchantCode string, body CreateMerchantMemberBody) (*Member, error)
@@ -2445,7 +2445,7 @@ func (s *MembersService) Create(ctx context.Context, merchantCode string, body C
 Create: Create a member Create a merchant member.
 
 <a name="MembersService.Delete"></a>
-### func \(\*MembersService\) Delete
+### func \(\*MembersService\) [Delete](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L246>)
 
 ```go
 func (s *MembersService) Delete(ctx context.Context, merchantCode string, memberId string) error
@@ -2454,7 +2454,7 @@ func (s *MembersService) Delete(ctx context.Context, merchantCode string, member
 Delete: Delete a member Deletes a merchant member.
 
 <a name="MembersService.Get"></a>
-### func \(\*MembersService\) Get
+### func \(\*MembersService\) [Get](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L267>)
 
 ```go
 func (s *MembersService) Get(ctx context.Context, merchantCode string, memberId string) (*Member, error)
@@ -2463,7 +2463,7 @@ func (s *MembersService) Get(ctx context.Context, merchantCode string, memberId 
 Get: Retrieve a member Retrieve a merchant member.
 
 <a name="MembersService.List"></a>
-### func \(\*MembersService\) List
+### func \(\*MembersService\) [List](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L190>)
 
 ```go
 func (s *MembersService) List(ctx context.Context, merchantCode string, params ListMerchantMembersParams) (*ListMerchantMembers200Response, error)
@@ -2472,7 +2472,7 @@ func (s *MembersService) List(ctx context.Context, merchantCode string, params L
 List: List members Lists merchant members.
 
 <a name="MembersService.Update"></a>
-### func \(\*MembersService\) Update
+### func \(\*MembersService\) [Update](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L293>)
 
 ```go
 func (s *MembersService) Update(ctx context.Context, merchantCode string, memberId string, body UpdateMerchantMemberBody) (*Member, error)
@@ -2481,7 +2481,7 @@ func (s *MembersService) Update(ctx context.Context, merchantCode string, member
 Update: Update a member Update the merchant member.
 
 <a name="MembershipUser"></a>
-## type MembershipUser
+## type [MembershipUser](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L45-L68>)
 
 MembershipUser: Information about the user associated with the membership.
 
@@ -2513,7 +2513,7 @@ type MembershipUser struct {
 ```
 
 <a name="MembershipUserClassic"></a>
-## type MembershipUserClassic
+## type [MembershipUserClassic](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L72-L75>)
 
 MembershipUserClassic: Classic identifiers of the user. Deprecated: this operation is deprecated
 
@@ -2525,7 +2525,7 @@ type MembershipUserClassic struct {
 ```
 
 <a name="UpdateMerchantMemberBody"></a>
-## type UpdateMerchantMemberBody
+## type [UpdateMerchantMemberBody](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L104-L113>)
 
 UpdateMerchantMemberBody is a schema definition.
 
@@ -2543,7 +2543,7 @@ type UpdateMerchantMemberBody struct {
 ```
 
 <a name="UpdateMerchantMemberBodyUser"></a>
-## type UpdateMerchantMemberBodyUser
+## type [UpdateMerchantMemberBodyUser](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L116-L123>)
 
 UpdateMerchantMemberBodyUser: Allows you to update user data of managed users.
 
@@ -2579,7 +2579,7 @@ import "github.com/sumup/sumup-go/memberships"
 
 
 <a name="ListMemberships200Response"></a>
-## type ListMemberships200Response
+## type [ListMemberships200Response](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L117-L120>)
 
 ListMemberships200Response is a schema definition.
 
@@ -2591,7 +2591,7 @@ type ListMemberships200Response struct {
 ```
 
 <a name="ListMembershipsParams"></a>
-## type ListMembershipsParams
+## type [ListMembershipsParams](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L82-L91>)
 
 ListMembershipsParams: query parameters for ListMemberships
 
@@ -2609,7 +2609,7 @@ type ListMembershipsParams struct {
 ```
 
 <a name="ListMembershipsParams.QueryValues"></a>
-### func \(\*ListMembershipsParams\) QueryValues
+### func \(\*ListMembershipsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L94>)
 
 ```go
 func (p *ListMembershipsParams) QueryValues() url.Values
@@ -2618,7 +2618,7 @@ func (p *ListMembershipsParams) QueryValues() url.Values
 QueryValues converts [ListMembershipsParams](<#ListMembershipsParams>) into \[url.Values\].
 
 <a name="Membership"></a>
-## type Membership
+## type [Membership](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L20-L46>)
 
 Membership: A membership associates a user with a resource, memberships is defined by user, resource, resource type, and associated roles.
 
@@ -2653,7 +2653,7 @@ type Membership struct {
 ```
 
 <a name="MembershipResource"></a>
-## type MembershipResource
+## type [MembershipResource](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L56-L72>)
 
 MembershipResource: Information about the resource the membership is in.
 
@@ -2678,7 +2678,7 @@ type MembershipResource struct {
 ```
 
 <a name="MembershipResourceType"></a>
-## type MembershipResourceType
+## type [MembershipResourceType](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L75>)
 
 MembershipResourceType is a schema definition.
 
@@ -2695,7 +2695,7 @@ const (
 ```
 
 <a name="MembershipType"></a>
-## type MembershipType
+## type [MembershipType](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L49>)
 
 MembershipType: Type of the resource the membership is in.
 
@@ -2712,7 +2712,7 @@ const (
 ```
 
 <a name="MembershipsService"></a>
-## type MembershipsService
+## type [MembershipsService](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L122-L124>)
 
 
 
@@ -2723,7 +2723,7 @@ type MembershipsService struct {
 ```
 
 <a name="NewMembershipsService"></a>
-### func NewMembershipsService
+### func [NewMembershipsService](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L126>)
 
 ```go
 func NewMembershipsService(c *client.Client) *MembershipsService
@@ -2732,7 +2732,7 @@ func NewMembershipsService(c *client.Client) *MembershipsService
 
 
 <a name="MembershipsService.List"></a>
-### func \(\*MembershipsService\) List
+### func \(\*MembershipsService\) [List](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L132>)
 
 ```go
 func (s *MembershipsService) List(ctx context.Context, params ListMembershipsParams) (*ListMemberships200Response, error)
@@ -2786,7 +2786,7 @@ import "github.com/sumup/sumup-go/merchant"
 
 
 <a name="Account"></a>
-## type Account
+## type [Account](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L18-L23>)
 
 Account: Profile information.
 
@@ -2800,7 +2800,7 @@ type Account struct {
 ```
 
 <a name="AccountType"></a>
-## type AccountType
+## type [AccountType](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L26>)
 
 AccountType: The role of the user.
 
@@ -2818,7 +2818,7 @@ const (
 ```
 
 <a name="AddressWithDetails"></a>
-## type AddressWithDetails
+## type [AddressWithDetails](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L34-L65>)
 
 AddressWithDetails: Details of the registered address.
 
@@ -2858,7 +2858,7 @@ type AddressWithDetails struct {
 ```
 
 <a name="AppSettings"></a>
-## type AppSettings
+## type [AppSettings](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L68-L101>)
 
 AppSettings: Mobile app settings
 
@@ -2900,7 +2900,7 @@ type AppSettings struct {
 ```
 
 <a name="BankAccount"></a>
-## type BankAccount
+## type [BankAccount](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L104-L128>)
 
 BankAccount is a schema definition.
 
@@ -2933,7 +2933,7 @@ type BankAccount struct {
 ```
 
 <a name="BusinessOwner"></a>
-## type BusinessOwner
+## type [BusinessOwner](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L131-L144>)
 
 BusinessOwner is a schema definition.
 
@@ -2955,7 +2955,7 @@ type BusinessOwner struct {
 ```
 
 <a name="BusinessOwners"></a>
-## type BusinessOwners
+## type [BusinessOwners](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L147>)
 
 BusinessOwners: Business owners information.
 
@@ -2964,7 +2964,7 @@ type BusinessOwners []BusinessOwner
 ```
 
 <a name="CountryDetails"></a>
-## type CountryDetails
+## type [CountryDetails](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L150-L159>)
 
 CountryDetails: Country Details
 
@@ -2982,7 +2982,7 @@ type CountryDetails struct {
 ```
 
 <a name="DoingBusinessAs"></a>
-## type DoingBusinessAs
+## type [DoingBusinessAs](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L162-L174>)
 
 DoingBusinessAs: Doing Business As information
 
@@ -3003,7 +3003,7 @@ type DoingBusinessAs struct {
 ```
 
 <a name="DoingBusinessAsAddress"></a>
-## type DoingBusinessAsAddress
+## type [DoingBusinessAsAddress](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L177-L192>)
 
 DoingBusinessAsAddress is a schema definition.
 
@@ -3027,7 +3027,7 @@ type DoingBusinessAsAddress struct {
 ```
 
 <a name="GetAccountParams"></a>
-## type GetAccountParams
+## type [GetAccountParams](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L361-L365>)
 
 GetAccountParams: query parameters for GetAccount
 
@@ -3040,7 +3040,7 @@ type GetAccountParams struct {
 ```
 
 <a name="GetAccountParams.QueryValues"></a>
-### func \(\*GetAccountParams\) QueryValues
+### func \(\*GetAccountParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L368>)
 
 ```go
 func (p *GetAccountParams) QueryValues() url.Values
@@ -3049,7 +3049,7 @@ func (p *GetAccountParams) QueryValues() url.Values
 QueryValues converts [GetAccountParams](<#GetAccountParams>) into \[url.Values\].
 
 <a name="LegalType"></a>
-## type LegalType
+## type [LegalType](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L195-L204>)
 
 LegalType: Id of the legal type of the merchant profile
 
@@ -3067,7 +3067,7 @@ type LegalType struct {
 ```
 
 <a name="ListBankAccounts200Response"></a>
-## type ListBankAccounts200Response
+## type [ListBankAccounts200Response](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L398>)
 
 ListBankAccounts200Response is a schema definition.
 
@@ -3076,7 +3076,7 @@ type ListBankAccounts200Response []BankAccount
 ```
 
 <a name="ListBankAccountsParams"></a>
-## type ListBankAccountsParams
+## type [ListBankAccountsParams](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L344-L347>)
 
 ListBankAccountsParams: query parameters for ListBankAccounts
 
@@ -3088,7 +3088,7 @@ type ListBankAccountsParams struct {
 ```
 
 <a name="ListBankAccountsParams.QueryValues"></a>
-### func \(\*ListBankAccountsParams\) QueryValues
+### func \(\*ListBankAccountsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L350>)
 
 ```go
 func (p *ListBankAccountsParams) QueryValues() url.Values
@@ -3097,7 +3097,7 @@ func (p *ListBankAccountsParams) QueryValues() url.Values
 QueryValues converts [ListBankAccountsParams](<#ListBankAccountsParams>) into \[url.Values\].
 
 <a name="ListBankAccountsV11200Response"></a>
-## type ListBankAccountsV11200Response
+## type [ListBankAccountsV11200Response](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L401>)
 
 ListBankAccountsV11200Response is a schema definition.
 
@@ -3106,7 +3106,7 @@ type ListBankAccountsV11200Response []BankAccount
 ```
 
 <a name="ListBankAccountsV11Params"></a>
-## type ListBankAccountsV11Params
+## type [ListBankAccountsV11Params](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L381-L384>)
 
 ListBankAccountsV11Params: query parameters for ListBankAccountsV11
 
@@ -3118,7 +3118,7 @@ type ListBankAccountsV11Params struct {
 ```
 
 <a name="ListBankAccountsV11Params.QueryValues"></a>
-### func \(\*ListBankAccountsV11Params\) QueryValues
+### func \(\*ListBankAccountsV11Params\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L387>)
 
 ```go
 func (p *ListBankAccountsV11Params) QueryValues() url.Values
@@ -3127,7 +3127,7 @@ func (p *ListBankAccountsV11Params) QueryValues() url.Values
 QueryValues converts [ListBankAccountsV11Params](<#ListBankAccountsV11Params>) into \[url.Values\].
 
 <a name="MerchantAccount"></a>
-## type MerchantAccount
+## type [MerchantAccount](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L207-L220>)
 
 MerchantAccount: Details of the merchant account.
 
@@ -3149,7 +3149,7 @@ type MerchantAccount struct {
 ```
 
 <a name="MerchantProfile"></a>
-## type MerchantProfile
+## type [MerchantProfile](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L223-L264>)
 
 MerchantProfile: Account's merchant profile
 
@@ -3199,7 +3199,7 @@ type MerchantProfile struct {
 ```
 
 <a name="MerchantService"></a>
-## type MerchantService
+## type [MerchantService](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L403-L405>)
 
 
 
@@ -3210,7 +3210,7 @@ type MerchantService struct {
 ```
 
 <a name="NewMerchantService"></a>
-### func NewMerchantService
+### func [NewMerchantService](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L407>)
 
 ```go
 func NewMerchantService(c *client.Client) *MerchantService
@@ -3219,7 +3219,7 @@ func NewMerchantService(c *client.Client) *MerchantService
 
 
 <a name="MerchantService.Get"></a>
-### func \(\*MerchantService\) Get
+### func \(\*MerchantService\) [Get](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L590>)
 
 ```go
 func (s *MerchantService) Get(ctx context.Context, params GetAccountParams) (*MerchantAccount, error)
@@ -3228,7 +3228,7 @@ func (s *MerchantService) Get(ctx context.Context, params GetAccountParams) (*Me
 Get: Retrieve a profile Returns user profile information.
 
 <a name="MerchantService.GetDoingBusinessAs"></a>
-### func \(\*MerchantService\) GetDoingBusinessAs
+### func \(\*MerchantService\) [GetDoingBusinessAs](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L482>)
 
 ```go
 func (s *MerchantService) GetDoingBusinessAs(ctx context.Context) (*DoingBusinessAs, error)
@@ -3237,7 +3237,7 @@ func (s *MerchantService) GetDoingBusinessAs(ctx context.Context) (*DoingBusines
 GetDoingBusinessAs: Retrieve DBA Retrieves Doing Business As profile.
 
 <a name="MerchantService.GetMerchantProfile"></a>
-### func \(\*MerchantService\) GetMerchantProfile
+### func \(\*MerchantService\) [GetMerchantProfile](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L552>)
 
 ```go
 func (s *MerchantService) GetMerchantProfile(ctx context.Context) (*MerchantProfile, error)
@@ -3246,7 +3246,7 @@ func (s *MerchantService) GetMerchantProfile(ctx context.Context) (*MerchantProf
 GetMerchantProfile: Retrieve a merchant profile Retrieves merchant profile data.
 
 <a name="MerchantService.GetPersonalProfile"></a>
-### func \(\*MerchantService\) GetPersonalProfile
+### func \(\*MerchantService\) [GetPersonalProfile](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L413>)
 
 ```go
 func (s *MerchantService) GetPersonalProfile(ctx context.Context) (*PersonalProfile, error)
@@ -3255,7 +3255,7 @@ func (s *MerchantService) GetPersonalProfile(ctx context.Context) (*PersonalProf
 GetPersonalProfile: Retrieve a personal profile Retrieves personal profile data.
 
 <a name="MerchantService.GetSettings"></a>
-### func \(\*MerchantService\) GetSettings
+### func \(\*MerchantService\) [GetSettings](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L444>)
 
 ```go
 func (s *MerchantService) GetSettings(ctx context.Context) (*MerchantSettings, error)
@@ -3264,7 +3264,7 @@ func (s *MerchantService) GetSettings(ctx context.Context) (*MerchantSettings, e
 GetSettings: Get settings Retrieves merchant settings.
 
 <a name="MerchantService.ListBankAccounts"></a>
-### func \(\*MerchantService\) ListBankAccounts
+### func \(\*MerchantService\) [ListBankAccounts](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L621>)
 
 ```go
 func (s *MerchantService) ListBankAccounts(ctx context.Context, merchantCode string, params ListBankAccountsV11Params) (*ListBankAccountsV11200Response, error)
@@ -3273,7 +3273,7 @@ func (s *MerchantService) ListBankAccounts(ctx context.Context, merchantCode str
 ListBankAccounts: List bank accounts Retrieves bank accounts of the merchant.
 
 <a name="MerchantService.ListBankAccountsDeprecated"></a>
-### func \(\*MerchantService\) ListBankAccountsDeprecated
+### func \(\*MerchantService\) [ListBankAccountsDeprecated](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L514>)
 
 ```go
 func (s *MerchantService) ListBankAccountsDeprecated(ctx context.Context, params ListBankAccountsParams) (*ListBankAccounts200Response, error)
@@ -3282,7 +3282,7 @@ func (s *MerchantService) ListBankAccountsDeprecated(ctx context.Context, params
 ListBankAccountsDeprecated: List bank accounts Retrieves bank accounts of the merchant. Deprecated: this operation is deprecated
 
 <a name="MerchantSettings"></a>
-## type MerchantSettings
+## type [MerchantSettings](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L267-L292>)
 
 MerchantSettings: Merchant settings &\#40;like \\"payout\_type\\", \\"payout\_period\\"&\#41;
 
@@ -3316,7 +3316,7 @@ type MerchantSettings struct {
 ```
 
 <a name="MerchantSettingsMotoPayment"></a>
-## type MerchantSettingsMotoPayment
+## type [MerchantSettingsMotoPayment](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L295>)
 
 MerchantSettingsMotoPayment: Whether merchant can make MOTO payments
 
@@ -3336,7 +3336,7 @@ const (
 ```
 
 <a name="PersonalProfile"></a>
-## type PersonalProfile
+## type [PersonalProfile](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L305-L317>)
 
 PersonalProfile: Account's personal profile.
 
@@ -3357,7 +3357,7 @@ type PersonalProfile struct {
 ```
 
 <a name="TimeoffsetDetails"></a>
-## type TimeoffsetDetails
+## type [TimeoffsetDetails](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L320-L327>)
 
 TimeoffsetDetails: TimeOffset Details
 
@@ -3373,7 +3373,7 @@ type TimeoffsetDetails struct {
 ```
 
 <a name="VatRates"></a>
-## type VatRates
+## type [VatRates](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L330-L341>)
 
 VatRates: Merchant VAT rates
 
@@ -3415,7 +3415,7 @@ import "github.com/sumup/sumup-go/payouts"
 
 
 <a name="FinancialPayout"></a>
-## type FinancialPayout
+## type [FinancialPayout](<https://github.com/sumup/sumup-go/blob/main/payouts/payouts.go#L18-L29>)
 
 FinancialPayout is a schema definition.
 
@@ -3435,7 +3435,7 @@ type FinancialPayout struct {
 ```
 
 <a name="FinancialPayoutStatus"></a>
-## type FinancialPayoutStatus
+## type [FinancialPayoutStatus](<https://github.com/sumup/sumup-go/blob/main/payouts/payouts.go#L32>)
 
 FinancialPayoutStatus is a schema definition.
 
@@ -3453,7 +3453,7 @@ const (
 ```
 
 <a name="FinancialPayoutType"></a>
-## type FinancialPayoutType
+## type [FinancialPayoutType](<https://github.com/sumup/sumup-go/blob/main/payouts/payouts.go#L40>)
 
 FinancialPayoutType is a schema definition.
 
@@ -3474,7 +3474,7 @@ const (
 ```
 
 <a name="FinancialPayouts"></a>
-## type FinancialPayouts
+## type [FinancialPayouts](<https://github.com/sumup/sumup-go/blob/main/payouts/payouts.go#L51>)
 
 FinancialPayouts is a schema definition.
 
@@ -3483,7 +3483,7 @@ type FinancialPayouts []FinancialPayout
 ```
 
 <a name="ListPayoutsParams"></a>
-## type ListPayoutsParams
+## type [ListPayoutsParams](<https://github.com/sumup/sumup-go/blob/main/payouts/payouts.go#L54-L62>)
 
 ListPayoutsParams: query parameters for ListPayouts
 
@@ -3500,7 +3500,7 @@ type ListPayoutsParams struct {
 ```
 
 <a name="ListPayoutsParams.QueryValues"></a>
-### func \(\*ListPayoutsParams\) QueryValues
+### func \(\*ListPayoutsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/payouts/payouts.go#L65>)
 
 ```go
 func (p *ListPayoutsParams) QueryValues() url.Values
@@ -3509,7 +3509,7 @@ func (p *ListPayoutsParams) QueryValues() url.Values
 QueryValues converts [ListPayoutsParams](<#ListPayoutsParams>) into \[url.Values\].
 
 <a name="ListPayoutsV1Params"></a>
-## type ListPayoutsV1Params
+## type [ListPayoutsV1Params](<https://github.com/sumup/sumup-go/blob/main/payouts/payouts.go#L88-L96>)
 
 ListPayoutsV1Params: query parameters for ListPayoutsV1
 
@@ -3526,7 +3526,7 @@ type ListPayoutsV1Params struct {
 ```
 
 <a name="ListPayoutsV1Params.QueryValues"></a>
-### func \(\*ListPayoutsV1Params\) QueryValues
+### func \(\*ListPayoutsV1Params\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/payouts/payouts.go#L99>)
 
 ```go
 func (p *ListPayoutsV1Params) QueryValues() url.Values
@@ -3535,7 +3535,7 @@ func (p *ListPayoutsV1Params) QueryValues() url.Values
 QueryValues converts [ListPayoutsV1Params](<#ListPayoutsV1Params>) into \[url.Values\].
 
 <a name="PayoutsService"></a>
-## type PayoutsService
+## type [PayoutsService](<https://github.com/sumup/sumup-go/blob/main/payouts/payouts.go#L121-L123>)
 
 
 
@@ -3546,7 +3546,7 @@ type PayoutsService struct {
 ```
 
 <a name="NewPayoutsService"></a>
-### func NewPayoutsService
+### func [NewPayoutsService](<https://github.com/sumup/sumup-go/blob/main/payouts/payouts.go#L125>)
 
 ```go
 func NewPayoutsService(c *client.Client) *PayoutsService
@@ -3555,7 +3555,7 @@ func NewPayoutsService(c *client.Client) *PayoutsService
 
 
 <a name="PayoutsService.List"></a>
-### func \(\*PayoutsService\) List
+### func \(\*PayoutsService\) [List](<https://github.com/sumup/sumup-go/blob/main/payouts/payouts.go#L163>)
 
 ```go
 func (s *PayoutsService) List(ctx context.Context, merchantCode string, params ListPayoutsV1Params) (*FinancialPayouts, error)
@@ -3564,7 +3564,7 @@ func (s *PayoutsService) List(ctx context.Context, merchantCode string, params L
 List: List payouts Lists ordered payouts for the merchant profile.
 
 <a name="PayoutsService.ListDeprecated"></a>
-### func \(\*PayoutsService\) ListDeprecated
+### func \(\*PayoutsService\) [ListDeprecated](<https://github.com/sumup/sumup-go/blob/main/payouts/payouts.go#L132>)
 
 ```go
 func (s *PayoutsService) ListDeprecated(ctx context.Context, params ListPayoutsParams) (*FinancialPayouts, error)
@@ -3641,7 +3641,7 @@ import "github.com/sumup/sumup-go/readers"
 
 
 <a name="Affiliate"></a>
-## type Affiliate
+## type [Affiliate](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L19-L35>)
 
 Affiliate: Affiliate metadata for the transaction. It is an optional field that allow for integrators to track the source of the transaction.
 
@@ -3666,7 +3666,7 @@ type Affiliate struct {
 ```
 
 <a name="AffiliateTags"></a>
-## type AffiliateTags
+## type [AffiliateTags](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L39>)
 
 AffiliateTags: Additional metadata for the transaction. It is key\-value object that can be associated with the transaction.
 
@@ -3675,7 +3675,7 @@ type AffiliateTags map[string]any
 ```
 
 <a name="CreateReaderBody"></a>
-## type CreateReaderBody
+## type [CreateReaderBody](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L180-L192>)
 
 CreateReaderBody is a schema definition.
 
@@ -3696,7 +3696,7 @@ type CreateReaderBody struct {
 ```
 
 <a name="CreateReaderCheckout"></a>
-## type CreateReaderCheckout
+## type [CreateReaderCheckout](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L42-L67>)
 
 CreateReaderCheckout: Reader Checkout
 
@@ -3730,7 +3730,7 @@ type CreateReaderCheckout struct {
 ```
 
 <a name="CreateReaderCheckout201Response"></a>
-## type CreateReaderCheckout201Response
+## type [CreateReaderCheckout201Response](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L332-L334>)
 
 CreateReaderCheckout201Response is a schema definition.
 
@@ -3741,7 +3741,7 @@ type CreateReaderCheckout201Response struct {
 ```
 
 <a name="CreateReaderCheckout201ResponseData"></a>
-## type CreateReaderCheckout201ResponseData
+## type [CreateReaderCheckout201ResponseData](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L337-L342>)
 
 CreateReaderCheckout201ResponseData is a schema definition.
 
@@ -3755,7 +3755,7 @@ type CreateReaderCheckout201ResponseData struct {
 ```
 
 <a name="CreateReaderCheckout400Response"></a>
-## type CreateReaderCheckout400Response
+## type [CreateReaderCheckout400Response](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L345-L347>)
 
 CreateReaderCheckout400Response is a schema definition.
 
@@ -3766,7 +3766,7 @@ type CreateReaderCheckout400Response struct {
 ```
 
 <a name="CreateReaderCheckout400Response.Error"></a>
-### func \(\*CreateReaderCheckout400Response\) Error
+### func \(\*CreateReaderCheckout400Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L354>)
 
 ```go
 func (e *CreateReaderCheckout400Response) Error() string
@@ -3775,7 +3775,7 @@ func (e *CreateReaderCheckout400Response) Error() string
 
 
 <a name="CreateReaderCheckout400ResponseErrors"></a>
-## type CreateReaderCheckout400ResponseErrors
+## type [CreateReaderCheckout400ResponseErrors](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L350-L352>)
 
 CreateReaderCheckout400ResponseErrors is a schema definition.
 
@@ -3786,7 +3786,7 @@ type CreateReaderCheckout400ResponseErrors struct {
 ```
 
 <a name="CreateReaderCheckout422Response"></a>
-## type CreateReaderCheckout422Response
+## type [CreateReaderCheckout422Response](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L361-L363>)
 
 CreateReaderCheckout422Response is a schema definition.
 
@@ -3797,7 +3797,7 @@ type CreateReaderCheckout422Response struct {
 ```
 
 <a name="CreateReaderCheckout422Response.Error"></a>
-### func \(\*CreateReaderCheckout422Response\) Error
+### func \(\*CreateReaderCheckout422Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L368>)
 
 ```go
 func (e *CreateReaderCheckout422Response) Error() string
@@ -3806,7 +3806,7 @@ func (e *CreateReaderCheckout422Response) Error() string
 
 
 <a name="CreateReaderCheckout422ResponseErrors"></a>
-## type CreateReaderCheckout422ResponseErrors
+## type [CreateReaderCheckout422ResponseErrors](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L366>)
 
 CreateReaderCheckout422ResponseErrors is a schema definition.
 
@@ -3815,7 +3815,7 @@ type CreateReaderCheckout422ResponseErrors map[string]any
 ```
 
 <a name="CreateReaderCheckout500Response"></a>
-## type CreateReaderCheckout500Response
+## type [CreateReaderCheckout500Response](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L375-L377>)
 
 CreateReaderCheckout500Response is a schema definition.
 
@@ -3826,7 +3826,7 @@ type CreateReaderCheckout500Response struct {
 ```
 
 <a name="CreateReaderCheckout500Response.Error"></a>
-### func \(\*CreateReaderCheckout500Response\) Error
+### func \(\*CreateReaderCheckout500Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L384>)
 
 ```go
 func (e *CreateReaderCheckout500Response) Error() string
@@ -3835,7 +3835,7 @@ func (e *CreateReaderCheckout500Response) Error() string
 
 
 <a name="CreateReaderCheckout500ResponseErrors"></a>
-## type CreateReaderCheckout500ResponseErrors
+## type [CreateReaderCheckout500ResponseErrors](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L380-L382>)
 
 CreateReaderCheckout500ResponseErrors is a schema definition.
 
@@ -3846,7 +3846,7 @@ type CreateReaderCheckout500ResponseErrors struct {
 ```
 
 <a name="CreateReaderCheckout502Response"></a>
-## type CreateReaderCheckout502Response
+## type [CreateReaderCheckout502Response](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L391-L393>)
 
 CreateReaderCheckout502Response is a schema definition.
 
@@ -3857,7 +3857,7 @@ type CreateReaderCheckout502Response struct {
 ```
 
 <a name="CreateReaderCheckout502Response.Error"></a>
-### func \(\*CreateReaderCheckout502Response\) Error
+### func \(\*CreateReaderCheckout502Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L400>)
 
 ```go
 func (e *CreateReaderCheckout502Response) Error() string
@@ -3866,7 +3866,7 @@ func (e *CreateReaderCheckout502Response) Error() string
 
 
 <a name="CreateReaderCheckout502ResponseErrors"></a>
-## type CreateReaderCheckout502ResponseErrors
+## type [CreateReaderCheckout502ResponseErrors](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L396-L398>)
 
 CreateReaderCheckout502ResponseErrors is a schema definition.
 
@@ -3877,7 +3877,7 @@ type CreateReaderCheckout502ResponseErrors struct {
 ```
 
 <a name="CreateReaderCheckout504Response"></a>
-## type CreateReaderCheckout504Response
+## type [CreateReaderCheckout504Response](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L407-L409>)
 
 CreateReaderCheckout504Response is a schema definition.
 
@@ -3888,7 +3888,7 @@ type CreateReaderCheckout504Response struct {
 ```
 
 <a name="CreateReaderCheckout504Response.Error"></a>
-### func \(\*CreateReaderCheckout504Response\) Error
+### func \(\*CreateReaderCheckout504Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L416>)
 
 ```go
 func (e *CreateReaderCheckout504Response) Error() string
@@ -3897,7 +3897,7 @@ func (e *CreateReaderCheckout504Response) Error() string
 
 
 <a name="CreateReaderCheckout504ResponseErrors"></a>
-## type CreateReaderCheckout504ResponseErrors
+## type [CreateReaderCheckout504ResponseErrors](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L412-L414>)
 
 CreateReaderCheckout504ResponseErrors is a schema definition.
 
@@ -3908,7 +3908,7 @@ type CreateReaderCheckout504ResponseErrors struct {
 ```
 
 <a name="CreateReaderCheckoutAmount"></a>
-## type CreateReaderCheckoutAmount
+## type [CreateReaderCheckoutAmount](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L81-L90>)
 
 CreateReaderCheckoutAmount: Amount of the transaction. The amount is represented as an integer value altogether with the currency and the minor unit. For example, EUR 1.00 is represented as value 100 with minor unit of 2.
 
@@ -3926,7 +3926,7 @@ type CreateReaderCheckoutAmount struct {
 ```
 
 <a name="CreateReaderCheckoutBody"></a>
-## type CreateReaderCheckoutBody
+## type [CreateReaderCheckoutBody](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L195-L220>)
 
 CreateReaderCheckoutBody: Reader Checkout
 
@@ -3960,7 +3960,7 @@ type CreateReaderCheckoutBody struct {
 ```
 
 <a name="CreateReaderCheckoutBodyCardType"></a>
-## type CreateReaderCheckoutBodyCardType
+## type [CreateReaderCheckoutBodyCardType](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L224>)
 
 CreateReaderCheckoutBodyCardType: The card type of the card used for the transaction. Is is required only for some countries \(e.g: Brazil\).
 
@@ -3978,7 +3978,7 @@ const (
 ```
 
 <a name="CreateReaderCheckoutCardType"></a>
-## type CreateReaderCheckoutCardType
+## type [CreateReaderCheckoutCardType](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L71>)
 
 CreateReaderCheckoutCardType: The card type of the card used for the transaction. Is is required only for some countries \(e.g: Brazil\).
 
@@ -3996,7 +3996,7 @@ const (
 ```
 
 <a name="CreateReaderTerminate422Response"></a>
-## type CreateReaderTerminate422Response
+## type [CreateReaderTerminate422Response](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L270-L272>)
 
 CreateReaderTerminate422Response is a schema definition.
 
@@ -4007,7 +4007,7 @@ type CreateReaderTerminate422Response struct {
 ```
 
 <a name="CreateReaderTerminate422Response.Error"></a>
-### func \(\*CreateReaderTerminate422Response\) Error
+### func \(\*CreateReaderTerminate422Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L277>)
 
 ```go
 func (e *CreateReaderTerminate422Response) Error() string
@@ -4016,7 +4016,7 @@ func (e *CreateReaderTerminate422Response) Error() string
 
 
 <a name="CreateReaderTerminate422ResponseErrors"></a>
-## type CreateReaderTerminate422ResponseErrors
+## type [CreateReaderTerminate422ResponseErrors](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L275>)
 
 CreateReaderTerminate422ResponseErrors is a schema definition.
 
@@ -4025,7 +4025,7 @@ type CreateReaderTerminate422ResponseErrors map[string]any
 ```
 
 <a name="CreateReaderTerminate500Response"></a>
-## type CreateReaderTerminate500Response
+## type [CreateReaderTerminate500Response](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L284-L286>)
 
 CreateReaderTerminate500Response is a schema definition.
 
@@ -4036,7 +4036,7 @@ type CreateReaderTerminate500Response struct {
 ```
 
 <a name="CreateReaderTerminate500Response.Error"></a>
-### func \(\*CreateReaderTerminate500Response\) Error
+### func \(\*CreateReaderTerminate500Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L293>)
 
 ```go
 func (e *CreateReaderTerminate500Response) Error() string
@@ -4045,7 +4045,7 @@ func (e *CreateReaderTerminate500Response) Error() string
 
 
 <a name="CreateReaderTerminate500ResponseErrors"></a>
-## type CreateReaderTerminate500ResponseErrors
+## type [CreateReaderTerminate500ResponseErrors](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L289-L291>)
 
 CreateReaderTerminate500ResponseErrors is a schema definition.
 
@@ -4056,7 +4056,7 @@ type CreateReaderTerminate500ResponseErrors struct {
 ```
 
 <a name="CreateReaderTerminate502Response"></a>
-## type CreateReaderTerminate502Response
+## type [CreateReaderTerminate502Response](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L300-L302>)
 
 CreateReaderTerminate502Response is a schema definition.
 
@@ -4067,7 +4067,7 @@ type CreateReaderTerminate502Response struct {
 ```
 
 <a name="CreateReaderTerminate502Response.Error"></a>
-### func \(\*CreateReaderTerminate502Response\) Error
+### func \(\*CreateReaderTerminate502Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L309>)
 
 ```go
 func (e *CreateReaderTerminate502Response) Error() string
@@ -4076,7 +4076,7 @@ func (e *CreateReaderTerminate502Response) Error() string
 
 
 <a name="CreateReaderTerminate502ResponseErrors"></a>
-## type CreateReaderTerminate502ResponseErrors
+## type [CreateReaderTerminate502ResponseErrors](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L305-L307>)
 
 CreateReaderTerminate502ResponseErrors is a schema definition.
 
@@ -4087,7 +4087,7 @@ type CreateReaderTerminate502ResponseErrors struct {
 ```
 
 <a name="CreateReaderTerminate504Response"></a>
-## type CreateReaderTerminate504Response
+## type [CreateReaderTerminate504Response](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L316-L318>)
 
 CreateReaderTerminate504Response is a schema definition.
 
@@ -4098,7 +4098,7 @@ type CreateReaderTerminate504Response struct {
 ```
 
 <a name="CreateReaderTerminate504Response.Error"></a>
-### func \(\*CreateReaderTerminate504Response\) Error
+### func \(\*CreateReaderTerminate504Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L325>)
 
 ```go
 func (e *CreateReaderTerminate504Response) Error() string
@@ -4107,7 +4107,7 @@ func (e *CreateReaderTerminate504Response) Error() string
 
 
 <a name="CreateReaderTerminate504ResponseErrors"></a>
-## type CreateReaderTerminate504ResponseErrors
+## type [CreateReaderTerminate504ResponseErrors](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L321-L323>)
 
 CreateReaderTerminate504ResponseErrors is a schema definition.
 
@@ -4118,7 +4118,7 @@ type CreateReaderTerminate504ResponseErrors struct {
 ```
 
 <a name="GetReaderParams"></a>
-## type GetReaderParams
+## type [GetReaderParams](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L242-L251>)
 
 GetReaderParams: query parameters for GetReader
 
@@ -4136,7 +4136,7 @@ type GetReaderParams struct {
 ```
 
 <a name="GetReaderParams.QueryValues"></a>
-### func \(\*GetReaderParams\) QueryValues
+### func \(\*GetReaderParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L254>)
 
 ```go
 func (p *GetReaderParams) QueryValues() url.Values
@@ -4145,7 +4145,7 @@ func (p *GetReaderParams) QueryValues() url.Values
 QueryValues converts [GetReaderParams](<#GetReaderParams>) into \[url.Values\].
 
 <a name="ListReaders200Response"></a>
-## type ListReaders200Response
+## type [ListReaders200Response](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L265-L267>)
 
 ListReaders200Response is a schema definition.
 
@@ -4156,7 +4156,7 @@ type ListReaders200Response struct {
 ```
 
 <a name="Meta"></a>
-## type Meta
+## type [Meta](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L94>)
 
 Meta: Set of user\-defined key\-value pairs attached to the object. Max properties: 50
 
@@ -4165,7 +4165,7 @@ type Meta map[string]any
 ```
 
 <a name="Reader"></a>
-## type Reader
+## type [Reader](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L97-L126>)
 
 Reader: A physical card reader device that can accept in\-person payments.
 
@@ -4203,7 +4203,7 @@ type Reader struct {
 ```
 
 <a name="ReaderDevice"></a>
-## type ReaderDevice
+## type [ReaderDevice](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L129-L134>)
 
 ReaderDevice: Information about the underlying physical device.
 
@@ -4217,7 +4217,7 @@ type ReaderDevice struct {
 ```
 
 <a name="ReaderDeviceModel"></a>
-## type ReaderDeviceModel
+## type [ReaderDeviceModel](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L137>)
 
 ReaderDeviceModel: Identifier of the model of the device.
 
@@ -4235,7 +4235,7 @@ const (
 ```
 
 <a name="ReaderId"></a>
-## type ReaderId
+## type [ReaderId](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L150>)
 
 ReaderId: Unique identifier of the object. Note that this identifies the instance of the physical devices pairing with your SumUp account. If you DELETE a reader, and pair the device again, the ID will be different. Do not use this ID to refer to a physical device. Min length: 30 Max length: 30
 
@@ -4244,7 +4244,7 @@ type ReaderId string
 ```
 
 <a name="ReaderName"></a>
-## type ReaderName
+## type [ReaderName](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L154>)
 
 ReaderName: Custom human\-readable, user\-defined name for easier identification of the reader. Max length: 500
 
@@ -4253,7 +4253,7 @@ type ReaderName string
 ```
 
 <a name="ReaderPairingCode"></a>
-## type ReaderPairingCode
+## type [ReaderPairingCode](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L160>)
 
 ReaderPairingCode: The pairing code is a 8 or 9 character alphanumeric string that is displayed on a SumUp Device after initiating the pairing. It is used to link the physical device to the created pairing. Min length: 8 Max length: 9
 
@@ -4262,7 +4262,7 @@ type ReaderPairingCode string
 ```
 
 <a name="ReaderStatus"></a>
-## type ReaderStatus
+## type [ReaderStatus](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L170>)
 
 ReaderStatus: The status of the reader object gives information about the current state of the reader.
 
@@ -4286,7 +4286,7 @@ const (
 ```
 
 <a name="ReadersService"></a>
-## type ReadersService
+## type [ReadersService](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L422-L424>)
 
 
 
@@ -4297,7 +4297,7 @@ type ReadersService struct {
 ```
 
 <a name="NewReadersService"></a>
-### func NewReadersService
+### func [NewReadersService](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L426>)
 
 ```go
 func NewReadersService(c *client.Client) *ReadersService
@@ -4306,7 +4306,7 @@ func NewReadersService(c *client.Client) *ReadersService
 
 
 <a name="ReadersService.Create"></a>
-### func \(\*ReadersService\) Create
+### func \(\*ReadersService\) [Create](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L456>)
 
 ```go
 func (s *ReadersService) Create(ctx context.Context, merchantCode string, body CreateReaderBody) (*Reader, error)
@@ -4315,7 +4315,7 @@ func (s *ReadersService) Create(ctx context.Context, merchantCode string, body C
 Create: Create a Reader Create a new Reader for the merchant account.
 
 <a name="ReadersService.CreateCheckout"></a>
-### func \(\*ReadersService\) CreateCheckout
+### func \(\*ReadersService\) [CreateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L551>)
 
 ```go
 func (s *ReadersService) CreateCheckout(ctx context.Context, merchantCode string, id string, body CreateReaderCheckoutBody) (*CreateReaderCheckout201Response, error)
@@ -4330,7 +4330,7 @@ There are some caveats when using this endpoint: \* The target device must be on
 \*\*Note\*\*: If the target device is a Solo, it must be in version 3.3.24.3 or higher.
 
 <a name="ReadersService.DeleteReader"></a>
-### func \(\*ReadersService\) DeleteReader
+### func \(\*ReadersService\) [DeleteReader](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L610>)
 
 ```go
 func (s *ReadersService) DeleteReader(ctx context.Context, merchantCode string, id ReaderId) error
@@ -4339,7 +4339,7 @@ func (s *ReadersService) DeleteReader(ctx context.Context, merchantCode string, 
 DeleteReader: Delete a reader Delete a reader.
 
 <a name="ReadersService.Get"></a>
-### func \(\*ReadersService\) Get
+### func \(\*ReadersService\) [Get](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L629>)
 
 ```go
 func (s *ReadersService) Get(ctx context.Context, merchantCode string, id ReaderId, params GetReaderParams) (*Reader, error)
@@ -4348,7 +4348,7 @@ func (s *ReadersService) Get(ctx context.Context, merchantCode string, id Reader
 Get: Retrieve a Reader Retrieve a Reader.
 
 <a name="ReadersService.List"></a>
-### func \(\*ReadersService\) List
+### func \(\*ReadersService\) [List](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L432>)
 
 ```go
 func (s *ReadersService) List(ctx context.Context, merchantCode string) (*ListReaders200Response, error)
@@ -4357,7 +4357,7 @@ func (s *ReadersService) List(ctx context.Context, merchantCode string) (*ListRe
 List: List Readers List all readers of the merchant.
 
 <a name="ReadersService.TerminateCheckout"></a>
-### func \(\*ReadersService\) TerminateCheckout
+### func \(\*ReadersService\) [TerminateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L495>)
 
 ```go
 func (s *ReadersService) TerminateCheckout(ctx context.Context, merchantCode string, id string) error
@@ -4376,7 +4376,7 @@ If a transaction is successfully terminated and \`return\_url\` was provided on 
 \*\*Note\*\*: If the target device is a Solo, it must be in version 3.3.28.0 or higher.
 
 <a name="ReadersService.Update"></a>
-### func \(\*ReadersService\) Update
+### func \(\*ReadersService\) [Update](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L657>)
 
 ```go
 func (s *ReadersService) Update(ctx context.Context, merchantCode string, id ReaderId, body UpdateReaderBody) (*Reader, error)
@@ -4385,7 +4385,7 @@ func (s *ReadersService) Update(ctx context.Context, merchantCode string, id Rea
 Update: Update a Reader Update a Reader.
 
 <a name="UpdateReaderBody"></a>
-## type UpdateReaderBody
+## type [UpdateReaderBody](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L232-L239>)
 
 UpdateReaderBody is a schema definition.
 
@@ -4427,7 +4427,7 @@ import "github.com/sumup/sumup-go/receipts"
 
 
 <a name="GetReceiptParams"></a>
-## type GetReceiptParams
+## type [GetReceiptParams](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L153-L158>)
 
 GetReceiptParams: query parameters for GetReceipt
 
@@ -4441,7 +4441,7 @@ type GetReceiptParams struct {
 ```
 
 <a name="GetReceiptParams.QueryValues"></a>
-### func \(\*GetReceiptParams\) QueryValues
+### func \(\*GetReceiptParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L161>)
 
 ```go
 func (p *GetReceiptParams) QueryValues() url.Values
@@ -4450,7 +4450,7 @@ func (p *GetReceiptParams) QueryValues() url.Values
 QueryValues converts [GetReceiptParams](<#GetReceiptParams>) into \[url.Values\].
 
 <a name="Receipt"></a>
-## type Receipt
+## type [Receipt](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L19-L26>)
 
 Receipt is a schema definition.
 
@@ -4466,7 +4466,7 @@ type Receipt struct {
 ```
 
 <a name="ReceiptAcquirerData"></a>
-## type ReceiptAcquirerData
+## type [ReceiptAcquirerData](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L29-L34>)
 
 ReceiptAcquirerData is a schema definition.
 
@@ -4480,7 +4480,7 @@ type ReceiptAcquirerData struct {
 ```
 
 <a name="ReceiptCard"></a>
-## type ReceiptCard
+## type [ReceiptCard](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L41-L46>)
 
 ReceiptCard is a schema definition.
 
@@ -4494,7 +4494,7 @@ type ReceiptCard struct {
 ```
 
 <a name="ReceiptEmvData"></a>
-## type ReceiptEmvData
+## type [ReceiptEmvData](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L37-L38>)
 
 ReceiptEmvData is a schema definition.
 
@@ -4504,7 +4504,7 @@ type ReceiptEmvData struct {
 ```
 
 <a name="ReceiptEvent"></a>
-## type ReceiptEvent
+## type [ReceiptEvent](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L49-L64>)
 
 ReceiptEvent is a schema definition.
 
@@ -4528,7 +4528,7 @@ type ReceiptEvent struct {
 ```
 
 <a name="ReceiptMerchantData"></a>
-## type ReceiptMerchantData
+## type [ReceiptMerchantData](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L67-L70>)
 
 ReceiptMerchantData: Receipt merchant data
 
@@ -4540,7 +4540,7 @@ type ReceiptMerchantData struct {
 ```
 
 <a name="ReceiptMerchantDataMerchantProfile"></a>
-## type ReceiptMerchantDataMerchantProfile
+## type [ReceiptMerchantDataMerchantProfile](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L73-L78>)
 
 ReceiptMerchantDataMerchantProfile is a schema definition.
 
@@ -4554,7 +4554,7 @@ type ReceiptMerchantDataMerchantProfile struct {
 ```
 
 <a name="ReceiptMerchantDataMerchantProfileAddress"></a>
-## type ReceiptMerchantDataMerchantProfileAddress
+## type [ReceiptMerchantDataMerchantProfileAddress](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L81-L89>)
 
 ReceiptMerchantDataMerchantProfileAddress is a schema definition.
 
@@ -4571,7 +4571,7 @@ type ReceiptMerchantDataMerchantProfileAddress struct {
 ```
 
 <a name="ReceiptTransaction"></a>
-## type ReceiptTransaction
+## type [ReceiptTransaction](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L92-L124>)
 
 ReceiptTransaction: Transaction information.
 
@@ -4612,7 +4612,7 @@ type ReceiptTransaction struct {
 ```
 
 <a name="ReceiptTransactionProduct"></a>
-## type ReceiptTransactionProduct
+## type [ReceiptTransactionProduct](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L127-L138>)
 
 ReceiptTransactionProduct is a schema definition.
 
@@ -4632,7 +4632,7 @@ type ReceiptTransactionProduct struct {
 ```
 
 <a name="ReceiptTransactionVatRate"></a>
-## type ReceiptTransactionVatRate
+## type [ReceiptTransactionVatRate](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L141-L150>)
 
 ReceiptTransactionVatRate is a schema definition.
 
@@ -4650,7 +4650,7 @@ type ReceiptTransactionVatRate struct {
 ```
 
 <a name="ReceiptsService"></a>
-## type ReceiptsService
+## type [ReceiptsService](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L173-L175>)
 
 
 
@@ -4661,7 +4661,7 @@ type ReceiptsService struct {
 ```
 
 <a name="NewReceiptsService"></a>
-### func NewReceiptsService
+### func [NewReceiptsService](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L177>)
 
 ```go
 func NewReceiptsService(c *client.Client) *ReceiptsService
@@ -4670,7 +4670,7 @@ func NewReceiptsService(c *client.Client) *ReceiptsService
 
 
 <a name="ReceiptsService.Get"></a>
-### func \(\*ReceiptsService\) Get
+### func \(\*ReceiptsService\) [Get](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L183>)
 
 ```go
 func (s *ReceiptsService) Get(ctx context.Context, id string, params GetReceiptParams) (*Receipt, error)
@@ -4700,7 +4700,7 @@ import "github.com/sumup/sumup-go/roles"
 
 
 <a name="CreateMerchantRoleBody"></a>
-## type CreateMerchantRoleBody
+## type [CreateMerchantRoleBody](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L40-L51>)
 
 CreateMerchantRoleBody is a schema definition.
 
@@ -4720,7 +4720,7 @@ type CreateMerchantRoleBody struct {
 ```
 
 <a name="ListMerchantRoles200Response"></a>
-## type ListMerchantRoles200Response
+## type [ListMerchantRoles200Response](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L65-L67>)
 
 ListMerchantRoles200Response is a schema definition.
 
@@ -4731,7 +4731,7 @@ type ListMerchantRoles200Response struct {
 ```
 
 <a name="Role"></a>
-## type Role
+## type [Role](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L18-L37>)
 
 Role: A custom role that can be used to assign set of permissions to members.
 
@@ -4759,7 +4759,7 @@ type Role struct {
 ```
 
 <a name="RolesService"></a>
-## type RolesService
+## type [RolesService](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L69-L71>)
 
 
 
@@ -4770,7 +4770,7 @@ type RolesService struct {
 ```
 
 <a name="NewRolesService"></a>
-### func NewRolesService
+### func [NewRolesService](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L73>)
 
 ```go
 func NewRolesService(c *client.Client) *RolesService
@@ -4779,7 +4779,7 @@ func NewRolesService(c *client.Client) *RolesService
 
 
 <a name="RolesService.Create"></a>
-### func \(\*RolesService\) Create
+### func \(\*RolesService\) [Create](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L106>)
 
 ```go
 func (s *RolesService) Create(ctx context.Context, merchantCode string, body CreateMerchantRoleBody) (*Role, error)
@@ -4788,7 +4788,7 @@ func (s *RolesService) Create(ctx context.Context, merchantCode string, body Cre
 Create: Create a role Create a custom role for the merchant. Roles are defined by the set of permissions that they grant to the members that they are assigned to.
 
 <a name="RolesService.Delete"></a>
-### func \(\*RolesService\) Delete
+### func \(\*RolesService\) [Delete](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L134>)
 
 ```go
 func (s *RolesService) Delete(ctx context.Context, merchantCode string, roleId string) error
@@ -4797,7 +4797,7 @@ func (s *RolesService) Delete(ctx context.Context, merchantCode string, roleId s
 Delete: Delete a role Delete a custom role.
 
 <a name="RolesService.Get"></a>
-### func \(\*RolesService\) Get
+### func \(\*RolesService\) [Get](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L157>)
 
 ```go
 func (s *RolesService) Get(ctx context.Context, merchantCode string, roleId string) (*Role, error)
@@ -4806,7 +4806,7 @@ func (s *RolesService) Get(ctx context.Context, merchantCode string, roleId stri
 Get: Retrieve a role Retrieve a custom role by ID.
 
 <a name="RolesService.List"></a>
-### func \(\*RolesService\) List
+### func \(\*RolesService\) [List](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L79>)
 
 ```go
 func (s *RolesService) List(ctx context.Context, merchantCode string) (*ListMerchantRoles200Response, error)
@@ -4815,7 +4815,7 @@ func (s *RolesService) List(ctx context.Context, merchantCode string) (*ListMerc
 List: List roles List merchant's custom roles.
 
 <a name="RolesService.Update"></a>
-### func \(\*RolesService\) Update
+### func \(\*RolesService\) [Update](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L183>)
 
 ```go
 func (s *RolesService) Update(ctx context.Context, merchantCode string, roleId string, body UpdateMerchantRoleBody) (*Role, error)
@@ -4824,7 +4824,7 @@ func (s *RolesService) Update(ctx context.Context, merchantCode string, roleId s
 Update: Update a role Update a custom role.
 
 <a name="UpdateMerchantRoleBody"></a>
-## type UpdateMerchantRoleBody
+## type [UpdateMerchantRoleBody](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L54-L62>)
 
 UpdateMerchantRoleBody is a schema definition.
 
@@ -4883,7 +4883,7 @@ import "github.com/sumup/sumup-go/shared"
 
 
 <a name="Address"></a>
-## type Address
+## type [Address](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L12-L25>)
 
 Address: Profile's personal address information.
 
@@ -4905,7 +4905,7 @@ type Address struct {
 ```
 
 <a name="AmountEvent"></a>
-## type AmountEvent
+## type [AmountEvent](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L28>)
 
 AmountEvent: Amount of the event.
 
@@ -4914,7 +4914,7 @@ type AmountEvent float64
 ```
 
 <a name="Attributes"></a>
-## type Attributes
+## type [Attributes](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L31>)
 
 Attributes: Object attributes that modifiable only by SumUp applications.
 
@@ -4923,7 +4923,7 @@ type Attributes map[string]any
 ```
 
 <a name="Currency"></a>
-## type Currency
+## type [Currency](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L35>)
 
 Currency: Three\-letter \[ISO4217\]\(https://en.wikipedia.org/wiki/ISO_4217\) code of the currency for the amount. Currently supported currency values are enumerated above.
 
@@ -4954,7 +4954,7 @@ const (
 ```
 
 <a name="Date"></a>
-## type Date
+## type [Date](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L247>)
 
 
 
@@ -4963,7 +4963,7 @@ type Date struct{ time.Time }
 ```
 
 <a name="Date.MarshalJSON"></a>
-### func \(Date\) MarshalJSON
+### func \(Date\) [MarshalJSON](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L268>)
 
 ```go
 func (d Date) MarshalJSON() ([]byte, error)
@@ -4972,7 +4972,7 @@ func (d Date) MarshalJSON() ([]byte, error)
 
 
 <a name="Date.String"></a>
-### func \(Date\) String
+### func \(Date\) [String](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L249>)
 
 ```go
 func (d Date) String() string
@@ -4981,7 +4981,7 @@ func (d Date) String() string
 
 
 <a name="Date.UnmarshalJSON"></a>
-### func \(\*Date\) UnmarshalJSON
+### func \(\*Date\) [UnmarshalJSON](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L257>)
 
 ```go
 func (d *Date) UnmarshalJSON(b []byte) (err error)
@@ -4990,7 +4990,7 @@ func (d *Date) UnmarshalJSON(b []byte) (err error)
 
 
 <a name="Error"></a>
-## type Error
+## type [Error](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L56-L61>)
 
 Error: Error message structure.
 
@@ -5004,7 +5004,7 @@ type Error struct {
 ```
 
 <a name="Error.Error"></a>
-### func \(\*Error\) Error
+### func \(\*Error\) [Error](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L63>)
 
 ```go
 func (e *Error) Error() string
@@ -5013,7 +5013,7 @@ func (e *Error) Error() string
 
 
 <a name="ErrorForbidden"></a>
-## type ErrorForbidden
+## type [ErrorForbidden](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L70-L77>)
 
 ErrorForbidden: Error message for forbidden requests.
 
@@ -5029,7 +5029,7 @@ type ErrorForbidden struct {
 ```
 
 <a name="ErrorForbidden.Error"></a>
-### func \(\*ErrorForbidden\) Error
+### func \(\*ErrorForbidden\) [Error](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L79>)
 
 ```go
 func (e *ErrorForbidden) Error() string
@@ -5038,7 +5038,7 @@ func (e *ErrorForbidden) Error() string
 
 
 <a name="EventId"></a>
-## type EventId
+## type [EventId](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L87>)
 
 EventId: Unique ID of the transaction event. Format: int64
 
@@ -5047,7 +5047,7 @@ type EventId int64
 ```
 
 <a name="EventStatus"></a>
-## type EventStatus
+## type [EventStatus](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L90>)
 
 EventStatus: Status of the transaction event.
 
@@ -5069,7 +5069,7 @@ const (
 ```
 
 <a name="EventType"></a>
-## type EventType
+## type [EventType](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L102>)
 
 EventType: Type of the transaction event.
 
@@ -5089,7 +5089,7 @@ const (
 ```
 
 <a name="Invite"></a>
-## type Invite
+## type [Invite](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L112-L117>)
 
 Invite: Pending invitation for membership.
 
@@ -5103,7 +5103,7 @@ type Invite struct {
 ```
 
 <a name="MandateResponse"></a>
-## type MandateResponse
+## type [MandateResponse](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L120-L127>)
 
 MandateResponse: Created mandate
 
@@ -5119,7 +5119,7 @@ type MandateResponse struct {
 ```
 
 <a name="MembershipStatus"></a>
-## type MembershipStatus
+## type [MembershipStatus](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L130>)
 
 MembershipStatus: The status of the membership.
 
@@ -5140,7 +5140,7 @@ const (
 ```
 
 <a name="Metadata"></a>
-## type Metadata
+## type [Metadata](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L142>)
 
 Metadata: Set of user\-defined key\-value pairs attached to the object. Partial updates are not supported. When updating, always submit whole metadata.
 
@@ -5149,7 +5149,7 @@ type Metadata map[string]any
 ```
 
 <a name="Permissions"></a>
-## type Permissions
+## type [Permissions](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L145-L154>)
 
 Permissions: User permissions
 
@@ -5167,7 +5167,7 @@ type Permissions struct {
 ```
 
 <a name="PersonalDetails"></a>
-## type PersonalDetails
+## type [PersonalDetails](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L157-L174>)
 
 PersonalDetails: Personal details for the customer.
 
@@ -5193,7 +5193,7 @@ type PersonalDetails struct {
 ```
 
 <a name="Time"></a>
-## type Time
+## type [Time](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L272>)
 
 
 
@@ -5202,7 +5202,7 @@ type Time struct{ time.Time }
 ```
 
 <a name="Time.MarshalJSON"></a>
-### func \(Time\) MarshalJSON
+### func \(Time\) [MarshalJSON](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L293>)
 
 ```go
 func (t Time) MarshalJSON() ([]byte, error)
@@ -5211,7 +5211,7 @@ func (t Time) MarshalJSON() ([]byte, error)
 
 
 <a name="Time.String"></a>
-### func \(Time\) String
+### func \(Time\) [String](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L274>)
 
 ```go
 func (t Time) String() string
@@ -5220,7 +5220,7 @@ func (t Time) String() string
 
 
 <a name="Time.UnmarshalJSON"></a>
-### func \(\*Time\) UnmarshalJSON
+### func \(\*Time\) [UnmarshalJSON](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L282>)
 
 ```go
 func (t *Time) UnmarshalJSON(b []byte) (err error)
@@ -5229,7 +5229,7 @@ func (t *Time) UnmarshalJSON(b []byte) (err error)
 
 
 <a name="TimestampEvent"></a>
-## type TimestampEvent
+## type [TimestampEvent](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L177>)
 
 TimestampEvent: Date and time of the transaction event.
 
@@ -5238,7 +5238,7 @@ type TimestampEvent string
 ```
 
 <a name="TransactionId"></a>
-## type TransactionId
+## type [TransactionId](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L180>)
 
 TransactionId: Unique ID of the transaction.
 
@@ -5247,7 +5247,7 @@ type TransactionId string
 ```
 
 <a name="TransactionMixinBase"></a>
-## type TransactionMixinBase
+## type [TransactionMixinBase](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L183-L202>)
 
 TransactionMixinBase: Details of the transaction.
 
@@ -5275,7 +5275,7 @@ type TransactionMixinBase struct {
 ```
 
 <a name="TransactionMixinBasePaymentType"></a>
-## type TransactionMixinBasePaymentType
+## type [TransactionMixinBasePaymentType](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L205>)
 
 TransactionMixinBasePaymentType: Payment type used for the transaction.
 
@@ -5294,7 +5294,7 @@ const (
 ```
 
 <a name="TransactionMixinBaseStatus"></a>
-## type TransactionMixinBaseStatus
+## type [TransactionMixinBaseStatus](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L214>)
 
 TransactionMixinBaseStatus: Current status of the transaction.
 
@@ -5314,7 +5314,7 @@ const (
 ```
 
 <a name="TransactionMixinCheckout"></a>
-## type TransactionMixinCheckout
+## type [TransactionMixinCheckout](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L224-L237>)
 
 TransactionMixinCheckout is a schema definition.
 
@@ -5336,7 +5336,7 @@ type TransactionMixinCheckout struct {
 ```
 
 <a name="TransactionMixinCheckoutEntryMode"></a>
-## type TransactionMixinCheckoutEntryMode
+## type [TransactionMixinCheckoutEntryMode](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L240>)
 
 TransactionMixinCheckoutEntryMode: Entry mode of the payment details.
 
@@ -5382,7 +5382,7 @@ import "github.com/sumup/sumup-go/subaccounts"
 
 
 <a name="CompatError"></a>
-## type CompatError
+## type [CompatError](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L19-L22>)
 
 CompatError: Error
 
@@ -5394,7 +5394,7 @@ type CompatError struct {
 ```
 
 <a name="CompatError.Error"></a>
-### func \(\*CompatError\) Error
+### func \(\*CompatError\) [Error](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L24>)
 
 ```go
 func (e *CompatError) Error() string
@@ -5403,7 +5403,7 @@ func (e *CompatError) Error() string
 
 
 <a name="CreateSubAccountBody"></a>
-## type CreateSubAccountBody
+## type [CreateSubAccountBody](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L55-L62>)
 
 CreateSubAccountBody is a schema definition.
 
@@ -5419,7 +5419,7 @@ type CreateSubAccountBody struct {
 ```
 
 <a name="CreateSubAccountBodyPermissions"></a>
-## type CreateSubAccountBodyPermissions
+## type [CreateSubAccountBodyPermissions](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L65-L70>)
 
 CreateSubAccountBodyPermissions is a schema definition.
 
@@ -5433,7 +5433,7 @@ type CreateSubAccountBodyPermissions struct {
 ```
 
 <a name="ListSubAccounts200Response"></a>
-## type ListSubAccounts200Response
+## type [ListSubAccounts200Response](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L119>)
 
 ListSubAccounts200Response is a schema definition.
 
@@ -5442,7 +5442,7 @@ type ListSubAccounts200Response []Operator
 ```
 
 <a name="ListSubAccountsParams"></a>
-## type ListSubAccountsParams
+## type [ListSubAccountsParams](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L93-L101>)
 
 ListSubAccountsParams: query parameters for ListSubAccounts
 
@@ -5459,7 +5459,7 @@ type ListSubAccountsParams struct {
 ```
 
 <a name="ListSubAccountsParams.QueryValues"></a>
-### func \(\*ListSubAccountsParams\) QueryValues
+### func \(\*ListSubAccountsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L104>)
 
 ```go
 func (p *ListSubAccountsParams) QueryValues() url.Values
@@ -5468,7 +5468,7 @@ func (p *ListSubAccountsParams) QueryValues() url.Values
 QueryValues converts [ListSubAccountsParams](<#ListSubAccountsParams>) into \[url.Values\].
 
 <a name="Operator"></a>
-## type Operator
+## type [Operator](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L31-L44>)
 
 Operator is a schema definition.
 
@@ -5490,7 +5490,7 @@ type Operator struct {
 ```
 
 <a name="OperatorAccountType"></a>
-## type OperatorAccountType
+## type [OperatorAccountType](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L47>)
 
 OperatorAccountType is a schema definition.
 
@@ -5508,7 +5508,7 @@ const (
 ```
 
 <a name="SubaccountsService"></a>
-## type SubaccountsService
+## type [SubaccountsService](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L121-L123>)
 
 
 
@@ -5519,7 +5519,7 @@ type SubaccountsService struct {
 ```
 
 <a name="NewSubaccountsService"></a>
-### func NewSubaccountsService
+### func [NewSubaccountsService](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L125>)
 
 ```go
 func NewSubaccountsService(c *client.Client) *SubaccountsService
@@ -5528,7 +5528,7 @@ func NewSubaccountsService(c *client.Client) *SubaccountsService
 
 
 <a name="SubaccountsService.CompatGetOperator"></a>
-### func \(\*SubaccountsService\) CompatGetOperator
+### func \(\*SubaccountsService\) [CompatGetOperator](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L217>)
 
 ```go
 func (s *SubaccountsService) CompatGetOperator(ctx context.Context, operatorId int) (*Operator, error)
@@ -5537,7 +5537,7 @@ func (s *SubaccountsService) CompatGetOperator(ctx context.Context, operatorId i
 CompatGetOperator: Retrieve an operator Returns specific operator. Deprecated: Subaccounts API is deprecated, to get an user that's a member of your merchant account please use \[Get member\]\(https://developer.sumup.com/api/members/get\) instead.
 
 <a name="SubaccountsService.CreateSubAccount"></a>
-### func \(\*SubaccountsService\) CreateSubAccount
+### func \(\*SubaccountsService\) [CreateSubAccount](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L158>)
 
 ```go
 func (s *SubaccountsService) CreateSubAccount(ctx context.Context, body CreateSubAccountBody) (*Operator, error)
@@ -5546,7 +5546,7 @@ func (s *SubaccountsService) CreateSubAccount(ctx context.Context, body CreateSu
 CreateSubAccount: Create an operator Creates new operator for currently authorized users' merchant. Deprecated: Subaccounts API is deprecated, to create an user in your merchant account please use \[Create member\]\(https://developer.sumup.com/api/members/create\) instead.
 
 <a name="SubaccountsService.DeactivateSubAccount"></a>
-### func \(\*SubaccountsService\) DeactivateSubAccount
+### func \(\*SubaccountsService\) [DeactivateSubAccount](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L191>)
 
 ```go
 func (s *SubaccountsService) DeactivateSubAccount(ctx context.Context, operatorId int) (*Operator, error)
@@ -5557,7 +5557,7 @@ DeactivateSubAccount: Disable an operator
 Deprecated: Subaccounts API is deprecated, to remove an user that's a member of your merchant account please use \[Delete member\]\(https://developer.sumup.com/api/members/delete\) instead.
 
 <a name="SubaccountsService.ListSubAccounts"></a>
-### func \(\*SubaccountsService\) ListSubAccounts
+### func \(\*SubaccountsService\) [ListSubAccounts](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L132>)
 
 ```go
 func (s *SubaccountsService) ListSubAccounts(ctx context.Context, params ListSubAccountsParams) (*ListSubAccounts200Response, error)
@@ -5566,7 +5566,7 @@ func (s *SubaccountsService) ListSubAccounts(ctx context.Context, params ListSub
 ListSubAccounts: List operators Returns list of operators for currently authorized user's merchant. Deprecated: Subaccounts API is deprecated, to list users in your merchant account please use \[List members\]\(https://developer.sumup.com/api/members/list\) instead.
 
 <a name="SubaccountsService.UpdateSubAccount"></a>
-### func \(\*SubaccountsService\) UpdateSubAccount
+### func \(\*SubaccountsService\) [UpdateSubAccount](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L243>)
 
 ```go
 func (s *SubaccountsService) UpdateSubAccount(ctx context.Context, operatorId int, body UpdateSubAccountBody) (*Operator, error)
@@ -5575,7 +5575,7 @@ func (s *SubaccountsService) UpdateSubAccount(ctx context.Context, operatorId in
 UpdateSubAccount: Update an operator Updates operator. If the operator was disabled and their password is updated they will be unblocked. Deprecated: Subaccounts API is deprecated, to update an user that's a member of your merchant account please use \[Update member\]\(https://developer.sumup.com/api/members/update\) instead.
 
 <a name="UpdateSubAccountBody"></a>
-## type UpdateSubAccountBody
+## type [UpdateSubAccountBody](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L73-L82>)
 
 UpdateSubAccountBody is a schema definition.
 
@@ -5593,7 +5593,7 @@ type UpdateSubAccountBody struct {
 ```
 
 <a name="UpdateSubAccountBodyPermissions"></a>
-## type UpdateSubAccountBodyPermissions
+## type [UpdateSubAccountBodyPermissions](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L85-L90>)
 
 UpdateSubAccountBodyPermissions is a schema definition.
 
@@ -5663,7 +5663,7 @@ import "github.com/sumup/sumup-go/transactions"
 
 
 <a name="CardResponse"></a>
-## type CardResponse
+## type [CardResponse](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L19-L28>)
 
 CardResponse: Details of the payment card.
 
@@ -5681,7 +5681,7 @@ type CardResponse struct {
 ```
 
 <a name="CardResponseType"></a>
-## type CardResponseType
+## type [CardResponseType](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L32>)
 
 CardResponseType: Issuing card network of the payment card. Read only
 
@@ -5711,7 +5711,7 @@ const (
 ```
 
 <a name="Event"></a>
-## type Event
+## type [Event](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L52-L74>)
 
 Event is a schema definition.
 
@@ -5742,7 +5742,7 @@ type Event struct {
 ```
 
 <a name="GetTransactionParams"></a>
-## type GetTransactionParams
+## type [GetTransactionParams](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L575-L583>)
 
 GetTransactionParams: query parameters for GetTransaction
 
@@ -5759,7 +5759,7 @@ type GetTransactionParams struct {
 ```
 
 <a name="GetTransactionParams.QueryValues"></a>
-### func \(\*GetTransactionParams\) QueryValues
+### func \(\*GetTransactionParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L586>)
 
 ```go
 func (p *GetTransactionParams) QueryValues() url.Values
@@ -5768,7 +5768,7 @@ func (p *GetTransactionParams) QueryValues() url.Values
 QueryValues converts [GetTransactionParams](<#GetTransactionParams>) into \[url.Values\].
 
 <a name="GetTransactionV21Params"></a>
-## type GetTransactionV21Params
+## type [GetTransactionV21Params](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L704-L712>)
 
 GetTransactionV21Params: query parameters for GetTransactionV2.1
 
@@ -5785,7 +5785,7 @@ type GetTransactionV21Params struct {
 ```
 
 <a name="GetTransactionV21Params.QueryValues"></a>
-### func \(\*GetTransactionV21Params\) QueryValues
+### func \(\*GetTransactionV21Params\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L715>)
 
 ```go
 func (p *GetTransactionV21Params) QueryValues() url.Values
@@ -5794,7 +5794,7 @@ func (p *GetTransactionV21Params) QueryValues() url.Values
 QueryValues converts [GetTransactionV21Params](<#GetTransactionV21Params>) into \[url.Values\].
 
 <a name="HorizontalAccuracy"></a>
-## type HorizontalAccuracy
+## type [HorizontalAccuracy](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L77>)
 
 HorizontalAccuracy: Indication of the precision of the geographical position received from the payment terminal.
 
@@ -5803,7 +5803,7 @@ type HorizontalAccuracy float64
 ```
 
 <a name="Lat"></a>
-## type Lat
+## type [Lat](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L83>)
 
 Lat: Latitude value from the coordinates of the payment location \(as received from the payment terminal reader\).
 
@@ -5814,7 +5814,7 @@ type Lat float64
 ```
 
 <a name="Link"></a>
-## type Link
+## type [Link](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L86-L94>)
 
 Link: Details of a link to a related resource.
 
@@ -5831,7 +5831,7 @@ type Link struct {
 ```
 
 <a name="LinkRefund"></a>
-## type LinkRefund
+## type [LinkRefund](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L97-L109>)
 
 LinkRefund is a schema definition.
 
@@ -5852,7 +5852,7 @@ type LinkRefund struct {
 ```
 
 <a name="ListTransactions200Response"></a>
-## type ListTransactions200Response
+## type [ListTransactions200Response](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L734-L737>)
 
 ListTransactions200Response is a schema definition.
 
@@ -5864,7 +5864,7 @@ type ListTransactions200Response struct {
 ```
 
 <a name="ListTransactionsParams"></a>
-## type ListTransactionsParams
+## type [ListTransactionsParams](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L476-L509>)
 
 ListTransactionsParams: query parameters for ListTransactions
 
@@ -5906,7 +5906,7 @@ type ListTransactionsParams struct {
 ```
 
 <a name="ListTransactionsParams.QueryValues"></a>
-### func \(\*ListTransactionsParams\) QueryValues
+### func \(\*ListTransactionsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L512>)
 
 ```go
 func (p *ListTransactionsParams) QueryValues() url.Values
@@ -5915,7 +5915,7 @@ func (p *ListTransactionsParams) QueryValues() url.Values
 QueryValues converts [ListTransactionsParams](<#ListTransactionsParams>) into \[url.Values\].
 
 <a name="ListTransactionsV21200Response"></a>
-## type ListTransactionsV21200Response
+## type [ListTransactionsV21200Response](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L740-L743>)
 
 ListTransactionsV21200Response is a schema definition.
 
@@ -5927,7 +5927,7 @@ type ListTransactionsV21200Response struct {
 ```
 
 <a name="ListTransactionsV21Params"></a>
-## type ListTransactionsV21Params
+## type [ListTransactionsV21Params](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L605-L638>)
 
 ListTransactionsV21Params: query parameters for ListTransactionsV2.1
 
@@ -5969,7 +5969,7 @@ type ListTransactionsV21Params struct {
 ```
 
 <a name="ListTransactionsV21Params.QueryValues"></a>
-### func \(\*ListTransactionsV21Params\) QueryValues
+### func \(\*ListTransactionsV21Params\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L641>)
 
 ```go
 func (p *ListTransactionsV21Params) QueryValues() url.Values
@@ -5978,7 +5978,7 @@ func (p *ListTransactionsV21Params) QueryValues() url.Values
 QueryValues converts [ListTransactionsV21Params](<#ListTransactionsV21Params>) into \[url.Values\].
 
 <a name="Lon"></a>
-## type Lon
+## type [Lon](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L115>)
 
 Lon: Longitude value from the coordinates of the payment location \(as received from the payment terminal reader\).
 
@@ -5989,7 +5989,7 @@ type Lon float64
 ```
 
 <a name="Product"></a>
-## type Product
+## type [Product](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L118-L141>)
 
 Product: Details of the product for which the payment is made.
 
@@ -6021,7 +6021,7 @@ type Product struct {
 ```
 
 <a name="RefundTransactionBody"></a>
-## type RefundTransactionBody
+## type [RefundTransactionBody](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L469-L473>)
 
 RefundTransactionBody: Optional amount for partial refunds of transactions.
 
@@ -6034,7 +6034,7 @@ type RefundTransactionBody struct {
 ```
 
 <a name="TransactionEvent"></a>
-## type TransactionEvent
+## type [TransactionEvent](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L144-L164>)
 
 TransactionEvent: Details of a transaction event.
 
@@ -6063,7 +6063,7 @@ type TransactionEvent struct {
 ```
 
 <a name="TransactionFull"></a>
-## type TransactionFull
+## type [TransactionFull](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L167-L247>)
 
 TransactionFull is a schema definition.
 
@@ -6152,7 +6152,7 @@ type TransactionFull struct {
 ```
 
 <a name="TransactionFullEntryMode"></a>
-## type TransactionFullEntryMode
+## type [TransactionFullEntryMode](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L269>)
 
 TransactionFullEntryMode: Entry mode of the payment details.
 
@@ -6170,7 +6170,7 @@ const (
 ```
 
 <a name="TransactionFullLocation"></a>
-## type TransactionFullLocation
+## type [TransactionFullLocation](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L286-L297>)
 
 TransactionFullLocation: Details of the payment location as received from the payment terminal.
 
@@ -6190,7 +6190,7 @@ type TransactionFullLocation struct {
 ```
 
 <a name="TransactionFullPaymentType"></a>
-## type TransactionFullPaymentType
+## type [TransactionFullPaymentType](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L250>)
 
 TransactionFullPaymentType: Payment type used for the transaction.
 
@@ -6209,7 +6209,7 @@ const (
 ```
 
 <a name="TransactionFullPayoutPlan"></a>
-## type TransactionFullPayoutPlan
+## type [TransactionFullPayoutPlan](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L277>)
 
 TransactionFullPayoutPlan: Payout plan of the registered user at the time when the transaction was made.
 
@@ -6228,7 +6228,7 @@ const (
 ```
 
 <a name="TransactionFullPayoutType"></a>
-## type TransactionFullPayoutType
+## type [TransactionFullPayoutType](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L300>)
 
 TransactionFullPayoutType: Payout type for the transaction.
 
@@ -6247,7 +6247,7 @@ const (
 ```
 
 <a name="TransactionFullSimplePaymentType"></a>
-## type TransactionFullSimplePaymentType
+## type [TransactionFullSimplePaymentType](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L309>)
 
 TransactionFullSimplePaymentType: Simple name of the payment type.
 
@@ -6270,7 +6270,7 @@ const (
 ```
 
 <a name="TransactionFullSimpleStatus"></a>
-## type TransactionFullSimpleStatus
+## type [TransactionFullSimpleStatus](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L322>)
 
 TransactionFullSimpleStatus: Status generated from the processing status and the latest transaction state.
 
@@ -6295,7 +6295,7 @@ const (
 ```
 
 <a name="TransactionFullStatus"></a>
-## type TransactionFullStatus
+## type [TransactionFullStatus](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L259>)
 
 TransactionFullStatus: Current status of the transaction.
 
@@ -6315,7 +6315,7 @@ const (
 ```
 
 <a name="TransactionFullVerificationMethod"></a>
-## type TransactionFullVerificationMethod
+## type [TransactionFullVerificationMethod](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L337>)
 
 TransactionFullVerificationMethod: Verification method used for the transaction.
 
@@ -6337,7 +6337,7 @@ const (
 ```
 
 <a name="TransactionHistory"></a>
-## type TransactionHistory
+## type [TransactionHistory](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L349-L387>)
 
 TransactionHistory is a schema definition.
 
@@ -6384,7 +6384,7 @@ type TransactionHistory struct {
 ```
 
 <a name="TransactionHistoryCardType"></a>
-## type TransactionHistoryCardType
+## type [TransactionHistoryCardType](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L418>)
 
 TransactionHistoryCardType: Issuing card network of the payment card used for the transaction.
 
@@ -6414,7 +6414,7 @@ const (
 ```
 
 <a name="TransactionHistoryPaymentType"></a>
-## type TransactionHistoryPaymentType
+## type [TransactionHistoryPaymentType](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L390>)
 
 TransactionHistoryPaymentType: Payment type used for the transaction.
 
@@ -6433,7 +6433,7 @@ const (
 ```
 
 <a name="TransactionHistoryPayoutPlan"></a>
-## type TransactionHistoryPayoutPlan
+## type [TransactionHistoryPayoutPlan](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L409>)
 
 TransactionHistoryPayoutPlan: Payout plan of the registered user at the time when the transaction was made.
 
@@ -6452,7 +6452,7 @@ const (
 ```
 
 <a name="TransactionHistoryStatus"></a>
-## type TransactionHistoryStatus
+## type [TransactionHistoryStatus](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L399>)
 
 TransactionHistoryStatus: Current status of the transaction.
 
@@ -6472,7 +6472,7 @@ const (
 ```
 
 <a name="TransactionHistoryType"></a>
-## type TransactionHistoryType
+## type [TransactionHistoryType](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L438>)
 
 TransactionHistoryType: Type of the transaction for the registered user specified in the \`user\` property.
 
@@ -6491,7 +6491,7 @@ const (
 ```
 
 <a name="TransactionMixinHistory"></a>
-## type TransactionMixinHistory
+## type [TransactionMixinHistory](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L447-L456>)
 
 TransactionMixinHistory is a schema definition.
 
@@ -6509,7 +6509,7 @@ type TransactionMixinHistory struct {
 ```
 
 <a name="TransactionMixinHistoryPayoutPlan"></a>
-## type TransactionMixinHistoryPayoutPlan
+## type [TransactionMixinHistoryPayoutPlan](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L460>)
 
 TransactionMixinHistoryPayoutPlan: Payout plan of the registered user at the time when the transaction was made.
 
@@ -6528,7 +6528,7 @@ const (
 ```
 
 <a name="TransactionsService"></a>
-## type TransactionsService
+## type [TransactionsService](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L745-L747>)
 
 
 
@@ -6539,7 +6539,7 @@ type TransactionsService struct {
 ```
 
 <a name="NewTransactionsService"></a>
-### func NewTransactionsService
+### func [NewTransactionsService](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L749>)
 
 ```go
 func NewTransactionsService(c *client.Client) *TransactionsService
@@ -6548,7 +6548,7 @@ func NewTransactionsService(c *client.Client) *TransactionsService
 
 
 <a name="TransactionsService.Get"></a>
-### func \(\*TransactionsService\) Get
+### func \(\*TransactionsService\) [Get](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L872>)
 
 ```go
 func (s *TransactionsService) Get(ctx context.Context, merchantCode string, params GetTransactionV21Params) (*TransactionFull, error)
@@ -6563,7 +6563,7 @@ Get: Retrieve a transaction Retrieves the full details of an identified transact
 - \`client\_transaction\_id\`
 
 <a name="TransactionsService.GetDeprecated"></a>
-### func \(\*TransactionsService\) GetDeprecated
+### func \(\*TransactionsService\) [GetDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L796>)
 
 ```go
 func (s *TransactionsService) GetDeprecated(ctx context.Context, params GetTransactionParams) (*TransactionFull, error)
@@ -6580,7 +6580,7 @@ GetDeprecated: Retrieve a transaction Retrieves the full details of an identifie
 Deprecated: this operation is deprecated
 
 <a name="TransactionsService.List"></a>
-### func \(\*TransactionsService\) List
+### func \(\*TransactionsService\) [List](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L834>)
 
 ```go
 func (s *TransactionsService) List(ctx context.Context, merchantCode string, params ListTransactionsV21Params) (*ListTransactionsV21200Response, error)
@@ -6589,7 +6589,7 @@ func (s *TransactionsService) List(ctx context.Context, merchantCode string, par
 List: List transactions Lists detailed history of all transactions associated with the merchant profile.
 
 <a name="TransactionsService.ListDeprecated"></a>
-### func \(\*TransactionsService\) ListDeprecated
+### func \(\*TransactionsService\) [ListDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L756>)
 
 ```go
 func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListTransactionsParams) (*ListTransactions200Response, error)
@@ -6598,7 +6598,7 @@ func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListTra
 ListDeprecated: List transactions Lists detailed history of all transactions associated with the merchant profile. Deprecated: this operation is deprecated
 
 <a name="TransactionsService.Refund"></a>
-### func \(\*TransactionsService\) Refund
+### func \(\*TransactionsService\) [Refund](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L910>)
 
 ```go
 func (s *TransactionsService) Refund(ctx context.Context, txnId string, body RefundTransactionBody) error
