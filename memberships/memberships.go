@@ -88,6 +88,8 @@ type ListMembershipsParams struct {
 	Offset *int
 	// Filter memberships by the sandbox status of the resource the membership is in.
 	ResourceAttributesSandbox *bool
+	// Filter memberships by the name of the resource the membership is in.
+	ResourceName *string
 }
 
 // QueryValues converts [ListMembershipsParams] into [url.Values].
@@ -108,6 +110,10 @@ func (p *ListMembershipsParams) QueryValues() url.Values {
 
 	if p.ResourceAttributesSandbox != nil {
 		q.Set("resource.attributes.sandbox", strconv.FormatBool(*p.ResourceAttributesSandbox))
+	}
+
+	if p.ResourceName != nil {
+		q.Set("resource.name", *p.ResourceName)
 	}
 
 	return q
