@@ -2361,6 +2361,8 @@ type ListMembershipsParams struct {
     Offset *int
     // Filter memberships by the sandbox status of the resource the membership is in.
     ResourceAttributesSandbox *bool
+    // Filter memberships by the name of the resource the membership is in.
+    ResourceName *string
 }
 ```
 
