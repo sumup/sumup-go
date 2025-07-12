@@ -119,7 +119,7 @@ type Reader struct {
 	// - `unknown` - The reader status is unknown.
 	// - `processing` - The reader is created and waits for the physical device to confirm the pairing.
 	// - `paired` - The reader is paired with a merchant account and can be used with SumUp APIs.
-	// - `expired` - The pairing is expired and no longer usable with the account. The resource needs to get recreated
+	// - `expired` - The pairing is expired and no longer usable with the account. The resource needs to get recreated.
 	Status ReaderStatus `json:"status"`
 	// The timestamp of when the reader was last updated.
 	UpdatedAt time.Time `json:"updated_at"`
@@ -166,7 +166,7 @@ type ReaderPairingCode string
 // - `unknown` - The reader status is unknown.
 // - `processing` - The reader is created and waits for the physical device to confirm the pairing.
 // - `paired` - The reader is paired with a merchant account and can be used with SumUp APIs.
-// - `expired` - The pairing is expired and no longer usable with the account. The resource needs to get recreated
+// - `expired` - The pairing is expired and no longer usable with the account. The resource needs to get recreated.
 type ReaderStatus string
 
 const (
@@ -643,8 +643,6 @@ func (s *ReadersService) Get(ctx context.Context, merchantCode string, id Reader
 		}
 
 		return &v, nil
-	case http.StatusBadRequest:
-		return nil, errors.New("Malformed request.")
 	case http.StatusNotFound:
 		return nil, errors.New("The requested Reader resource does not exists.")
 	default:

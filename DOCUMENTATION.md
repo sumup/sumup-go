@@ -287,10 +287,6 @@ type Checkout struct {
     Mandate *shared.MandateResponse `json:"mandate,omitempty"`
     // Unique identifying code of the merchant profile.
     MerchantCode *string `json:"merchant_code,omitempty"`
-    // Email address of the registered user (merchant) to whom the payment is made.
-    // Format: email
-    // Deprecated: `pay_to_email` is deprecated, use `merchant_code` instead.
-    PayToEmail *string `json:"pay_to_email,omitempty"`
     // URL to which the SumUp platform sends the processing status of the payment checkout.
     // Format: uri
     ReturnUrl *string `json:"return_url,omitempty"`
@@ -399,10 +395,6 @@ type CheckoutCreateRequest struct {
     Id  *string `json:"id,omitempty"`
     // Unique identifying code of the merchant profile.
     MerchantCode string `json:"merchant_code"`
-    // Email address of the registered user (merchant) to whom the payment is made.
-    // Format: email
-    // Deprecated: `pay_to_email` is deprecated, use `merchant_code` instead.
-    PayToEmail *string `json:"pay_to_email,omitempty"`
     // Purpose of the checkout.
     // Default: CHECKOUT
     Purpose *CheckoutCreateRequestPurpose `json:"purpose,omitempty"`
@@ -661,10 +653,6 @@ type CheckoutSuccess struct {
     MerchantCode *string `json:"merchant_code,omitempty"`
     // Name of the merchant
     MerchantName *string `json:"merchant_name,omitempty"`
-    // Email address of the registered user (merchant) to whom the payment is made.
-    // Format: email
-    // Deprecated: `pay_to_email` is deprecated, use `merchant_code` instead.
-    PayToEmail *string `json:"pay_to_email,omitempty"`
     // Object containing token information for the specified payment instrument
     PaymentInstrument *CheckoutSuccessPaymentInstrument `json:"payment_instrument,omitempty"`
     // Refers to a url where the end user is redirected once the payment processing completes.
@@ -1024,10 +1012,6 @@ type CreateCheckoutBody struct {
     Id  *string `json:"id,omitempty"`
     // Unique identifying code of the merchant profile.
     MerchantCode string `json:"merchant_code"`
-    // Email address of the registered user (merchant) to whom the payment is made.
-    // Format: email
-    // Deprecated: `pay_to_email` is deprecated, use `merchant_code` instead.
-    PayToEmail *string `json:"pay_to_email,omitempty"`
     // Purpose of the checkout.
     // Default: CHECKOUT
     Purpose *CreateCheckoutBodyPurpose `json:"purpose,omitempty"`
@@ -1218,10 +1202,6 @@ type DeactivateCheckout200Response struct {
     MerchantCountry *string `json:"merchant_country,omitempty"`
     // Merchant name
     MerchantName *string `json:"merchant_name,omitempty"`
-    // Email address of the registered user (merchant) to whom the payment is made.
-    // Format: email
-    // Deprecated: `pay_to_email` is deprecated, use `merchant_code` instead.
-    PayToEmail *string `json:"pay_to_email,omitempty"`
     // Purpose of the checkout creation initially
     Purpose *DeactivateCheckout200ResponsePurpose `json:"purpose,omitempty"`
     // Current status of the checkout.
@@ -3953,7 +3933,7 @@ type Reader struct {
     // - `unknown` - The reader status is unknown.
     // - `processing` - The reader is created and waits for the physical device to confirm the pairing.
     // - `paired` - The reader is paired with a merchant account and can be used with SumUp APIs.
-    // - `expired` - The pairing is expired and no longer usable with the account. The resource needs to get recreated
+    // - `expired` - The pairing is expired and no longer usable with the account. The resource needs to get recreated.
     Status ReaderStatus `json:"status"`
     // The timestamp of when the reader was last updated.
     UpdatedAt time.Time `json:"updated_at"`
@@ -4026,7 +4006,7 @@ ReaderStatus: The status of the reader object gives information about the curren
 
 Possible values:
 
-\- \`unknown\` \- The reader status is unknown. \- \`processing\` \- The reader is created and waits for the physical device to confirm the pairing. \- \`paired\` \- The reader is paired with a merchant account and can be used with SumUp APIs. \- \`expired\` \- The pairing is expired and no longer usable with the account. The resource needs to get recreated
+\- \`unknown\` \- The reader status is unknown. \- \`processing\` \- The reader is created and waits for the physical device to confirm the pairing. \- \`paired\` \- The reader is paired with a merchant account and can be used with SumUp APIs. \- \`expired\` \- The pairing is expired and no longer usable with the account. The resource needs to get recreated.
 
 ```go
 type ReaderStatus string
@@ -5142,7 +5122,7 @@ import "github.com/sumup/sumup-go/subaccounts"
 <a name="CompatError"></a>
 ## type CompatError
 
-CompatError: Error
+CompatError: Error object for compat API calls.
 
 ```go
 type CompatError struct {
@@ -5228,7 +5208,7 @@ QueryValues converts [ListSubAccountsParams](<#ListSubAccountsParams>) into \[ur
 <a name="Operator"></a>
 ## type Operator
 
-Operator is a schema definition.
+Operator: Operator account for a merchant.
 
 ```go
 type Operator struct {
@@ -5310,9 +5290,7 @@ CreateSubAccount: Create an operator Creates new operator for currently authoriz
 func (s *SubaccountsService) DeactivateSubAccount(ctx context.Context, operatorId int) (*Operator, error)
 ```
 
-DeactivateSubAccount: Disable an operator
-
-Deprecated: Subaccounts API is deprecated, to remove an user that's a member of your merchant account please use \[Delete member\]\(https://developer.sumup.com/api/members/delete\) instead.
+DeactivateSubAccount: Disable an operator. Disable the specified operator for the merchant account. Deprecated: Subaccounts API is deprecated, to remove an user that's a member of your merchant account please use \[Delete member\]\(https://developer.sumup.com/api/members/delete\) instead.
 
 <a name="SubaccountsService.ListSubAccounts"></a>
 ### func \(\*SubaccountsService\) ListSubAccounts
