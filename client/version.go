@@ -2,4 +2,4 @@
 
 package client
 
-const version = "0.0.1" // x-release-please-version
+const version = "0.1.0" // x-release-please-version
