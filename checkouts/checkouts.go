@@ -116,10 +116,6 @@ type Checkout struct {
 	Mandate *shared.MandateResponse `json:"mandate,omitempty"`
 	// Unique identifying code of the merchant profile.
 	MerchantCode *string `json:"merchant_code,omitempty"`
-	// Email address of the registered user (merchant) to whom the payment is made.
-	// Format: email
-	// Deprecated: `pay_to_email` is deprecated, use `merchant_code` instead.
-	PayToEmail *string `json:"pay_to_email,omitempty"`
 	// URL to which the SumUp platform sends the processing status of the payment checkout.
 	// Format: uri
 	ReturnUrl *string `json:"return_url,omitempty"`
@@ -265,10 +261,6 @@ type CheckoutCreateRequest struct {
 	Id *string `json:"id,omitempty"`
 	// Unique identifying code of the merchant profile.
 	MerchantCode string `json:"merchant_code"`
-	// Email address of the registered user (merchant) to whom the payment is made.
-	// Format: email
-	// Deprecated: `pay_to_email` is deprecated, use `merchant_code` instead.
-	PayToEmail *string `json:"pay_to_email,omitempty"`
 	// Purpose of the checkout.
 	// Default: CHECKOUT
 	Purpose *CheckoutCreateRequestPurpose `json:"purpose,omitempty"`
@@ -432,10 +424,6 @@ type CheckoutSuccess struct {
 	MerchantCode *string `json:"merchant_code,omitempty"`
 	// Name of the merchant
 	MerchantName *string `json:"merchant_name,omitempty"`
-	// Email address of the registered user (merchant) to whom the payment is made.
-	// Format: email
-	// Deprecated: `pay_to_email` is deprecated, use `merchant_code` instead.
-	PayToEmail *string `json:"pay_to_email,omitempty"`
 	// Object containing token information for the specified payment instrument
 	PaymentInstrument *CheckoutSuccessPaymentInstrument `json:"payment_instrument,omitempty"`
 	// Refers to a url where the end user is redirected once the payment processing completes.
@@ -618,10 +606,6 @@ type CreateCheckoutBody struct {
 	Id *string `json:"id,omitempty"`
 	// Unique identifying code of the merchant profile.
 	MerchantCode string `json:"merchant_code"`
-	// Email address of the registered user (merchant) to whom the payment is made.
-	// Format: email
-	// Deprecated: `pay_to_email` is deprecated, use `merchant_code` instead.
-	PayToEmail *string `json:"pay_to_email,omitempty"`
 	// Purpose of the checkout.
 	// Default: CHECKOUT
 	Purpose *CreateCheckoutBodyPurpose `json:"purpose,omitempty"`
@@ -839,10 +823,6 @@ type DeactivateCheckout200Response struct {
 	MerchantCountry *string `json:"merchant_country,omitempty"`
 	// Merchant name
 	MerchantName *string `json:"merchant_name,omitempty"`
-	// Email address of the registered user (merchant) to whom the payment is made.
-	// Format: email
-	// Deprecated: `pay_to_email` is deprecated, use `merchant_code` instead.
-	PayToEmail *string `json:"pay_to_email,omitempty"`
 	// Purpose of the checkout creation initially
 	Purpose *DeactivateCheckout200ResponsePurpose `json:"purpose,omitempty"`
 	// Current status of the checkout.

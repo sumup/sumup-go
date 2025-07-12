@@ -15,7 +15,7 @@ import (
 	"github.com/sumup/sumup-go/shared"
 )
 
-// CompatError: Error
+// CompatError: Error object for compat API calls.
 type CompatError struct {
 	ErrorCode string `json:"error_code"`
 	Message   string `json:"message"`
@@ -27,7 +27,7 @@ func (e *CompatError) Error() string {
 
 var _ error = (*CompatError)(nil)
 
-// Operator is a schema definition.
+// Operator: Operator account for a merchant.
 type Operator struct {
 	AccountType OperatorAccountType `json:"account_type"`
 	// The timestamp of when the operator was created.
@@ -184,8 +184,8 @@ func (s *SubaccountsService) CreateSubAccount(ctx context.Context, body CreateSu
 	}
 }
 
-// DeactivateSubAccount: Disable an operator
-//
+// DeactivateSubAccount: Disable an operator.
+// Disable the specified operator for the merchant account.
 // Deprecated: Subaccounts API is deprecated, to remove an user that's a member of your merchant account please
 // use [Delete member](https://developer.sumup.com/api/members/delete) instead.
 func (s *SubaccountsService) DeactivateSubAccount(ctx context.Context, operatorId int) (*Operator, error) {
