@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.0](https://github.com/sumup/sumup-go/compare/v0.0.1...v0.1.0) (2025-07-12)
+
+
+### Features
+
+* **readme:** docs badge ([#85](https://github.com/sumup/sumup-go/issues/85)) ([7d2b120](https://github.com/sumup/sumup-go/commit/7d2b120ddaa35ed50a1bd91118bd00c2262d6c6f))
+
 ## 0.0.1 (2025-06-17)
 
 
