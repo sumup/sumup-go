@@ -209,8 +209,6 @@ type MerchantAccount struct {
 	Account *Account `json:"account,omitempty"`
 	// Mobile app settings
 	AppSettings *AppSettings `json:"app_settings,omitempty"`
-	// Merchant comes from payleven BR migration
-	IsMigratedPaylevenBr *bool `json:"is_migrated_payleven_br,omitempty"`
 	// Account's merchant profile
 	MerchantProfile *MerchantProfile `json:"merchant_profile,omitempty"`
 	// User permissions
