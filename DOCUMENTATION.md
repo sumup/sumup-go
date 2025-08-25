@@ -2307,11 +2307,10 @@ import "github.com/sumup/sumup-go/memberships"
   - [func \(p \*ListMembershipsParams\) QueryValues\(\) url.Values](<#ListMembershipsParams.QueryValues>)
 - [type Membership](<#Membership>)
 - [type MembershipResource](<#MembershipResource>)
-- [type MembershipResourceType](<#MembershipResourceType>)
-- [type MembershipType](<#MembershipType>)
 - [type MembershipsService](<#MembershipsService>)
   - [func NewMembershipsService\(c \*client.Client\) \*MembershipsService](<#NewMembershipsService>)
   - [func \(s \*MembershipsService\) List\(ctx context.Context, params ListMembershipsParams\) \(\*ListMemberships200Response, error\)](<#MembershipsService.List>)
+- [type ResourceType](<#ResourceType>)
 
 
 <a name="ListMemberships200Response"></a>
@@ -2334,7 +2333,7 @@ ListMembershipsParams: query parameters for ListMemberships
 ```go
 type ListMembershipsParams struct {
     // Filter memberships by resource kind.
-    Kind *string
+    Kind *ResourceType
     // Maximum number of members to return.
     Limit *int
     // Offset of the first member to return.
@@ -2383,8 +2382,11 @@ type Membership struct {
     Roles []string `json:"roles"`
     // The status of the membership.
     Status shared.MembershipStatus `json:"status"`
-    // Type of the resource the membership is in.
-    Type MembershipType `json:"type"`
+    // The kind of the membership resource.
+    // Possible values are:
+    // * `merchant` - merchant account(s)
+    // * `organization` - organization(s)
+    Type ResourceType `json:"type"`
     // The timestamp of when the membership was last updated.
     UpdatedAt time.Time `json:"updated_at"`
 }
@@ -2408,45 +2410,15 @@ type MembershipResource struct {
     // Max length: 256
     Logo *string `json:"logo,omitempty"`
     // Display name of the resource.
-    Name string                 `json:"name"`
-    Type MembershipResourceType `json:"type"`
+    Name string `json:"name"`
+    // The kind of the membership resource.
+    // Possible values are:
+    // * `merchant` - merchant account(s)
+    // * `organization` - organization(s)
+    Type ResourceType `json:"type"`
     // The timestamp of when the membership resource was last updated.
     UpdatedAt time.Time `json:"updated_at"`
 }
-```
-
-<a name="MembershipResourceType"></a>
-## type MembershipResourceType
-
-MembershipResourceType is a schema definition.
-
-```go
-type MembershipResourceType string
-```
-
-<a name="MembershipResourceTypeMerchant"></a>
-
-```go
-const (
-    MembershipResourceTypeMerchant MembershipResourceType = "merchant"
-)
-```
-
-<a name="MembershipType"></a>
-## type MembershipType
-
-MembershipType: Type of the resource the membership is in.
-
-```go
-type MembershipType string
-```
-
-<a name="MembershipTypeMerchant"></a>
-
-```go
-const (
-    MembershipTypeMerchant MembershipType = "merchant"
-)
 ```
 
 <a name="MembershipsService"></a>
@@ -2477,6 +2449,15 @@ func (s *MembershipsService) List(ctx context.Context, params ListMembershipsPar
 ```
 
 List: List memberships List memberships of the current user.
+
+<a name="ResourceType"></a>
+## type ResourceType
+
+ResourceType: The kind of the membership resource. Possible values are: \* \`merchant\` \- merchant account\(s\) \* \`organization\` \- organization\(s\)
+
+```go
+type ResourceType string
+```
 
 # merchant
 
