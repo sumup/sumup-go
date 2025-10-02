@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/sumup/sumup-go/compare/v0.1.0...v0.2.0) (2025-10-02)
+
+
+### Features
+
+* **ci:** use native govulncheck SARIF functionality ([#103](https://github.com/sumup/sumup-go/issues/103)) ([156150c](https://github.com/sumup/sumup-go/commit/156150c339006e902cbd27afa605a96c3215b12e))
+
 ## [0.1.0](https://github.com/sumup/sumup-go/compare/v0.0.1...v0.1.0) (2025-07-12)
 
 
