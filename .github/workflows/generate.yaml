@@ -30,7 +30,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 # v6.0.0
         with:
-          go-version: '1.24'
+          go-version: 'stable'
 
       # Would be nice to run this from go-sdk-gen but goimports can't be imported as a pkg
       - run: go install golang.org/x/tools/cmd/goimports@latest
