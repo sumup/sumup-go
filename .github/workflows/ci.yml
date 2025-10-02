@@ -55,7 +55,7 @@ jobs:
         run: go test -v -failfast -race -timeout 10m ./...
 
   vulncheck:
-    name: Vulnerabilities check
+    name: Vulncheck
     runs-on: ubuntu-latest
     permissions:
       actions: read
@@ -66,10 +66,18 @@ jobs:
 
       - uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 # v6.0.0
         with:
-          go-version-file: 'go.mod'
+          go-version: 'stable'
 
-      - name: Scan for Vulnerabilities in Code
-        uses: Templum/govulncheck-action@0eeca9d81f01facc00829cc99a14e44ce59ce80f # v1.0.2
+      - name: govulncheck scan
+        run: |
+          go install golang.org/x/vuln/cmd/govulncheck@latest
+          make vulncheck-sarif
+
+      - name: Upload govulncheck results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@3599b3baa15b485a2e49ef411a7a4bb2452e7f93 # v3.30.5
+        with:
+          sarif_file: "govulncheck.sarif"
+          category: "govulncheck"
 
   release-please:
     name: Publish
