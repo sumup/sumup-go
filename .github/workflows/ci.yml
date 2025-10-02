@@ -12,7 +12,7 @@ on:
       - main
 
 env:
-  GOLANGCI_LINT_VERSION: v2.1.5
+  GOLANGCI_LINT_VERSION: v2.5.0
 
 permissions:
   contents: write
@@ -40,10 +40,9 @@ jobs:
     strategy:
       matrix:
         go:
-          - "1.21"
-          - "1.22"
-          - "1.23"
-          - "stable"
+          - "1.23" # stable-2
+          - "1.24" # stable-1
+          - "stable" # 1.25
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
@@ -66,7 +65,7 @@ jobs:
 
       - uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 # v6.0.0
         with:
-          go-version-file: 'go.mod'
+          go-version: 'stable'
 
       - name: Scan for Vulnerabilities in Code
         uses: Templum/govulncheck-action@0eeca9d81f01facc00829cc99a14e44ce59ce80f # v1.0.2
