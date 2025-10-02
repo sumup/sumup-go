@@ -25,6 +25,10 @@ download:
 vulncheck: ## Check for Vulnerabilities (make sure you have the tools install: `make install-tools`)
 	govulncheck ./...
 
+.PHONY: vulncheck-sarif
+vulncheck-sarif: ## Check for Vulnerabilities
+	govulncheck -format=sarif ./... > govulncheck.sarif
+
 .PHONY: generate
 generate: # Generate latest SDK
 	go-sdk-gen generate --mod github.com/sumup/sumup-go --pkg sumup --name SumUp ./openapi.json
