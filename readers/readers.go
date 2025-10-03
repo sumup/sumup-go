@@ -470,6 +470,7 @@ func (s *ReadersService) Create(ctx context.Context, merchantCode string, body C
 //
 // This process is asynchronous and the actual termination may take some time to be performed on the device.
 //
+//
 // There are some caveats when using this endpoint:
 // * The target device must be online, otherwise terminate won't be accepted
 // * The action will succeed only if the device is waiting for cardholder action: e.g: waiting for card, waiting
@@ -479,63 +480,64 @@ func (s *ReadersService) Create(ctx context.Context, merchantCode string, body C
 // If a transaction is successfully terminated and `return_url` was provided on Checkout, the transaction status
 // will be sent as `failed` to the provided URL.
 //
+//
 // **Note**: If the target device is a Solo, it must be in version 3.3.28.0 or higher.
-func (s *ReadersService) CreateReaderTerminate(ctx context.Context, merchantCode string, readerId string) (*CreateReaderTerminate202Response, error) {
+func (s *ReadersService) CreateReaderTerminate(ctx context.Context, merchantCode string, readerId string) error {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v/terminate", merchantCode, readerId)
 
-	resp, err := s.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
+	resp, err := s.c.Call(ctx, http.MethodPost, path)
 	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
+		return fmt.Errorf("error building request: %v", err)
 	}
 	defer resp.Body.Close()
 
 	switch resp.StatusCode {
 	case http.StatusAccepted:
-		return nil, nil
+		return nil
 	case http.StatusBadRequest:
 		var apiErr CreateReaderTerminateError
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
+			return fmt.Errorf("read error response: %s", err.Error())
 		}
 
-		return nil, &apiErr
+		return &apiErr
 	case http.StatusUnauthorized:
 		var apiErr CreateReaderTerminateError
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
+			return fmt.Errorf("read error response: %s", err.Error())
 		}
 
-		return nil, &apiErr
+		return &apiErr
 	case http.StatusUnprocessableEntity:
 		var apiErr CreateReaderTerminateUnprocessableEntity
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
+			return fmt.Errorf("read error response: %s", err.Error())
 		}
 
-		return nil, &apiErr
+		return &apiErr
 	case http.StatusInternalServerError:
 		var apiErr CreateReaderTerminateError
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
+			return fmt.Errorf("read error response: %s", err.Error())
 		}
 
-		return nil, &apiErr
+		return &apiErr
 	case http.StatusBadGateway:
 		var apiErr CreateReaderTerminateError
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
+			return fmt.Errorf("read error response: %s", err.Error())
 		}
 
-		return nil, &apiErr
+		return &apiErr
 	case http.StatusGatewayTimeout:
 		var apiErr CreateReaderTerminateError
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
+			return fmt.Errorf("read error response: %s", err.Error())
 		}
 
-		return nil, &apiErr
+		return &apiErr
 	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		return fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
 }
 
@@ -544,10 +546,12 @@ func (s *ReadersService) CreateReaderTerminate(ctx context.Context, merchantCode
 //
 // This process is asynchronous and the actual transaction may take some time to be stared on the device.
 //
+//
 // There are some caveats when using this endpoint:
 // * The target device must be online, otherwise checkout won't be accepted
 // * After the checkout is accepted, the system has 60 seconds to start the payment on the target device. During
 // this time, any other checkout for the same device will be rejected.
+//
 //
 // **Note**: If the target device is a Solo, it must be in version 3.3.24.3 or higher.
 func (s *ReadersService) CreateReaderCheckout(ctx context.Context, merchantCode string, readerId string, body CreateReaderCheckoutBody) (*CreateReaderCheckoutResponse, error) {
