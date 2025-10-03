@@ -30,6 +30,8 @@ type Membership struct {
 	// submit whole metadata.
 	Metadata *shared.Metadata `json:"metadata,omitempty"`
 	// User's permissions.
+	// Deprecated: Permissions include only legacy permissions. Otherwise, access control is based on member's roles
+	// within a given resource.
 	Permissions []string `json:"permissions"`
 	// Information about the resource the membership is in.
 	Resource MembershipResource `json:"resource"`
@@ -39,18 +41,14 @@ type Membership struct {
 	Roles []string `json:"roles"`
 	// The status of the membership.
 	Status shared.MembershipStatus `json:"status"`
-	// Type of the resource the membership is in.
-	Type MembershipType `json:"type"`
+	// The kind of the membership resource.
+	// Possible values are:
+	// * `merchant` - merchant account(s)
+	// * `organization` - organization(s)
+	Type ResourceType `json:"type"`
 	// The timestamp of when the membership was last updated.
 	UpdatedAt time.Time `json:"updated_at"`
 }
-
-// MembershipType: Type of the resource the membership is in.
-type MembershipType string
-
-const (
-	MembershipTypeMerchant MembershipType = "merchant"
-)
 
 // MembershipResource: Information about the resource the membership is in.
 type MembershipResource struct {
@@ -65,23 +63,26 @@ type MembershipResource struct {
 	// Max length: 256
 	Logo *string `json:"logo,omitempty"`
 	// Display name of the resource.
-	Name string                 `json:"name"`
-	Type MembershipResourceType `json:"type"`
+	Name string `json:"name"`
+	// The kind of the membership resource.
+	// Possible values are:
+	// * `merchant` - merchant account(s)
+	// * `organization` - organization(s)
+	Type ResourceType `json:"type"`
 	// The timestamp of when the membership resource was last updated.
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// MembershipResourceType is a schema definition.
-type MembershipResourceType string
-
-const (
-	MembershipResourceTypeMerchant MembershipResourceType = "merchant"
-)
+// ResourceType: The kind of the membership resource.
+// Possible values are:
+// * `merchant` - merchant account(s)
+// * `organization` - organization(s)
+type ResourceType string
 
 // ListMembershipsParams: query parameters for ListMemberships
 type ListMembershipsParams struct {
 	// Filter memberships by resource kind.
-	Kind *string
+	Kind *ResourceType
 	// Maximum number of members to return.
 	Limit *int
 	// Offset of the first member to return.
@@ -97,7 +98,7 @@ func (p *ListMembershipsParams) QueryValues() url.Values {
 	q := make(url.Values)
 
 	if p.Kind != nil {
-		q.Set("kind", *p.Kind)
+		q.Set("kind", string(*p.Kind))
 	}
 
 	if p.Limit != nil {

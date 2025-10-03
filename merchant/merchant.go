@@ -14,20 +14,20 @@ import (
 	"github.com/sumup/sumup-go/shared"
 )
 
-// Account: Profile information.
-type Account struct {
+// AccountLegacy: Profile information.
+type AccountLegacy struct {
 	// The role of the user.
-	Type *AccountType `json:"type,omitempty"`
+	Type *AccountLegacyType `json:"type,omitempty"`
 	// Username of the user profile.
 	Username *string `json:"username,omitempty"`
 }
 
-// AccountType: The role of the user.
-type AccountType string
+// AccountLegacyType: The role of the user.
+type AccountLegacyType string
 
 const (
-	AccountTypeNormal   AccountType = "normal"
-	AccountTypeOperator AccountType = "operator"
+	AccountLegacyTypeNormal   AccountLegacyType = "normal"
+	AccountLegacyTypeOperator AccountLegacyType = "operator"
 )
 
 // AddressWithDetails: Details of the registered address.
@@ -158,9 +158,9 @@ type CountryDetails struct {
 	NativeName *string `json:"native_name,omitempty"`
 }
 
-// DoingBusinessAs: Doing Business As information
-type DoingBusinessAs struct {
-	Address *DoingBusinessAsAddress `json:"address,omitempty"`
+// DoingBusinessAsLegacy: Doing Business As information
+type DoingBusinessAsLegacy struct {
+	Address *DoingBusinessAsLegacyAddress `json:"address,omitempty"`
 	// Doing business as name
 	BusinessName *string `json:"business_name,omitempty"`
 	// Doing business as company registration number
@@ -173,8 +173,8 @@ type DoingBusinessAs struct {
 	Website *string `json:"website,omitempty"`
 }
 
-// DoingBusinessAsAddress is a schema definition.
-type DoingBusinessAsAddress struct {
+// DoingBusinessAsLegacyAddress is a schema definition.
+type DoingBusinessAsLegacyAddress struct {
 	// Address line 1
 	AddressLine1 *string `json:"address_line_1,omitempty"`
 	// Address line 2
@@ -191,8 +191,8 @@ type DoingBusinessAsAddress struct {
 	RegionName *string `json:"region_name,omitempty"`
 }
 
-// LegalType: Id of the legal type of the merchant profile
-type LegalType struct {
+// LegalTypeLegacy: Id of the legal type of the merchant profile
+type LegalTypeLegacy struct {
 	// Legal type short description
 	Description *string `json:"description,omitempty"`
 	// Legal type description
@@ -206,19 +206,19 @@ type LegalType struct {
 // MerchantAccount: Details of the merchant account.
 type MerchantAccount struct {
 	// Profile information.
-	Account *Account `json:"account,omitempty"`
+	Account *AccountLegacy `json:"account,omitempty"`
 	// Mobile app settings
 	AppSettings *AppSettings `json:"app_settings,omitempty"`
 	// Account's merchant profile
-	MerchantProfile *MerchantProfile `json:"merchant_profile,omitempty"`
+	MerchantProfile *MerchantProfileLegacy `json:"merchant_profile,omitempty"`
 	// User permissions
-	Permissions *shared.Permissions `json:"permissions,omitempty"`
+	Permissions *PermissionsLegacy `json:"permissions,omitempty"`
 	// Account's personal profile.
-	PersonalProfile *PersonalProfile `json:"personal_profile,omitempty"`
+	PersonalProfile *PersonalProfileLegacy `json:"personal_profile,omitempty"`
 }
 
-// MerchantProfile: Account's merchant profile
-type MerchantProfile struct {
+// MerchantProfileLegacy: Account's merchant profile
+type MerchantProfileLegacy struct {
 	// Details of the registered address.
 	Address      *AddressWithDetails `json:"address,omitempty"`
 	BankAccounts *[]BankAccount      `json:"bank_accounts,omitempty"`
@@ -232,11 +232,11 @@ type MerchantProfile struct {
 	// internal usage only&#41;
 	Country *string `json:"country,omitempty"`
 	// Doing Business As information
-	DoingBusinessAs *DoingBusinessAs `json:"doing_business_as,omitempty"`
+	DoingBusinessAs *DoingBusinessAsLegacy `json:"doing_business_as,omitempty"`
 	// True if the merchant is extdev
 	Extdev *bool `json:"extdev,omitempty"`
 	// Id of the legal type of the merchant profile
-	LegalType *LegalType `json:"legal_type,omitempty"`
+	LegalType *LegalTypeLegacy `json:"legal_type,omitempty"`
 	// Merchant locale &#40;for internal usage only&#41;
 	Locale *string `json:"locale,omitempty"`
 	// Merchant category code
@@ -299,8 +299,20 @@ const (
 	MerchantSettingsMotoPaymentUnavailable MerchantSettingsMotoPayment = "UNAVAILABLE"
 )
 
-// PersonalProfile: Account's personal profile.
-type PersonalProfile struct {
+// PermissionsLegacy: User permissions
+type PermissionsLegacy struct {
+	// Create MOTO payments
+	CreateMotoPayments *bool `json:"create_moto_payments,omitempty"`
+	// Create referral
+	CreateReferral *bool `json:"create_referral,omitempty"`
+	// Can view full merchant transaction history
+	FullTransactionHistoryView *bool `json:"full_transaction_history_view,omitempty"`
+	// Refund transactions
+	RefundTransactions *bool `json:"refund_transactions,omitempty"`
+}
+
+// PersonalProfileLegacy: Account's personal profile.
+type PersonalProfileLegacy struct {
 	// Details of the registered address.
 	Address  *AddressWithDetails `json:"address,omitempty"`
 	Complete *bool               `json:"complete,omitempty"`
@@ -408,7 +420,9 @@ func NewMerchantService(c *client.Client) *MerchantService {
 
 // GetPersonalProfile: Retrieve a personal profile
 // Retrieves personal profile data.
-func (s *MerchantService) GetPersonalProfile(ctx context.Context) (*PersonalProfile, error) {
+// Deprecated: The _Retrieve a personal profile_ endpoint is deprecated, please use the `persons` field of
+// the `Merchant` object instead. (see [Merchants](https://developer.sumup.com/api/merchants)).
+func (s *MerchantService) GetPersonalProfile(ctx context.Context) (*PersonalProfileLegacy, error) {
 	path := fmt.Sprintf("/v0.1/me/personal-profile")
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path)
@@ -419,7 +433,7 @@ func (s *MerchantService) GetPersonalProfile(ctx context.Context) (*PersonalProf
 
 	switch resp.StatusCode {
 	case http.StatusOK:
-		var v PersonalProfile
+		var v PersonalProfileLegacy
 		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
 			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}
@@ -477,7 +491,9 @@ func (s *MerchantService) GetSettings(ctx context.Context) (*MerchantSettings, e
 
 // GetDoingBusinessAs: Retrieve DBA
 // Retrieves Doing Business As profile.
-func (s *MerchantService) GetDoingBusinessAs(ctx context.Context) (*DoingBusinessAs, error) {
+// Deprecated: The _Retrieve DBA_ endpoint is deprecated, please use the `business_profile` field of the `Merchant`
+// object instead (see [Merchants](https://developer.sumup.com/api/merchants)).
+func (s *MerchantService) GetDoingBusinessAs(ctx context.Context) (*DoingBusinessAsLegacy, error) {
 	path := fmt.Sprintf("/v0.1/me/merchant-profile/doing-business-as")
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path)
@@ -488,7 +504,7 @@ func (s *MerchantService) GetDoingBusinessAs(ctx context.Context) (*DoingBusines
 
 	switch resp.StatusCode {
 	case http.StatusOK:
-		var v DoingBusinessAs
+		var v DoingBusinessAsLegacy
 		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
 			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}
@@ -547,7 +563,9 @@ func (s *MerchantService) ListBankAccountsDeprecated(ctx context.Context, params
 
 // GetMerchantProfile: Retrieve a merchant profile
 // Retrieves merchant profile data.
-func (s *MerchantService) GetMerchantProfile(ctx context.Context) (*MerchantProfile, error) {
+// Deprecated: The _Retrieve a merchant profile_ endpoint is deprecated, please use the `Merchant` object instead
+// (see [Merchants](https://developer.sumup.com/api/merchants)).
+func (s *MerchantService) GetMerchantProfile(ctx context.Context) (*MerchantProfileLegacy, error) {
 	path := fmt.Sprintf("/v0.1/me/merchant-profile")
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path)
@@ -558,7 +576,7 @@ func (s *MerchantService) GetMerchantProfile(ctx context.Context) (*MerchantProf
 
 	switch resp.StatusCode {
 	case http.StatusOK:
-		var v MerchantProfile
+		var v MerchantProfileLegacy
 		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
 			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}
@@ -585,6 +603,8 @@ func (s *MerchantService) GetMerchantProfile(ctx context.Context) (*MerchantProf
 
 // Get: Retrieve a profile
 // Returns user profile information.
+// Deprecated: The _Retrieve a profile_ endpoint is deprecated, please use the `Merchant` object instead (see
+// [Merchants](https://developer.sumup.com/api/merchants)).
 func (s *MerchantService) Get(ctx context.Context, params GetAccountParams) (*MerchantAccount, error) {
 	path := fmt.Sprintf("/v0.1/me")
 
