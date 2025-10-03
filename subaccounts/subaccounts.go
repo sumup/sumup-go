@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"github.com/sumup/sumup-go/client"
-	"github.com/sumup/sumup-go/shared"
 )
 
 // CompatError: Error object for compat API calls.
@@ -36,8 +35,8 @@ type Operator struct {
 	// Format: int32
 	Id       int     `json:"id"`
 	Nickname *string `json:"nickname,omitempty"`
-	// User permissions
-	Permissions shared.Permissions `json:"permissions"`
+	// Permissions assigned to an operator or user.
+	Permissions Permissions `json:"permissions"`
 	// The timestamp of when the operator was last updated.
 	UpdatedAt time.Time `json:"updated_at"`
 	Username  string    `json:"username"`
@@ -50,6 +49,15 @@ const (
 	OperatorAccountTypeNormal   OperatorAccountType = "normal"
 	OperatorAccountTypeOperator OperatorAccountType = "operator"
 )
+
+// Permissions: Permissions assigned to an operator or user.
+type Permissions struct {
+	Admin                      bool `json:"admin"`
+	CreateMotoPayments         bool `json:"create_moto_payments"`
+	CreateReferral             bool `json:"create_referral"`
+	FullTransactionHistoryView bool `json:"full_transaction_history_view"`
+	RefundTransactions         bool `json:"refund_transactions"`
+}
 
 // CreateSubAccountBody is a schema definition.
 type CreateSubAccountBody struct {

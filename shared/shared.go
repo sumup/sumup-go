@@ -8,8 +8,8 @@ import (
 	"time"
 )
 
-// Address: Profile's personal address information.
-type Address struct {
+// AddressLegacy: Profile's personal address information.
+type AddressLegacy struct {
 	// City name from the address.
 	City *string `json:"city,omitempty"`
 	// Two letter country code formatted according to [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
@@ -141,22 +141,10 @@ const (
 // updating, always submit whole metadata.
 type Metadata map[string]any
 
-// Permissions: User permissions
-type Permissions struct {
-	// Create MOTO payments
-	CreateMotoPayments *bool `json:"create_moto_payments,omitempty"`
-	// Create referral
-	CreateReferral *bool `json:"create_referral,omitempty"`
-	// Can view full merchant transaction history
-	FullTransactionHistoryView *bool `json:"full_transaction_history_view,omitempty"`
-	// Refund transactions
-	RefundTransactions *bool `json:"refund_transactions,omitempty"`
-}
-
 // PersonalDetails: Personal details for the customer.
 type PersonalDetails struct {
 	// Profile's personal address information.
-	Address *Address `json:"address,omitempty"`
+	Address *AddressLegacy `json:"address,omitempty"`
 	// Date of birth of the customer.
 	// Format: date
 	BirthDate *Date `json:"birth_date,omitempty"`

@@ -2307,11 +2307,10 @@ import "github.com/sumup/sumup-go/memberships"
   - [func \(p \*ListMembershipsParams\) QueryValues\(\) url.Values](<#ListMembershipsParams.QueryValues>)
 - [type Membership](<#Membership>)
 - [type MembershipResource](<#MembershipResource>)
-- [type MembershipResourceType](<#MembershipResourceType>)
-- [type MembershipType](<#MembershipType>)
 - [type MembershipsService](<#MembershipsService>)
   - [func NewMembershipsService\(c \*client.Client\) \*MembershipsService](<#NewMembershipsService>)
   - [func \(s \*MembershipsService\) List\(ctx context.Context, params ListMembershipsParams\) \(\*ListMemberships200Response, error\)](<#MembershipsService.List>)
+- [type ResourceType](<#ResourceType>)
 
 
 <a name="ListMemberships200Response"></a>
@@ -2334,7 +2333,7 @@ ListMembershipsParams: query parameters for ListMemberships
 ```go
 type ListMembershipsParams struct {
     // Filter memberships by resource kind.
-    Kind *string
+    Kind *ResourceType
     // Maximum number of members to return.
     Limit *int
     // Offset of the first member to return.
@@ -2374,6 +2373,8 @@ type Membership struct {
     // submit whole metadata.
     Metadata *shared.Metadata `json:"metadata,omitempty"`
     // User's permissions.
+    // Deprecated: Permissions include only legacy permissions. Otherwise, access control is based on member's roles
+    // within a given resource.
     Permissions []string `json:"permissions"`
     // Information about the resource the membership is in.
     Resource MembershipResource `json:"resource"`
@@ -2383,8 +2384,11 @@ type Membership struct {
     Roles []string `json:"roles"`
     // The status of the membership.
     Status shared.MembershipStatus `json:"status"`
-    // Type of the resource the membership is in.
-    Type MembershipType `json:"type"`
+    // The kind of the membership resource.
+    // Possible values are:
+    // * `merchant` - merchant account(s)
+    // * `organization` - organization(s)
+    Type ResourceType `json:"type"`
     // The timestamp of when the membership was last updated.
     UpdatedAt time.Time `json:"updated_at"`
 }
@@ -2408,45 +2412,15 @@ type MembershipResource struct {
     // Max length: 256
     Logo *string `json:"logo,omitempty"`
     // Display name of the resource.
-    Name string                 `json:"name"`
-    Type MembershipResourceType `json:"type"`
+    Name string `json:"name"`
+    // The kind of the membership resource.
+    // Possible values are:
+    // * `merchant` - merchant account(s)
+    // * `organization` - organization(s)
+    Type ResourceType `json:"type"`
     // The timestamp of when the membership resource was last updated.
     UpdatedAt time.Time `json:"updated_at"`
 }
-```
-
-<a name="MembershipResourceType"></a>
-## type MembershipResourceType
-
-MembershipResourceType is a schema definition.
-
-```go
-type MembershipResourceType string
-```
-
-<a name="MembershipResourceTypeMerchant"></a>
-
-```go
-const (
-    MembershipResourceTypeMerchant MembershipResourceType = "merchant"
-)
-```
-
-<a name="MembershipType"></a>
-## type MembershipType
-
-MembershipType: Type of the resource the membership is in.
-
-```go
-type MembershipType string
-```
-
-<a name="MembershipTypeMerchant"></a>
-
-```go
-const (
-    MembershipTypeMerchant MembershipType = "merchant"
-)
 ```
 
 <a name="MembershipsService"></a>
@@ -2478,6 +2452,15 @@ func (s *MembershipsService) List(ctx context.Context, params ListMembershipsPar
 
 List: List memberships List memberships of the current user.
 
+<a name="ResourceType"></a>
+## type ResourceType
+
+ResourceType: The kind of the membership resource. Possible values are: \* \`merchant\` \- merchant account\(s\) \* \`organization\` \- organization\(s\)
+
+```go
+type ResourceType string
+```
+
 # merchant
 
 ```go
@@ -2486,19 +2469,19 @@ import "github.com/sumup/sumup-go/merchant"
 
 ## Index
 
-- [type Account](<#Account>)
-- [type AccountType](<#AccountType>)
+- [type AccountLegacy](<#AccountLegacy>)
+- [type AccountLegacyType](<#AccountLegacyType>)
 - [type AddressWithDetails](<#AddressWithDetails>)
 - [type AppSettings](<#AppSettings>)
 - [type BankAccount](<#BankAccount>)
 - [type BusinessOwner](<#BusinessOwner>)
 - [type BusinessOwners](<#BusinessOwners>)
 - [type CountryDetails](<#CountryDetails>)
-- [type DoingBusinessAs](<#DoingBusinessAs>)
-- [type DoingBusinessAsAddress](<#DoingBusinessAsAddress>)
+- [type DoingBusinessAsLegacy](<#DoingBusinessAsLegacy>)
+- [type DoingBusinessAsLegacyAddress](<#DoingBusinessAsLegacyAddress>)
 - [type GetAccountParams](<#GetAccountParams>)
   - [func \(p \*GetAccountParams\) QueryValues\(\) url.Values](<#GetAccountParams.QueryValues>)
-- [type LegalType](<#LegalType>)
+- [type LegalTypeLegacy](<#LegalTypeLegacy>)
 - [type ListBankAccounts200Response](<#ListBankAccounts200Response>)
 - [type ListBankAccountsParams](<#ListBankAccountsParams>)
   - [func \(p \*ListBankAccountsParams\) QueryValues\(\) url.Values](<#ListBankAccountsParams.QueryValues>)
@@ -2506,52 +2489,53 @@ import "github.com/sumup/sumup-go/merchant"
 - [type ListBankAccountsV11Params](<#ListBankAccountsV11Params>)
   - [func \(p \*ListBankAccountsV11Params\) QueryValues\(\) url.Values](<#ListBankAccountsV11Params.QueryValues>)
 - [type MerchantAccount](<#MerchantAccount>)
-- [type MerchantProfile](<#MerchantProfile>)
+- [type MerchantProfileLegacy](<#MerchantProfileLegacy>)
 - [type MerchantService](<#MerchantService>)
   - [func NewMerchantService\(c \*client.Client\) \*MerchantService](<#NewMerchantService>)
   - [func \(s \*MerchantService\) Get\(ctx context.Context, params GetAccountParams\) \(\*MerchantAccount, error\)](<#MerchantService.Get>)
-  - [func \(s \*MerchantService\) GetDoingBusinessAs\(ctx context.Context\) \(\*DoingBusinessAs, error\)](<#MerchantService.GetDoingBusinessAs>)
-  - [func \(s \*MerchantService\) GetMerchantProfile\(ctx context.Context\) \(\*MerchantProfile, error\)](<#MerchantService.GetMerchantProfile>)
-  - [func \(s \*MerchantService\) GetPersonalProfile\(ctx context.Context\) \(\*PersonalProfile, error\)](<#MerchantService.GetPersonalProfile>)
+  - [func \(s \*MerchantService\) GetDoingBusinessAs\(ctx context.Context\) \(\*DoingBusinessAsLegacy, error\)](<#MerchantService.GetDoingBusinessAs>)
+  - [func \(s \*MerchantService\) GetMerchantProfile\(ctx context.Context\) \(\*MerchantProfileLegacy, error\)](<#MerchantService.GetMerchantProfile>)
+  - [func \(s \*MerchantService\) GetPersonalProfile\(ctx context.Context\) \(\*PersonalProfileLegacy, error\)](<#MerchantService.GetPersonalProfile>)
   - [func \(s \*MerchantService\) GetSettings\(ctx context.Context\) \(\*MerchantSettings, error\)](<#MerchantService.GetSettings>)
   - [func \(s \*MerchantService\) ListBankAccounts\(ctx context.Context, merchantCode string, params ListBankAccountsV11Params\) \(\*ListBankAccountsV11200Response, error\)](<#MerchantService.ListBankAccounts>)
   - [func \(s \*MerchantService\) ListBankAccountsDeprecated\(ctx context.Context, params ListBankAccountsParams\) \(\*ListBankAccounts200Response, error\)](<#MerchantService.ListBankAccountsDeprecated>)
 - [type MerchantSettings](<#MerchantSettings>)
 - [type MerchantSettingsMotoPayment](<#MerchantSettingsMotoPayment>)
-- [type PersonalProfile](<#PersonalProfile>)
+- [type PermissionsLegacy](<#PermissionsLegacy>)
+- [type PersonalProfileLegacy](<#PersonalProfileLegacy>)
 - [type TimeoffsetDetails](<#TimeoffsetDetails>)
 - [type VatRates](<#VatRates>)
 
 
-<a name="Account"></a>
-## type Account
+<a name="AccountLegacy"></a>
+## type AccountLegacy
 
-Account: Profile information.
+AccountLegacy: Profile information.
 
 ```go
-type Account struct {
+type AccountLegacy struct {
     // The role of the user.
-    Type *AccountType `json:"type,omitempty"`
+    Type *AccountLegacyType `json:"type,omitempty"`
     // Username of the user profile.
     Username *string `json:"username,omitempty"`
 }
 ```
 
-<a name="AccountType"></a>
-## type AccountType
+<a name="AccountLegacyType"></a>
+## type AccountLegacyType
 
-AccountType: The role of the user.
+AccountLegacyType: The role of the user.
 
 ```go
-type AccountType string
+type AccountLegacyType string
 ```
 
-<a name="AccountTypeNormal"></a>
+<a name="AccountLegacyTypeNormal"></a>
 
 ```go
 const (
-    AccountTypeNormal   AccountType = "normal"
-    AccountTypeOperator AccountType = "operator"
+    AccountLegacyTypeNormal   AccountLegacyType = "normal"
+    AccountLegacyTypeOperator AccountLegacyType = "operator"
 )
 ```
 
@@ -2719,14 +2703,14 @@ type CountryDetails struct {
 }
 ```
 
-<a name="DoingBusinessAs"></a>
-## type DoingBusinessAs
+<a name="DoingBusinessAsLegacy"></a>
+## type DoingBusinessAsLegacy
 
-DoingBusinessAs: Doing Business As information
+DoingBusinessAsLegacy: Doing Business As information
 
 ```go
-type DoingBusinessAs struct {
-    Address *DoingBusinessAsAddress `json:"address,omitempty"`
+type DoingBusinessAsLegacy struct {
+    Address *DoingBusinessAsLegacyAddress `json:"address,omitempty"`
     // Doing business as name
     BusinessName *string `json:"business_name,omitempty"`
     // Doing business as company registration number
@@ -2740,13 +2724,13 @@ type DoingBusinessAs struct {
 }
 ```
 
-<a name="DoingBusinessAsAddress"></a>
-## type DoingBusinessAsAddress
+<a name="DoingBusinessAsLegacyAddress"></a>
+## type DoingBusinessAsLegacyAddress
 
-DoingBusinessAsAddress is a schema definition.
+DoingBusinessAsLegacyAddress is a schema definition.
 
 ```go
-type DoingBusinessAsAddress struct {
+type DoingBusinessAsLegacyAddress struct {
     // Address line 1
     AddressLine1 *string `json:"address_line_1,omitempty"`
     // Address line 2
@@ -2786,13 +2770,13 @@ func (p *GetAccountParams) QueryValues() url.Values
 
 QueryValues converts [GetAccountParams](<#GetAccountParams>) into \[url.Values\].
 
-<a name="LegalType"></a>
-## type LegalType
+<a name="LegalTypeLegacy"></a>
+## type LegalTypeLegacy
 
-LegalType: Id of the legal type of the merchant profile
+LegalTypeLegacy: Id of the legal type of the merchant profile
 
 ```go
-type LegalType struct {
+type LegalTypeLegacy struct {
     // Legal type short description
     Description *string `json:"description,omitempty"`
     // Legal type description
@@ -2872,25 +2856,25 @@ MerchantAccount: Details of the merchant account.
 ```go
 type MerchantAccount struct {
     // Profile information.
-    Account *Account `json:"account,omitempty"`
+    Account *AccountLegacy `json:"account,omitempty"`
     // Mobile app settings
     AppSettings *AppSettings `json:"app_settings,omitempty"`
     // Account's merchant profile
-    MerchantProfile *MerchantProfile `json:"merchant_profile,omitempty"`
+    MerchantProfile *MerchantProfileLegacy `json:"merchant_profile,omitempty"`
     // User permissions
-    Permissions *shared.Permissions `json:"permissions,omitempty"`
+    Permissions *PermissionsLegacy `json:"permissions,omitempty"`
     // Account's personal profile.
-    PersonalProfile *PersonalProfile `json:"personal_profile,omitempty"`
+    PersonalProfile *PersonalProfileLegacy `json:"personal_profile,omitempty"`
 }
 ```
 
-<a name="MerchantProfile"></a>
-## type MerchantProfile
+<a name="MerchantProfileLegacy"></a>
+## type MerchantProfileLegacy
 
-MerchantProfile: Account's merchant profile
+MerchantProfileLegacy: Account's merchant profile
 
 ```go
-type MerchantProfile struct {
+type MerchantProfileLegacy struct {
     // Details of the registered address.
     Address      *AddressWithDetails `json:"address,omitempty"`
     BankAccounts *[]BankAccount      `json:"bank_accounts,omitempty"`
@@ -2904,11 +2888,11 @@ type MerchantProfile struct {
     // internal usage only&#41;
     Country *string `json:"country,omitempty"`
     // Doing Business As information
-    DoingBusinessAs *DoingBusinessAs `json:"doing_business_as,omitempty"`
+    DoingBusinessAs *DoingBusinessAsLegacy `json:"doing_business_as,omitempty"`
     // True if the merchant is extdev
     Extdev *bool `json:"extdev,omitempty"`
     // Id of the legal type of the merchant profile
-    LegalType *LegalType `json:"legal_type,omitempty"`
+    LegalType *LegalTypeLegacy `json:"legal_type,omitempty"`
     // Merchant locale &#40;for internal usage only&#41;
     Locale *string `json:"locale,omitempty"`
     // Merchant category code
@@ -2961,34 +2945,34 @@ func NewMerchantService(c *client.Client) *MerchantService
 func (s *MerchantService) Get(ctx context.Context, params GetAccountParams) (*MerchantAccount, error)
 ```
 
-Get: Retrieve a profile Returns user profile information.
+Get: Retrieve a profile Returns user profile information. Deprecated: The \_Retrieve a profile\_ endpoint is deprecated, please use the \`Merchant\` object instead \(see \[Merchants\]\(https://developer.sumup.com/api/merchants\)\).
 
 <a name="MerchantService.GetDoingBusinessAs"></a>
 ### func \(\*MerchantService\) GetDoingBusinessAs
 
 ```go
-func (s *MerchantService) GetDoingBusinessAs(ctx context.Context) (*DoingBusinessAs, error)
+func (s *MerchantService) GetDoingBusinessAs(ctx context.Context) (*DoingBusinessAsLegacy, error)
 ```
 
-GetDoingBusinessAs: Retrieve DBA Retrieves Doing Business As profile.
+GetDoingBusinessAs: Retrieve DBA Retrieves Doing Business As profile. Deprecated: The \_Retrieve DBA\_ endpoint is deprecated, please use the \`business\_profile\` field of the \`Merchant\` object instead \(see \[Merchants\]\(https://developer.sumup.com/api/merchants\)\).
 
 <a name="MerchantService.GetMerchantProfile"></a>
 ### func \(\*MerchantService\) GetMerchantProfile
 
 ```go
-func (s *MerchantService) GetMerchantProfile(ctx context.Context) (*MerchantProfile, error)
+func (s *MerchantService) GetMerchantProfile(ctx context.Context) (*MerchantProfileLegacy, error)
 ```
 
-GetMerchantProfile: Retrieve a merchant profile Retrieves merchant profile data.
+GetMerchantProfile: Retrieve a merchant profile Retrieves merchant profile data. Deprecated: The \_Retrieve a merchant profile\_ endpoint is deprecated, please use the \`Merchant\` object instead \(see \[Merchants\]\(https://developer.sumup.com/api/merchants\)\).
 
 <a name="MerchantService.GetPersonalProfile"></a>
 ### func \(\*MerchantService\) GetPersonalProfile
 
 ```go
-func (s *MerchantService) GetPersonalProfile(ctx context.Context) (*PersonalProfile, error)
+func (s *MerchantService) GetPersonalProfile(ctx context.Context) (*PersonalProfileLegacy, error)
 ```
 
-GetPersonalProfile: Retrieve a personal profile Retrieves personal profile data.
+GetPersonalProfile: Retrieve a personal profile Retrieves personal profile data. Deprecated: The \_Retrieve a personal profile\_ endpoint is deprecated, please use the \`persons\` field of the \`Merchant\` object instead. \(see \[Merchants\]\(https://developer.sumup.com/api/merchants\)\).
 
 <a name="MerchantService.GetSettings"></a>
 ### func \(\*MerchantService\) GetSettings
@@ -3071,13 +3055,31 @@ const (
 )
 ```
 
-<a name="PersonalProfile"></a>
-## type PersonalProfile
+<a name="PermissionsLegacy"></a>
+## type PermissionsLegacy
 
-PersonalProfile: Account's personal profile.
+PermissionsLegacy: User permissions
 
 ```go
-type PersonalProfile struct {
+type PermissionsLegacy struct {
+    // Create MOTO payments
+    CreateMotoPayments *bool `json:"create_moto_payments,omitempty"`
+    // Create referral
+    CreateReferral *bool `json:"create_referral,omitempty"`
+    // Can view full merchant transaction history
+    FullTransactionHistoryView *bool `json:"full_transaction_history_view,omitempty"`
+    // Refund transactions
+    RefundTransactions *bool `json:"refund_transactions,omitempty"`
+}
+```
+
+<a name="PersonalProfileLegacy"></a>
+## type PersonalProfileLegacy
+
+PersonalProfileLegacy: Account's personal profile.
+
+```go
+type PersonalProfileLegacy struct {
     // Details of the registered address.
     Address  *AddressWithDetails `json:"address,omitempty"`
     Complete *bool               `json:"complete,omitempty"`
@@ -3316,43 +3318,31 @@ import "github.com/sumup/sumup-go/readers"
 
 ## Index
 
-- [type Affiliate](<#Affiliate>)
-- [type AffiliateTags](<#AffiliateTags>)
 - [type CreateReaderBody](<#CreateReaderBody>)
-- [type CreateReaderCheckout](<#CreateReaderCheckout>)
-- [type CreateReaderCheckout201Response](<#CreateReaderCheckout201Response>)
-- [type CreateReaderCheckout201ResponseData](<#CreateReaderCheckout201ResponseData>)
-- [type CreateReaderCheckout400Response](<#CreateReaderCheckout400Response>)
-  - [func \(e \*CreateReaderCheckout400Response\) Error\(\) string](<#CreateReaderCheckout400Response.Error>)
-- [type CreateReaderCheckout400ResponseErrors](<#CreateReaderCheckout400ResponseErrors>)
-- [type CreateReaderCheckout422Response](<#CreateReaderCheckout422Response>)
-  - [func \(e \*CreateReaderCheckout422Response\) Error\(\) string](<#CreateReaderCheckout422Response.Error>)
-- [type CreateReaderCheckout422ResponseErrors](<#CreateReaderCheckout422ResponseErrors>)
-- [type CreateReaderCheckout500Response](<#CreateReaderCheckout500Response>)
-  - [func \(e \*CreateReaderCheckout500Response\) Error\(\) string](<#CreateReaderCheckout500Response.Error>)
-- [type CreateReaderCheckout500ResponseErrors](<#CreateReaderCheckout500ResponseErrors>)
-- [type CreateReaderCheckout502Response](<#CreateReaderCheckout502Response>)
-  - [func \(e \*CreateReaderCheckout502Response\) Error\(\) string](<#CreateReaderCheckout502Response.Error>)
-- [type CreateReaderCheckout502ResponseErrors](<#CreateReaderCheckout502ResponseErrors>)
-- [type CreateReaderCheckout504Response](<#CreateReaderCheckout504Response>)
-  - [func \(e \*CreateReaderCheckout504Response\) Error\(\) string](<#CreateReaderCheckout504Response.Error>)
-- [type CreateReaderCheckout504ResponseErrors](<#CreateReaderCheckout504ResponseErrors>)
-- [type CreateReaderCheckoutAmount](<#CreateReaderCheckoutAmount>)
 - [type CreateReaderCheckoutBody](<#CreateReaderCheckoutBody>)
+- [type CreateReaderCheckoutBodyAffiliate](<#CreateReaderCheckoutBodyAffiliate>)
+- [type CreateReaderCheckoutBodyAffiliateTags](<#CreateReaderCheckoutBodyAffiliateTags>)
 - [type CreateReaderCheckoutBodyCardType](<#CreateReaderCheckoutBodyCardType>)
-- [type CreateReaderCheckoutCardType](<#CreateReaderCheckoutCardType>)
-- [type CreateReaderTerminate422Response](<#CreateReaderTerminate422Response>)
-  - [func \(e \*CreateReaderTerminate422Response\) Error\(\) string](<#CreateReaderTerminate422Response.Error>)
-- [type CreateReaderTerminate422ResponseErrors](<#CreateReaderTerminate422ResponseErrors>)
-- [type CreateReaderTerminate500Response](<#CreateReaderTerminate500Response>)
-  - [func \(e \*CreateReaderTerminate500Response\) Error\(\) string](<#CreateReaderTerminate500Response.Error>)
-- [type CreateReaderTerminate500ResponseErrors](<#CreateReaderTerminate500ResponseErrors>)
-- [type CreateReaderTerminate502Response](<#CreateReaderTerminate502Response>)
-  - [func \(e \*CreateReaderTerminate502Response\) Error\(\) string](<#CreateReaderTerminate502Response.Error>)
-- [type CreateReaderTerminate502ResponseErrors](<#CreateReaderTerminate502ResponseErrors>)
-- [type CreateReaderTerminate504Response](<#CreateReaderTerminate504Response>)
-  - [func \(e \*CreateReaderTerminate504Response\) Error\(\) string](<#CreateReaderTerminate504Response.Error>)
-- [type CreateReaderTerminate504ResponseErrors](<#CreateReaderTerminate504ResponseErrors>)
+- [type CreateReaderCheckoutBodyTotalAmount](<#CreateReaderCheckoutBodyTotalAmount>)
+- [type CreateReaderCheckoutError](<#CreateReaderCheckoutError>)
+  - [func \(e \*CreateReaderCheckoutError\) Error\(\) string](<#CreateReaderCheckoutError.Error>)
+- [type CreateReaderCheckoutErrorErrors](<#CreateReaderCheckoutErrorErrors>)
+- [type CreateReaderCheckoutRequest](<#CreateReaderCheckoutRequest>)
+- [type CreateReaderCheckoutRequestAffiliate](<#CreateReaderCheckoutRequestAffiliate>)
+- [type CreateReaderCheckoutRequestAffiliateTags](<#CreateReaderCheckoutRequestAffiliateTags>)
+- [type CreateReaderCheckoutRequestCardType](<#CreateReaderCheckoutRequestCardType>)
+- [type CreateReaderCheckoutRequestTotalAmount](<#CreateReaderCheckoutRequestTotalAmount>)
+- [type CreateReaderCheckoutResponse](<#CreateReaderCheckoutResponse>)
+- [type CreateReaderCheckoutResponseData](<#CreateReaderCheckoutResponseData>)
+- [type CreateReaderCheckoutUnprocessableEntity](<#CreateReaderCheckoutUnprocessableEntity>)
+  - [func \(e \*CreateReaderCheckoutUnprocessableEntity\) Error\(\) string](<#CreateReaderCheckoutUnprocessableEntity.Error>)
+- [type CreateReaderCheckoutUnprocessableEntityErrors](<#CreateReaderCheckoutUnprocessableEntityErrors>)
+- [type CreateReaderTerminateError](<#CreateReaderTerminateError>)
+  - [func \(e \*CreateReaderTerminateError\) Error\(\) string](<#CreateReaderTerminateError.Error>)
+- [type CreateReaderTerminateErrorErrors](<#CreateReaderTerminateErrorErrors>)
+- [type CreateReaderTerminateUnprocessableEntity](<#CreateReaderTerminateUnprocessableEntity>)
+  - [func \(e \*CreateReaderTerminateUnprocessableEntity\) Error\(\) string](<#CreateReaderTerminateUnprocessableEntity.Error>)
+- [type CreateReaderTerminateUnprocessableEntityErrors](<#CreateReaderTerminateUnprocessableEntityErrors>)
 - [type GetReaderParams](<#GetReaderParams>)
   - [func \(p \*GetReaderParams\) QueryValues\(\) url.Values](<#GetReaderParams.QueryValues>)
 - [type ListReaders200Response](<#ListReaders200Response>)
@@ -3367,48 +3357,14 @@ import "github.com/sumup/sumup-go/readers"
 - [type ReadersService](<#ReadersService>)
   - [func NewReadersService\(c \*client.Client\) \*ReadersService](<#NewReadersService>)
   - [func \(s \*ReadersService\) Create\(ctx context.Context, merchantCode string, body CreateReaderBody\) \(\*Reader, error\)](<#ReadersService.Create>)
-  - [func \(s \*ReadersService\) CreateCheckout\(ctx context.Context, merchantCode string, id string, body CreateReaderCheckoutBody\) \(\*CreateReaderCheckout201Response, error\)](<#ReadersService.CreateCheckout>)
+  - [func \(s \*ReadersService\) CreateReaderCheckout\(ctx context.Context, merchantCode string, readerId string, body CreateReaderCheckoutBody\) \(\*CreateReaderCheckoutResponse, error\)](<#ReadersService.CreateReaderCheckout>)
+  - [func \(s \*ReadersService\) CreateReaderTerminate\(ctx context.Context, merchantCode string, readerId string\) \(\*CreateReaderTerminate202Response, error\)](<#ReadersService.CreateReaderTerminate>)
   - [func \(s \*ReadersService\) DeleteReader\(ctx context.Context, merchantCode string, id ReaderId\) error](<#ReadersService.DeleteReader>)
   - [func \(s \*ReadersService\) Get\(ctx context.Context, merchantCode string, id ReaderId, params GetReaderParams\) \(\*Reader, error\)](<#ReadersService.Get>)
   - [func \(s \*ReadersService\) List\(ctx context.Context, merchantCode string\) \(\*ListReaders200Response, error\)](<#ReadersService.List>)
-  - [func \(s \*ReadersService\) TerminateCheckout\(ctx context.Context, merchantCode string, id string\) error](<#ReadersService.TerminateCheckout>)
   - [func \(s \*ReadersService\) Update\(ctx context.Context, merchantCode string, id ReaderId, body UpdateReaderBody\) \(\*Reader, error\)](<#ReadersService.Update>)
 - [type UpdateReaderBody](<#UpdateReaderBody>)
 
-
-<a name="Affiliate"></a>
-## type Affiliate
-
-Affiliate: Affiliate metadata for the transaction. It is an optional field that allow for integrators to track the source of the transaction.
-
-```go
-type Affiliate struct {
-    // Application ID of the affiliate.
-    // It is a unique identifier for the application and should be set by the integrator in the [Affiliate Keys](https://developer.sumup.com/affiliate-keys) page.
-    AppId string `json:"app_id"`
-    // Foreign transaction ID of the affiliate.
-    // It is a unique identifier for the transaction.
-    // It can be used later to fetch the transaction details via the [Transactions API](https://developer.sumup.com/api/transactions/get).
-    ForeignTransactionId string `json:"foreign_transaction_id"`
-    // Key of the affiliate.
-    // It is a unique identifier for the key  and should be generated by the integrator in the [Affiliate Keys](https://developer.sumup.com/affiliate-keys) page.
-    //
-    // Format: uuid
-    Key string `json:"key"`
-    // Additional metadata for the transaction.
-    // It is key-value object that can be associated with the transaction.
-    Tags *AffiliateTags `json:"tags,omitempty"`
-}
-```
-
-<a name="AffiliateTags"></a>
-## type AffiliateTags
-
-AffiliateTags: Additional metadata for the transaction. It is key\-value object that can be associated with the transaction.
-
-```go
-type AffiliateTags map[string]any
-```
 
 <a name="CreateReaderBody"></a>
 ## type CreateReaderBody
@@ -3431,236 +3387,6 @@ type CreateReaderBody struct {
 }
 ```
 
-<a name="CreateReaderCheckout"></a>
-## type CreateReaderCheckout
-
-CreateReaderCheckout: Reader Checkout
-
-```go
-type CreateReaderCheckout struct {
-    // Affiliate metadata for the transaction.
-    // It is an optional field that allow for integrators to track the source of the transaction.
-    Affiliate *Affiliate `json:"affiliate,omitempty"`
-    // The card type of the card used for the transaction.
-    // Is is required only for some countries (e.g: Brazil).
-    CardType *CreateReaderCheckoutCardType `json:"card_type,omitempty"`
-    // Description of the checkout to be shown in the Merchant Sales
-    Description *string `json:"description,omitempty"`
-    // Number of installments for the transaction.
-    // It may vary according to the merchant country.
-    // For example, in Brazil, the maximum number of installments is 12.
-    Installments *int `json:"installments,omitempty"`
-    // Webhook URL to which the payment result will be sent.
-    // It must be a HTTPS url.
-    // Format: uri
-    ReturnUrl *string `json:"return_url,omitempty"`
-    // List of tipping rates to be displayed to the cardholder.
-    // The rates are in percentage and should be between 0.01 and 0.99.
-    // The list should be sorted in ascending order.
-    TipRates *[]float64 `json:"tip_rates,omitempty"`
-    // Amount of the transaction.
-    // The amount is represented as an integer value altogether with the currency and the minor unit.
-    // For example, EUR 1.00 is represented as value 100 with minor unit of 2.
-    TotalAmount CreateReaderCheckoutAmount `json:"total_amount"`
-}
-```
-
-<a name="CreateReaderCheckout201Response"></a>
-## type CreateReaderCheckout201Response
-
-CreateReaderCheckout201Response is a schema definition.
-
-```go
-type CreateReaderCheckout201Response struct {
-    Data *CreateReaderCheckout201ResponseData `json:"data,omitempty"`
-}
-```
-
-<a name="CreateReaderCheckout201ResponseData"></a>
-## type CreateReaderCheckout201ResponseData
-
-CreateReaderCheckout201ResponseData is a schema definition.
-
-```go
-type CreateReaderCheckout201ResponseData struct {
-    // The client transaction ID is a unique identifier for the transaction that is generated for the client.
-    // It can be used later to fetch the transaction details via the [Transactions API](https://developer.sumup.com/api/transactions/get).
-    // Format: uuid
-    ClientTransactionId *string `json:"client_transaction_id,omitempty"`
-}
-```
-
-<a name="CreateReaderCheckout400Response"></a>
-## type CreateReaderCheckout400Response
-
-CreateReaderCheckout400Response is a schema definition.
-
-```go
-type CreateReaderCheckout400Response struct {
-    Errors *CreateReaderCheckout400ResponseErrors `json:"errors,omitempty"`
-}
-```
-
-<a name="CreateReaderCheckout400Response.Error"></a>
-### func \(\*CreateReaderCheckout400Response\) Error
-
-```go
-func (e *CreateReaderCheckout400Response) Error() string
-```
-
-
-
-<a name="CreateReaderCheckout400ResponseErrors"></a>
-## type CreateReaderCheckout400ResponseErrors
-
-CreateReaderCheckout400ResponseErrors is a schema definition.
-
-```go
-type CreateReaderCheckout400ResponseErrors struct {
-    Detail *string `json:"detail,omitempty"`
-}
-```
-
-<a name="CreateReaderCheckout422Response"></a>
-## type CreateReaderCheckout422Response
-
-CreateReaderCheckout422Response is a schema definition.
-
-```go
-type CreateReaderCheckout422Response struct {
-    Errors *CreateReaderCheckout422ResponseErrors `json:"errors,omitempty"`
-}
-```
-
-<a name="CreateReaderCheckout422Response.Error"></a>
-### func \(\*CreateReaderCheckout422Response\) Error
-
-```go
-func (e *CreateReaderCheckout422Response) Error() string
-```
-
-
-
-<a name="CreateReaderCheckout422ResponseErrors"></a>
-## type CreateReaderCheckout422ResponseErrors
-
-CreateReaderCheckout422ResponseErrors is a schema definition.
-
-```go
-type CreateReaderCheckout422ResponseErrors map[string]any
-```
-
-<a name="CreateReaderCheckout500Response"></a>
-## type CreateReaderCheckout500Response
-
-CreateReaderCheckout500Response is a schema definition.
-
-```go
-type CreateReaderCheckout500Response struct {
-    Errors *CreateReaderCheckout500ResponseErrors `json:"errors,omitempty"`
-}
-```
-
-<a name="CreateReaderCheckout500Response.Error"></a>
-### func \(\*CreateReaderCheckout500Response\) Error
-
-```go
-func (e *CreateReaderCheckout500Response) Error() string
-```
-
-
-
-<a name="CreateReaderCheckout500ResponseErrors"></a>
-## type CreateReaderCheckout500ResponseErrors
-
-CreateReaderCheckout500ResponseErrors is a schema definition.
-
-```go
-type CreateReaderCheckout500ResponseErrors struct {
-    Detail *string `json:"detail,omitempty"`
-}
-```
-
-<a name="CreateReaderCheckout502Response"></a>
-## type CreateReaderCheckout502Response
-
-CreateReaderCheckout502Response is a schema definition.
-
-```go
-type CreateReaderCheckout502Response struct {
-    Errors *CreateReaderCheckout502ResponseErrors `json:"errors,omitempty"`
-}
-```
-
-<a name="CreateReaderCheckout502Response.Error"></a>
-### func \(\*CreateReaderCheckout502Response\) Error
-
-```go
-func (e *CreateReaderCheckout502Response) Error() string
-```
-
-
-
-<a name="CreateReaderCheckout502ResponseErrors"></a>
-## type CreateReaderCheckout502ResponseErrors
-
-CreateReaderCheckout502ResponseErrors is a schema definition.
-
-```go
-type CreateReaderCheckout502ResponseErrors struct {
-    Detail *string `json:"detail,omitempty"`
-}
-```
-
-<a name="CreateReaderCheckout504Response"></a>
-## type CreateReaderCheckout504Response
-
-CreateReaderCheckout504Response is a schema definition.
-
-```go
-type CreateReaderCheckout504Response struct {
-    Errors *CreateReaderCheckout504ResponseErrors `json:"errors,omitempty"`
-}
-```
-
-<a name="CreateReaderCheckout504Response.Error"></a>
-### func \(\*CreateReaderCheckout504Response\) Error
-
-```go
-func (e *CreateReaderCheckout504Response) Error() string
-```
-
-
-
-<a name="CreateReaderCheckout504ResponseErrors"></a>
-## type CreateReaderCheckout504ResponseErrors
-
-CreateReaderCheckout504ResponseErrors is a schema definition.
-
-```go
-type CreateReaderCheckout504ResponseErrors struct {
-    Detail *string `json:"detail,omitempty"`
-}
-```
-
-<a name="CreateReaderCheckoutAmount"></a>
-## type CreateReaderCheckoutAmount
-
-CreateReaderCheckoutAmount: Amount of the transaction. The amount is represented as an integer value altogether with the currency and the minor unit. For example, EUR 1.00 is represented as value 100 with minor unit of 2.
-
-```go
-type CreateReaderCheckoutAmount struct {
-    // Currency ISO 4217 code
-    Currency string `json:"currency"`
-    // The minor units of the currency. It represents the number of decimals of the currency.
-    // For the currencies CLP, COP and HUF, the minor unit is 0.
-    MinorUnit int `json:"minor_unit"`
-    // Total amount of the transaction.
-    // It must be a positive integer.
-    Value int `json:"value"`
-}
-```
-
 <a name="CreateReaderCheckoutBody"></a>
 ## type CreateReaderCheckoutBody
 
@@ -3669,8 +3395,8 @@ CreateReaderCheckoutBody: Reader Checkout
 ```go
 type CreateReaderCheckoutBody struct {
     // Affiliate metadata for the transaction.
-    // It is an optional field that allow for integrators to track the source of the transaction.
-    Affiliate *Affiliate `json:"affiliate,omitempty"`
+    // It is a field that allow for integrators to track the source of the transaction.
+    Affiliate *CreateReaderCheckoutBodyAffiliate `json:"affiliate,omitempty"`
     // The card type of the card used for the transaction.
     // Is is required only for some countries (e.g: Brazil).
     CardType *CreateReaderCheckoutBodyCardType `json:"card_type,omitempty"`
@@ -3688,11 +3414,55 @@ type CreateReaderCheckoutBody struct {
     // The rates are in percentage and should be between 0.01 and 0.99.
     // The list should be sorted in ascending order.
     TipRates *[]float64 `json:"tip_rates,omitempty"`
-    // Amount of the transaction.
+    // Time in seconds the cardholder has to select a tip rate.
+    // If not provided, the default value is 30 seconds.
+    //
+    // It can only be set if `tip_rates` is provided.
+    //
+    // **Note**: If the target device is a Solo, it must be in version 3.3.38.0 or higher.
+    // Default: 30
+    // Min: 30
+    // Max: 120
+    TipTimeout *int `json:"tip_timeout,omitempty"`
+    // Amount structure.
+    //
     // The amount is represented as an integer value altogether with the currency and the minor unit.
+    //
     // For example, EUR 1.00 is represented as value 100 with minor unit of 2.
-    TotalAmount CreateReaderCheckoutAmount `json:"total_amount"`
+    TotalAmount CreateReaderCheckoutBodyTotalAmount `json:"total_amount"`
 }
+```
+
+<a name="CreateReaderCheckoutBodyAffiliate"></a>
+## type CreateReaderCheckoutBodyAffiliate
+
+CreateReaderCheckoutBodyAffiliate: Affiliate metadata for the transaction. It is a field that allow for integrators to track the source of the transaction.
+
+```go
+type CreateReaderCheckoutBodyAffiliate struct {
+    // Application ID of the affiliate.
+    // It is a unique identifier for the application and should be set by the integrator in the [Affiliate Keys](https://developer.sumup.com/affiliate-keys) page.
+    AppId string `json:"app_id"`
+    // Foreign transaction ID of the affiliate.
+    // It is a unique identifier for the transaction.
+    // It can be used later to fetch the transaction details via the [Transactions API](https://developer.sumup.com/api/transactions/get).
+    ForeignTransactionId string `json:"foreign_transaction_id"`
+    // Key of the affiliate.
+    // It is a unique identifier for the key  and should be generated by the integrator in the [Affiliate Keys](https://developer.sumup.com/affiliate-keys) page.
+    Key string `json:"key"`
+    // Additional metadata for the transaction.
+    // It is key-value object that can be associated with the transaction.
+    Tags *CreateReaderCheckoutBodyAffiliateTags `json:"tags,omitempty"`
+}
+```
+
+<a name="CreateReaderCheckoutBodyAffiliateTags"></a>
+## type CreateReaderCheckoutBodyAffiliateTags
+
+CreateReaderCheckoutBodyAffiliateTags: Additional metadata for the transaction. It is key\-value object that can be associated with the transaction.
+
+```go
+type CreateReaderCheckoutBodyAffiliateTags map[string]any
 ```
 
 <a name="CreateReaderCheckoutBodyCardType"></a>
@@ -3713,144 +3483,295 @@ const (
 )
 ```
 
-<a name="CreateReaderCheckoutCardType"></a>
-## type CreateReaderCheckoutCardType
+<a name="CreateReaderCheckoutBodyTotalAmount"></a>
+## type CreateReaderCheckoutBodyTotalAmount
 
-CreateReaderCheckoutCardType: The card type of the card used for the transaction. Is is required only for some countries \(e.g: Brazil\).
+CreateReaderCheckoutBodyTotalAmount: Amount structure.
+
+The amount is represented as an integer value altogether with the currency and the minor unit.
+
+For example, EUR 1.00 is represented as value 100 with minor unit of 2.
 
 ```go
-type CreateReaderCheckoutCardType string
+type CreateReaderCheckoutBodyTotalAmount struct {
+    // Currency ISO 4217 code
+    Currency string `json:"currency"`
+    // The minor units of the currency.
+    // It represents the number of decimals of the currency. For the currencies CLP, COP and HUF, the minor unit
+    // is 0.
+    // Min: 0
+    MinorUnit int `json:"minor_unit"`
+    // Integer value of the amount.
+    // Min: 0
+    Value int `json:"value"`
+}
 ```
 
-<a name="CreateReaderCheckoutCardTypeCredit"></a>
+<a name="CreateReaderCheckoutError"></a>
+## type CreateReaderCheckoutError
+
+CreateReaderCheckoutError: Error description
+
+```go
+type CreateReaderCheckoutError struct {
+    Errors CreateReaderCheckoutErrorErrors `json:"errors"`
+}
+```
+
+<a name="CreateReaderCheckoutError.Error"></a>
+### func \(\*CreateReaderCheckoutError\) Error
+
+```go
+func (e *CreateReaderCheckoutError) Error() string
+```
+
+
+
+<a name="CreateReaderCheckoutErrorErrors"></a>
+## type CreateReaderCheckoutErrorErrors
+
+CreateReaderCheckoutErrorErrors is a schema definition.
+
+```go
+type CreateReaderCheckoutErrorErrors struct {
+    // Error message
+    Detail *string `json:"detail,omitempty"`
+}
+```
+
+<a name="CreateReaderCheckoutRequest"></a>
+## type CreateReaderCheckoutRequest
+
+CreateReaderCheckoutRequest: Reader Checkout
+
+```go
+type CreateReaderCheckoutRequest struct {
+    // Affiliate metadata for the transaction.
+    // It is a field that allow for integrators to track the source of the transaction.
+    Affiliate *CreateReaderCheckoutRequestAffiliate `json:"affiliate,omitempty"`
+    // The card type of the card used for the transaction.
+    // Is is required only for some countries (e.g: Brazil).
+    CardType *CreateReaderCheckoutRequestCardType `json:"card_type,omitempty"`
+    // Description of the checkout to be shown in the Merchant Sales
+    Description *string `json:"description,omitempty"`
+    // Number of installments for the transaction.
+    // It may vary according to the merchant country.
+    // For example, in Brazil, the maximum number of installments is 12.
+    Installments *int `json:"installments,omitempty"`
+    // Webhook URL to which the payment result will be sent.
+    // It must be a HTTPS url.
+    // Format: uri
+    ReturnUrl *string `json:"return_url,omitempty"`
+    // List of tipping rates to be displayed to the cardholder.
+    // The rates are in percentage and should be between 0.01 and 0.99.
+    // The list should be sorted in ascending order.
+    TipRates *[]float64 `json:"tip_rates,omitempty"`
+    // Time in seconds the cardholder has to select a tip rate.
+    // If not provided, the default value is 30 seconds.
+    //
+    // It can only be set if `tip_rates` is provided.
+    //
+    // **Note**: If the target device is a Solo, it must be in version 3.3.38.0 or higher.
+    // Default: 30
+    // Min: 30
+    // Max: 120
+    TipTimeout *int `json:"tip_timeout,omitempty"`
+    // Amount structure.
+    //
+    // The amount is represented as an integer value altogether with the currency and the minor unit.
+    //
+    // For example, EUR 1.00 is represented as value 100 with minor unit of 2.
+    TotalAmount CreateReaderCheckoutRequestTotalAmount `json:"total_amount"`
+}
+```
+
+<a name="CreateReaderCheckoutRequestAffiliate"></a>
+## type CreateReaderCheckoutRequestAffiliate
+
+CreateReaderCheckoutRequestAffiliate: Affiliate metadata for the transaction. It is a field that allow for integrators to track the source of the transaction.
+
+```go
+type CreateReaderCheckoutRequestAffiliate struct {
+    // Application ID of the affiliate.
+    // It is a unique identifier for the application and should be set by the integrator in the [Affiliate Keys](https://developer.sumup.com/affiliate-keys) page.
+    AppId string `json:"app_id"`
+    // Foreign transaction ID of the affiliate.
+    // It is a unique identifier for the transaction.
+    // It can be used later to fetch the transaction details via the [Transactions API](https://developer.sumup.com/api/transactions/get).
+    ForeignTransactionId string `json:"foreign_transaction_id"`
+    // Key of the affiliate.
+    // It is a unique identifier for the key  and should be generated by the integrator in the [Affiliate Keys](https://developer.sumup.com/affiliate-keys) page.
+    Key string `json:"key"`
+    // Additional metadata for the transaction.
+    // It is key-value object that can be associated with the transaction.
+    Tags *CreateReaderCheckoutRequestAffiliateTags `json:"tags,omitempty"`
+}
+```
+
+<a name="CreateReaderCheckoutRequestAffiliateTags"></a>
+## type CreateReaderCheckoutRequestAffiliateTags
+
+CreateReaderCheckoutRequestAffiliateTags: Additional metadata for the transaction. It is key\-value object that can be associated with the transaction.
+
+```go
+type CreateReaderCheckoutRequestAffiliateTags map[string]any
+```
+
+<a name="CreateReaderCheckoutRequestCardType"></a>
+## type CreateReaderCheckoutRequestCardType
+
+CreateReaderCheckoutRequestCardType: The card type of the card used for the transaction. Is is required only for some countries \(e.g: Brazil\).
+
+```go
+type CreateReaderCheckoutRequestCardType string
+```
+
+<a name="CreateReaderCheckoutRequestCardTypeCredit"></a>
 
 ```go
 const (
-    CreateReaderCheckoutCardTypeCredit CreateReaderCheckoutCardType = "credit"
-    CreateReaderCheckoutCardTypeDebit  CreateReaderCheckoutCardType = "debit"
+    CreateReaderCheckoutRequestCardTypeCredit CreateReaderCheckoutRequestCardType = "credit"
+    CreateReaderCheckoutRequestCardTypeDebit  CreateReaderCheckoutRequestCardType = "debit"
 )
 ```
 
-<a name="CreateReaderTerminate422Response"></a>
-## type CreateReaderTerminate422Response
+<a name="CreateReaderCheckoutRequestTotalAmount"></a>
+## type CreateReaderCheckoutRequestTotalAmount
 
-CreateReaderTerminate422Response is a schema definition.
+CreateReaderCheckoutRequestTotalAmount: Amount structure.
+
+The amount is represented as an integer value altogether with the currency and the minor unit.
+
+For example, EUR 1.00 is represented as value 100 with minor unit of 2.
 
 ```go
-type CreateReaderTerminate422Response struct {
-    Errors *CreateReaderTerminate422ResponseErrors `json:"errors,omitempty"`
+type CreateReaderCheckoutRequestTotalAmount struct {
+    // Currency ISO 4217 code
+    Currency string `json:"currency"`
+    // The minor units of the currency.
+    // It represents the number of decimals of the currency. For the currencies CLP, COP and HUF, the minor unit
+    // is 0.
+    // Min: 0
+    MinorUnit int `json:"minor_unit"`
+    // Integer value of the amount.
+    // Min: 0
+    Value int `json:"value"`
 }
 ```
 
-<a name="CreateReaderTerminate422Response.Error"></a>
-### func \(\*CreateReaderTerminate422Response\) Error
+<a name="CreateReaderCheckoutResponse"></a>
+## type CreateReaderCheckoutResponse
+
+CreateReaderCheckoutResponse is a schema definition.
 
 ```go
-func (e *CreateReaderTerminate422Response) Error() string
-```
-
-
-
-<a name="CreateReaderTerminate422ResponseErrors"></a>
-## type CreateReaderTerminate422ResponseErrors
-
-CreateReaderTerminate422ResponseErrors is a schema definition.
-
-```go
-type CreateReaderTerminate422ResponseErrors map[string]any
-```
-
-<a name="CreateReaderTerminate500Response"></a>
-## type CreateReaderTerminate500Response
-
-CreateReaderTerminate500Response is a schema definition.
-
-```go
-type CreateReaderTerminate500Response struct {
-    Errors *CreateReaderTerminate500ResponseErrors `json:"errors,omitempty"`
+type CreateReaderCheckoutResponse struct {
+    Data CreateReaderCheckoutResponseData `json:"data"`
 }
 ```
 
-<a name="CreateReaderTerminate500Response.Error"></a>
-### func \(\*CreateReaderTerminate500Response\) Error
+<a name="CreateReaderCheckoutResponseData"></a>
+## type CreateReaderCheckoutResponseData
+
+CreateReaderCheckoutResponseData is a schema definition.
 
 ```go
-func (e *CreateReaderTerminate500Response) Error() string
+type CreateReaderCheckoutResponseData struct {
+    // The client transaction ID is a unique identifier for the transaction that is generated for the client.
+    //
+    // It can be used later to fetch the transaction details via the [Transactions API](https://developer.sumup.com/api/transactions/get).
+    ClientTransactionId string `json:"client_transaction_id"`
+}
+```
+
+<a name="CreateReaderCheckoutUnprocessableEntity"></a>
+## type CreateReaderCheckoutUnprocessableEntity
+
+CreateReaderCheckoutUnprocessableEntity: Unprocessable entity
+
+```go
+type CreateReaderCheckoutUnprocessableEntity struct {
+    Errors CreateReaderCheckoutUnprocessableEntityErrors `json:"errors"`
+}
+```
+
+<a name="CreateReaderCheckoutUnprocessableEntity.Error"></a>
+### func \(\*CreateReaderCheckoutUnprocessableEntity\) Error
+
+```go
+func (e *CreateReaderCheckoutUnprocessableEntity) Error() string
 ```
 
 
 
-<a name="CreateReaderTerminate500ResponseErrors"></a>
-## type CreateReaderTerminate500ResponseErrors
+<a name="CreateReaderCheckoutUnprocessableEntityErrors"></a>
+## type CreateReaderCheckoutUnprocessableEntityErrors
 
-CreateReaderTerminate500ResponseErrors is a schema definition.
+CreateReaderCheckoutUnprocessableEntityErrors is a schema definition.
 
 ```go
-type CreateReaderTerminate500ResponseErrors struct {
+type CreateReaderCheckoutUnprocessableEntityErrors map[string]any
+```
+
+<a name="CreateReaderTerminateError"></a>
+## type CreateReaderTerminateError
+
+CreateReaderTerminateError: Error description
+
+```go
+type CreateReaderTerminateError struct {
+    Errors CreateReaderTerminateErrorErrors `json:"errors"`
+}
+```
+
+<a name="CreateReaderTerminateError.Error"></a>
+### func \(\*CreateReaderTerminateError\) Error
+
+```go
+func (e *CreateReaderTerminateError) Error() string
+```
+
+
+
+<a name="CreateReaderTerminateErrorErrors"></a>
+## type CreateReaderTerminateErrorErrors
+
+CreateReaderTerminateErrorErrors is a schema definition.
+
+```go
+type CreateReaderTerminateErrorErrors struct {
+    // Error message
     Detail *string `json:"detail,omitempty"`
 }
 ```
 
-<a name="CreateReaderTerminate502Response"></a>
-## type CreateReaderTerminate502Response
+<a name="CreateReaderTerminateUnprocessableEntity"></a>
+## type CreateReaderTerminateUnprocessableEntity
 
-CreateReaderTerminate502Response is a schema definition.
+CreateReaderTerminateUnprocessableEntity: Unprocessable entity
 
 ```go
-type CreateReaderTerminate502Response struct {
-    Errors *CreateReaderTerminate502ResponseErrors `json:"errors,omitempty"`
+type CreateReaderTerminateUnprocessableEntity struct {
+    Errors CreateReaderTerminateUnprocessableEntityErrors `json:"errors"`
 }
 ```
 
-<a name="CreateReaderTerminate502Response.Error"></a>
-### func \(\*CreateReaderTerminate502Response\) Error
+<a name="CreateReaderTerminateUnprocessableEntity.Error"></a>
+### func \(\*CreateReaderTerminateUnprocessableEntity\) Error
 
 ```go
-func (e *CreateReaderTerminate502Response) Error() string
+func (e *CreateReaderTerminateUnprocessableEntity) Error() string
 ```
 
 
 
-<a name="CreateReaderTerminate502ResponseErrors"></a>
-## type CreateReaderTerminate502ResponseErrors
+<a name="CreateReaderTerminateUnprocessableEntityErrors"></a>
+## type CreateReaderTerminateUnprocessableEntityErrors
 
-CreateReaderTerminate502ResponseErrors is a schema definition.
-
-```go
-type CreateReaderTerminate502ResponseErrors struct {
-    Detail *string `json:"detail,omitempty"`
-}
-```
-
-<a name="CreateReaderTerminate504Response"></a>
-## type CreateReaderTerminate504Response
-
-CreateReaderTerminate504Response is a schema definition.
+CreateReaderTerminateUnprocessableEntityErrors is a schema definition.
 
 ```go
-type CreateReaderTerminate504Response struct {
-    Errors *CreateReaderTerminate504ResponseErrors `json:"errors,omitempty"`
-}
-```
-
-<a name="CreateReaderTerminate504Response.Error"></a>
-### func \(\*CreateReaderTerminate504Response\) Error
-
-```go
-func (e *CreateReaderTerminate504Response) Error() string
-```
-
-
-
-<a name="CreateReaderTerminate504ResponseErrors"></a>
-## type CreateReaderTerminate504ResponseErrors
-
-CreateReaderTerminate504ResponseErrors is a schema definition.
-
-```go
-type CreateReaderTerminate504ResponseErrors struct {
-    Detail *string `json:"detail,omitempty"`
-}
+type CreateReaderTerminateUnprocessableEntityErrors map[string]any
 ```
 
 <a name="GetReaderParams"></a>
@@ -4050,20 +3971,39 @@ func (s *ReadersService) Create(ctx context.Context, merchantCode string, body C
 
 Create: Create a Reader Create a new Reader for the merchant account.
 
-<a name="ReadersService.CreateCheckout"></a>
-### func \(\*ReadersService\) CreateCheckout
+<a name="ReadersService.CreateReaderCheckout"></a>
+### func \(\*ReadersService\) CreateReaderCheckout
 
 ```go
-func (s *ReadersService) CreateCheckout(ctx context.Context, merchantCode string, id string, body CreateReaderCheckoutBody) (*CreateReaderCheckout201Response, error)
+func (s *ReadersService) CreateReaderCheckout(ctx context.Context, merchantCode string, readerId string, body CreateReaderCheckoutBody) (*CreateReaderCheckoutResponse, error)
 ```
 
-CreateCheckout: Create a Reader Checkout Create a Checkout for a Reader.
+CreateReaderCheckout: Create a Reader Checkout Create a Checkout for a Reader.
 
 This process is asynchronous and the actual transaction may take some time to be stared on the device.
 
 There are some caveats when using this endpoint: \* The target device must be online, otherwise checkout won't be accepted \* After the checkout is accepted, the system has 60 seconds to start the payment on the target device. During this time, any other checkout for the same device will be rejected.
 
 \*\*Note\*\*: If the target device is a Solo, it must be in version 3.3.24.3 or higher.
+
+<a name="ReadersService.CreateReaderTerminate"></a>
+### func \(\*ReadersService\) CreateReaderTerminate
+
+```go
+func (s *ReadersService) CreateReaderTerminate(ctx context.Context, merchantCode string, readerId string) (*CreateReaderTerminate202Response, error)
+```
+
+CreateReaderTerminate: Create a Reader Terminate action Create a Terminate action for a Reader.
+
+It stops the current transaction on the target device.
+
+This process is asynchronous and the actual termination may take some time to be performed on the device.
+
+There are some caveats when using this endpoint: \* The target device must be online, otherwise terminate won't be accepted \* The action will succeed only if the device is waiting for cardholder action: e.g: waiting for card, waiting for PIN, etc. \* There is no confirmation of the termination.
+
+If a transaction is successfully terminated and \`return\_url\` was provided on Checkout, the transaction status will be sent as \`failed\` to the provided URL.
+
+\*\*Note\*\*: If the target device is a Solo, it must be in version 3.3.28.0 or higher.
 
 <a name="ReadersService.DeleteReader"></a>
 ### func \(\*ReadersService\) DeleteReader
@@ -4091,25 +4031,6 @@ func (s *ReadersService) List(ctx context.Context, merchantCode string) (*ListRe
 ```
 
 List: List Readers List all readers of the merchant.
-
-<a name="ReadersService.TerminateCheckout"></a>
-### func \(\*ReadersService\) TerminateCheckout
-
-```go
-func (s *ReadersService) TerminateCheckout(ctx context.Context, merchantCode string, id string) error
-```
-
-TerminateCheckout: Create a Reader Terminate action Create a Terminate action for a Reader.
-
-It stops the current transaction on the target device.
-
-This process is asynchronous and the actual termination may take some time to be performed on the device.
-
-There are some caveats when using this endpoint: \* The target device must be online, otherwise terminate won't be accepted \* The action will succeed only if the device is waiting for cardholder action: e.g: waiting for card, waiting for PIN, etc. \* There is no confirmation of the termination.
-
-If a transaction is successfully terminated and \`return\_url\` was provided on Checkout, the transaction status will be sent as \`failed\` to the provided URL.
-
-\*\*Note\*\*: If the target device is a Solo, it must be in version 3.3.28.0 or higher.
 
 <a name="ReadersService.Update"></a>
 ### func \(\*ReadersService\) Update
@@ -4584,7 +4505,7 @@ import "github.com/sumup/sumup-go/shared"
 
 ## Index
 
-- [type Address](<#Address>)
+- [type AddressLegacy](<#AddressLegacy>)
 - [type AmountEvent](<#AmountEvent>)
 - [type Attributes](<#Attributes>)
 - [type Currency](<#Currency>)
@@ -4603,7 +4524,6 @@ import "github.com/sumup/sumup-go/shared"
 - [type MandateResponse](<#MandateResponse>)
 - [type MembershipStatus](<#MembershipStatus>)
 - [type Metadata](<#Metadata>)
-- [type Permissions](<#Permissions>)
 - [type PersonalDetails](<#PersonalDetails>)
 - [type Time](<#Time>)
   - [func \(t Time\) MarshalJSON\(\) \(\[\]byte, error\)](<#Time.MarshalJSON>)
@@ -4618,13 +4538,13 @@ import "github.com/sumup/sumup-go/shared"
 - [type TransactionMixinCheckoutEntryMode](<#TransactionMixinCheckoutEntryMode>)
 
 
-<a name="Address"></a>
-## type Address
+<a name="AddressLegacy"></a>
+## type AddressLegacy
 
-Address: Profile's personal address information.
+AddressLegacy: Profile's personal address information.
 
 ```go
-type Address struct {
+type AddressLegacy struct {
     // City name from the address.
     City *string `json:"city,omitempty"`
     // Two letter country code formatted according to [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
@@ -4884,24 +4804,6 @@ Metadata: Set of user\-defined key\-value pairs attached to the object. Partial 
 type Metadata map[string]any
 ```
 
-<a name="Permissions"></a>
-## type Permissions
-
-Permissions: User permissions
-
-```go
-type Permissions struct {
-    // Create MOTO payments
-    CreateMotoPayments *bool `json:"create_moto_payments,omitempty"`
-    // Create referral
-    CreateReferral *bool `json:"create_referral,omitempty"`
-    // Can view full merchant transaction history
-    FullTransactionHistoryView *bool `json:"full_transaction_history_view,omitempty"`
-    // Refund transactions
-    RefundTransactions *bool `json:"refund_transactions,omitempty"`
-}
-```
-
 <a name="PersonalDetails"></a>
 ## type PersonalDetails
 
@@ -4910,7 +4812,7 @@ PersonalDetails: Personal details for the customer.
 ```go
 type PersonalDetails struct {
     // Profile's personal address information.
-    Address *Address `json:"address,omitempty"`
+    Address *AddressLegacy `json:"address,omitempty"`
     // Date of birth of the customer.
     // Format: date
     BirthDate *Date `json:"birth_date,omitempty"`
@@ -5106,6 +5008,7 @@ import "github.com/sumup/sumup-go/subaccounts"
   - [func \(p \*ListSubAccountsParams\) QueryValues\(\) url.Values](<#ListSubAccountsParams.QueryValues>)
 - [type Operator](<#Operator>)
 - [type OperatorAccountType](<#OperatorAccountType>)
+- [type Permissions](<#Permissions>)
 - [type SubaccountsService](<#SubaccountsService>)
   - [func NewSubaccountsService\(c \*client.Client\) \*SubaccountsService](<#NewSubaccountsService>)
   - [func \(s \*SubaccountsService\) CompatGetOperator\(ctx context.Context, operatorId int\) \(\*Operator, error\)](<#SubaccountsService.CompatGetOperator>)
@@ -5217,8 +5120,8 @@ type Operator struct {
     // Format: int32
     Id       int     `json:"id"`
     Nickname *string `json:"nickname,omitempty"`
-    // User permissions
-    Permissions shared.Permissions `json:"permissions"`
+    // Permissions assigned to an operator or user.
+    Permissions Permissions `json:"permissions"`
     // The timestamp of when the operator was last updated.
     UpdatedAt time.Time `json:"updated_at"`
     Username  string    `json:"username"`
@@ -5241,6 +5144,21 @@ const (
     OperatorAccountTypeNormal   OperatorAccountType = "normal"
     OperatorAccountTypeOperator OperatorAccountType = "operator"
 )
+```
+
+<a name="Permissions"></a>
+## type Permissions
+
+Permissions: Permissions assigned to an operator or user.
+
+```go
+type Permissions struct {
+    Admin                      bool `json:"admin"`
+    CreateMotoPayments         bool `json:"create_moto_payments"`
+    CreateReferral             bool `json:"create_referral"`
+    FullTransactionHistoryView bool `json:"full_transaction_history_view"`
+    RefundTransactions         bool `json:"refund_transactions"`
+}
 ```
 
 <a name="SubaccountsService"></a>
