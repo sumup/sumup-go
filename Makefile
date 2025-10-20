@@ -6,11 +6,15 @@ help: ## Show help
 
 .PHONY: fmt
 fmt: ## Format go files
-	goimports -w .
+	golangci-lint fmt --verbose
 
 .PHONY: lint
 lint: ## Lint go files
-	golangci-lint run -v
+	golangci-lint run --verbose
+
+.PHONY: lint-fix
+lint-fix: ## Lint go files and apply auto-fixes
+	golangci-lint run --verbose --fix
 
 .PHONY: test
 test: ## Run tests
