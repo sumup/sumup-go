@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.0](https://github.com/sumup/sumup-go/compare/v0.2.0...v0.3.0) (2025-10-23)
+
+
+### Features
+
+* update makefile targets ([a21676d](https://github.com/sumup/sumup-go/commit/a21676d1c03295fe5244354aa676b239cf24e8b4))
+
+
+### Bug Fixes
+
+* **cd:** generated docs repo url ([615e80f](https://github.com/sumup/sumup-go/commit/615e80f29ec39ef794b078679500e30fbd59dd74))
+
 ## [0.2.0](https://github.com/sumup/sumup-go/compare/v0.1.0...v0.2.0) (2025-10-02)
 
 
