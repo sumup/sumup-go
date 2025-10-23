@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SumUp Checkout Example</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="https://static.sumup.com/favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://static.sumup.com/favicons/favicon-16x16.png">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1>SumUp Checkout</h1>
+    <p class="subtitle">Enter an amount to initiate a payment</p>
+
+    <div id="payment-form">
+      <div class="input-group">
+        <label for="amount">Amount ({{.DefaultCurrency}})</label>
+        <input type="number" id="amount" placeholder="10.00" step="0.01" min="0.01" value="10.00">
+      </div>
+      <button id="pay-button">Pay Now</button>
+    </div>
+
+    <div class="loading" id="loading">Processing payment...</div>
+    <div id="sumup-card"></div>
+    <div class="message" id="message"></div>
+  </div>
+
+  <script type="text/javascript" src="https://gateway.sumup.com/gateway/ecom/card/v2/sdk.js"></script>
+  <script type="text/javascript" src="/static/script.js"></script>
+</body>
+
+</html>
