@@ -798,11 +798,11 @@ func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListTra
 // Retrieves the full details of an identified transaction. The transaction resource is identified by a query
 // parameter and *one* of following parameters is required:
 //
-//  *  `id`
-//  *  `internal_id`
-//  *  `transaction_code`
-//  *  `foreign_transaction_id`
-//  *  `client_transaction_id`
+//   - `id`
+//   - `internal_id`
+//   - `transaction_code`
+//   - `foreign_transaction_id`
+//   - `client_transaction_id`
 //
 // Deprecated: this operation is deprecated
 func (s *TransactionsService) GetDeprecated(ctx context.Context, params GetTransactionParams) (*TransactionFull, error) {
@@ -876,11 +876,11 @@ func (s *TransactionsService) List(ctx context.Context, merchantCode string, par
 // Retrieves the full details of an identified transaction. The transaction resource is identified by a query
 // parameter and *one* of following parameters is required:
 //
-//  *  `id`
-//  *  `internal_id`
-//  *  `transaction_code`
-//  *  `foreign_transaction_id`
-//  *  `client_transaction_id`
+//   - `id`
+//   - `internal_id`
+//   - `transaction_code`
+//   - `foreign_transaction_id`
+//   - `client_transaction_id`
 func (s *TransactionsService) Get(ctx context.Context, merchantCode string, params GetTransactionV21Params) (*TransactionFull, error) {
 	path := fmt.Sprintf("/v2.1/merchants/%v/transactions", merchantCode)
 

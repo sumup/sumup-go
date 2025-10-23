@@ -18,7 +18,7 @@ import (
 // Membership: A membership associates a user with a resource, memberships is defined by user, resource, resource
 // type, and associated roles.
 type Membership struct {
-	// Object attributes that modifiable only by SumUp applications.
+	// Object attributes that are modifiable only by SumUp applications.
 	Attributes *shared.Attributes `json:"attributes,omitempty"`
 	// The timestamp of when the membership was created.
 	CreatedAt time.Time `json:"created_at"`
@@ -30,8 +30,8 @@ type Membership struct {
 	// submit whole metadata.
 	Metadata *shared.Metadata `json:"metadata,omitempty"`
 	// User's permissions.
-	// Deprecated: Permissions include only legacy permissions. Otherwise, access control is based on member's roles
-	// within a given resource.
+	// Deprecated: Permissions include only legacy permissions, please use roles instead. Member access is based on
+	// their roles within a given resource and the permissions these roles grant.
 	Permissions []string `json:"permissions"`
 	// Information about the resource the membership is in.
 	Resource MembershipResource `json:"resource"`
@@ -52,8 +52,8 @@ type Membership struct {
 
 // MembershipResource: Information about the resource the membership is in.
 type MembershipResource struct {
-	// Object attributes that modifiable only by SumUp applications.
-	Attributes shared.Attributes `json:"attributes"`
+	// Object attributes that are modifiable only by SumUp applications.
+	Attributes *shared.Attributes `json:"attributes,omitempty"`
 	// The timestamp of when the membership resource was created.
 	CreatedAt time.Time `json:"created_at"`
 	// ID of the resource the membership is in.

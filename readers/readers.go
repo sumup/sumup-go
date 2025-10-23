@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/sumup/sumup-go/client"
+	"github.com/sumup/sumup-go/shared"
 )
 
 // CreateReaderCheckoutError: Error description
@@ -178,10 +179,6 @@ func (e *CreateReaderTerminateUnprocessableEntity) Error() string {
 
 var _ error = (*CreateReaderTerminateUnprocessableEntity)(nil)
 
-// Meta: Set of user-defined key-value pairs attached to the object.
-// Max properties: 50
-type Meta map[string]any
-
 // Reader: A physical card reader device that can accept in-person payments.
 type Reader struct {
 	// The timestamp of when the reader was created.
@@ -195,9 +192,11 @@ type Reader struct {
 	// Min length: 30
 	// Max length: 30
 	Id ReaderId `json:"id"`
-	// Set of user-defined key-value pairs attached to the object.
-	// Max properties: 50
-	Meta *Meta `json:"meta,omitempty"`
+	// A set of key-value pairs that you can attach to an object. This can be useful for storing additional information
+	// about the object in a structured format.
+	// **Warning**: Updating Meta will overwrite the existing data. Make sure to always include the complete JSON
+	// object.
+	Meta *shared.Meta `json:"meta,omitempty"`
 	// Custom human-readable, user-defined name for easier identification of the reader.
 	// Max length: 500
 	Name ReaderName `json:"name"`
@@ -267,9 +266,11 @@ const (
 
 // CreateReaderBody is a schema definition.
 type CreateReaderBody struct {
-	// Set of user-defined key-value pairs attached to the object.
-	// Max properties: 50
-	Meta *Meta `json:"meta,omitempty"`
+	// A set of key-value pairs that you can attach to an object. This can be useful for storing additional information
+	// about the object in a structured format.
+	// **Warning**: Updating Meta will overwrite the existing data. Make sure to always include the complete JSON
+	// object.
+	Meta *shared.Meta `json:"meta,omitempty"`
 	// Custom human-readable, user-defined name for easier identification of the reader.
 	// Max length: 500
 	Name *ReaderName `json:"name,omitempty"`
@@ -371,9 +372,11 @@ type CreateReaderCheckoutBodyTotalAmount struct {
 
 // UpdateReaderBody is a schema definition.
 type UpdateReaderBody struct {
-	// Set of user-defined key-value pairs attached to the object.
-	// Max properties: 50
-	Meta *Meta `json:"meta,omitempty"`
+	// A set of key-value pairs that you can attach to an object. This can be useful for storing additional information
+	// about the object in a structured format.
+	// **Warning**: Updating Meta will overwrite the existing data. Make sure to always include the complete JSON
+	// object.
+	Meta *shared.Meta `json:"meta,omitempty"`
 	// Custom human-readable, user-defined name for easier identification of the reader.
 	// Max length: 500
 	Name *ReaderName `json:"name,omitempty"`
@@ -463,13 +466,10 @@ func (s *ReadersService) Create(ctx context.Context, merchantCode string, body C
 	}
 }
 
-// CreateReaderTerminate: Create a Reader Terminate action
-// Create a Terminate action for a Reader.
-//
-// It stops the current transaction on the target device.
+// TerminateCheckout: Terminate a Reader Checkout
+// Terminate a Reader Checkout stops the current transaction on the target device.
 //
 // This process is asynchronous and the actual termination may take some time to be performed on the device.
-//
 //
 // There are some caveats when using this endpoint:
 // * The target device must be online, otherwise terminate won't be accepted
@@ -480,9 +480,8 @@ func (s *ReadersService) Create(ctx context.Context, merchantCode string, body C
 // If a transaction is successfully terminated and `return_url` was provided on Checkout, the transaction status
 // will be sent as `failed` to the provided URL.
 //
-//
 // **Note**: If the target device is a Solo, it must be in version 3.3.28.0 or higher.
-func (s *ReadersService) CreateReaderTerminate(ctx context.Context, merchantCode string, readerId string) error {
+func (s *ReadersService) TerminateCheckout(ctx context.Context, merchantCode string, readerId string) error {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v/terminate", merchantCode, readerId)
 
 	resp, err := s.c.Call(ctx, http.MethodPost, path)
@@ -541,20 +540,18 @@ func (s *ReadersService) CreateReaderTerminate(ctx context.Context, merchantCode
 	}
 }
 
-// CreateReaderCheckout: Create a Reader Checkout
-// Create a Checkout for a Reader.
+// CreateCheckout: Create a Reader Checkout
+// Creates a Checkout for a Reader.
 //
 // This process is asynchronous and the actual transaction may take some time to be stared on the device.
-//
 //
 // There are some caveats when using this endpoint:
 // * The target device must be online, otherwise checkout won't be accepted
 // * After the checkout is accepted, the system has 60 seconds to start the payment on the target device. During
 // this time, any other checkout for the same device will be rejected.
 //
-//
 // **Note**: If the target device is a Solo, it must be in version 3.3.24.3 or higher.
-func (s *ReadersService) CreateReaderCheckout(ctx context.Context, merchantCode string, readerId string, body CreateReaderCheckoutBody) (*CreateReaderCheckoutResponse, error) {
+func (s *ReadersService) CreateCheckout(ctx context.Context, merchantCode string, readerId string, body CreateReaderCheckoutBody) (*CreateReaderCheckoutResponse, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v/checkout", merchantCode, readerId)
 
 	resp, err := s.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))

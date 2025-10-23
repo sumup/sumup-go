@@ -9,6 +9,7 @@ import (
 	"github.com/sumup/sumup-go/members"
 	"github.com/sumup/sumup-go/memberships"
 	"github.com/sumup/sumup-go/merchant"
+	"github.com/sumup/sumup-go/merchants"
 	"github.com/sumup/sumup-go/payouts"
 	"github.com/sumup/sumup-go/readers"
 	"github.com/sumup/sumup-go/receipts"
@@ -24,6 +25,7 @@ type Client struct {
 	Members      *members.MembersService
 	Memberships  *memberships.MembershipsService
 	Merchant     *merchant.MerchantService
+	Merchants    *merchants.MerchantsService
 	Payouts      *payouts.PayoutsService
 	Readers      *readers.ReadersService
 	Receipts     *receipts.ReceiptsService
@@ -44,6 +46,7 @@ func NewClient(opts ...client.ClientOption) *Client {
 	c.Members = members.NewMembersService(client)
 	c.Memberships = memberships.NewMembershipsService(client)
 	c.Merchant = merchant.NewMerchantService(client)
+	c.Merchants = merchants.NewMerchantsService(client)
 	c.Payouts = payouts.NewPayoutsService(client)
 	c.Readers = readers.NewReadersService(client)
 	c.Receipts = receipts.NewReceiptsService(client)
