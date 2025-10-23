@@ -36,7 +36,7 @@ vulncheck-sarif: ## Check for Vulnerabilities
 .PHONY: generate
 generate: # Generate latest SDK
 	go-sdk-gen generate --mod github.com/sumup/sumup-go --pkg sumup --name SumUp ./openapi.json
-	gomarkdoc --output DOCUMENTATION.md ./...
+	gomarkdoc --repository.url https://github.com/sumup/sumup-go --repository.default-branch main --output DOCUMENTATION.md ./...
 
 .PHONY: install-tools
 install-tools: # Install development dependencies

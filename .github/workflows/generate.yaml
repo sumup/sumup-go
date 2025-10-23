@@ -41,7 +41,7 @@ jobs:
         run: go-sdk-gen generate --mod github.com/sumup/sumup-go --pkg sumup  --name SumUp ./openapi.json
 
       - name: Generate docs
-        run: gomarkdoc --output DOCUMENTATION.md ./...
+        run: gomarkdoc --repository.url https://github.com/sumup/sumup-go --repository.default-branch main --output DOCUMENTATION.md ./...
 
       - name: Commit changes
         uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5 # v9.1.4
