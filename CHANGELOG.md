@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.3.0](https://github.com/sumup/sumup-go/compare/v0.2.0...v0.3.0) (2025-10-23)
+
+0.3.0 bring the Merchants API, allowing access to multiple merchant accounts, depending on the authorization. For users that authenticate using SumUp's SSO you can now access any of the merchant accounts that they have membership in. For API keys the access is still restricted to the merchant account for which the API key was created. We are working on introducing more authentication options to make integrations that need to rely on multiple merchant accounts easier in the future.
+
+The merchants endpoints replace the legacy `/me/` endpoints and further cleanup the underlying models.
+
+### Features
+
+* update makefile targets ([a21676d](https://github.com/sumup/sumup-go/commit/a21676d1c03295fe5244354aa676b239cf24e8b4))
+
+
+### Bug Fixes
+
+* **cd:** generated docs repo url ([615e80f](https://github.com/sumup/sumup-go/commit/615e80f29ec39ef794b078679500e30fbd59dd74))
+
 ## [0.2.0](https://github.com/sumup/sumup-go/compare/v0.1.0...v0.2.0) (2025-10-02)
 
 
