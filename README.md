@@ -46,7 +46,7 @@ package main
 
 import (
 	"context"
-	"os"
+	"log"
 
 	"github.com/sumup/sumup-go"
 	"github.com/sumup/sumup-go/merchant"
@@ -55,13 +55,13 @@ import (
 func main() {
 	client := sumup.NewClient()
 
-	account, err := client.Merchant.GetAccount(context.Background(), merchant.GetAccountParams{})
+	merchant, err := client.Merchants.Get(context.Background(), "MCNPLE22", merchant.GetAccountParams{})
 	if err != nil {
-		fmt.Printf("[ERROR] get merchant account: %v\n", err)
+		log.Printf("[ERROR] get merchant account: %v", err)
 		return
 	}
 
-	fmt.Printf("[INFO] merchant profile: %+v\n", account.MerchantProfile)
+	log.Printf("[INFO] merchant code: %s", merchant.MerchantCode)
 }
 ```
 
@@ -72,6 +72,26 @@ The easiest form of authenticating with SumUp APIs is using [API keys](https://d
 ```go
 client := sumup.NewClient(client.WithAPIKey("sup_sk_LZFWoLyd..."))
 ```
+
+## Examples
+
+The repository includes several examples demonstrating different use cases:
+
+**[simple](./example/simple)** - Basic merchant account information retrieval showing how to initialize the SDK and make a simple API call.
+```sh
+go run example/simple/main.go
+```
+
+**[checkout](./example/checkout)** - Creating and processing a checkout programmatically using test card details.
+```sh
+go run example/checkout/main.go
+```
+
+**[full](./example/full)** - Complete web application demonstrating the full checkout flow with the SumUp payment widget. Shows how to create checkouts and integrate the widget in a real application.
+```sh
+go run example/full/main.go
+```
+and visit http://localhost:8080
 
 ## Support
 
