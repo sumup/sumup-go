@@ -27,7 +27,7 @@ type AddressLegacy struct {
 // AmountEvent: Amount of the event.
 type AmountEvent float64
 
-// Attributes: Object attributes that modifiable only by SumUp applications.
+// Attributes: Object attributes that are modifiable only by SumUp applications.
 type Attributes map[string]any
 
 // Currency: Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount.
@@ -136,6 +136,12 @@ const (
 	MembershipStatusPending  MembershipStatus = "pending"
 	MembershipStatusUnknown  MembershipStatus = "unknown"
 )
+
+// Meta: A set of key-value pairs that you can attach to an object. This can be useful for storing additional information
+// about the object in a structured format.
+// **Warning**: Updating Meta will overwrite the existing data. Make sure to always include the complete JSON
+// object.
+type Meta map[string]any
 
 // Metadata: Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When
 // updating, always submit whole metadata.

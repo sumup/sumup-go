@@ -18,7 +18,7 @@ import (
 
 // Member: A member is user within specific resource identified by resource id, resource type, and associated roles.
 type Member struct {
-	// Object attributes that modifiable only by SumUp applications.
+	// Object attributes that are modifiable only by SumUp applications.
 	Attributes *shared.Attributes `json:"attributes,omitempty"`
 	// The timestamp of when the member was created.
 	CreatedAt time.Time `json:"created_at"`
@@ -30,6 +30,8 @@ type Member struct {
 	// submit whole metadata.
 	Metadata *shared.Metadata `json:"metadata,omitempty"`
 	// User's permissions.
+	// Deprecated: Permissions include only legacy permissions, please use roles instead. Member access is based on
+	// roles within a given resource and the permissions these roles grant.
 	Permissions []string `json:"permissions"`
 	// User's roles.
 	Roles []string `json:"roles"`
@@ -76,7 +78,7 @@ type MembershipUserClassic struct {
 
 // CreateMerchantMemberBody is a schema definition.
 type CreateMerchantMemberBody struct {
-	// Object attributes that modifiable only by SumUp applications.
+	// Object attributes that are modifiable only by SumUp applications.
 	Attributes *shared.Attributes `json:"attributes,omitempty"`
 	// Email address of the member to add.
 	// Format: email
@@ -84,8 +86,6 @@ type CreateMerchantMemberBody struct {
 	// True if the user is managed by the merchant. In this case, we'll created a virtual user with the provided password
 	// and nickname.
 	IsManagedUser *bool `json:"is_managed_user,omitempty"`
-	// True if the user is a service account. It can later be used to create OAuth2 clients.
-	IsServiceAccount *bool `json:"is_service_account,omitempty"`
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
 	// submit whole metadata.
 	Metadata *shared.Metadata `json:"metadata,omitempty"`
@@ -102,7 +102,7 @@ type CreateMerchantMemberBody struct {
 
 // UpdateMerchantMemberBody is a schema definition.
 type UpdateMerchantMemberBody struct {
-	// Object attributes that modifiable only by SumUp applications.
+	// Object attributes that are modifiable only by SumUp applications.
 	Attributes *shared.Attributes `json:"attributes,omitempty"`
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
 	// submit whole metadata.
