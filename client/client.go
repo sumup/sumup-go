@@ -46,7 +46,7 @@ func New(opts ...ClientOption) *Client {
 	baseURL, _ := url.Parse(APIUrl)
 	c := &Client{
 		client:    http.DefaultClient,
-		userAgent: fmt.Sprintf("sumup-go/v%s", version),
+		userAgent: fmt.Sprintf("sumup/%s", version),
 		base:      baseURL,
 		key:       os.Getenv("SUMUP_API_KEY"),
 	}

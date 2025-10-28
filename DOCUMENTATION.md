@@ -2077,7 +2077,7 @@ type CreateMerchantMemberBody struct {
 ```
 
 <a name="ListMerchantMembers200Response"></a>
-## type [ListMerchantMembers200Response](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L175-L178>)
+## type [ListMerchantMembers200Response](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L181-L184>)
 
 ListMerchantMembers200Response is a schema definition.
 
@@ -2089,7 +2089,7 @@ type ListMerchantMembers200Response struct {
 ```
 
 <a name="ListMerchantMembersParams"></a>
-## type [ListMerchantMembersParams](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L126-L139>)
+## type [ListMerchantMembersParams](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L126-L141>)
 
 ListMerchantMembersParams: query parameters for ListMerchantMembers
 
@@ -2107,11 +2107,13 @@ type ListMerchantMembersParams struct {
     Scroll *bool
     // Filter the returned members by the membership status.
     Status *shared.MembershipStatus
+    // Search for a member by user id.
+    UserId *string
 }
 ```
 
 <a name="ListMerchantMembersParams.QueryValues"></a>
-### func \(\*ListMerchantMembersParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L142>)
+### func \(\*ListMerchantMembersParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L144>)
 
 ```go
 func (p *ListMerchantMembersParams) QueryValues() url.Values
@@ -2153,7 +2155,7 @@ type Member struct {
 ```
 
 <a name="MembersService"></a>
-## type [MembersService](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L180-L182>)
+## type [MembersService](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L186-L188>)
 
 
 
@@ -2164,7 +2166,7 @@ type MembersService struct {
 ```
 
 <a name="NewMembersService"></a>
-### func [NewMembersService](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L184>)
+### func [NewMembersService](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L190>)
 
 ```go
 func NewMembersService(c *client.Client) *MembersService
@@ -2173,7 +2175,7 @@ func NewMembersService(c *client.Client) *MembersService
 
 
 <a name="MembersService.Create"></a>
-### func \(\*MembersService\) [Create](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L216>)
+### func \(\*MembersService\) [Create](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L222>)
 
 ```go
 func (s *MembersService) Create(ctx context.Context, merchantCode string, body CreateMerchantMemberBody) (*Member, error)
@@ -2182,7 +2184,7 @@ func (s *MembersService) Create(ctx context.Context, merchantCode string, body C
 Create: Create a member Create a merchant member.
 
 <a name="MembersService.Delete"></a>
-### func \(\*MembersService\) [Delete](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L246>)
+### func \(\*MembersService\) [Delete](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L252>)
 
 ```go
 func (s *MembersService) Delete(ctx context.Context, merchantCode string, memberId string) error
@@ -2191,7 +2193,7 @@ func (s *MembersService) Delete(ctx context.Context, merchantCode string, member
 Delete: Delete a member Deletes a merchant member.
 
 <a name="MembersService.Get"></a>
-### func \(\*MembersService\) [Get](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L267>)
+### func \(\*MembersService\) [Get](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L273>)
 
 ```go
 func (s *MembersService) Get(ctx context.Context, merchantCode string, memberId string) (*Member, error)
@@ -2200,7 +2202,7 @@ func (s *MembersService) Get(ctx context.Context, merchantCode string, memberId 
 Get: Retrieve a member Retrieve a merchant member.
 
 <a name="MembersService.List"></a>
-### func \(\*MembersService\) [List](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L190>)
+### func \(\*MembersService\) [List](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L196>)
 
 ```go
 func (s *MembersService) List(ctx context.Context, merchantCode string, params ListMerchantMembersParams) (*ListMerchantMembers200Response, error)
@@ -2209,7 +2211,7 @@ func (s *MembersService) List(ctx context.Context, merchantCode string, params L
 List: List members Lists merchant members.
 
 <a name="MembersService.Update"></a>
-### func \(\*MembersService\) [Update](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L293>)
+### func \(\*MembersService\) [Update](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L299>)
 
 ```go
 func (s *MembersService) Update(ctx context.Context, merchantCode string, memberId string, body UpdateMerchantMemberBody) (*Member, error)
@@ -4317,7 +4319,7 @@ type CreateReaderBody struct {
     Meta *shared.Meta `json:"meta,omitempty"`
     // Custom human-readable, user-defined name for easier identification of the reader.
     // Max length: 500
-    Name *ReaderName `json:"name,omitempty"`
+    Name ReaderName `json:"name"`
     // The pairing code is a 8 or 9 character alphanumeric string that is displayed on a SumUp Device after initiating
     // the pairing. It is used to link the physical device to the created pairing.
     // Min length: 8
@@ -6130,7 +6132,7 @@ func NewSubaccountsService(c *client.Client) *SubaccountsService
 func (s *SubaccountsService) CompatGetOperator(ctx context.Context, operatorId int) (*Operator, error)
 ```
 
-CompatGetOperator: Retrieve an operator Returns specific operator. Deprecated: Subaccounts API is deprecated, to get an user that's a member of your merchant account please use \[Get member\]\(https://developer.sumup.com/api/members/get\) instead.
+CompatGetOperator: Retrieve an operator Returns specific operator. Deprecated: Subaccounts API is deprecated, to get a user that's a member of your merchant account please use \[Get member\]\(https://developer.sumup.com/api/members/get\) instead.
 
 <a name="SubaccountsService.CreateSubAccount"></a>
 ### func \(\*SubaccountsService\) [CreateSubAccount](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L166>)
@@ -6139,7 +6141,7 @@ CompatGetOperator: Retrieve an operator Returns specific operator. Deprecated: S
 func (s *SubaccountsService) CreateSubAccount(ctx context.Context, body CreateSubAccountBody) (*Operator, error)
 ```
 
-CreateSubAccount: Create an operator Creates new operator for currently authorized users' merchant. Deprecated: Subaccounts API is deprecated, to create an user in your merchant account please use \[Create member\]\(https://developer.sumup.com/api/members/create\) instead.
+CreateSubAccount: Create an operator Creates new operator for currently authorized users' merchant. Deprecated: Subaccounts API is deprecated, to create a user in your merchant account please use \[Create member\]\(https://developer.sumup.com/api/members/create\) instead.
 
 <a name="SubaccountsService.DeactivateSubAccount"></a>
 ### func \(\*SubaccountsService\) [DeactivateSubAccount](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L199>)
@@ -6148,7 +6150,7 @@ CreateSubAccount: Create an operator Creates new operator for currently authoriz
 func (s *SubaccountsService) DeactivateSubAccount(ctx context.Context, operatorId int) (*Operator, error)
 ```
 
-DeactivateSubAccount: Disable an operator. Disable the specified operator for the merchant account. Deprecated: Subaccounts API is deprecated, to remove an user that's a member of your merchant account please use \[Delete member\]\(https://developer.sumup.com/api/members/delete\) instead.
+DeactivateSubAccount: Disable an operator. Disable the specified operator for the merchant account. Deprecated: Subaccounts API is deprecated, to remove a user that's a member of your merchant account please use \[Delete member\]\(https://developer.sumup.com/api/members/delete\) instead.
 
 <a name="SubaccountsService.ListSubAccounts"></a>
 ### func \(\*SubaccountsService\) [ListSubAccounts](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L140>)
@@ -6166,7 +6168,7 @@ ListSubAccounts: List operators Returns list of operators for currently authoriz
 func (s *SubaccountsService) UpdateSubAccount(ctx context.Context, operatorId int, body UpdateSubAccountBody) (*Operator, error)
 ```
 
-UpdateSubAccount: Update an operator Updates operator. If the operator was disabled and their password is updated they will be unblocked. Deprecated: Subaccounts API is deprecated, to update an user that's a member of your merchant account please use \[Update member\]\(https://developer.sumup.com/api/members/update\) instead.
+UpdateSubAccount: Update an operator Updates operator. If the operator was disabled and their password is updated they will be unblocked. Deprecated: Subaccounts API is deprecated, to update a user that's a member of your merchant account please use \[Update member\]\(https://developer.sumup.com/api/members/update\) instead.
 
 <a name="UpdateSubAccountBody"></a>
 ## type [UpdateSubAccountBody](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L81-L90>)
@@ -7209,6 +7211,32 @@ Refund: Refund a transaction Refunds an identified transaction either in full or
 ```go
 import "github.com/sumup/sumup-go/example/checkout"
 ```
+
+## Index
+
+
+
+# full
+
+```go
+import "github.com/sumup/sumup-go/example/full"
+```
+
+This example demonstrates a complete checkout flow with the SumUp payment widget.
+
+Basic steps: 1. Create a checkout for the desired amount using the SDK 2. Initiate the payment widget with the checkout ID
+
+Prerequisites: \- SUMUP\_API\_KEY environment variable with your SumUp API key \- SUMUP\_MERCHANT\_CODE environment variable with your merchant code
+
+To run:
+
+```
+export SUMUP_API_KEY="your-api-key"
+export SUMUP_MERCHANT_CODE="your-merchant-code"
+go run main.go
+```
+
+Then open http://localhost:8080 in your browser.
 
 ## Index
 
