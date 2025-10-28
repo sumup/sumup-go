@@ -136,6 +136,8 @@ type ListMerchantMembersParams struct {
 	Scroll *bool
 	// Filter the returned members by the membership status.
 	Status *shared.MembershipStatus
+	// Search for a member by user id.
+	UserId *string
 }
 
 // QueryValues converts [ListMerchantMembersParams] into [url.Values].
@@ -166,6 +168,10 @@ func (p *ListMerchantMembersParams) QueryValues() url.Values {
 
 	if p.Status != nil {
 		q.Set("status", string(*p.Status))
+	}
+
+	if p.UserId != nil {
+		q.Set("user.id", *p.UserId)
 	}
 
 	return q

@@ -161,7 +161,7 @@ func (s *SubaccountsService) ListSubAccounts(ctx context.Context, params ListSub
 
 // CreateSubAccount: Create an operator
 // Creates new operator for currently authorized users' merchant.
-// Deprecated: Subaccounts API is deprecated, to create an user in your merchant account please use [Create member](https://developer.sumup.com/api/members/create)
+// Deprecated: Subaccounts API is deprecated, to create a user in your merchant account please use [Create member](https://developer.sumup.com/api/members/create)
 // instead.
 func (s *SubaccountsService) CreateSubAccount(ctx context.Context, body CreateSubAccountBody) (*Operator, error) {
 	path := fmt.Sprintf("/v0.1/me/accounts")
@@ -194,7 +194,7 @@ func (s *SubaccountsService) CreateSubAccount(ctx context.Context, body CreateSu
 
 // DeactivateSubAccount: Disable an operator.
 // Disable the specified operator for the merchant account.
-// Deprecated: Subaccounts API is deprecated, to remove an user that's a member of your merchant account please
+// Deprecated: Subaccounts API is deprecated, to remove a user that's a member of your merchant account please
 // use [Delete member](https://developer.sumup.com/api/members/delete) instead.
 func (s *SubaccountsService) DeactivateSubAccount(ctx context.Context, operatorId int) (*Operator, error) {
 	path := fmt.Sprintf("/v0.1/me/accounts/%v", operatorId)
@@ -220,7 +220,7 @@ func (s *SubaccountsService) DeactivateSubAccount(ctx context.Context, operatorI
 
 // CompatGetOperator: Retrieve an operator
 // Returns specific operator.
-// Deprecated: Subaccounts API is deprecated, to get an user that's a member of your merchant account please use
+// Deprecated: Subaccounts API is deprecated, to get a user that's a member of your merchant account please use
 // [Get member](https://developer.sumup.com/api/members/get) instead.
 func (s *SubaccountsService) CompatGetOperator(ctx context.Context, operatorId int) (*Operator, error) {
 	path := fmt.Sprintf("/v0.1/me/accounts/%v", operatorId)
@@ -246,7 +246,7 @@ func (s *SubaccountsService) CompatGetOperator(ctx context.Context, operatorId i
 
 // UpdateSubAccount: Update an operator
 // Updates operator. If the operator was disabled and their password is updated they will be unblocked.
-// Deprecated: Subaccounts API is deprecated, to update an user that's a member of your merchant account please
+// Deprecated: Subaccounts API is deprecated, to update a user that's a member of your merchant account please
 // use [Update member](https://developer.sumup.com/api/members/update) instead.
 func (s *SubaccountsService) UpdateSubAccount(ctx context.Context, operatorId int, body UpdateSubAccountBody) (*Operator, error) {
 	path := fmt.Sprintf("/v0.1/me/accounts/%v", operatorId)
