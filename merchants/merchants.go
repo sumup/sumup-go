@@ -393,6 +393,7 @@ type Merchant struct {
 	MerchantCode string `json:"merchant_code"`
 	// A set of key-value pairs that you can attach to an object. This can be useful for storing additional information
 	// about the object in a structured format.
+	//
 	// **Warning**: Updating Meta will overwrite the existing data. Make sure to always include the complete JSON
 	// object.
 	Meta *shared.Meta `json:"meta,omitempty"`
@@ -702,10 +703,10 @@ func (s *MerchantsService) ListPersons(ctx context.Context, merchantCode string,
 	}
 }
 
-// GetMerchant: Retrieve a Merchant
+// Get: Retrieve a Merchant
 // Retrieve a merchant.
 // Merchant documentation: https://developer.sumup.com/tools/models/merchant
-func (s *MerchantsService) GetMerchant(ctx context.Context, merchantCode string, params GetMerchantParams) (*Merchant, error) {
+func (s *MerchantsService) Get(ctx context.Context, merchantCode string, params GetMerchantParams) (*Merchant, error) {
 	path := fmt.Sprintf("/v1/merchants/%v", merchantCode)
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))

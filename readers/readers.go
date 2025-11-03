@@ -194,6 +194,7 @@ type Reader struct {
 	Id ReaderId `json:"id"`
 	// A set of key-value pairs that you can attach to an object. This can be useful for storing additional information
 	// about the object in a structured format.
+	//
 	// **Warning**: Updating Meta will overwrite the existing data. Make sure to always include the complete JSON
 	// object.
 	Meta *shared.Meta `json:"meta,omitempty"`
@@ -268,6 +269,7 @@ const (
 type CreateReaderBody struct {
 	// A set of key-value pairs that you can attach to an object. This can be useful for storing additional information
 	// about the object in a structured format.
+	//
 	// **Warning**: Updating Meta will overwrite the existing data. Make sure to always include the complete JSON
 	// object.
 	Meta *shared.Meta `json:"meta,omitempty"`
@@ -374,6 +376,7 @@ type CreateReaderCheckoutBodyTotalAmount struct {
 type UpdateReaderBody struct {
 	// A set of key-value pairs that you can attach to an object. This can be useful for storing additional information
 	// about the object in a structured format.
+	//
 	// **Warning**: Updating Meta will overwrite the existing data. Make sure to always include the complete JSON
 	// object.
 	Meta *shared.Meta `json:"meta,omitempty"`

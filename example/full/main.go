@@ -63,7 +63,7 @@ func main() {
 	ctx := context.Background()
 	client := sumup.NewClient()
 
-	merchant, err := client.Merchants.GetMerchant(ctx, merchantCode, merchants.GetMerchantParams{})
+	merchant, err := client.Merchants.Get(ctx, merchantCode, merchants.GetMerchantParams{})
 	if err != nil {
 		slog.Error("Failed to load merchant information", "error", err)
 		os.Exit(1)

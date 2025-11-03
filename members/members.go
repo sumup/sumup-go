@@ -96,7 +96,7 @@ type CreateMerchantMemberBody struct {
 	// Format: password
 	// Min length: 8
 	Password *string `json:"password,omitempty"`
-	// List of roles to assign to the new member. In the case of service accounts, the roles are predefined.
+	// List of roles to assign to the new member.
 	Roles []string `json:"roles"`
 }
 
