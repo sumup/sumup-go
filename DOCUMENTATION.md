@@ -2071,7 +2071,7 @@ type CreateMerchantMemberBody struct {
     // Format: password
     // Min length: 8
     Password *string `json:"password,omitempty"`
-    // List of roles to assign to the new member. In the case of service accounts, the roles are predefined.
+    // List of roles to assign to the new member.
     Roles []string `json:"roles"`
 }
 ```
@@ -3177,7 +3177,7 @@ import "github.com/sumup/sumup-go/merchants"
 - [type Merchant](<#Merchant>)
 - [type MerchantsService](<#MerchantsService>)
   - [func NewMerchantsService\(c \*client.Client\) \*MerchantsService](<#NewMerchantsService>)
-  - [func \(s \*MerchantsService\) GetMerchant\(ctx context.Context, merchantCode string, params GetMerchantParams\) \(\*Merchant, error\)](<#MerchantsService.GetMerchant>)
+  - [func \(s \*MerchantsService\) Get\(ctx context.Context, merchantCode string, params GetMerchantParams\) \(\*Merchant, error\)](<#MerchantsService.Get>)
   - [func \(s \*MerchantsService\) GetPerson\(ctx context.Context, merchantCode string, personId string, params GetPersonParams\) \(\*Person, error\)](<#MerchantsService.GetPerson>)
   - [func \(s \*MerchantsService\) ListPersons\(ctx context.Context, merchantCode string, params ListPersonsParams\) \(\*ListPersonsResponseBody, error\)](<#MerchantsService.ListPersons>)
 - [type Ownership](<#Ownership>)
@@ -3583,7 +3583,7 @@ const (
 ```
 
 <a name="GetMerchant404Response"></a>
-## type [GetMerchant404Response](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L605-L614>)
+## type [GetMerchant404Response](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L606-L615>)
 
 GetMerchant404Response is a schema definition.
 
@@ -3601,7 +3601,7 @@ type GetMerchant404Response struct {
 ```
 
 <a name="GetMerchant404Response.Error"></a>
-### func \(\*GetMerchant404Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L616>)
+### func \(\*GetMerchant404Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L617>)
 
 ```go
 func (e *GetMerchant404Response) Error() string
@@ -3610,7 +3610,7 @@ func (e *GetMerchant404Response) Error() string
 
 
 <a name="GetMerchantParams"></a>
-## type [GetMerchantParams](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L529-L535>)
+## type [GetMerchantParams](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L530-L536>)
 
 GetMerchantParams: query parameters for GetMerchant
 
@@ -3625,7 +3625,7 @@ type GetMerchantParams struct {
 ```
 
 <a name="GetMerchantParams.QueryValues"></a>
-### func \(\*GetMerchantParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L538>)
+### func \(\*GetMerchantParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L539>)
 
 ```go
 func (p *GetMerchantParams) QueryValues() url.Values
@@ -3634,7 +3634,7 @@ func (p *GetMerchantParams) QueryValues() url.Values
 QueryValues converts [GetMerchantParams](<#GetMerchantParams>) into \[url.Values\].
 
 <a name="GetPerson404Response"></a>
-## type [GetPerson404Response](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L623-L632>)
+## type [GetPerson404Response](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L624-L633>)
 
 GetPerson404Response is a schema definition.
 
@@ -3652,7 +3652,7 @@ type GetPerson404Response struct {
 ```
 
 <a name="GetPerson404Response.Error"></a>
-### func \(\*GetPerson404Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L634>)
+### func \(\*GetPerson404Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L635>)
 
 ```go
 func (e *GetPerson404Response) Error() string
@@ -3661,7 +3661,7 @@ func (e *GetPerson404Response) Error() string
 
 
 <a name="GetPerson500Response"></a>
-## type [GetPerson500Response](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L641-L650>)
+## type [GetPerson500Response](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L642-L651>)
 
 GetPerson500Response is a schema definition.
 
@@ -3679,7 +3679,7 @@ type GetPerson500Response struct {
 ```
 
 <a name="GetPerson500Response.Error"></a>
-### func \(\*GetPerson500Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L652>)
+### func \(\*GetPerson500Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L653>)
 
 ```go
 func (e *GetPerson500Response) Error() string
@@ -3688,7 +3688,7 @@ func (e *GetPerson500Response) Error() string
 
 
 <a name="GetPersonParams"></a>
-## type [GetPersonParams](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L549-L555>)
+## type [GetPersonParams](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L550-L556>)
 
 GetPersonParams: query parameters for GetPerson
 
@@ -3703,7 +3703,7 @@ type GetPersonParams struct {
 ```
 
 <a name="GetPersonParams.QueryValues"></a>
-### func \(\*GetPersonParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L558>)
+### func \(\*GetPersonParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L559>)
 
 ```go
 func (p *GetPersonParams) QueryValues() url.Values
@@ -3723,7 +3723,7 @@ type LegalType string
 ```
 
 <a name="ListPersons404Response"></a>
-## type [ListPersons404Response](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L569-L578>)
+## type [ListPersons404Response](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L570-L579>)
 
 ListPersons404Response is a schema definition.
 
@@ -3741,7 +3741,7 @@ type ListPersons404Response struct {
 ```
 
 <a name="ListPersons404Response.Error"></a>
-### func \(\*ListPersons404Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L580>)
+### func \(\*ListPersons404Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L581>)
 
 ```go
 func (e *ListPersons404Response) Error() string
@@ -3750,7 +3750,7 @@ func (e *ListPersons404Response) Error() string
 
 
 <a name="ListPersons500Response"></a>
-## type [ListPersons500Response](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L587-L596>)
+## type [ListPersons500Response](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L588-L597>)
 
 ListPersons500Response is a schema definition.
 
@@ -3768,7 +3768,7 @@ type ListPersons500Response struct {
 ```
 
 <a name="ListPersons500Response.Error"></a>
-### func \(\*ListPersons500Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L598>)
+### func \(\*ListPersons500Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L599>)
 
 ```go
 func (e *ListPersons500Response) Error() string
@@ -3777,7 +3777,7 @@ func (e *ListPersons500Response) Error() string
 
 
 <a name="ListPersonsParams"></a>
-## type [ListPersonsParams](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L509-L515>)
+## type [ListPersonsParams](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L510-L516>)
 
 ListPersonsParams: query parameters for ListPersons
 
@@ -3792,7 +3792,7 @@ type ListPersonsParams struct {
 ```
 
 <a name="ListPersonsParams.QueryValues"></a>
-### func \(\*ListPersonsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L518>)
+### func \(\*ListPersonsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L519>)
 
 ```go
 func (p *ListPersonsParams) QueryValues() url.Values
@@ -3812,7 +3812,7 @@ type ListPersonsResponseBody struct {
 ```
 
 <a name="Merchant"></a>
-## type [Merchant](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L338-L410>)
+## type [Merchant](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L338-L411>)
 
 Merchant is a schema definition. Merchant documentation: https://developer.sumup.com/tools/models/merchant
 
@@ -3875,6 +3875,7 @@ type Merchant struct {
     MerchantCode string `json:"merchant_code"`
     // A set of key-value pairs that you can attach to an object. This can be useful for storing additional information
     // about the object in a structured format.
+    //
     // **Warning**: Updating Meta will overwrite the existing data. Make sure to always include the complete JSON
     // object.
     Meta *shared.Meta `json:"meta,omitempty"`
@@ -3893,7 +3894,7 @@ type Merchant struct {
 ```
 
 <a name="MerchantsService"></a>
-## type [MerchantsService](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L658-L660>)
+## type [MerchantsService](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L659-L661>)
 
 
 
@@ -3904,7 +3905,7 @@ type MerchantsService struct {
 ```
 
 <a name="NewMerchantsService"></a>
-### func [NewMerchantsService](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L662>)
+### func [NewMerchantsService](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L663>)
 
 ```go
 func NewMerchantsService(c *client.Client) *MerchantsService
@@ -3912,17 +3913,17 @@ func NewMerchantsService(c *client.Client) *MerchantsService
 
 
 
-<a name="MerchantsService.GetMerchant"></a>
-### func \(\*MerchantsService\) [GetMerchant](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L708>)
+<a name="MerchantsService.Get"></a>
+### func \(\*MerchantsService\) [Get](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L709>)
 
 ```go
-func (s *MerchantsService) GetMerchant(ctx context.Context, merchantCode string, params GetMerchantParams) (*Merchant, error)
+func (s *MerchantsService) Get(ctx context.Context, merchantCode string, params GetMerchantParams) (*Merchant, error)
 ```
 
-GetMerchant: Retrieve a Merchant Retrieve a merchant. Merchant documentation: https://developer.sumup.com/tools/models/merchant
+Get: Retrieve a Merchant Retrieve a merchant. Merchant documentation: https://developer.sumup.com/tools/models/merchant
 
 <a name="MerchantsService.GetPerson"></a>
-### func \(\*MerchantsService\) [GetPerson](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L740>)
+### func \(\*MerchantsService\) [GetPerson](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L741>)
 
 ```go
 func (s *MerchantsService) GetPerson(ctx context.Context, merchantCode string, personId string, params GetPersonParams) (*Person, error)
@@ -3931,7 +3932,7 @@ func (s *MerchantsService) GetPerson(ctx context.Context, merchantCode string, p
 GetPerson: Retrieve a Person Returns a single person related to the merchant. Persons documentation: https://developer.sumup.com/tools/models/merchant#persons
 
 <a name="MerchantsService.ListPersons"></a>
-### func \(\*MerchantsService\) [ListPersons](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L669>)
+### func \(\*MerchantsService\) [ListPersons](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L670>)
 
 ```go
 func (s *MerchantsService) ListPersons(ctx context.Context, merchantCode string, params ListPersonsParams) (*ListPersonsResponseBody, error)
@@ -3940,7 +3941,7 @@ func (s *MerchantsService) ListPersons(ctx context.Context, merchantCode string,
 ListPersons: List Persons Returns a list of persons related to the merchant. Persons documentation: https://developer.sumup.com/tools/models/merchant#persons
 
 <a name="Ownership"></a>
-## type [Ownership](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L413-L420>)
+## type [Ownership](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L414-L421>)
 
 Ownership is a schema definition.
 
@@ -3956,7 +3957,7 @@ type Ownership struct {
 ```
 
 <a name="Person"></a>
-## type [Person](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L423-L478>)
+## type [Person](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L424-L479>)
 
 Person is a schema definition.
 
@@ -4020,7 +4021,7 @@ type Person struct {
 ```
 
 <a name="PersonalIdentifier"></a>
-## type [PersonalIdentifier](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L481-L486>)
+## type [PersonalIdentifier](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L482-L487>)
 
 PersonalIdentifier is a schema definition.
 
@@ -4034,7 +4035,7 @@ type PersonalIdentifier struct {
 ```
 
 <a name="PhoneNumber"></a>
-## type [PhoneNumber](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L491>)
+## type [PhoneNumber](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L492>)
 
 PhoneNumber: A publicly available phone number in \[E.164\]\(https://en.wikipedia.org/wiki/E.164\) format.
 
@@ -4045,7 +4046,7 @@ type PhoneNumber string
 ```
 
 <a name="Timestamps"></a>
-## type [Timestamps](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L494-L502>)
+## type [Timestamps](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L495-L503>)
 
 Timestamps is a schema definition.
 
@@ -4062,7 +4063,7 @@ type Timestamps struct {
 ```
 
 <a name="Version"></a>
-## type [Version](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L506>)
+## type [Version](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L507>)
 
 Version: The version of the resource. The version reflects a specific change submitted to the API via one of the \`PATCH\` endpoints.
 
@@ -4306,7 +4307,7 @@ import "github.com/sumup/sumup-go/readers"
 
 
 <a name="CreateReaderBody"></a>
-## type [CreateReaderBody](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L268-L282>)
+## type [CreateReaderBody](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L269-L284>)
 
 CreateReaderBody is a schema definition.
 
@@ -4314,6 +4315,7 @@ CreateReaderBody is a schema definition.
 type CreateReaderBody struct {
     // A set of key-value pairs that you can attach to an object. This can be useful for storing additional information
     // about the object in a structured format.
+    //
     // **Warning**: Updating Meta will overwrite the existing data. Make sure to always include the complete JSON
     // object.
     Meta *shared.Meta `json:"meta,omitempty"`
@@ -4329,7 +4331,7 @@ type CreateReaderBody struct {
 ```
 
 <a name="CreateReaderCheckoutBody"></a>
-## type [CreateReaderCheckoutBody](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L285-L322>)
+## type [CreateReaderCheckoutBody](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L287-L324>)
 
 CreateReaderCheckoutBody: Reader Checkout
 
@@ -4375,7 +4377,7 @@ type CreateReaderCheckoutBody struct {
 ```
 
 <a name="CreateReaderCheckoutBodyAffiliate"></a>
-## type [CreateReaderCheckoutBodyAffiliate](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L326-L340>)
+## type [CreateReaderCheckoutBodyAffiliate](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L328-L342>)
 
 CreateReaderCheckoutBodyAffiliate: Affiliate metadata for the transaction. It is a field that allow for integrators to track the source of the transaction.
 
@@ -4398,7 +4400,7 @@ type CreateReaderCheckoutBodyAffiliate struct {
 ```
 
 <a name="CreateReaderCheckoutBodyAffiliateTags"></a>
-## type [CreateReaderCheckoutBodyAffiliateTags](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L344>)
+## type [CreateReaderCheckoutBodyAffiliateTags](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L346>)
 
 CreateReaderCheckoutBodyAffiliateTags: Additional metadata for the transaction. It is key\-value object that can be associated with the transaction.
 
@@ -4407,7 +4409,7 @@ type CreateReaderCheckoutBodyAffiliateTags map[string]any
 ```
 
 <a name="CreateReaderCheckoutBodyCardType"></a>
-## type [CreateReaderCheckoutBodyCardType](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L348>)
+## type [CreateReaderCheckoutBodyCardType](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L350>)
 
 CreateReaderCheckoutBodyCardType: The card type of the card used for the transaction. Is is required only for some countries \(e.g: Brazil\).
 
@@ -4425,7 +4427,7 @@ const (
 ```
 
 <a name="CreateReaderCheckoutBodyTotalAmount"></a>
-## type [CreateReaderCheckoutBodyTotalAmount](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L360-L371>)
+## type [CreateReaderCheckoutBodyTotalAmount](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L362-L373>)
 
 CreateReaderCheckoutBodyTotalAmount: Amount structure.
 
@@ -4716,7 +4718,7 @@ type CreateReaderTerminateUnprocessableEntityErrors map[string]any
 ```
 
 <a name="GetReaderParams"></a>
-## type [GetReaderParams](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L386-L395>)
+## type [GetReaderParams](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L389-L398>)
 
 GetReaderParams: query parameters for GetReader
 
@@ -4734,7 +4736,7 @@ type GetReaderParams struct {
 ```
 
 <a name="GetReaderParams.QueryValues"></a>
-### func \(\*GetReaderParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L398>)
+### func \(\*GetReaderParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L401>)
 
 ```go
 func (p *GetReaderParams) QueryValues() url.Values
@@ -4743,7 +4745,7 @@ func (p *GetReaderParams) QueryValues() url.Values
 QueryValues converts [GetReaderParams](<#GetReaderParams>) into \[url.Values\].
 
 <a name="ListReaders200Response"></a>
-## type [ListReaders200Response](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L409-L411>)
+## type [ListReaders200Response](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L412-L414>)
 
 ListReaders200Response is a schema definition.
 
@@ -4754,7 +4756,7 @@ type ListReaders200Response struct {
 ```
 
 <a name="Reader"></a>
-## type [Reader](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L183-L214>)
+## type [Reader](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L183-L215>)
 
 Reader: A physical card reader device that can accept in\-person payments.
 
@@ -4773,6 +4775,7 @@ type Reader struct {
     Id  ReaderId `json:"id"`
     // A set of key-value pairs that you can attach to an object. This can be useful for storing additional information
     // about the object in a structured format.
+    //
     // **Warning**: Updating Meta will overwrite the existing data. Make sure to always include the complete JSON
     // object.
     Meta *shared.Meta `json:"meta,omitempty"`
@@ -4794,7 +4797,7 @@ type Reader struct {
 ```
 
 <a name="ReaderDevice"></a>
-## type [ReaderDevice](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L217-L222>)
+## type [ReaderDevice](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L218-L223>)
 
 ReaderDevice: Information about the underlying physical device.
 
@@ -4808,7 +4811,7 @@ type ReaderDevice struct {
 ```
 
 <a name="ReaderDeviceModel"></a>
-## type [ReaderDeviceModel](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L225>)
+## type [ReaderDeviceModel](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L226>)
 
 ReaderDeviceModel: Identifier of the model of the device.
 
@@ -4826,7 +4829,7 @@ const (
 ```
 
 <a name="ReaderId"></a>
-## type [ReaderId](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L238>)
+## type [ReaderId](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L239>)
 
 ReaderId: Unique identifier of the object. Note that this identifies the instance of the physical devices pairing with your SumUp account. If you DELETE a reader, and pair the device again, the ID will be different. Do not use this ID to refer to a physical device. Min length: 30 Max length: 30
 
@@ -4835,7 +4838,7 @@ type ReaderId string
 ```
 
 <a name="ReaderName"></a>
-## type [ReaderName](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L242>)
+## type [ReaderName](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L243>)
 
 ReaderName: Custom human\-readable, user\-defined name for easier identification of the reader. Max length: 500
 
@@ -4844,7 +4847,7 @@ type ReaderName string
 ```
 
 <a name="ReaderPairingCode"></a>
-## type [ReaderPairingCode](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L248>)
+## type [ReaderPairingCode](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L249>)
 
 ReaderPairingCode: The pairing code is a 8 or 9 character alphanumeric string that is displayed on a SumUp Device after initiating the pairing. It is used to link the physical device to the created pairing. Min length: 8 Max length: 9
 
@@ -4853,7 +4856,7 @@ type ReaderPairingCode string
 ```
 
 <a name="ReaderStatus"></a>
-## type [ReaderStatus](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L258>)
+## type [ReaderStatus](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L259>)
 
 ReaderStatus: The status of the reader object gives information about the current state of the reader.
 
@@ -4877,7 +4880,7 @@ const (
 ```
 
 <a name="ReadersService"></a>
-## type [ReadersService](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L413-L415>)
+## type [ReadersService](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L416-L418>)
 
 
 
@@ -4888,7 +4891,7 @@ type ReadersService struct {
 ```
 
 <a name="NewReadersService"></a>
-### func [NewReadersService](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L417>)
+### func [NewReadersService](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L420>)
 
 ```go
 func NewReadersService(c *client.Client) *ReadersService
@@ -4897,7 +4900,7 @@ func NewReadersService(c *client.Client) *ReadersService
 
 
 <a name="ReadersService.Create"></a>
-### func \(\*ReadersService\) [Create](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L447>)
+### func \(\*ReadersService\) [Create](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L450>)
 
 ```go
 func (s *ReadersService) Create(ctx context.Context, merchantCode string, body CreateReaderBody) (*Reader, error)
@@ -4906,7 +4909,7 @@ func (s *ReadersService) Create(ctx context.Context, merchantCode string, body C
 Create: Create a Reader Create a new Reader for the merchant account.
 
 <a name="ReadersService.CreateCheckout"></a>
-### func \(\*ReadersService\) [CreateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L554>)
+### func \(\*ReadersService\) [CreateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L557>)
 
 ```go
 func (s *ReadersService) CreateCheckout(ctx context.Context, merchantCode string, readerId string, body CreateReaderCheckoutBody) (*CreateReaderCheckoutResponse, error)
@@ -4921,7 +4924,7 @@ There are some caveats when using this endpoint: \* The target device must be on
 \*\*Note\*\*: If the target device is a Solo, it must be in version 3.3.24.3 or higher.
 
 <a name="ReadersService.DeleteReader"></a>
-### func \(\*ReadersService\) [DeleteReader](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L620>)
+### func \(\*ReadersService\) [DeleteReader](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L623>)
 
 ```go
 func (s *ReadersService) DeleteReader(ctx context.Context, merchantCode string, id ReaderId) error
@@ -4930,7 +4933,7 @@ func (s *ReadersService) DeleteReader(ctx context.Context, merchantCode string, 
 DeleteReader: Delete a reader Delete a reader.
 
 <a name="ReadersService.Get"></a>
-### func \(\*ReadersService\) [Get](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L639>)
+### func \(\*ReadersService\) [Get](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L642>)
 
 ```go
 func (s *ReadersService) Get(ctx context.Context, merchantCode string, id ReaderId, params GetReaderParams) (*Reader, error)
@@ -4939,7 +4942,7 @@ func (s *ReadersService) Get(ctx context.Context, merchantCode string, id Reader
 Get: Retrieve a Reader Retrieve a Reader.
 
 <a name="ReadersService.List"></a>
-### func \(\*ReadersService\) [List](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L423>)
+### func \(\*ReadersService\) [List](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L426>)
 
 ```go
 func (s *ReadersService) List(ctx context.Context, merchantCode string) (*ListReaders200Response, error)
@@ -4948,7 +4951,7 @@ func (s *ReadersService) List(ctx context.Context, merchantCode string) (*ListRe
 List: List Readers List all readers of the merchant.
 
 <a name="ReadersService.TerminateCheckout"></a>
-### func \(\*ReadersService\) [TerminateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L484>)
+### func \(\*ReadersService\) [TerminateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L487>)
 
 ```go
 func (s *ReadersService) TerminateCheckout(ctx context.Context, merchantCode string, readerId string) error
@@ -4965,7 +4968,7 @@ If a transaction is successfully terminated and \`return\_url\` was provided on 
 \*\*Note\*\*: If the target device is a Solo, it must be in version 3.3.28.0 or higher.
 
 <a name="ReadersService.Update"></a>
-### func \(\*ReadersService\) [Update](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L665>)
+### func \(\*ReadersService\) [Update](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L668>)
 
 ```go
 func (s *ReadersService) Update(ctx context.Context, merchantCode string, id ReaderId, body UpdateReaderBody) (*Reader, error)
@@ -4974,7 +4977,7 @@ func (s *ReadersService) Update(ctx context.Context, merchantCode string, id Rea
 Update: Update a Reader Update a Reader.
 
 <a name="UpdateReaderBody"></a>
-## type [UpdateReaderBody](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L374-L383>)
+## type [UpdateReaderBody](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L376-L386>)
 
 UpdateReaderBody is a schema definition.
 
@@ -4982,6 +4985,7 @@ UpdateReaderBody is a schema definition.
 type UpdateReaderBody struct {
     // A set of key-value pairs that you can attach to an object. This can be useful for storing additional information
     // about the object in a structured format.
+    //
     // **Warning**: Updating Meta will overwrite the existing data. Make sure to always include the complete JSON
     // object.
     Meta *shared.Meta `json:"meta,omitempty"`
@@ -5545,7 +5549,7 @@ const (
 ```
 
 <a name="Date"></a>
-## type [Date](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L241>)
+## type [Date](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L242>)
 
 
 
@@ -5554,7 +5558,7 @@ type Date struct{ time.Time }
 ```
 
 <a name="Date.MarshalJSON"></a>
-### func \(Date\) [MarshalJSON](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L262>)
+### func \(Date\) [MarshalJSON](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L263>)
 
 ```go
 func (d Date) MarshalJSON() ([]byte, error)
@@ -5563,7 +5567,7 @@ func (d Date) MarshalJSON() ([]byte, error)
 
 
 <a name="Date.String"></a>
-### func \(Date\) [String](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L243>)
+### func \(Date\) [String](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L244>)
 
 ```go
 func (d Date) String() string
@@ -5572,7 +5576,7 @@ func (d Date) String() string
 
 
 <a name="Date.UnmarshalJSON"></a>
-### func \(\*Date\) [UnmarshalJSON](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L251>)
+### func \(\*Date\) [UnmarshalJSON](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L252>)
 
 ```go
 func (d *Date) UnmarshalJSON(b []byte) (err error)
@@ -5731,16 +5735,18 @@ const (
 ```
 
 <a name="Meta"></a>
-## type [Meta](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L144>)
+## type [Meta](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L145>)
 
-Meta: A set of key\-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format. \*\*Warning\*\*: Updating Meta will overwrite the existing data. Make sure to always include the complete JSON object.
+Meta: A set of key\-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+
+\*\*Warning\*\*: Updating Meta will overwrite the existing data. Make sure to always include the complete JSON object.
 
 ```go
 type Meta map[string]any
 ```
 
 <a name="Metadata"></a>
-## type [Metadata](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L148>)
+## type [Metadata](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L149>)
 
 Metadata: Set of user\-defined key\-value pairs attached to the object. Partial updates are not supported. When updating, always submit whole metadata.
 
@@ -5749,7 +5755,7 @@ type Metadata map[string]any
 ```
 
 <a name="PersonalDetails"></a>
-## type [PersonalDetails](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L151-L168>)
+## type [PersonalDetails](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L152-L169>)
 
 PersonalDetails: Personal details for the customer.
 
@@ -5775,7 +5781,7 @@ type PersonalDetails struct {
 ```
 
 <a name="Time"></a>
-## type [Time](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L266>)
+## type [Time](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L267>)
 
 
 
@@ -5784,7 +5790,7 @@ type Time struct{ time.Time }
 ```
 
 <a name="Time.MarshalJSON"></a>
-### func \(Time\) [MarshalJSON](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L287>)
+### func \(Time\) [MarshalJSON](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L288>)
 
 ```go
 func (t Time) MarshalJSON() ([]byte, error)
@@ -5793,7 +5799,7 @@ func (t Time) MarshalJSON() ([]byte, error)
 
 
 <a name="Time.String"></a>
-### func \(Time\) [String](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L268>)
+### func \(Time\) [String](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L269>)
 
 ```go
 func (t Time) String() string
@@ -5802,7 +5808,7 @@ func (t Time) String() string
 
 
 <a name="Time.UnmarshalJSON"></a>
-### func \(\*Time\) [UnmarshalJSON](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L276>)
+### func \(\*Time\) [UnmarshalJSON](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L277>)
 
 ```go
 func (t *Time) UnmarshalJSON(b []byte) (err error)
@@ -5811,7 +5817,7 @@ func (t *Time) UnmarshalJSON(b []byte) (err error)
 
 
 <a name="TimestampEvent"></a>
-## type [TimestampEvent](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L171>)
+## type [TimestampEvent](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L172>)
 
 TimestampEvent: Date and time of the transaction event.
 
@@ -5820,7 +5826,7 @@ type TimestampEvent string
 ```
 
 <a name="TransactionId"></a>
-## type [TransactionId](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L174>)
+## type [TransactionId](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L175>)
 
 TransactionId: Unique ID of the transaction.
 
@@ -5829,7 +5835,7 @@ type TransactionId string
 ```
 
 <a name="TransactionMixinBase"></a>
-## type [TransactionMixinBase](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L177-L196>)
+## type [TransactionMixinBase](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L178-L197>)
 
 TransactionMixinBase: Details of the transaction.
 
@@ -5857,7 +5863,7 @@ type TransactionMixinBase struct {
 ```
 
 <a name="TransactionMixinBasePaymentType"></a>
-## type [TransactionMixinBasePaymentType](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L199>)
+## type [TransactionMixinBasePaymentType](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L200>)
 
 TransactionMixinBasePaymentType: Payment type used for the transaction.
 
@@ -5876,7 +5882,7 @@ const (
 ```
 
 <a name="TransactionMixinBaseStatus"></a>
-## type [TransactionMixinBaseStatus](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L208>)
+## type [TransactionMixinBaseStatus](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L209>)
 
 TransactionMixinBaseStatus: Current status of the transaction.
 
@@ -5896,7 +5902,7 @@ const (
 ```
 
 <a name="TransactionMixinCheckout"></a>
-## type [TransactionMixinCheckout](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L218-L231>)
+## type [TransactionMixinCheckout](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L219-L232>)
 
 TransactionMixinCheckout is a schema definition.
 
@@ -5918,7 +5924,7 @@ type TransactionMixinCheckout struct {
 ```
 
 <a name="TransactionMixinCheckoutEntryMode"></a>
-## type [TransactionMixinCheckoutEntryMode](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L234>)
+## type [TransactionMixinCheckoutEntryMode](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L235>)
 
 TransactionMixinCheckoutEntryMode: Entry mode of the payment details.
 
