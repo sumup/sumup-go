@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.4.0](https://github.com/sumup/sumup-go/compare/v0.3.0...v0.4.0) (2025-11-03)
+
+
+### Features
+
+* **example:** add full example of checkout ([#115](https://github.com/sumup/sumup-go/issues/115)) ([e4f9796](https://github.com/sumup/sumup-go/commit/e4f9796ac60ab240bd5dd9e128087bc29eb29260))
+
+
+### Bug Fixes
+
+* **cd:** commit generated SDK using SumUp Bot ([31b58f1](https://github.com/sumup/sumup-go/commit/31b58f192d4fb93e6425363e134e3866559d5729))
+* user-agent string ([7f6fd8a](https://github.com/sumup/sumup-go/commit/7f6fd8aa72611a0c043a95082ed47dcdc0ebcf17))
+
 ## [0.3.0](https://github.com/sumup/sumup-go/compare/v0.2.0...v0.3.0) (2025-10-23)
 
 0.3.0 bring the Merchants API, allowing access to multiple merchant accounts, depending on the authorization. For users that authenticate using SumUp's SSO you can now access any of the merchant accounts that they have membership in. For API keys the access is still restricted to the merchant account for which the API key was created. We are working on introducing more authentication options to make integrations that need to rely on multiple merchant accounts easier in the future.
