@@ -1,6 +1,6 @@
 <div align="center">
 
-# sumup-go
+# SumUp Go SDK
 
 [![Stars](https://img.shields.io/github/stars/sumup/sumup-go)](https://github.com/sumup/sumup-go/)
 [![Go Reference](https://pkg.go.dev/badge/github.com/sumup/sumup-go.svg)](https://pkg.go.dev/github.com/sumup/sumup-go)
@@ -12,7 +12,7 @@
 
 _**IMPORTANT:** This SDK is under development. We might still introduce minor breaking changes before reaching v1._
 
-The Golang SDK for the SumUp [API](https://developer.sumup.com).
+The [Go](https://go.dev/) SDK for the SumUp [API](https://developer.sumup.com).
 
 To learn more, check out our [API Reference](https://developer.sumup.com/api) and [Documentation](https://developer.sumup.com).
 
