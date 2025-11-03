@@ -8,18 +8,20 @@ on:
     branches:
       - main
 
+concurrency:
+  group: generate-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   GOPRIVATE: "github.com/sumup/*"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   generate:
-    name: Generate
+    name: Generate SDK
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
