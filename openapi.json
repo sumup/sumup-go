@@ -4402,7 +4402,7 @@
                     "example": "Test User"
                   },
                   "roles": {
-                    "description": "List of roles to assign to the new member. In the case of service accounts, the roles are predefined.",
+                    "description": "List of roles to assign to the new member.",
                     "type": "array",
                     "items": {
                       "type": "string"
@@ -5157,7 +5157,7 @@
           {
             "name": "merchant_code",
             "in": "path",
-            "description": "Merchant code.",
+            "description": "Short unique identifier for the merchant.",
             "required": true,
             "schema": {
               "type": "string",
@@ -5221,6 +5221,9 @@
         "tags": [
           "Merchants"
         ],
+        "x-codegen": {
+          "method_name": "get"
+        },
         "x-permissions": [
           "merchant_read"
         ],
@@ -5251,7 +5254,7 @@
           {
             "name": "merchant_code",
             "in": "path",
-            "description": "Merchant code.",
+            "description": "Short unique identifier for the merchant.",
             "required": true,
             "schema": {
               "type": "string",
@@ -5340,6 +5343,9 @@
         "tags": [
           "Merchants"
         ],
+        "x-codegen": {
+          "method_name": "list_persons"
+        },
         "x-permissions": [
           "persons_read"
         ],
@@ -5370,7 +5376,7 @@
           {
             "name": "merchant_code",
             "in": "path",
-            "description": "Merchant code.",
+            "description": "Short unique identifier for the merchant.",
             "required": true,
             "schema": {
               "type": "string",
@@ -5473,6 +5479,9 @@
         "tags": [
           "Merchants"
         ],
+        "x-codegen": {
+          "method_name": "get_person"
+        },
         "x-permissions": [
           "persons_read"
         ],
@@ -9426,7 +9435,8 @@
         "externalDocs": {
           "description": "Merchant documentation",
           "url": "https://developer.sumup.com/tools/models/merchant"
-        }
+        },
+        "title": "Merchant"
       },
       "Company": {
         "description": "Information about the company or business. This is legal information that is used for verification.\n",
@@ -9480,7 +9490,7 @@
         }
       },
       "Meta": {
-        "description": "A set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n**Warning**: Updating Meta will overwrite the existing data. Make sure to always include the complete JSON object.\n",
+        "description": "A set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n\n**Warning**: Updating Meta will overwrite the existing data. Make sure to always include the complete JSON object.",
         "type": "object",
         "example": {},
         "additionalProperties": {
