@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.0](https://github.com/sumup/sumup-go/compare/v0.4.0...v0.5.0) (2025-11-04)
+
+
+### Features
+
+* **docs:** update README title ([f874ad2](https://github.com/sumup/sumup-go/commit/f874ad2c1d2bca3b5cf11f16c6a4e7cb6a3f7e59))
+* improved typing ([#123](https://github.com/sumup/sumup-go/issues/123)) ([4d80c5e](https://github.com/sumup/sumup-go/commit/4d80c5ee51718866a28374cbf11d2230a431b0ef))
+
 ## [0.4.0](https://github.com/sumup/sumup-go/compare/v0.3.0...v0.4.0) (2025-11-03)
 
 
