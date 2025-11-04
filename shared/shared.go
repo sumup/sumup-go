@@ -3,9 +3,10 @@
 package shared
 
 import (
-	"encoding/json"
 	"fmt"
 	"time"
+
+	"github.com/sumup/sumup-go/datetime"
 )
 
 // AddressLegacy: Profile's personal address information.
@@ -154,7 +155,7 @@ type PersonalDetails struct {
 	Address *AddressLegacy `json:"address,omitempty"`
 	// Date of birth of the customer.
 	// Format: date
-	BirthDate *Date `json:"birth_date,omitempty"`
+	BirthDate *datetime.Date `json:"birth_date,omitempty"`
 	// Email address of the customer.
 	Email *string `json:"email,omitempty"`
 	// First name of the customer.
@@ -238,53 +239,3 @@ const (
 	TransactionMixinCheckoutEntryModeBoleto        TransactionMixinCheckoutEntryMode = "BOLETO"
 	TransactionMixinCheckoutEntryModeCustomerEntry TransactionMixinCheckoutEntryMode = "CUSTOMER_ENTRY"
 )
-
-type Date struct{ time.Time }
-
-func (d Date) String() string {
-	return d.Format(time.DateOnly)
-}
-
-const jsonDateFormat = `"` + time.DateOnly + `"`
-
-var _ json.Unmarshaler = (*Date)(nil)
-
-func (d *Date) UnmarshalJSON(b []byte) (err error) {
-	date, err := time.Parse(jsonDateFormat, string(b))
-	if err != nil {
-		return err
-	}
-	d.Time = date
-	return
-}
-
-var _ json.Marshaler = (*Date)(nil)
-
-func (d Date) MarshalJSON() ([]byte, error) {
-	return []byte(d.Time.Format(jsonDateFormat)), nil
-}
-
-type Time struct{ time.Time }
-
-func (t Time) String() string {
-	return t.Format(time.TimeOnly)
-}
-
-const jsonTimeFormat = `"` + time.TimeOnly + `"`
-
-var _ json.Unmarshaler = (*Time)(nil)
-
-func (t *Time) UnmarshalJSON(b []byte) (err error) {
-	date, err := time.Parse(jsonTimeFormat, string(b))
-	if err != nil {
-		return err
-	}
-	t.Time = date
-	return
-}
-
-var _ json.Marshaler = (*Time)(nil)
-
-func (t Time) MarshalJSON() ([]byte, error) {
-	return []byte(t.Time.Format(jsonTimeFormat)), nil
-}

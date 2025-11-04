@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/sumup/sumup-go/client"
+	"github.com/sumup/sumup-go/datetime"
 	"github.com/sumup/sumup-go/shared"
 )
 
@@ -146,10 +147,10 @@ type TransactionEvent struct {
 	Amount *shared.AmountEvent `json:"amount,omitempty"`
 	// Date when the transaction event occurred.
 	// Format: date
-	Date *shared.Date `json:"date,omitempty"`
+	Date *datetime.Date `json:"date,omitempty"`
 	// Date when the transaction event is due to occur.
 	// Format: date
-	DueDate *shared.Date `json:"due_date,omitempty"`
+	DueDate *datetime.Date `json:"due_date,omitempty"`
 	// Type of the transaction event.
 	EventType *shared.EventType `json:"event_type,omitempty"`
 	// Unique ID of the transaction event.
