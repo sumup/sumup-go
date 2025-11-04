@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/sumup/sumup-go/client"
+	"github.com/sumup/sumup-go/secret"
 	"github.com/sumup/sumup-go/shared"
 )
 
@@ -95,7 +96,7 @@ type CreateMerchantMemberBody struct {
 	// password is not used and can not be defined by the caller.
 	// Format: password
 	// Min length: 8
-	Password *string `json:"password,omitempty"`
+	Password *secret.Secret `json:"password,omitempty"`
 	// List of roles to assign to the new member.
 	Roles []string `json:"roles"`
 }
@@ -119,7 +120,7 @@ type UpdateMerchantMemberBodyUser struct {
 	// Password of the member to add. Only used if `is_managed_user` is true.
 	// Format: password
 	// Min length: 8
-	Password *string `json:"password,omitempty"`
+	Password *secret.Secret `json:"password,omitempty"`
 }
 
 // ListMerchantMembersParams: query parameters for ListMerchantMembers

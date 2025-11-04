@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/sumup/sumup-go/client"
+	"github.com/sumup/sumup-go/datetime"
 	"github.com/sumup/sumup-go/shared"
 )
 
@@ -108,7 +109,7 @@ type BasePerson struct {
 	Address *Address `json:"address,omitempty"`
 	// The date of birth of the individual, represented as an ISO 8601:2004 [ISO8601‑2004] YYYY-MM-DD format.
 	// Format: date
-	Birthdate *shared.Date `json:"birthdate,omitempty"`
+	Birthdate *datetime.Date `json:"birthdate,omitempty"`
 	// Reflects the status of changes submitted through the `PATCH` endpoints for the merchant or persons. If some
 	// changes have not been applied yet, the status will be `pending`. If all changes have been applied, the status
 	// `done`.
@@ -431,7 +432,7 @@ type Person struct {
 	Address *Address `json:"address,omitempty"`
 	// The date of birth of the individual, represented as an ISO 8601:2004 [ISO8601‑2004] YYYY-MM-DD format.
 	// Format: date
-	Birthdate *shared.Date `json:"birthdate,omitempty"`
+	Birthdate *datetime.Date `json:"birthdate,omitempty"`
 	// Reflects the status of changes submitted through the `PATCH` endpoints for the merchant or persons. If some
 	// changes have not been applied yet, the status will be `pending`. If all changes have been applied, the status
 	// `done`.
