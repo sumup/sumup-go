@@ -123,6 +123,11 @@ type BasePerson struct {
 	// Min length: 2
 	// Max length: 2
 	Citizenship *CountryCode `json:"citizenship,omitempty"`
+	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code representing the country
+	// where the person resides.
+	// Min length: 2
+	// Max length: 2
+	CountryOfResidence *string `json:"country_of_residence,omitempty"`
 	// The last name(s) of the individual.
 	// Max length: 60
 	FamilyName *string `json:"family_name,omitempty"`
@@ -139,8 +144,11 @@ type BasePerson struct {
 	// be present, with the names being separated by space characters. Also note that in some cultures, middle names
 	// are not used.
 	// Max length: 60
-	MiddleName *string    `json:"middle_name,omitempty"`
-	Ownership  *Ownership `json:"ownership,omitempty"`
+	MiddleName *string `json:"middle_name,omitempty"`
+	// The persons nationality. May be an [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country
+	// code, but legacy data may not conform to this standard.
+	Nationality *string    `json:"nationality,omitempty"`
+	Ownership   *Ownership `json:"ownership,omitempty"`
 	// A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
 	// Max length: 64
 	PhoneNumber *PhoneNumber `json:"phone_number,omitempty"`
@@ -446,6 +454,11 @@ type Person struct {
 	// Min length: 2
 	// Max length: 2
 	Citizenship *CountryCode `json:"citizenship,omitempty"`
+	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code representing the country
+	// where the person resides.
+	// Min length: 2
+	// Max length: 2
+	CountryOfResidence *string `json:"country_of_residence,omitempty"`
 	// The last name(s) of the individual.
 	// Max length: 60
 	FamilyName *string `json:"family_name,omitempty"`
@@ -462,8 +475,11 @@ type Person struct {
 	// be present, with the names being separated by space characters. Also note that in some cultures, middle names
 	// are not used.
 	// Max length: 60
-	MiddleName *string    `json:"middle_name,omitempty"`
-	Ownership  *Ownership `json:"ownership,omitempty"`
+	MiddleName *string `json:"middle_name,omitempty"`
+	// The persons nationality. May be an [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country
+	// code, but legacy data may not conform to this standard.
+	Nationality *string    `json:"nationality,omitempty"`
+	Ownership   *Ownership `json:"ownership,omitempty"`
 	// A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
 	// Max length: 64
 	PhoneNumber *PhoneNumber `json:"phone_number,omitempty"`

@@ -2026,6 +2026,8 @@ type UpdateCustomerBody struct {
 import "github.com/sumup/sumup-go/datetime"
 ```
 
+Package datetime provides custom date and time types with JSON marshaling support.
+
 ## Index
 
 - [type Date](<#Date>)
@@ -2039,76 +2041,76 @@ import "github.com/sumup/sumup-go/datetime"
 
 
 <a name="Date"></a>
-## type [Date](<https://github.com/sumup/sumup-go/blob/main/datetime/datetime.go#L8>)
+## type [Date](<https://github.com/sumup/sumup-go/blob/main/datetime/datetime.go#L10>)
 
-
+Date represents a date without time using RFC3339 date format \(YYYY\-MM\-DD\).
 
 ```go
 type Date struct{ time.Time }
 ```
 
 <a name="Date.MarshalJSON"></a>
-### func \(Date\) [MarshalJSON](<https://github.com/sumup/sumup-go/blob/main/datetime/datetime.go#L29>)
+### func \(Date\) [MarshalJSON](<https://github.com/sumup/sumup-go/blob/main/datetime/datetime.go#L34>)
 
 ```go
 func (d Date) MarshalJSON() ([]byte, error)
 ```
 
-
+MarshalJSON formats the date as a JSON string in YYYY\-MM\-DD format.
 
 <a name="Date.String"></a>
-### func \(Date\) [String](<https://github.com/sumup/sumup-go/blob/main/datetime/datetime.go#L10>)
+### func \(Date\) [String](<https://github.com/sumup/sumup-go/blob/main/datetime/datetime.go#L13>)
 
 ```go
 func (d Date) String() string
 ```
 
-
+String returns the date formatted as YYYY\-MM\-DD.
 
 <a name="Date.UnmarshalJSON"></a>
-### func \(\*Date\) [UnmarshalJSON](<https://github.com/sumup/sumup-go/blob/main/datetime/datetime.go#L18>)
+### func \(\*Date\) [UnmarshalJSON](<https://github.com/sumup/sumup-go/blob/main/datetime/datetime.go#L22>)
 
 ```go
 func (d *Date) UnmarshalJSON(b []byte) (err error)
 ```
 
-
+UnmarshalJSON parses a JSON string in YYYY\-MM\-DD format.
 
 <a name="Time"></a>
-## type [Time](<https://github.com/sumup/sumup-go/blob/main/datetime/datetime.go#L33>)
+## type [Time](<https://github.com/sumup/sumup-go/blob/main/datetime/datetime.go#L39>)
 
-
+Time represents a time of day using RFC3339 time format \(HH:MM:SS\).
 
 ```go
 type Time struct{ time.Time }
 ```
 
 <a name="Time.MarshalJSON"></a>
-### func \(Time\) [MarshalJSON](<https://github.com/sumup/sumup-go/blob/main/datetime/datetime.go#L54>)
+### func \(Time\) [MarshalJSON](<https://github.com/sumup/sumup-go/blob/main/datetime/datetime.go#L63>)
 
 ```go
 func (t Time) MarshalJSON() ([]byte, error)
 ```
 
-
+MarshalJSON formats the time as a JSON string in HH:MM:SS format.
 
 <a name="Time.String"></a>
-### func \(Time\) [String](<https://github.com/sumup/sumup-go/blob/main/datetime/datetime.go#L35>)
+### func \(Time\) [String](<https://github.com/sumup/sumup-go/blob/main/datetime/datetime.go#L42>)
 
 ```go
 func (t Time) String() string
 ```
 
-
+String returns the time formatted as HH:MM:SS.
 
 <a name="Time.UnmarshalJSON"></a>
-### func \(\*Time\) [UnmarshalJSON](<https://github.com/sumup/sumup-go/blob/main/datetime/datetime.go#L43>)
+### func \(\*Time\) [UnmarshalJSON](<https://github.com/sumup/sumup-go/blob/main/datetime/datetime.go#L51>)
 
 ```go
 func (t *Time) UnmarshalJSON(b []byte) (err error)
 ```
 
-
+UnmarshalJSON parses a JSON string in HH:MM:SS format.
 
 # members
 
@@ -3365,7 +3367,7 @@ type BaseError struct {
 ```
 
 <a name="BasePerson"></a>
-## type [BasePerson](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L102-L157>)
+## type [BasePerson](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L102-L165>)
 
 BasePerson: Base schema for a person associated with a merchant. This can be a legal representative, business owner \(ultimate beneficial owner\), or an officer. A legal representative is the person who registered the merchant with SumUp. They should always have a \`user\_id\`.
 
@@ -3396,6 +3398,11 @@ type BasePerson struct {
     // Min length: 2
     // Max length: 2
     Citizenship *CountryCode `json:"citizenship,omitempty"`
+    // An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code representing the country
+    // where the person resides.
+    // Min length: 2
+    // Max length: 2
+    CountryOfResidence *string `json:"country_of_residence,omitempty"`
     // The last name(s) of the individual.
     // Max length: 60
     FamilyName *string `json:"family_name,omitempty"`
@@ -3412,8 +3419,11 @@ type BasePerson struct {
     // be present, with the names being separated by space characters. Also note that in some cultures, middle names
     // are not used.
     // Max length: 60
-    MiddleName *string    `json:"middle_name,omitempty"`
-    Ownership  *Ownership `json:"ownership,omitempty"`
+    MiddleName *string `json:"middle_name,omitempty"`
+    // The persons nationality. May be an [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country
+    // code, but legacy data may not conform to this standard.
+    Nationality *string    `json:"nationality,omitempty"`
+    Ownership   *Ownership `json:"ownership,omitempty"`
     // A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
     // Max length: 64
     PhoneNumber *PhoneNumber `json:"phone_number,omitempty"`
@@ -3431,7 +3441,7 @@ type BasePerson struct {
 ```
 
 <a name="Branding"></a>
-## type [Branding](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L161-L182>)
+## type [Branding](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L169-L190>)
 
 Branding: Settings used to apply the Merchant's branding to email receipts, invoices, checkouts, and other products.
 
@@ -3461,7 +3471,7 @@ type Branding struct {
 ```
 
 <a name="BusinessProfile"></a>
-## type [BusinessProfile](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L185-L212>)
+## type [BusinessProfile](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L193-L220>)
 
 BusinessProfile: Business information about the merchant. This information will be visible to the merchant's customers.
 
@@ -3497,7 +3507,7 @@ type BusinessProfile struct {
 ```
 
 <a name="ChangeStatus"></a>
-## type [ChangeStatus](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L221>)
+## type [ChangeStatus](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L229>)
 
 ChangeStatus: Reflects the status of changes submitted through the \`PATCH\` endpoints for the merchant or persons. If some changes have not been applied yet, the status will be \`pending\`. If all changes have been applied, the status \`done\`. The status is only returned after write operations or on read endpoints when the \`version\` query parameter is provided.
 
@@ -3508,7 +3518,7 @@ type ChangeStatus string
 ```
 
 <a name="ClassicMerchantIdentifiers"></a>
-## type [ClassicMerchantIdentifiers](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L224-L229>)
+## type [ClassicMerchantIdentifiers](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L232-L237>)
 
 ClassicMerchantIdentifiers is a schema definition.
 
@@ -3522,7 +3532,7 @@ type ClassicMerchantIdentifiers struct {
 ```
 
 <a name="Company"></a>
-## type [Company](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L234-L273>)
+## type [Company](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L242-L281>)
 
 Company: Information about the company or business. This is legal information that is used for verification.
 
@@ -3572,7 +3582,7 @@ type Company struct {
 ```
 
 <a name="CompanyIdentifier"></a>
-## type [CompanyIdentifier](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L277-L283>)
+## type [CompanyIdentifier](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L285-L291>)
 
 CompanyIdentifier is a schema definition. Company identifier documentation: https://developer.sumup.com/tools/models/merchant#company-identifiers
 
@@ -3587,7 +3597,7 @@ type CompanyIdentifier struct {
 ```
 
 <a name="CompanyIdentifiers"></a>
-## type [CompanyIdentifiers](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L286>)
+## type [CompanyIdentifiers](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L294>)
 
 CompanyIdentifiers: A list of country\-specific company identifiers.
 
@@ -3596,7 +3606,7 @@ type CompanyIdentifiers []CompanyIdentifier
 ```
 
 <a name="CountryCode"></a>
-## type [CountryCode](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L293>)
+## type [CountryCode](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L301>)
 
 CountryCode: An \[ISO3166\-1 alpha\-2\]\(https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2\) country code. This definition users \`oneOf\` with a two\-character string type to allow for support of future countries in client code. Min length: 2 Max length: 2
 
@@ -3605,7 +3615,7 @@ type CountryCode string
 ```
 
 <a name="ErrorCategoryClient"></a>
-## type [ErrorCategoryClient](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L296>)
+## type [ErrorCategoryClient](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L304>)
 
 ErrorCategoryClient: The category of the error.
 
@@ -3622,7 +3632,7 @@ const (
 ```
 
 <a name="ErrorCategoryServer"></a>
-## type [ErrorCategoryServer](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L303>)
+## type [ErrorCategoryServer](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L311>)
 
 ErrorCategoryServer: The category of the error.
 
@@ -3639,7 +3649,7 @@ const (
 ```
 
 <a name="ErrorCodeInternalServerError"></a>
-## type [ErrorCodeInternalServerError](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L310>)
+## type [ErrorCodeInternalServerError](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L318>)
 
 ErrorCodeInternalServerError: An error code specifying the exact error that occurred.
 
@@ -3656,7 +3666,7 @@ const (
 ```
 
 <a name="ErrorCodeNotFound"></a>
-## type [ErrorCodeNotFound](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L317>)
+## type [ErrorCodeNotFound](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L325>)
 
 ErrorCodeNotFound: An error code specifying the exact error that occurred.
 
@@ -3673,7 +3683,7 @@ const (
 ```
 
 <a name="GetMerchant404Response"></a>
-## type [GetMerchant404Response](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L607-L616>)
+## type [GetMerchant404Response](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L623-L632>)
 
 GetMerchant404Response is a schema definition.
 
@@ -3691,7 +3701,7 @@ type GetMerchant404Response struct {
 ```
 
 <a name="GetMerchant404Response.Error"></a>
-### func \(\*GetMerchant404Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L618>)
+### func \(\*GetMerchant404Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L634>)
 
 ```go
 func (e *GetMerchant404Response) Error() string
@@ -3700,7 +3710,7 @@ func (e *GetMerchant404Response) Error() string
 
 
 <a name="GetMerchantParams"></a>
-## type [GetMerchantParams](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L531-L537>)
+## type [GetMerchantParams](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L547-L553>)
 
 GetMerchantParams: query parameters for GetMerchant
 
@@ -3715,7 +3725,7 @@ type GetMerchantParams struct {
 ```
 
 <a name="GetMerchantParams.QueryValues"></a>
-### func \(\*GetMerchantParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L540>)
+### func \(\*GetMerchantParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L556>)
 
 ```go
 func (p *GetMerchantParams) QueryValues() url.Values
@@ -3724,7 +3734,7 @@ func (p *GetMerchantParams) QueryValues() url.Values
 QueryValues converts [GetMerchantParams](<#GetMerchantParams>) into \[url.Values\].
 
 <a name="GetPerson404Response"></a>
-## type [GetPerson404Response](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L625-L634>)
+## type [GetPerson404Response](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L641-L650>)
 
 GetPerson404Response is a schema definition.
 
@@ -3742,7 +3752,7 @@ type GetPerson404Response struct {
 ```
 
 <a name="GetPerson404Response.Error"></a>
-### func \(\*GetPerson404Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L636>)
+### func \(\*GetPerson404Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L652>)
 
 ```go
 func (e *GetPerson404Response) Error() string
@@ -3751,7 +3761,7 @@ func (e *GetPerson404Response) Error() string
 
 
 <a name="GetPerson500Response"></a>
-## type [GetPerson500Response](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L643-L652>)
+## type [GetPerson500Response](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L659-L668>)
 
 GetPerson500Response is a schema definition.
 
@@ -3769,7 +3779,7 @@ type GetPerson500Response struct {
 ```
 
 <a name="GetPerson500Response.Error"></a>
-### func \(\*GetPerson500Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L654>)
+### func \(\*GetPerson500Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L670>)
 
 ```go
 func (e *GetPerson500Response) Error() string
@@ -3778,7 +3788,7 @@ func (e *GetPerson500Response) Error() string
 
 
 <a name="GetPersonParams"></a>
-## type [GetPersonParams](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L551-L557>)
+## type [GetPersonParams](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L567-L573>)
 
 GetPersonParams: query parameters for GetPerson
 
@@ -3793,7 +3803,7 @@ type GetPersonParams struct {
 ```
 
 <a name="GetPersonParams.QueryValues"></a>
-### func \(\*GetPersonParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L560>)
+### func \(\*GetPersonParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L576>)
 
 ```go
 func (p *GetPersonParams) QueryValues() url.Values
@@ -3802,7 +3812,7 @@ func (p *GetPersonParams) QueryValues() url.Values
 QueryValues converts [GetPersonParams](<#GetPersonParams>) into \[url.Values\].
 
 <a name="LegalType"></a>
-## type [LegalType](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L330>)
+## type [LegalType](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L338>)
 
 LegalType: The unique legal type reference as defined in the country SDK. We do not rely on IDs as used by other services. Consumers of this API are expected to use the country SDK to map to any other IDs, translation keys, or descriptions.
 
@@ -3813,7 +3823,7 @@ type LegalType string
 ```
 
 <a name="ListPersons404Response"></a>
-## type [ListPersons404Response](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L571-L580>)
+## type [ListPersons404Response](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L587-L596>)
 
 ListPersons404Response is a schema definition.
 
@@ -3831,7 +3841,7 @@ type ListPersons404Response struct {
 ```
 
 <a name="ListPersons404Response.Error"></a>
-### func \(\*ListPersons404Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L582>)
+### func \(\*ListPersons404Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L598>)
 
 ```go
 func (e *ListPersons404Response) Error() string
@@ -3840,7 +3850,7 @@ func (e *ListPersons404Response) Error() string
 
 
 <a name="ListPersons500Response"></a>
-## type [ListPersons500Response](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L589-L598>)
+## type [ListPersons500Response](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L605-L614>)
 
 ListPersons500Response is a schema definition.
 
@@ -3858,7 +3868,7 @@ type ListPersons500Response struct {
 ```
 
 <a name="ListPersons500Response.Error"></a>
-### func \(\*ListPersons500Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L600>)
+### func \(\*ListPersons500Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L616>)
 
 ```go
 func (e *ListPersons500Response) Error() string
@@ -3867,7 +3877,7 @@ func (e *ListPersons500Response) Error() string
 
 
 <a name="ListPersonsParams"></a>
-## type [ListPersonsParams](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L511-L517>)
+## type [ListPersonsParams](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L527-L533>)
 
 ListPersonsParams: query parameters for ListPersons
 
@@ -3882,7 +3892,7 @@ type ListPersonsParams struct {
 ```
 
 <a name="ListPersonsParams.QueryValues"></a>
-### func \(\*ListPersonsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L520>)
+### func \(\*ListPersonsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L536>)
 
 ```go
 func (p *ListPersonsParams) QueryValues() url.Values
@@ -3891,7 +3901,7 @@ func (p *ListPersonsParams) QueryValues() url.Values
 QueryValues converts [ListPersonsParams](<#ListPersonsParams>) into \[url.Values\].
 
 <a name="ListPersonsResponseBody"></a>
-## type [ListPersonsResponseBody](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L333-L335>)
+## type [ListPersonsResponseBody](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L341-L343>)
 
 ListPersonsResponseBody is a schema definition.
 
@@ -3902,7 +3912,7 @@ type ListPersonsResponseBody struct {
 ```
 
 <a name="Merchant"></a>
-## type [Merchant](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L339-L412>)
+## type [Merchant](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L347-L420>)
 
 Merchant is a schema definition. Merchant documentation: https://developer.sumup.com/tools/models/merchant
 
@@ -3984,7 +3994,7 @@ type Merchant struct {
 ```
 
 <a name="MerchantsService"></a>
-## type [MerchantsService](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L660-L662>)
+## type [MerchantsService](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L676-L678>)
 
 
 
@@ -3995,7 +4005,7 @@ type MerchantsService struct {
 ```
 
 <a name="NewMerchantsService"></a>
-### func [NewMerchantsService](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L664>)
+### func [NewMerchantsService](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L680>)
 
 ```go
 func NewMerchantsService(c *client.Client) *MerchantsService
@@ -4004,7 +4014,7 @@ func NewMerchantsService(c *client.Client) *MerchantsService
 
 
 <a name="MerchantsService.Get"></a>
-### func \(\*MerchantsService\) [Get](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L710>)
+### func \(\*MerchantsService\) [Get](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L726>)
 
 ```go
 func (s *MerchantsService) Get(ctx context.Context, merchantCode string, params GetMerchantParams) (*Merchant, error)
@@ -4013,7 +4023,7 @@ func (s *MerchantsService) Get(ctx context.Context, merchantCode string, params 
 Get: Retrieve a Merchant Retrieve a merchant. Merchant documentation: https://developer.sumup.com/tools/models/merchant
 
 <a name="MerchantsService.GetPerson"></a>
-### func \(\*MerchantsService\) [GetPerson](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L742>)
+### func \(\*MerchantsService\) [GetPerson](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L758>)
 
 ```go
 func (s *MerchantsService) GetPerson(ctx context.Context, merchantCode string, personId string, params GetPersonParams) (*Person, error)
@@ -4022,7 +4032,7 @@ func (s *MerchantsService) GetPerson(ctx context.Context, merchantCode string, p
 GetPerson: Retrieve a Person Returns a single person related to the merchant. Persons documentation: https://developer.sumup.com/tools/models/merchant#persons
 
 <a name="MerchantsService.ListPersons"></a>
-### func \(\*MerchantsService\) [ListPersons](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L671>)
+### func \(\*MerchantsService\) [ListPersons](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L687>)
 
 ```go
 func (s *MerchantsService) ListPersons(ctx context.Context, merchantCode string, params ListPersonsParams) (*ListPersonsResponseBody, error)
@@ -4031,7 +4041,7 @@ func (s *MerchantsService) ListPersons(ctx context.Context, merchantCode string,
 ListPersons: List Persons Returns a list of persons related to the merchant. Persons documentation: https://developer.sumup.com/tools/models/merchant#persons
 
 <a name="Ownership"></a>
-## type [Ownership](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L415-L422>)
+## type [Ownership](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L423-L430>)
 
 Ownership is a schema definition.
 
@@ -4047,7 +4057,7 @@ type Ownership struct {
 ```
 
 <a name="Person"></a>
-## type [Person](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L425-L480>)
+## type [Person](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L433-L496>)
 
 Person is a schema definition.
 
@@ -4076,6 +4086,11 @@ type Person struct {
     // Min length: 2
     // Max length: 2
     Citizenship *CountryCode `json:"citizenship,omitempty"`
+    // An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code representing the country
+    // where the person resides.
+    // Min length: 2
+    // Max length: 2
+    CountryOfResidence *string `json:"country_of_residence,omitempty"`
     // The last name(s) of the individual.
     // Max length: 60
     FamilyName *string `json:"family_name,omitempty"`
@@ -4092,8 +4107,11 @@ type Person struct {
     // be present, with the names being separated by space characters. Also note that in some cultures, middle names
     // are not used.
     // Max length: 60
-    MiddleName *string    `json:"middle_name,omitempty"`
-    Ownership  *Ownership `json:"ownership,omitempty"`
+    MiddleName *string `json:"middle_name,omitempty"`
+    // The persons nationality. May be an [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country
+    // code, but legacy data may not conform to this standard.
+    Nationality *string    `json:"nationality,omitempty"`
+    Ownership   *Ownership `json:"ownership,omitempty"`
     // A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
     // Max length: 64
     PhoneNumber *PhoneNumber `json:"phone_number,omitempty"`
@@ -4111,7 +4129,7 @@ type Person struct {
 ```
 
 <a name="PersonalIdentifier"></a>
-## type [PersonalIdentifier](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L483-L488>)
+## type [PersonalIdentifier](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L499-L504>)
 
 PersonalIdentifier is a schema definition.
 
@@ -4125,7 +4143,7 @@ type PersonalIdentifier struct {
 ```
 
 <a name="PhoneNumber"></a>
-## type [PhoneNumber](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L493>)
+## type [PhoneNumber](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L509>)
 
 PhoneNumber: A publicly available phone number in \[E.164\]\(https://en.wikipedia.org/wiki/E.164\) format.
 
@@ -4136,7 +4154,7 @@ type PhoneNumber string
 ```
 
 <a name="Timestamps"></a>
-## type [Timestamps](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L496-L504>)
+## type [Timestamps](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L512-L520>)
 
 Timestamps is a schema definition.
 
@@ -4153,137 +4171,13 @@ type Timestamps struct {
 ```
 
 <a name="Version"></a>
-## type [Version](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L508>)
+## type [Version](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L524>)
 
 Version: The version of the resource. The version reflects a specific change submitted to the API via one of the \`PATCH\` endpoints.
 
 ```go
 type Version string
 ```
-
-# nullable
-
-```go
-import "github.com/sumup/sumup-go/nullable"
-```
-
-## Index
-
-- [type Field](<#Field>)
-  - [func Bool\(value bool\) Field\[bool\]](<#Bool>)
-  - [func Float\(value float64\) Field\[float64\]](<#Float>)
-  - [func Int\(value int\) Field\[int\]](<#Int>)
-  - [func Null\[T any\]\(\) Field\[T\]](<#Null>)
-  - [func String\(value string\) Field\[string\]](<#String>)
-  - [func Value\[T any\]\(value T\) Field\[T\]](<#Value>)
-  - [func \(f Field\[T\]\) IsZero\(\) bool](<#Field[T].IsZero>)
-  - [func \(f Field\[T\]\) MarshalJSON\(\) \(\[\]byte, error\)](<#Field[T].MarshalJSON>)
-  - [func \(f Field\[T\]\) String\(\) string](<#Field[T].String>)
-  - [func \(f \*Field\[T\]\) UnmarshalJSON\(data \[\]byte\) error](<#Field[T].UnmarshalJSON>)
-
-
-<a name="Field"></a>
-## type [Field](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L15-L19>)
-
-Field is a wrapper for nullable fields to distinguish zero values from null or omitted fields.
-
-```go
-type Field[T any] struct {
-    Value   T
-    Null    bool
-    Present bool
-}
-```
-
-<a name="Bool"></a>
-### func [Bool](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L65>)
-
-```go
-func Bool(value bool) Field[bool]
-```
-
-Bool is a nullable field helper for constructing nullable bools with a value.
-
-<a name="Float"></a>
-### func [Float](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L62>)
-
-```go
-func Float(value float64) Field[float64]
-```
-
-Float is a nullable field helper for constructing nullable floats with a value.
-
-<a name="Int"></a>
-### func [Int](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L56>)
-
-```go
-func Int(value int) Field[int]
-```
-
-Int is a nullable field helper for constructing nullable integers with a value.
-
-<a name="Null"></a>
-### func [Null](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L53>)
-
-```go
-func Null[T any]() Field[T]
-```
-
-Null is a nullable field helper for constructing a generic null fields.
-
-<a name="String"></a>
-### func [String](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L59>)
-
-```go
-func String(value string) Field[string]
-```
-
-String is a nullable field helper for constructing nullable strings with a value.
-
-<a name="Value"></a>
-### func [Value](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L50>)
-
-```go
-func Value[T any](value T) Field[T]
-```
-
-Value is a nullable field helper for constructing a generic nullable field with a value.
-
-<a name="Field[T].IsZero"></a>
-### func \(Field\[T\]\) [IsZero](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L21>)
-
-```go
-func (f Field[T]) IsZero() bool
-```
-
-
-
-<a name="Field[T].MarshalJSON"></a>
-### func \(Field\[T\]\) [MarshalJSON](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L25>)
-
-```go
-func (f Field[T]) MarshalJSON() ([]byte, error)
-```
-
-
-
-<a name="Field[T].String"></a>
-### func \(Field\[T\]\) [String](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L44>)
-
-```go
-func (f Field[T]) String() string
-```
-
-
-
-<a name="Field[T].UnmarshalJSON"></a>
-### func \(\*Field\[T\]\) [UnmarshalJSON](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L32>)
-
-```go
-func (f *Field[T]) UnmarshalJSON(data []byte) error
-```
-
-
 
 # payouts
 
