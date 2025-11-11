@@ -2577,12 +2577,6 @@ import "github.com/sumup/sumup-go/merchant"
 - [type GetAccountParams](<#GetAccountParams>)
   - [func \(p \*GetAccountParams\) QueryValues\(\) url.Values](<#GetAccountParams.QueryValues>)
 - [type LegalTypeLegacy](<#LegalTypeLegacy>)
-- [type ListBankAccounts200Response](<#ListBankAccounts200Response>)
-- [type ListBankAccountsParams](<#ListBankAccountsParams>)
-  - [func \(p \*ListBankAccountsParams\) QueryValues\(\) url.Values](<#ListBankAccountsParams.QueryValues>)
-- [type ListBankAccountsV11200Response](<#ListBankAccountsV11200Response>)
-- [type ListBankAccountsV11Params](<#ListBankAccountsV11Params>)
-  - [func \(p \*ListBankAccountsV11Params\) QueryValues\(\) url.Values](<#ListBankAccountsV11Params.QueryValues>)
 - [type MerchantAccount](<#MerchantAccount>)
 - [type MerchantProfileLegacy](<#MerchantProfileLegacy>)
 - [type MerchantService](<#MerchantService>)
@@ -2591,9 +2585,6 @@ import "github.com/sumup/sumup-go/merchant"
   - [func \(s \*MerchantService\) GetDoingBusinessAs\(ctx context.Context\) \(\*DoingBusinessAsLegacy, error\)](<#MerchantService.GetDoingBusinessAs>)
   - [func \(s \*MerchantService\) GetMerchantProfile\(ctx context.Context\) \(\*MerchantProfileLegacy, error\)](<#MerchantService.GetMerchantProfile>)
   - [func \(s \*MerchantService\) GetPersonalProfile\(ctx context.Context\) \(\*PersonalProfileLegacy, error\)](<#MerchantService.GetPersonalProfile>)
-  - [func \(s \*MerchantService\) GetSettings\(ctx context.Context\) \(\*MerchantSettings, error\)](<#MerchantService.GetSettings>)
-  - [func \(s \*MerchantService\) ListBankAccounts\(ctx context.Context, merchantCode string, params ListBankAccountsV11Params\) \(\*ListBankAccountsV11200Response, error\)](<#MerchantService.ListBankAccounts>)
-  - [func \(s \*MerchantService\) ListBankAccountsDeprecated\(ctx context.Context, params ListBankAccountsParams\) \(\*ListBankAccounts200Response, error\)](<#MerchantService.ListBankAccountsDeprecated>)
 - [type MerchantSettings](<#MerchantSettings>)
 - [type MerchantSettingsMotoPayment](<#MerchantSettingsMotoPayment>)
 - [type PermissionsLegacy](<#PermissionsLegacy>)
@@ -2603,7 +2594,7 @@ import "github.com/sumup/sumup-go/merchant"
 
 
 <a name="AccountLegacy"></a>
-## type [AccountLegacy](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L18-L23>)
+## type [AccountLegacy](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L17-L22>)
 
 AccountLegacy: Profile information.
 
@@ -2617,7 +2608,7 @@ type AccountLegacy struct {
 ```
 
 <a name="AccountLegacyType"></a>
-## type [AccountLegacyType](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L26>)
+## type [AccountLegacyType](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L25>)
 
 AccountLegacyType: The role of the user.
 
@@ -2635,7 +2626,7 @@ const (
 ```
 
 <a name="AddressWithDetails"></a>
-## type [AddressWithDetails](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L34-L65>)
+## type [AddressWithDetails](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L33-L64>)
 
 AddressWithDetails: Details of the registered address.
 
@@ -2675,7 +2666,7 @@ type AddressWithDetails struct {
 ```
 
 <a name="AppSettings"></a>
-## type [AppSettings](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L68-L101>)
+## type [AppSettings](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L67-L100>)
 
 AppSettings: Mobile app settings
 
@@ -2717,7 +2708,7 @@ type AppSettings struct {
 ```
 
 <a name="BankAccount"></a>
-## type [BankAccount](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L104-L128>)
+## type [BankAccount](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L103-L127>)
 
 BankAccount is a schema definition.
 
@@ -2750,7 +2741,7 @@ type BankAccount struct {
 ```
 
 <a name="BusinessOwner"></a>
-## type [BusinessOwner](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L131-L144>)
+## type [BusinessOwner](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L130-L143>)
 
 BusinessOwner is a schema definition.
 
@@ -2772,7 +2763,7 @@ type BusinessOwner struct {
 ```
 
 <a name="BusinessOwners"></a>
-## type [BusinessOwners](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L147>)
+## type [BusinessOwners](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L146>)
 
 BusinessOwners: Business owners information.
 
@@ -2781,7 +2772,7 @@ type BusinessOwners []BusinessOwner
 ```
 
 <a name="CountryDetails"></a>
-## type [CountryDetails](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L150-L159>)
+## type [CountryDetails](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L149-L158>)
 
 CountryDetails: Country Details
 
@@ -2799,7 +2790,7 @@ type CountryDetails struct {
 ```
 
 <a name="DoingBusinessAsLegacy"></a>
-## type [DoingBusinessAsLegacy](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L162-L174>)
+## type [DoingBusinessAsLegacy](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L161-L173>)
 
 DoingBusinessAsLegacy: Doing Business As information
 
@@ -2820,7 +2811,7 @@ type DoingBusinessAsLegacy struct {
 ```
 
 <a name="DoingBusinessAsLegacyAddress"></a>
-## type [DoingBusinessAsLegacyAddress](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L177-L192>)
+## type [DoingBusinessAsLegacyAddress](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L176-L191>)
 
 DoingBusinessAsLegacyAddress is a schema definition.
 
@@ -2844,7 +2835,7 @@ type DoingBusinessAsLegacyAddress struct {
 ```
 
 <a name="GetAccountParams"></a>
-## type [GetAccountParams](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L371-L375>)
+## type [GetAccountParams](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L353-L357>)
 
 GetAccountParams: query parameters for GetAccount
 
@@ -2857,7 +2848,7 @@ type GetAccountParams struct {
 ```
 
 <a name="GetAccountParams.QueryValues"></a>
-### func \(\*GetAccountParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L378>)
+### func \(\*GetAccountParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L360>)
 
 ```go
 func (p *GetAccountParams) QueryValues() url.Values
@@ -2866,7 +2857,7 @@ func (p *GetAccountParams) QueryValues() url.Values
 QueryValues converts [GetAccountParams](<#GetAccountParams>) into \[url.Values\].
 
 <a name="LegalTypeLegacy"></a>
-## type [LegalTypeLegacy](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L195-L204>)
+## type [LegalTypeLegacy](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L194-L203>)
 
 LegalTypeLegacy: Id of the legal type of the merchant profile
 
@@ -2883,68 +2874,8 @@ type LegalTypeLegacy struct {
 }
 ```
 
-<a name="ListBankAccounts200Response"></a>
-## type [ListBankAccounts200Response](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L408>)
-
-ListBankAccounts200Response is a schema definition.
-
-```go
-type ListBankAccounts200Response []BankAccount
-```
-
-<a name="ListBankAccountsParams"></a>
-## type [ListBankAccountsParams](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L354-L357>)
-
-ListBankAccountsParams: query parameters for ListBankAccounts
-
-```go
-type ListBankAccountsParams struct {
-    // If true only the primary bank account (the one used for payouts) will be returned.
-    Primary *bool
-}
-```
-
-<a name="ListBankAccountsParams.QueryValues"></a>
-### func \(\*ListBankAccountsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L360>)
-
-```go
-func (p *ListBankAccountsParams) QueryValues() url.Values
-```
-
-QueryValues converts [ListBankAccountsParams](<#ListBankAccountsParams>) into \[url.Values\].
-
-<a name="ListBankAccountsV11200Response"></a>
-## type [ListBankAccountsV11200Response](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L411>)
-
-ListBankAccountsV11200Response is a schema definition.
-
-```go
-type ListBankAccountsV11200Response []BankAccount
-```
-
-<a name="ListBankAccountsV11Params"></a>
-## type [ListBankAccountsV11Params](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L391-L394>)
-
-ListBankAccountsV11Params: query parameters for ListBankAccountsV11
-
-```go
-type ListBankAccountsV11Params struct {
-    // If true only the primary bank account (the one used for payouts) will be returned.
-    Primary *bool
-}
-```
-
-<a name="ListBankAccountsV11Params.QueryValues"></a>
-### func \(\*ListBankAccountsV11Params\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L397>)
-
-```go
-func (p *ListBankAccountsV11Params) QueryValues() url.Values
-```
-
-QueryValues converts [ListBankAccountsV11Params](<#ListBankAccountsV11Params>) into \[url.Values\].
-
 <a name="MerchantAccount"></a>
-## type [MerchantAccount](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L207-L218>)
+## type [MerchantAccount](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L206-L217>)
 
 MerchantAccount: Details of the merchant account.
 
@@ -2964,7 +2895,7 @@ type MerchantAccount struct {
 ```
 
 <a name="MerchantProfileLegacy"></a>
-## type [MerchantProfileLegacy](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L221-L262>)
+## type [MerchantProfileLegacy](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L220-L261>)
 
 MerchantProfileLegacy: Account's merchant profile
 
@@ -3014,7 +2945,7 @@ type MerchantProfileLegacy struct {
 ```
 
 <a name="MerchantService"></a>
-## type [MerchantService](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L413-L415>)
+## type [MerchantService](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L372-L374>)
 
 
 
@@ -3025,7 +2956,7 @@ type MerchantService struct {
 ```
 
 <a name="NewMerchantService"></a>
-### func [NewMerchantService](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L417>)
+### func [NewMerchantService](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L376>)
 
 ```go
 func NewMerchantService(c *client.Client) *MerchantService
@@ -3034,7 +2965,7 @@ func NewMerchantService(c *client.Client) *MerchantService
 
 
 <a name="MerchantService.Get"></a>
-### func \(\*MerchantService\) [Get](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L608>)
+### func \(\*MerchantService\) [Get](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L490>)
 
 ```go
 func (s *MerchantService) Get(ctx context.Context, params GetAccountParams) (*MerchantAccount, error)
@@ -3043,7 +2974,7 @@ func (s *MerchantService) Get(ctx context.Context, params GetAccountParams) (*Me
 Get: Retrieve a profile Returns user profile information. Deprecated: The \_Retrieve a profile\_ endpoint is deprecated, please use the \`Merchant\` object instead \(see \[Merchants\]\(https://developer.sumup.com/api/merchants\)\).
 
 <a name="MerchantService.GetDoingBusinessAs"></a>
-### func \(\*MerchantService\) [GetDoingBusinessAs](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L496>)
+### func \(\*MerchantService\) [GetDoingBusinessAs](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L417>)
 
 ```go
 func (s *MerchantService) GetDoingBusinessAs(ctx context.Context) (*DoingBusinessAsLegacy, error)
@@ -3052,7 +2983,7 @@ func (s *MerchantService) GetDoingBusinessAs(ctx context.Context) (*DoingBusines
 GetDoingBusinessAs: Retrieve DBA Retrieves Doing Business As profile. Deprecated: The \_Retrieve DBA\_ endpoint is deprecated, please use the \`business\_profile\` field of the \`Merchant\` object instead \(see \[Merchants\]\(https://developer.sumup.com/api/merchants\)\).
 
 <a name="MerchantService.GetMerchantProfile"></a>
-### func \(\*MerchantService\) [GetMerchantProfile](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L568>)
+### func \(\*MerchantService\) [GetMerchantProfile](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L450>)
 
 ```go
 func (s *MerchantService) GetMerchantProfile(ctx context.Context) (*MerchantProfileLegacy, error)
@@ -3061,7 +2992,7 @@ func (s *MerchantService) GetMerchantProfile(ctx context.Context) (*MerchantProf
 GetMerchantProfile: Retrieve a merchant profile Retrieves merchant profile data. Deprecated: The \_Retrieve a merchant profile\_ endpoint is deprecated, please use the \`Merchant\` object instead \(see \[Merchants\]\(https://developer.sumup.com/api/merchants\)\).
 
 <a name="MerchantService.GetPersonalProfile"></a>
-### func \(\*MerchantService\) [GetPersonalProfile](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L425>)
+### func \(\*MerchantService\) [GetPersonalProfile](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L384>)
 
 ```go
 func (s *MerchantService) GetPersonalProfile(ctx context.Context) (*PersonalProfileLegacy, error)
@@ -3069,35 +3000,8 @@ func (s *MerchantService) GetPersonalProfile(ctx context.Context) (*PersonalProf
 
 GetPersonalProfile: Retrieve a personal profile Retrieves personal profile data. Deprecated: The \_Retrieve a personal profile\_ endpoint is deprecated, please use the \`persons\` field of the \`Merchant\` object instead. \(see \[Merchants\]\(https://developer.sumup.com/api/merchants\)\).
 
-<a name="MerchantService.GetSettings"></a>
-### func \(\*MerchantService\) [GetSettings](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L456>)
-
-```go
-func (s *MerchantService) GetSettings(ctx context.Context) (*MerchantSettings, error)
-```
-
-GetSettings: Get settings Retrieves merchant settings.
-
-<a name="MerchantService.ListBankAccounts"></a>
-### func \(\*MerchantService\) [ListBankAccounts](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L639>)
-
-```go
-func (s *MerchantService) ListBankAccounts(ctx context.Context, merchantCode string, params ListBankAccountsV11Params) (*ListBankAccountsV11200Response, error)
-```
-
-ListBankAccounts: List bank accounts Retrieves bank accounts of the merchant.
-
-<a name="MerchantService.ListBankAccountsDeprecated"></a>
-### func \(\*MerchantService\) [ListBankAccountsDeprecated](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L528>)
-
-```go
-func (s *MerchantService) ListBankAccountsDeprecated(ctx context.Context, params ListBankAccountsParams) (*ListBankAccounts200Response, error)
-```
-
-ListBankAccountsDeprecated: List bank accounts Retrieves bank accounts of the merchant. Deprecated: this operation is deprecated
-
 <a name="MerchantSettings"></a>
-## type [MerchantSettings](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L265-L290>)
+## type [MerchantSettings](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L264-L289>)
 
 MerchantSettings: Merchant settings &\#40;like \\"payout\_type\\", \\"payout\_period\\"&\#41;
 
@@ -3131,7 +3035,7 @@ type MerchantSettings struct {
 ```
 
 <a name="MerchantSettingsMotoPayment"></a>
-## type [MerchantSettingsMotoPayment](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L293>)
+## type [MerchantSettingsMotoPayment](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L292>)
 
 MerchantSettingsMotoPayment: Whether merchant can make MOTO payments
 
@@ -3151,7 +3055,7 @@ const (
 ```
 
 <a name="PermissionsLegacy"></a>
-## type [PermissionsLegacy](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L303-L312>)
+## type [PermissionsLegacy](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L302-L311>)
 
 PermissionsLegacy: User permissions
 
@@ -3169,7 +3073,7 @@ type PermissionsLegacy struct {
 ```
 
 <a name="PersonalProfileLegacy"></a>
-## type [PersonalProfileLegacy](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L315-L327>)
+## type [PersonalProfileLegacy](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L314-L326>)
 
 PersonalProfileLegacy: Account's personal profile.
 
@@ -3190,7 +3094,7 @@ type PersonalProfileLegacy struct {
 ```
 
 <a name="TimeoffsetDetails"></a>
-## type [TimeoffsetDetails](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L330-L337>)
+## type [TimeoffsetDetails](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L329-L336>)
 
 TimeoffsetDetails: TimeOffset Details
 
@@ -3206,7 +3110,7 @@ type TimeoffsetDetails struct {
 ```
 
 <a name="VatRates"></a>
-## type [VatRates](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L340-L351>)
+## type [VatRates](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L339-L350>)
 
 VatRates: Merchant VAT rates
 
