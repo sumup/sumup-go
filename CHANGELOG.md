@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0](https://github.com/sumup/sumup-go/compare/v0.5.0...v0.6.0) (2025-11-11)
+
+
+### Features
+
+* release 0.6.0 ([3aab4be](https://github.com/sumup/sumup-go/commit/3aab4be626018da1b53eba7671a6674621ac70ca))
+
 ## [0.5.0](https://github.com/sumup/sumup-go/compare/v0.4.0...v0.5.0) (2025-11-04)
 
 
