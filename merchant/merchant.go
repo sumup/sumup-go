@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"strconv"
 
 	"github.com/sumup/sumup-go/client"
 	"github.com/sumup/sumup-go/shared"
@@ -350,23 +349,6 @@ type VatRates struct {
 	Rate *float64 `json:"rate,omitempty"`
 }
 
-// ListBankAccountsParams: query parameters for ListBankAccounts
-type ListBankAccountsParams struct {
-	// If true only the primary bank account (the one used for payouts) will be returned.
-	Primary *bool
-}
-
-// QueryValues converts [ListBankAccountsParams] into [url.Values].
-func (p *ListBankAccountsParams) QueryValues() url.Values {
-	q := make(url.Values)
-
-	if p.Primary != nil {
-		q.Set("primary", strconv.FormatBool(*p.Primary))
-	}
-
-	return q
-}
-
 // GetAccountParams: query parameters for GetAccount
 type GetAccountParams struct {
 	// A list of additional information you want to receive for the user. By default only personal and merchant profile
@@ -386,29 +368,6 @@ func (p *GetAccountParams) QueryValues() url.Values {
 
 	return q
 }
-
-// ListBankAccountsV11Params: query parameters for ListBankAccountsV11
-type ListBankAccountsV11Params struct {
-	// If true only the primary bank account (the one used for payouts) will be returned.
-	Primary *bool
-}
-
-// QueryValues converts [ListBankAccountsV11Params] into [url.Values].
-func (p *ListBankAccountsV11Params) QueryValues() url.Values {
-	q := make(url.Values)
-
-	if p.Primary != nil {
-		q.Set("primary", strconv.FormatBool(*p.Primary))
-	}
-
-	return q
-}
-
-// ListBankAccounts200Response is a schema definition.
-type ListBankAccounts200Response []BankAccount
-
-// ListBankAccountsV11200Response is a schema definition.
-type ListBankAccountsV11200Response []BankAccount
 
 type MerchantService struct {
 	c *client.Client
@@ -451,44 +410,6 @@ func (s *MerchantService) GetPersonalProfile(ctx context.Context) (*PersonalProf
 	}
 }
 
-// GetSettings: Get settings
-// Retrieves merchant settings.
-func (s *MerchantService) GetSettings(ctx context.Context) (*MerchantSettings, error) {
-	path := fmt.Sprintf("/v0.1/me/merchant-profile/settings")
-
-	resp, err := s.c.Call(ctx, http.MethodGet, path)
-	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
-	}
-	defer resp.Body.Close()
-
-	switch resp.StatusCode {
-	case http.StatusOK:
-		var v MerchantSettings
-		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-			return nil, fmt.Errorf("decode response: %s", err.Error())
-		}
-
-		return &v, nil
-	case http.StatusUnauthorized:
-		var apiErr shared.Error
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	case http.StatusForbidden:
-		var apiErr shared.ErrorForbidden
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
-}
-
 // GetDoingBusinessAs: Retrieve DBA
 // Retrieves Doing Business As profile.
 // Deprecated: The _Retrieve DBA_ endpoint is deprecated, please use the `business_profile` field of the `Merchant`
@@ -512,45 +433,6 @@ func (s *MerchantService) GetDoingBusinessAs(ctx context.Context) (*DoingBusines
 		return &v, nil
 	case http.StatusUnauthorized:
 		var apiErr shared.Error
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
-}
-
-// ListBankAccountsDeprecated: List bank accounts
-// Retrieves bank accounts of the merchant.
-// Deprecated: this operation is deprecated
-func (s *MerchantService) ListBankAccountsDeprecated(ctx context.Context, params ListBankAccountsParams) (*ListBankAccounts200Response, error) {
-	path := fmt.Sprintf("/v0.1/me/merchant-profile/bank-accounts")
-
-	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
-	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
-	}
-	defer resp.Body.Close()
-
-	switch resp.StatusCode {
-	case http.StatusOK:
-		var v ListBankAccounts200Response
-		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-			return nil, fmt.Errorf("decode response: %s", err.Error())
-		}
-
-		return &v, nil
-	case http.StatusUnauthorized:
-		var apiErr shared.Error
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	case http.StatusForbidden:
-		var apiErr shared.ErrorForbidden
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
@@ -624,44 +506,6 @@ func (s *MerchantService) Get(ctx context.Context, params GetAccountParams) (*Me
 		return &v, nil
 	case http.StatusUnauthorized:
 		var apiErr shared.Error
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
-}
-
-// ListBankAccounts: List bank accounts
-// Retrieves bank accounts of the merchant.
-func (s *MerchantService) ListBankAccounts(ctx context.Context, merchantCode string, params ListBankAccountsV11Params) (*ListBankAccountsV11200Response, error) {
-	path := fmt.Sprintf("/v1.1/merchants/%v/bank-accounts", merchantCode)
-
-	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
-	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
-	}
-	defer resp.Body.Close()
-
-	switch resp.StatusCode {
-	case http.StatusOK:
-		var v ListBankAccountsV11200Response
-		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-			return nil, fmt.Errorf("decode response: %s", err.Error())
-		}
-
-		return &v, nil
-	case http.StatusUnauthorized:
-		var apiErr shared.Error
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	case http.StatusForbidden:
-		var apiErr shared.ErrorForbidden
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
