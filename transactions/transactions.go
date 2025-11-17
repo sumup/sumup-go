@@ -253,6 +253,7 @@ type TransactionFullPaymentType string
 const (
 	TransactionFullPaymentTypeBoleto    TransactionFullPaymentType = "BOLETO"
 	TransactionFullPaymentTypeEcom      TransactionFullPaymentType = "ECOM"
+	TransactionFullPaymentTypePos       TransactionFullPaymentType = "POS"
 	TransactionFullPaymentTypeRecurring TransactionFullPaymentType = "RECURRING"
 )
 
@@ -393,6 +394,7 @@ type TransactionHistoryPaymentType string
 const (
 	TransactionHistoryPaymentTypeBoleto    TransactionHistoryPaymentType = "BOLETO"
 	TransactionHistoryPaymentTypeEcom      TransactionHistoryPaymentType = "ECOM"
+	TransactionHistoryPaymentTypePos       TransactionHistoryPaymentType = "POS"
 	TransactionHistoryPaymentTypeRecurring TransactionHistoryPaymentType = "RECURRING"
 )
 

@@ -178,6 +178,7 @@ type CheckoutTransactionPaymentType string
 const (
 	CheckoutTransactionPaymentTypeBoleto    CheckoutTransactionPaymentType = "BOLETO"
 	CheckoutTransactionPaymentTypeEcom      CheckoutTransactionPaymentType = "ECOM"
+	CheckoutTransactionPaymentTypePos       CheckoutTransactionPaymentType = "POS"
 	CheckoutTransactionPaymentTypeRecurring CheckoutTransactionPaymentType = "RECURRING"
 )
 
@@ -344,6 +345,7 @@ type CheckoutCreateRequestTransactionPaymentType string
 const (
 	CheckoutCreateRequestTransactionPaymentTypeBoleto    CheckoutCreateRequestTransactionPaymentType = "BOLETO"
 	CheckoutCreateRequestTransactionPaymentTypeEcom      CheckoutCreateRequestTransactionPaymentType = "ECOM"
+	CheckoutCreateRequestTransactionPaymentTypePos       CheckoutCreateRequestTransactionPaymentType = "POS"
 	CheckoutCreateRequestTransactionPaymentTypeRecurring CheckoutCreateRequestTransactionPaymentType = "RECURRING"
 )
 
@@ -496,6 +498,7 @@ type CheckoutSuccessTransactionPaymentType string
 const (
 	CheckoutSuccessTransactionPaymentTypeBoleto    CheckoutSuccessTransactionPaymentType = "BOLETO"
 	CheckoutSuccessTransactionPaymentTypeEcom      CheckoutSuccessTransactionPaymentType = "ECOM"
+	CheckoutSuccessTransactionPaymentTypePos       CheckoutSuccessTransactionPaymentType = "POS"
 	CheckoutSuccessTransactionPaymentTypeRecurring CheckoutSuccessTransactionPaymentType = "RECURRING"
 )
 
@@ -689,6 +692,7 @@ type CreateCheckoutBodyTransactionPaymentType string
 const (
 	CreateCheckoutBodyTransactionPaymentTypeBoleto    CreateCheckoutBodyTransactionPaymentType = "BOLETO"
 	CreateCheckoutBodyTransactionPaymentTypeEcom      CreateCheckoutBodyTransactionPaymentType = "ECOM"
+	CreateCheckoutBodyTransactionPaymentTypePos       CreateCheckoutBodyTransactionPaymentType = "POS"
 	CreateCheckoutBodyTransactionPaymentTypeRecurring CreateCheckoutBodyTransactionPaymentType = "RECURRING"
 )
 
@@ -796,124 +800,6 @@ type GetPaymentMethods200ResponseAvailablePaymentMethod struct {
 	// The ID of the payment method.
 	Id string `json:"id"`
 }
-
-// DeactivateCheckout200Response: Details of the deleted checkout.
-type DeactivateCheckout200Response struct {
-	// Amount of the payment.
-	Amount *float64 `json:"amount,omitempty"`
-	// Unique ID of the payment checkout specified by the client application when creating the checkout resource.
-	// Max length: 90
-	CheckoutReference *string `json:"checkout_reference,omitempty"`
-	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
-	// currency values are enumerated above.
-	Currency *shared.Currency `json:"currency,omitempty"`
-	// Date and time of the creation of the payment checkout. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
-	//
-	// Read only
-	Date *time.Time `json:"date,omitempty"`
-	// Short description of the checkout visible in the SumUp dashboard. The description can contribute to reporting, allowing
-	// easier identification of a checkout.
-	Description *string `json:"description,omitempty"`
-	// Unique ID of the checkout resource.
-	// Read only
-	Id *string `json:"id,omitempty"`
-	// Unique identifying code of the merchant profile.
-	MerchantCode *string `json:"merchant_code,omitempty"`
-	// The merchant's country
-	MerchantCountry *string `json:"merchant_country,omitempty"`
-	// Merchant name
-	MerchantName *string `json:"merchant_name,omitempty"`
-	// Purpose of the checkout creation initially
-	Purpose *DeactivateCheckout200ResponsePurpose `json:"purpose,omitempty"`
-	// Current status of the checkout.
-	// Read only
-	Status *DeactivateCheckout200ResponseStatus `json:"status,omitempty"`
-	// List of transactions related to the payment.
-	// Read only
-	// Unique items only
-	Transactions *[]DeactivateCheckout200ResponseTransaction `json:"transactions,omitempty"`
-	// Date and time of the checkout expiration before which the client application needs to send a processing request.
-	// If no value is present, the checkout does not have an expiration time.
-	// Read only
-	ValidUntil *time.Time `json:"valid_until,omitempty"`
-}
-
-// DeactivateCheckout200ResponsePurpose: Purpose of the checkout creation initially
-type DeactivateCheckout200ResponsePurpose string
-
-const (
-	DeactivateCheckout200ResponsePurposeCheckout              DeactivateCheckout200ResponsePurpose = "CHECKOUT"
-	DeactivateCheckout200ResponsePurposeSetupRecurringPayment DeactivateCheckout200ResponsePurpose = "SETUP_RECURRING_PAYMENT"
-)
-
-// DeactivateCheckout200ResponseStatus: Current status of the checkout.
-// Read only
-type DeactivateCheckout200ResponseStatus string
-
-const (
-	DeactivateCheckout200ResponseStatusExpired DeactivateCheckout200ResponseStatus = "EXPIRED"
-)
-
-// DeactivateCheckout200ResponseTransaction is a schema definition.
-type DeactivateCheckout200ResponseTransaction struct {
-	// Total amount of the transaction.
-	Amount *float64 `json:"amount,omitempty"`
-	// Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
-	AuthCode *string `json:"auth_code,omitempty"`
-	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
-	// currency values are enumerated above.
-	Currency *shared.Currency `json:"currency,omitempty"`
-	// Entry mode of the payment details.
-	EntryMode *DeactivateCheckout200ResponseTransactionEntryMode `json:"entry_mode,omitempty"`
-	// Unique ID of the transaction.
-	Id *string `json:"id,omitempty"`
-	// Current number of the installment for deferred payments.
-	// Min: 1
-	InstallmentsCount *int `json:"installments_count,omitempty"`
-	// Internal unique ID of the transaction on the SumUp platform.
-	InternalId *int `json:"internal_id,omitempty"`
-	// Unique code of the registered merchant to whom the payment is made.
-	MerchantCode *string `json:"merchant_code,omitempty"`
-	// Payment type used for the transaction.
-	PaymentType *DeactivateCheckout200ResponseTransactionPaymentType `json:"payment_type,omitempty"`
-	// Current status of the transaction.
-	Status *DeactivateCheckout200ResponseTransactionStatus `json:"status,omitempty"`
-	// Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
-	Timestamp *time.Time `json:"timestamp,omitempty"`
-	// Amount of the tip (out of the total transaction amount).
-	TipAmount *float64 `json:"tip_amount,omitempty"`
-	// Transaction code returned by the acquirer/processing entity after processing the transaction.
-	TransactionCode *string `json:"transaction_code,omitempty"`
-	// Amount of the applicable VAT (out of the total transaction amount).
-	VatAmount *float64 `json:"vat_amount,omitempty"`
-}
-
-// DeactivateCheckout200ResponseTransactionPaymentType: Payment type used for the transaction.
-type DeactivateCheckout200ResponseTransactionPaymentType string
-
-const (
-	DeactivateCheckout200ResponseTransactionPaymentTypeBoleto    DeactivateCheckout200ResponseTransactionPaymentType = "BOLETO"
-	DeactivateCheckout200ResponseTransactionPaymentTypeEcom      DeactivateCheckout200ResponseTransactionPaymentType = "ECOM"
-	DeactivateCheckout200ResponseTransactionPaymentTypeRecurring DeactivateCheckout200ResponseTransactionPaymentType = "RECURRING"
-)
-
-// DeactivateCheckout200ResponseTransactionStatus: Current status of the transaction.
-type DeactivateCheckout200ResponseTransactionStatus string
-
-const (
-	DeactivateCheckout200ResponseTransactionStatusCancelled  DeactivateCheckout200ResponseTransactionStatus = "CANCELLED"
-	DeactivateCheckout200ResponseTransactionStatusFailed     DeactivateCheckout200ResponseTransactionStatus = "FAILED"
-	DeactivateCheckout200ResponseTransactionStatusPending    DeactivateCheckout200ResponseTransactionStatus = "PENDING"
-	DeactivateCheckout200ResponseTransactionStatusSuccessful DeactivateCheckout200ResponseTransactionStatus = "SUCCESSFUL"
-)
-
-// DeactivateCheckout200ResponseTransactionEntryMode: Entry mode of the payment details.
-type DeactivateCheckout200ResponseTransactionEntryMode string
-
-const (
-	DeactivateCheckout200ResponseTransactionEntryModeBoleto        DeactivateCheckout200ResponseTransactionEntryMode = "BOLETO"
-	DeactivateCheckout200ResponseTransactionEntryModeCustomerEntry DeactivateCheckout200ResponseTransactionEntryMode = "CUSTOMER_ENTRY"
-)
 
 // ProcessCheckout400Response is a schema definition.
 type ProcessCheckout400Response json.RawMessage
@@ -1081,7 +967,7 @@ func (s *CheckoutsService) ListAvailablePaymentMethods(ctx context.Context, merc
 
 // Deactivate: Deactivate a checkout
 // Deactivates an identified checkout resource. If the checkout has already been processed it can not be deactivated.
-func (s *CheckoutsService) Deactivate(ctx context.Context, id string) (*DeactivateCheckout200Response, error) {
+func (s *CheckoutsService) Deactivate(ctx context.Context, id string) (*Checkout, error) {
 	path := fmt.Sprintf("/v0.1/checkouts/%v", id)
 
 	resp, err := s.c.Call(ctx, http.MethodDelete, path)
@@ -1092,7 +978,7 @@ func (s *CheckoutsService) Deactivate(ctx context.Context, id string) (*Deactiva
 
 	switch resp.StatusCode {
 	case http.StatusOK:
-		var v DeactivateCheckout200Response
+		var v Checkout
 		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
 			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}
