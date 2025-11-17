@@ -203,6 +203,7 @@ type TransactionMixinBasePaymentType string
 const (
 	TransactionMixinBasePaymentTypeBoleto    TransactionMixinBasePaymentType = "BOLETO"
 	TransactionMixinBasePaymentTypeEcom      TransactionMixinBasePaymentType = "ECOM"
+	TransactionMixinBasePaymentTypePos       TransactionMixinBasePaymentType = "POS"
 	TransactionMixinBasePaymentTypeRecurring TransactionMixinBasePaymentType = "RECURRING"
 )
 
