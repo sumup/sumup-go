@@ -2227,7 +2227,7 @@ import "github.com/sumup/sumup-go/memberships"
 
 
 <a name="ListMemberships200Response"></a>
-## type [ListMemberships200Response](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L124-L127>)
+## type [ListMemberships200Response](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L136-L139>)
 
 ListMemberships200Response is a schema definition.
 
@@ -2239,7 +2239,7 @@ type ListMemberships200Response struct {
 ```
 
 <a name="ListMembershipsParams"></a>
-## type [ListMembershipsParams](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L83-L94>)
+## type [ListMembershipsParams](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L83-L98>)
 
 ListMembershipsParams: query parameters for ListMemberships
 
@@ -2255,11 +2255,15 @@ type ListMembershipsParams struct {
     ResourceAttributesSandbox *bool
     // Filter memberships by the name of the resource the membership is in.
     ResourceName *string
+    // Filter memberships by resource kind.
+    ResourceType *ResourceType
+    // Filter the returned memberships by the membership status.
+    Status *shared.MembershipStatus
 }
 ```
 
 <a name="ListMembershipsParams.QueryValues"></a>
-### func \(\*ListMembershipsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L97>)
+### func \(\*ListMembershipsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L101>)
 
 ```go
 func (p *ListMembershipsParams) QueryValues() url.Values
@@ -2297,7 +2301,7 @@ type Membership struct {
     Roles []string `json:"roles"`
     // The status of the membership.
     Status shared.MembershipStatus `json:"status"`
-    // The kind of the membership resource.
+    // The type of the membership resource.
     // Possible values are:
     // * `merchant` - merchant account(s)
     // * `organization` - organization(s)
@@ -2326,7 +2330,7 @@ type MembershipResource struct {
     Logo *string `json:"logo,omitempty"`
     // Display name of the resource.
     Name string `json:"name"`
-    // The kind of the membership resource.
+    // The type of the membership resource.
     // Possible values are:
     // * `merchant` - merchant account(s)
     // * `organization` - organization(s)
@@ -2337,7 +2341,7 @@ type MembershipResource struct {
 ```
 
 <a name="MembershipsService"></a>
-## type [MembershipsService](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L129-L131>)
+## type [MembershipsService](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L141-L143>)
 
 
 
@@ -2348,7 +2352,7 @@ type MembershipsService struct {
 ```
 
 <a name="NewMembershipsService"></a>
-### func [NewMembershipsService](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L133>)
+### func [NewMembershipsService](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L145>)
 
 ```go
 func NewMembershipsService(c *client.Client) *MembershipsService
@@ -2357,7 +2361,7 @@ func NewMembershipsService(c *client.Client) *MembershipsService
 
 
 <a name="MembershipsService.List"></a>
-### func \(\*MembershipsService\) [List](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L139>)
+### func \(\*MembershipsService\) [List](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L151>)
 
 ```go
 func (s *MembershipsService) List(ctx context.Context, params ListMembershipsParams) (*ListMemberships200Response, error)
@@ -2368,7 +2372,7 @@ List: List memberships List memberships of the current user.
 <a name="ResourceType"></a>
 ## type [ResourceType](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L80>)
 
-ResourceType: The kind of the membership resource. Possible values are: \* \`merchant\` \- merchant account\(s\) \* \`organization\` \- organization\(s\)
+ResourceType: The type of the membership resource. Possible values are: \* \`merchant\` \- merchant account\(s\) \* \`organization\` \- organization\(s\)
 
 ```go
 type ResourceType string
@@ -7082,6 +7086,39 @@ Then open http://localhost:8080 in your browser.
 ## Index
 
 
+
+# oauth2
+
+```go
+import "github.com/sumup/sumup-go/example/oauth2"
+```
+
+OAuth 2.0 Authorization Code flow with SumUp
+
+This example walks your through the steps necessary to implement OAuth 2.0 \(\<https://oauth.net/\>\) in case you are building a software for other people to use.
+
+To get started, you will need your client credentials. If you don't have any yet, you can create them in the \[Developer Settings\]\(https://me.sumup.com/en-us/settings/oauth2-applications\).
+
+Your credentials need to be configured with the correct redirect URI, that's the URI the user will get redirected to once they authenticate and authorize your application. For development, you might want to use for example \`http://localhost:8080/callback\`. In production, you would redirect the user back to your host, e.g. \`https://example.com/callback\`.
+
+## Index
+
+- [Constants](<#constants>)
+
+
+## Constants
+
+<a name="PKCECookieName"></a>
+
+```go
+const PKCECookieName = "oauth_pkce"
+```
+
+<a name="StateCookieName"></a>
+
+```go
+const StateCookieName = "oauth_state"
+```
 
 # simple
 

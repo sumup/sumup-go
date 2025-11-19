@@ -41,7 +41,7 @@ type Membership struct {
 	Roles []string `json:"roles"`
 	// The status of the membership.
 	Status shared.MembershipStatus `json:"status"`
-	// The kind of the membership resource.
+	// The type of the membership resource.
 	// Possible values are:
 	// * `merchant` - merchant account(s)
 	// * `organization` - organization(s)
@@ -64,7 +64,7 @@ type MembershipResource struct {
 	Logo *string `json:"logo,omitempty"`
 	// Display name of the resource.
 	Name string `json:"name"`
-	// The kind of the membership resource.
+	// The type of the membership resource.
 	// Possible values are:
 	// * `merchant` - merchant account(s)
 	// * `organization` - organization(s)
@@ -73,7 +73,7 @@ type MembershipResource struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// ResourceType: The kind of the membership resource.
+// ResourceType: The type of the membership resource.
 // Possible values are:
 // * `merchant` - merchant account(s)
 // * `organization` - organization(s)
@@ -91,6 +91,10 @@ type ListMembershipsParams struct {
 	ResourceAttributesSandbox *bool
 	// Filter memberships by the name of the resource the membership is in.
 	ResourceName *string
+	// Filter memberships by resource kind.
+	ResourceType *ResourceType
+	// Filter the returned memberships by the membership status.
+	Status *shared.MembershipStatus
 }
 
 // QueryValues converts [ListMembershipsParams] into [url.Values].
@@ -115,6 +119,14 @@ func (p *ListMembershipsParams) QueryValues() url.Values {
 
 	if p.ResourceName != nil {
 		q.Set("resource.name", *p.ResourceName)
+	}
+
+	if p.ResourceType != nil {
+		q.Set("resource.type", string(*p.ResourceType))
+	}
+
+	if p.Status != nil {
+		q.Set("status", string(*p.Status))
 	}
 
 	return q
