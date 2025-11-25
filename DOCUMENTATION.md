@@ -99,8 +99,6 @@ import "github.com/sumup/sumup-go/checkouts"
 - [type CheckoutCreateRequestTransactionEntryMode](<#CheckoutCreateRequestTransactionEntryMode>)
 - [type CheckoutCreateRequestTransactionPaymentType](<#CheckoutCreateRequestTransactionPaymentType>)
 - [type CheckoutCreateRequestTransactionStatus](<#CheckoutCreateRequestTransactionStatus>)
-- [type CheckoutProcessMixin](<#CheckoutProcessMixin>)
-- [type CheckoutProcessMixinPaymentType](<#CheckoutProcessMixinPaymentType>)
 - [type CheckoutStatus](<#CheckoutStatus>)
 - [type CheckoutSuccess](<#CheckoutSuccess>)
 - [type CheckoutSuccessPaymentInstrument](<#CheckoutSuccessPaymentInstrument>)
@@ -142,10 +140,12 @@ import "github.com/sumup/sumup-go/checkouts"
   - [func \(p \*ListCheckoutsParams\) QueryValues\(\) url.Values](<#ListCheckoutsParams.QueryValues>)
 - [type MandatePayload](<#MandatePayload>)
 - [type MandatePayloadType](<#MandatePayloadType>)
+- [type ProcessCheckout](<#ProcessCheckout>)
 - [type ProcessCheckout400Response](<#ProcessCheckout400Response>)
   - [func \(e \*ProcessCheckout400Response\) Error\(\) string](<#ProcessCheckout400Response.Error>)
 - [type ProcessCheckoutBody](<#ProcessCheckoutBody>)
 - [type ProcessCheckoutBodyPaymentType](<#ProcessCheckoutBodyPaymentType>)
+- [type ProcessCheckoutPaymentType](<#ProcessCheckoutPaymentType>)
 - [type ProcessCheckoutResponse](<#ProcessCheckoutResponse>)
   - [func \(r \*ProcessCheckoutResponse\) AsCheckoutAccepted\(\) \(\*CheckoutAccepted, bool\)](<#ProcessCheckoutResponse.AsCheckoutAccepted>)
   - [func \(r \*ProcessCheckoutResponse\) AsCheckoutSuccess\(\) \(\*CheckoutSuccess, bool\)](<#ProcessCheckoutResponse.AsCheckoutSuccess>)
@@ -549,54 +549,6 @@ const (
 )
 ```
 
-<a name="CheckoutProcessMixin"></a>
-## type [CheckoutProcessMixin](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L371-L389>)
-
-CheckoutProcessMixin: Details of the payment instrument for processing the checkout.
-
-```go
-type CheckoutProcessMixin struct {
-    // __Required when payment type is `card`.__ Details of the payment card.
-    Card *Card `json:"card,omitempty"`
-    // __Required when `token` is provided.__ Unique ID of the customer.
-    CustomerId *string `json:"customer_id,omitempty"`
-    // Number of installments for deferred payments. Available only to merchant users in Brazil.
-    // Min: 1
-    // Max: 12
-    Installments *int `json:"installments,omitempty"`
-    // Mandate is passed when a card is to be tokenized
-    Mandate *MandatePayload `json:"mandate,omitempty"`
-    // Describes the payment method used to attempt processing
-    PaymentType CheckoutProcessMixinPaymentType `json:"payment_type"`
-    // Personal details for the customer.
-    PersonalDetails *shared.PersonalDetails `json:"personal_details,omitempty"`
-    // __Required when using a tokenized card to process a checkout.__ Unique token identifying the saved payment card
-    // for a customer.
-    Token *string `json:"token,omitempty"`
-}
-```
-
-<a name="CheckoutProcessMixinPaymentType"></a>
-## type [CheckoutProcessMixinPaymentType](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L392>)
-
-CheckoutProcessMixinPaymentType: Describes the payment method used to attempt processing
-
-```go
-type CheckoutProcessMixinPaymentType string
-```
-
-<a name="CheckoutProcessMixinPaymentTypeBancontact"></a>
-
-```go
-const (
-    CheckoutProcessMixinPaymentTypeBancontact CheckoutProcessMixinPaymentType = "bancontact"
-    CheckoutProcessMixinPaymentTypeBlik       CheckoutProcessMixinPaymentType = "blik"
-    CheckoutProcessMixinPaymentTypeBoleto     CheckoutProcessMixinPaymentType = "boleto"
-    CheckoutProcessMixinPaymentTypeCard       CheckoutProcessMixinPaymentType = "card"
-    CheckoutProcessMixinPaymentTypeIdeal      CheckoutProcessMixinPaymentType = "ideal"
-)
-```
-
 <a name="CheckoutStatus"></a>
 ## type [CheckoutStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L133>)
 
@@ -617,7 +569,7 @@ const (
 ```
 
 <a name="CheckoutSuccess"></a>
-## type [CheckoutSuccess](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L403-L450>)
+## type [CheckoutSuccess](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L371-L418>)
 
 CheckoutSuccess is a schema definition.
 
@@ -673,7 +625,7 @@ type CheckoutSuccess struct {
 ```
 
 <a name="CheckoutSuccessPaymentInstrument"></a>
-## type [CheckoutSuccessPaymentInstrument](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L524-L527>)
+## type [CheckoutSuccessPaymentInstrument](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L492-L495>)
 
 CheckoutSuccessPaymentInstrument: Object containing token information for the specified payment instrument
 
@@ -685,7 +637,7 @@ type CheckoutSuccessPaymentInstrument struct {
 ```
 
 <a name="CheckoutSuccessStatus"></a>
-## type [CheckoutSuccessStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L453>)
+## type [CheckoutSuccessStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L421>)
 
 CheckoutSuccessStatus: Current status of the checkout.
 
@@ -704,7 +656,7 @@ const (
 ```
 
 <a name="CheckoutSuccessTransaction"></a>
-## type [CheckoutSuccessTransaction](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L462-L493>)
+## type [CheckoutSuccessTransaction](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L430-L461>)
 
 CheckoutSuccessTransaction is a schema definition.
 
@@ -744,7 +696,7 @@ type CheckoutSuccessTransaction struct {
 ```
 
 <a name="CheckoutSuccessTransactionEntryMode"></a>
-## type [CheckoutSuccessTransactionEntryMode](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L516>)
+## type [CheckoutSuccessTransactionEntryMode](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L484>)
 
 CheckoutSuccessTransactionEntryMode: Entry mode of the payment details.
 
@@ -762,7 +714,7 @@ const (
 ```
 
 <a name="CheckoutSuccessTransactionPaymentType"></a>
-## type [CheckoutSuccessTransactionPaymentType](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L496>)
+## type [CheckoutSuccessTransactionPaymentType](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L464>)
 
 CheckoutSuccessTransactionPaymentType: Payment type used for the transaction.
 
@@ -782,7 +734,7 @@ const (
 ```
 
 <a name="CheckoutSuccessTransactionStatus"></a>
-## type [CheckoutSuccessTransactionStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L506>)
+## type [CheckoutSuccessTransactionStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L474>)
 
 CheckoutSuccessTransactionStatus: Current status of the transaction.
 
@@ -1170,7 +1122,7 @@ const (
 ```
 
 <a name="DetailsError"></a>
-## type [DetailsError](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L530-L538>)
+## type [DetailsError](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L498-L506>)
 
 DetailsError: Error message structure.
 
@@ -1187,7 +1139,7 @@ type DetailsError struct {
 ```
 
 <a name="DetailsError.Error"></a>
-### func \(\*DetailsError\) [Error](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L546>)
+### func \(\*DetailsError\) [Error](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L514>)
 
 ```go
 func (e *DetailsError) Error() string
@@ -1196,7 +1148,7 @@ func (e *DetailsError) Error() string
 
 
 <a name="DetailsErrorFailedConstraint"></a>
-## type [DetailsErrorFailedConstraint](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L541-L544>)
+## type [DetailsErrorFailedConstraint](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L509-L512>)
 
 DetailsErrorFailedConstraint is a schema definition.
 
@@ -1208,7 +1160,7 @@ type DetailsErrorFailedConstraint struct {
 ```
 
 <a name="ErrorExtended"></a>
-## type [ErrorExtended](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L553-L562>)
+## type [ErrorExtended](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L521-L530>)
 
 ErrorExtended is a schema definition.
 
@@ -1226,7 +1178,7 @@ type ErrorExtended struct {
 ```
 
 <a name="ErrorExtended.Error"></a>
-### func \(\*ErrorExtended\) [Error](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L564>)
+### func \(\*ErrorExtended\) [Error](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L532>)
 
 ```go
 func (e *ErrorExtended) Error() string
@@ -1312,7 +1264,7 @@ func (p *ListCheckoutsParams) QueryValues() url.Values
 QueryValues converts [ListCheckoutsParams](<#ListCheckoutsParams>) into \[url.Values\].
 
 <a name="MandatePayload"></a>
-## type [MandatePayload](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L571-L578>)
+## type [MandatePayload](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L539-L546>)
 
 MandatePayload: Mandate is passed when a card is to be tokenized
 
@@ -1328,7 +1280,7 @@ type MandatePayload struct {
 ```
 
 <a name="MandatePayloadType"></a>
-## type [MandatePayloadType](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L581>)
+## type [MandatePayloadType](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L549>)
 
 MandatePayloadType: Indicates the mandate type
 
@@ -1342,6 +1294,33 @@ type MandatePayloadType string
 const (
     MandatePayloadTypeRecurrent MandatePayloadType = "recurrent"
 )
+```
+
+<a name="ProcessCheckout"></a>
+## type [ProcessCheckout](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L556-L574>)
+
+ProcessCheckout: Details of the payment instrument for processing the checkout.
+
+```go
+type ProcessCheckout struct {
+    // __Required when payment type is `card`.__ Details of the payment card.
+    Card *Card `json:"card,omitempty"`
+    // __Required when `token` is provided.__ Unique ID of the customer.
+    CustomerId *string `json:"customer_id,omitempty"`
+    // Number of installments for deferred payments. Available only to merchant users in Brazil.
+    // Min: 1
+    // Max: 12
+    Installments *int `json:"installments,omitempty"`
+    // Mandate is passed when a card is to be tokenized
+    Mandate *MandatePayload `json:"mandate,omitempty"`
+    // Describes the payment method used to attempt processing
+    PaymentType ProcessCheckoutPaymentType `json:"payment_type"`
+    // Personal details for the customer.
+    PersonalDetails *shared.PersonalDetails `json:"personal_details,omitempty"`
+    // __Required when using a tokenized card to process a checkout.__ Unique token identifying the saved payment card
+    // for a customer.
+    Token *string `json:"token,omitempty"`
+}
 ```
 
 <a name="ProcessCheckout400Response"></a>
@@ -1407,6 +1386,27 @@ const (
     ProcessCheckoutBodyPaymentTypeBoleto     ProcessCheckoutBodyPaymentType = "boleto"
     ProcessCheckoutBodyPaymentTypeCard       ProcessCheckoutBodyPaymentType = "card"
     ProcessCheckoutBodyPaymentTypeIdeal      ProcessCheckoutBodyPaymentType = "ideal"
+)
+```
+
+<a name="ProcessCheckoutPaymentType"></a>
+## type [ProcessCheckoutPaymentType](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L577>)
+
+ProcessCheckoutPaymentType: Describes the payment method used to attempt processing
+
+```go
+type ProcessCheckoutPaymentType string
+```
+
+<a name="ProcessCheckoutPaymentTypeBancontact"></a>
+
+```go
+const (
+    ProcessCheckoutPaymentTypeBancontact ProcessCheckoutPaymentType = "bancontact"
+    ProcessCheckoutPaymentTypeBlik       ProcessCheckoutPaymentType = "blik"
+    ProcessCheckoutPaymentTypeBoleto     ProcessCheckoutPaymentType = "boleto"
+    ProcessCheckoutPaymentTypeCard       ProcessCheckoutPaymentType = "card"
+    ProcessCheckoutPaymentTypeIdeal      ProcessCheckoutPaymentType = "ideal"
 )
 ```
 
@@ -5377,12 +5377,12 @@ import "github.com/sumup/sumup-go/shared"
 - [type Metadata](<#Metadata>)
 - [type PersonalDetails](<#PersonalDetails>)
 - [type TimestampEvent](<#TimestampEvent>)
+- [type TransactionBase](<#TransactionBase>)
+- [type TransactionBasePaymentType](<#TransactionBasePaymentType>)
+- [type TransactionBaseStatus](<#TransactionBaseStatus>)
+- [type TransactionCheckoutInfo](<#TransactionCheckoutInfo>)
+- [type TransactionCheckoutInfoEntryMode](<#TransactionCheckoutInfoEntryMode>)
 - [type TransactionId](<#TransactionId>)
-- [type TransactionMixinBase](<#TransactionMixinBase>)
-- [type TransactionMixinBasePaymentType](<#TransactionMixinBasePaymentType>)
-- [type TransactionMixinBaseStatus](<#TransactionMixinBaseStatus>)
-- [type TransactionMixinCheckout](<#TransactionMixinCheckout>)
-- [type TransactionMixinCheckoutEntryMode](<#TransactionMixinCheckoutEntryMode>)
 
 
 <a name="AddressLegacy"></a>
@@ -5661,22 +5661,13 @@ TimestampEvent: Date and time of the transaction event.
 type TimestampEvent string
 ```
 
-<a name="TransactionId"></a>
-## type [TransactionId](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L176>)
+<a name="TransactionBase"></a>
+## type [TransactionBase](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L176-L195>)
 
-TransactionId: Unique ID of the transaction.
-
-```go
-type TransactionId string
-```
-
-<a name="TransactionMixinBase"></a>
-## type [TransactionMixinBase](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L179-L198>)
-
-TransactionMixinBase: Details of the transaction.
+TransactionBase: Details of the transaction.
 
 ```go
-type TransactionMixinBase struct {
+type TransactionBase struct {
     // Total amount of the transaction.
     Amount *float64 `json:"amount,omitempty"`
     // Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
@@ -5688,9 +5679,9 @@ type TransactionMixinBase struct {
     // Min: 1
     InstallmentsCount *int `json:"installments_count,omitempty"`
     // Payment type used for the transaction.
-    PaymentType *TransactionMixinBasePaymentType `json:"payment_type,omitempty"`
+    PaymentType *TransactionBasePaymentType `json:"payment_type,omitempty"`
     // Current status of the transaction.
-    Status *TransactionMixinBaseStatus `json:"status,omitempty"`
+    Status *TransactionBaseStatus `json:"status,omitempty"`
     // Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
     Timestamp *time.Time `json:"timestamp,omitempty"`
     // Transaction code returned by the acquirer/processing entity after processing the transaction.
@@ -5698,57 +5689,57 @@ type TransactionMixinBase struct {
 }
 ```
 
-<a name="TransactionMixinBasePaymentType"></a>
-## type [TransactionMixinBasePaymentType](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L201>)
+<a name="TransactionBasePaymentType"></a>
+## type [TransactionBasePaymentType](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L198>)
 
-TransactionMixinBasePaymentType: Payment type used for the transaction.
+TransactionBasePaymentType: Payment type used for the transaction.
 
 ```go
-type TransactionMixinBasePaymentType string
+type TransactionBasePaymentType string
 ```
 
-<a name="TransactionMixinBasePaymentTypeBoleto"></a>
+<a name="TransactionBasePaymentTypeBoleto"></a>
 
 ```go
 const (
-    TransactionMixinBasePaymentTypeBoleto    TransactionMixinBasePaymentType = "BOLETO"
-    TransactionMixinBasePaymentTypeEcom      TransactionMixinBasePaymentType = "ECOM"
-    TransactionMixinBasePaymentTypePos       TransactionMixinBasePaymentType = "POS"
-    TransactionMixinBasePaymentTypeRecurring TransactionMixinBasePaymentType = "RECURRING"
+    TransactionBasePaymentTypeBoleto    TransactionBasePaymentType = "BOLETO"
+    TransactionBasePaymentTypeEcom      TransactionBasePaymentType = "ECOM"
+    TransactionBasePaymentTypePos       TransactionBasePaymentType = "POS"
+    TransactionBasePaymentTypeRecurring TransactionBasePaymentType = "RECURRING"
 )
 ```
 
-<a name="TransactionMixinBaseStatus"></a>
-## type [TransactionMixinBaseStatus](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L211>)
+<a name="TransactionBaseStatus"></a>
+## type [TransactionBaseStatus](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L208>)
 
-TransactionMixinBaseStatus: Current status of the transaction.
+TransactionBaseStatus: Current status of the transaction.
 
 ```go
-type TransactionMixinBaseStatus string
+type TransactionBaseStatus string
 ```
 
-<a name="TransactionMixinBaseStatusCancelled"></a>
+<a name="TransactionBaseStatusCancelled"></a>
 
 ```go
 const (
-    TransactionMixinBaseStatusCancelled  TransactionMixinBaseStatus = "CANCELLED"
-    TransactionMixinBaseStatusFailed     TransactionMixinBaseStatus = "FAILED"
-    TransactionMixinBaseStatusPending    TransactionMixinBaseStatus = "PENDING"
-    TransactionMixinBaseStatusSuccessful TransactionMixinBaseStatus = "SUCCESSFUL"
+    TransactionBaseStatusCancelled  TransactionBaseStatus = "CANCELLED"
+    TransactionBaseStatusFailed     TransactionBaseStatus = "FAILED"
+    TransactionBaseStatusPending    TransactionBaseStatus = "PENDING"
+    TransactionBaseStatusSuccessful TransactionBaseStatus = "SUCCESSFUL"
 )
 ```
 
-<a name="TransactionMixinCheckout"></a>
-## type [TransactionMixinCheckout](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L221-L234>)
+<a name="TransactionCheckoutInfo"></a>
+## type [TransactionCheckoutInfo](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L218-L231>)
 
-TransactionMixinCheckout is a schema definition.
+TransactionCheckoutInfo is a schema definition.
 
 ```go
-type TransactionMixinCheckout struct {
+type TransactionCheckoutInfo struct {
     // Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
     AuthCode *string `json:"auth_code,omitempty"`
     // Entry mode of the payment details.
-    EntryMode *TransactionMixinCheckoutEntryMode `json:"entry_mode,omitempty"`
+    EntryMode *TransactionCheckoutInfoEntryMode `json:"entry_mode,omitempty"`
     // Internal unique ID of the transaction on the SumUp platform.
     InternalId *int `json:"internal_id,omitempty"`
     // Unique code of the registered merchant to whom the payment is made.
@@ -5760,22 +5751,31 @@ type TransactionMixinCheckout struct {
 }
 ```
 
-<a name="TransactionMixinCheckoutEntryMode"></a>
-## type [TransactionMixinCheckoutEntryMode](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L237>)
+<a name="TransactionCheckoutInfoEntryMode"></a>
+## type [TransactionCheckoutInfoEntryMode](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L234>)
 
-TransactionMixinCheckoutEntryMode: Entry mode of the payment details.
+TransactionCheckoutInfoEntryMode: Entry mode of the payment details.
 
 ```go
-type TransactionMixinCheckoutEntryMode string
+type TransactionCheckoutInfoEntryMode string
 ```
 
-<a name="TransactionMixinCheckoutEntryModeBoleto"></a>
+<a name="TransactionCheckoutInfoEntryModeBoleto"></a>
 
 ```go
 const (
-    TransactionMixinCheckoutEntryModeBoleto        TransactionMixinCheckoutEntryMode = "BOLETO"
-    TransactionMixinCheckoutEntryModeCustomerEntry TransactionMixinCheckoutEntryMode = "CUSTOMER_ENTRY"
+    TransactionCheckoutInfoEntryModeBoleto        TransactionCheckoutInfoEntryMode = "BOLETO"
+    TransactionCheckoutInfoEntryModeCustomerEntry TransactionCheckoutInfoEntryMode = "CUSTOMER_ENTRY"
 )
+```
+
+<a name="TransactionId"></a>
+## type [TransactionId](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L242>)
+
+TransactionId: Unique ID of the transaction.
+
+```go
+type TransactionId string
 ```
 
 # subaccounts
