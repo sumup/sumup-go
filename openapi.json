@@ -661,7 +661,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CheckoutProcessMixin"
+                "$ref": "#/components/schemas/ProcessCheckout"
               },
               "examples": {
                 "ProcessCard": {
@@ -6473,10 +6473,10 @@
             "items": {
               "allOf": [
                 {
-                  "$ref": "#/components/schemas/TransactionMixinBase"
+                  "$ref": "#/components/schemas/TransactionBase"
                 },
                 {
-                  "$ref": "#/components/schemas/TransactionMixinCheckout"
+                  "$ref": "#/components/schemas/TransactionCheckoutInfo"
                 }
               ]
             },
@@ -6564,10 +6564,10 @@
             "items": {
               "allOf": [
                 {
-                  "$ref": "#/components/schemas/TransactionMixinBase"
+                  "$ref": "#/components/schemas/TransactionBase"
                 },
                 {
-                  "$ref": "#/components/schemas/TransactionMixinCheckout"
+                  "$ref": "#/components/schemas/TransactionCheckoutInfo"
                 }
               ]
             },
@@ -6587,7 +6587,7 @@
           "merchant_code"
         ]
       },
-      "CheckoutProcessMixin": {
+      "ProcessCheckout": {
         "description": "Details of the payment instrument for processing the checkout.",
         "type": "object",
         "properties": {
@@ -7779,7 +7779,7 @@
           }
         }
       },
-      "TransactionMixinBase": {
+      "TransactionBase": {
         "description": "Details of the transaction.",
         "type": "object",
         "properties": {
@@ -7835,7 +7835,7 @@
           }
         }
       },
-      "TransactionMixinCheckout": {
+      "TransactionCheckoutInfo": {
         "type": "object",
         "properties": {
           "merchant_code": {
@@ -7904,7 +7904,7 @@
       "TransactionHistory": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/TransactionMixinBase"
+            "$ref": "#/components/schemas/TransactionBase"
           },
           {
             "$ref": "#/components/schemas/TransactionMixinHistory"
@@ -7960,10 +7960,10 @@
       "TransactionFull": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/TransactionMixinBase"
+            "$ref": "#/components/schemas/TransactionBase"
           },
           {
-            "$ref": "#/components/schemas/TransactionMixinCheckout"
+            "$ref": "#/components/schemas/TransactionCheckoutInfo"
           },
           {
             "$ref": "#/components/schemas/TransactionMixinHistory"
@@ -10450,7 +10450,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/CheckoutProcessMixin"
+              "$ref": "#/components/schemas/ProcessCheckout"
             },
             "examples": {
               "ProcessCard": {

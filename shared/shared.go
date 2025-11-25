@@ -172,11 +172,8 @@ type PersonalDetails struct {
 // TimestampEvent: Date and time of the transaction event.
 type TimestampEvent string
 
-// TransactionId: Unique ID of the transaction.
-type TransactionId string
-
-// TransactionMixinBase: Details of the transaction.
-type TransactionMixinBase struct {
+// TransactionBase: Details of the transaction.
+type TransactionBase struct {
 	// Total amount of the transaction.
 	Amount *float64 `json:"amount,omitempty"`
 	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
@@ -188,41 +185,41 @@ type TransactionMixinBase struct {
 	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Payment type used for the transaction.
-	PaymentType *TransactionMixinBasePaymentType `json:"payment_type,omitempty"`
+	PaymentType *TransactionBasePaymentType `json:"payment_type,omitempty"`
 	// Current status of the transaction.
-	Status *TransactionMixinBaseStatus `json:"status,omitempty"`
+	Status *TransactionBaseStatus `json:"status,omitempty"`
 	// Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
 	// Transaction code returned by the acquirer/processing entity after processing the transaction.
 	TransactionCode *string `json:"transaction_code,omitempty"`
 }
 
-// TransactionMixinBasePaymentType: Payment type used for the transaction.
-type TransactionMixinBasePaymentType string
+// TransactionBasePaymentType: Payment type used for the transaction.
+type TransactionBasePaymentType string
 
 const (
-	TransactionMixinBasePaymentTypeBoleto    TransactionMixinBasePaymentType = "BOLETO"
-	TransactionMixinBasePaymentTypeEcom      TransactionMixinBasePaymentType = "ECOM"
-	TransactionMixinBasePaymentTypePos       TransactionMixinBasePaymentType = "POS"
-	TransactionMixinBasePaymentTypeRecurring TransactionMixinBasePaymentType = "RECURRING"
+	TransactionBasePaymentTypeBoleto    TransactionBasePaymentType = "BOLETO"
+	TransactionBasePaymentTypeEcom      TransactionBasePaymentType = "ECOM"
+	TransactionBasePaymentTypePos       TransactionBasePaymentType = "POS"
+	TransactionBasePaymentTypeRecurring TransactionBasePaymentType = "RECURRING"
 )
 
-// TransactionMixinBaseStatus: Current status of the transaction.
-type TransactionMixinBaseStatus string
+// TransactionBaseStatus: Current status of the transaction.
+type TransactionBaseStatus string
 
 const (
-	TransactionMixinBaseStatusCancelled  TransactionMixinBaseStatus = "CANCELLED"
-	TransactionMixinBaseStatusFailed     TransactionMixinBaseStatus = "FAILED"
-	TransactionMixinBaseStatusPending    TransactionMixinBaseStatus = "PENDING"
-	TransactionMixinBaseStatusSuccessful TransactionMixinBaseStatus = "SUCCESSFUL"
+	TransactionBaseStatusCancelled  TransactionBaseStatus = "CANCELLED"
+	TransactionBaseStatusFailed     TransactionBaseStatus = "FAILED"
+	TransactionBaseStatusPending    TransactionBaseStatus = "PENDING"
+	TransactionBaseStatusSuccessful TransactionBaseStatus = "SUCCESSFUL"
 )
 
-// TransactionMixinCheckout is a schema definition.
-type TransactionMixinCheckout struct {
+// TransactionCheckoutInfo is a schema definition.
+type TransactionCheckoutInfo struct {
 	// Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
 	AuthCode *string `json:"auth_code,omitempty"`
 	// Entry mode of the payment details.
-	EntryMode *TransactionMixinCheckoutEntryMode `json:"entry_mode,omitempty"`
+	EntryMode *TransactionCheckoutInfoEntryMode `json:"entry_mode,omitempty"`
 	// Internal unique ID of the transaction on the SumUp platform.
 	InternalId *int `json:"internal_id,omitempty"`
 	// Unique code of the registered merchant to whom the payment is made.
@@ -233,10 +230,13 @@ type TransactionMixinCheckout struct {
 	VatAmount *float64 `json:"vat_amount,omitempty"`
 }
 
-// TransactionMixinCheckoutEntryMode: Entry mode of the payment details.
-type TransactionMixinCheckoutEntryMode string
+// TransactionCheckoutInfoEntryMode: Entry mode of the payment details.
+type TransactionCheckoutInfoEntryMode string
 
 const (
-	TransactionMixinCheckoutEntryModeBoleto        TransactionMixinCheckoutEntryMode = "BOLETO"
-	TransactionMixinCheckoutEntryModeCustomerEntry TransactionMixinCheckoutEntryMode = "CUSTOMER_ENTRY"
+	TransactionCheckoutInfoEntryModeBoleto        TransactionCheckoutInfoEntryMode = "BOLETO"
+	TransactionCheckoutInfoEntryModeCustomerEntry TransactionCheckoutInfoEntryMode = "CUSTOMER_ENTRY"
 )
+
+// TransactionId: Unique ID of the transaction.
+type TransactionId string

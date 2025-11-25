@@ -461,7 +461,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CheckoutProcessMixin'
+              $ref: '#/components/schemas/ProcessCheckout'
             examples:
               ProcessCard:
                 description: Process a checkout with a card
@@ -4361,8 +4361,8 @@ components:
           type: array
           items:
             allOf:
-              - $ref: '#/components/schemas/TransactionMixinBase'
-              - $ref: '#/components/schemas/TransactionMixinCheckout'
+              - $ref: '#/components/schemas/TransactionBase'
+              - $ref: '#/components/schemas/TransactionCheckoutInfo'
           uniqueItems: true
       title: Checkout
     CheckoutCreateRequest:
@@ -4429,8 +4429,8 @@ components:
           type: array
           items:
             allOf:
-              - $ref: '#/components/schemas/TransactionMixinBase'
-              - $ref: '#/components/schemas/TransactionMixinCheckout'
+              - $ref: '#/components/schemas/TransactionBase'
+              - $ref: '#/components/schemas/TransactionCheckoutInfo'
           readOnly: true
           uniqueItems: true
         redirect_url:
@@ -4442,7 +4442,7 @@ components:
         - amount
         - currency
         - merchant_code
-    CheckoutProcessMixin:
+    ProcessCheckout:
       description: Details of the payment instrument for processing the checkout.
       type: object
       properties:
@@ -5306,7 +5306,7 @@ components:
           type: integer
         timestamp:
           $ref: '#/components/schemas/TimestampEvent'
-    TransactionMixinBase:
+    TransactionBase:
       description: Details of the transaction.
       type: object
       properties:
@@ -5350,7 +5350,7 @@ components:
           description: Current number of the installment for deferred payments.
           type: integer
           minimum: 1
-    TransactionMixinCheckout:
+    TransactionCheckoutInfo:
       type: object
       properties:
         merchant_code:
@@ -5402,7 +5402,7 @@ components:
             - ACCELERATED_INSTALLMENT
     TransactionHistory:
       allOf:
-        - $ref: '#/components/schemas/TransactionMixinBase'
+        - $ref: '#/components/schemas/TransactionBase'
         - $ref: '#/components/schemas/TransactionMixinHistory'
         - type: object
           properties:
@@ -5442,8 +5442,8 @@ components:
                 - UNKNOWN
     TransactionFull:
       allOf:
-        - $ref: '#/components/schemas/TransactionMixinBase'
-        - $ref: '#/components/schemas/TransactionMixinCheckout'
+        - $ref: '#/components/schemas/TransactionBase'
+        - $ref: '#/components/schemas/TransactionCheckoutInfo'
         - $ref: '#/components/schemas/TransactionMixinHistory'
         - type: object
           properties:
@@ -7467,7 +7467,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/CheckoutProcessMixin'
+            $ref: '#/components/schemas/ProcessCheckout'
           examples:
             ProcessCard:
               description: Process a checkout with a card

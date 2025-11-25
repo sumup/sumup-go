@@ -367,38 +367,6 @@ const (
 	CheckoutCreateRequestTransactionEntryModeCustomerEntry CheckoutCreateRequestTransactionEntryMode = "CUSTOMER_ENTRY"
 )
 
-// CheckoutProcessMixin: Details of the payment instrument for processing the checkout.
-type CheckoutProcessMixin struct {
-	// __Required when payment type is `card`.__ Details of the payment card.
-	Card *Card `json:"card,omitempty"`
-	// __Required when `token` is provided.__ Unique ID of the customer.
-	CustomerId *string `json:"customer_id,omitempty"`
-	// Number of installments for deferred payments. Available only to merchant users in Brazil.
-	// Min: 1
-	// Max: 12
-	Installments *int `json:"installments,omitempty"`
-	// Mandate is passed when a card is to be tokenized
-	Mandate *MandatePayload `json:"mandate,omitempty"`
-	// Describes the payment method used to attempt processing
-	PaymentType CheckoutProcessMixinPaymentType `json:"payment_type"`
-	// Personal details for the customer.
-	PersonalDetails *shared.PersonalDetails `json:"personal_details,omitempty"`
-	// __Required when using a tokenized card to process a checkout.__ Unique token identifying the saved payment card
-	// for a customer.
-	Token *string `json:"token,omitempty"`
-}
-
-// CheckoutProcessMixinPaymentType: Describes the payment method used to attempt processing
-type CheckoutProcessMixinPaymentType string
-
-const (
-	CheckoutProcessMixinPaymentTypeBancontact CheckoutProcessMixinPaymentType = "bancontact"
-	CheckoutProcessMixinPaymentTypeBlik       CheckoutProcessMixinPaymentType = "blik"
-	CheckoutProcessMixinPaymentTypeBoleto     CheckoutProcessMixinPaymentType = "boleto"
-	CheckoutProcessMixinPaymentTypeCard       CheckoutProcessMixinPaymentType = "card"
-	CheckoutProcessMixinPaymentTypeIdeal      CheckoutProcessMixinPaymentType = "ideal"
-)
-
 // CheckoutSuccess is a schema definition.
 type CheckoutSuccess struct {
 	// Amount of the payment.
@@ -582,6 +550,38 @@ type MandatePayloadType string
 
 const (
 	MandatePayloadTypeRecurrent MandatePayloadType = "recurrent"
+)
+
+// ProcessCheckout: Details of the payment instrument for processing the checkout.
+type ProcessCheckout struct {
+	// __Required when payment type is `card`.__ Details of the payment card.
+	Card *Card `json:"card,omitempty"`
+	// __Required when `token` is provided.__ Unique ID of the customer.
+	CustomerId *string `json:"customer_id,omitempty"`
+	// Number of installments for deferred payments. Available only to merchant users in Brazil.
+	// Min: 1
+	// Max: 12
+	Installments *int `json:"installments,omitempty"`
+	// Mandate is passed when a card is to be tokenized
+	Mandate *MandatePayload `json:"mandate,omitempty"`
+	// Describes the payment method used to attempt processing
+	PaymentType ProcessCheckoutPaymentType `json:"payment_type"`
+	// Personal details for the customer.
+	PersonalDetails *shared.PersonalDetails `json:"personal_details,omitempty"`
+	// __Required when using a tokenized card to process a checkout.__ Unique token identifying the saved payment card
+	// for a customer.
+	Token *string `json:"token,omitempty"`
+}
+
+// ProcessCheckoutPaymentType: Describes the payment method used to attempt processing
+type ProcessCheckoutPaymentType string
+
+const (
+	ProcessCheckoutPaymentTypeBancontact ProcessCheckoutPaymentType = "bancontact"
+	ProcessCheckoutPaymentTypeBlik       ProcessCheckoutPaymentType = "blik"
+	ProcessCheckoutPaymentTypeBoleto     ProcessCheckoutPaymentType = "boleto"
+	ProcessCheckoutPaymentTypeCard       ProcessCheckoutPaymentType = "card"
+	ProcessCheckoutPaymentTypeIdeal      ProcessCheckoutPaymentType = "ideal"
 )
 
 // CreateCheckoutBody: Details of the payment checkout.
