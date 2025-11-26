@@ -19,7 +19,7 @@ import (
 // type, and associated roles.
 type Membership struct {
 	// Object attributes that are modifiable only by SumUp applications.
-	Attributes *shared.Attributes `json:"attributes,omitempty"`
+	Attributes shared.Attributes `json:"attributes,omitempty"`
 	// The timestamp of when the membership was created.
 	CreatedAt time.Time `json:"created_at"`
 	// ID of the membership.
@@ -29,7 +29,7 @@ type Membership struct {
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
 	// submit whole metadata. Maximum of 64 parameters are allowed in the object.
 	// Max properties: 64
-	Metadata *shared.Metadata `json:"metadata,omitempty"`
+	Metadata shared.Metadata `json:"metadata,omitempty"`
 	// User's permissions.
 	// Deprecated: Permissions include only legacy permissions, please use roles instead. Member access is based on
 	// their roles within a given resource and the permissions these roles grant.
@@ -54,7 +54,7 @@ type Membership struct {
 // MembershipResource: Information about the resource the membership is in.
 type MembershipResource struct {
 	// Object attributes that are modifiable only by SumUp applications.
-	Attributes *shared.Attributes `json:"attributes,omitempty"`
+	Attributes shared.Attributes `json:"attributes,omitempty"`
 	// The timestamp of when the membership resource was created.
 	CreatedAt time.Time `json:"created_at"`
 	// ID of the resource the membership is in.

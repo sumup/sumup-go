@@ -26,7 +26,7 @@ type Role struct {
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
 	// submit whole metadata. Maximum of 64 parameters are allowed in the object.
 	// Max properties: 64
-	Metadata *shared.Metadata `json:"metadata,omitempty"`
+	Metadata shared.Metadata `json:"metadata,omitempty"`
 	// User-defined name of the role.
 	Name string `json:"name"`
 	// List of permission granted by this role.
@@ -43,7 +43,7 @@ type CreateMerchantRoleBody struct {
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
 	// submit whole metadata. Maximum of 64 parameters are allowed in the object.
 	// Max properties: 64
-	Metadata *shared.Metadata `json:"metadata,omitempty"`
+	Metadata shared.Metadata `json:"metadata,omitempty"`
 	// User-defined name of the role.
 	Name string `json:"name"`
 	// User's permissions.
@@ -59,7 +59,7 @@ type UpdateMerchantRoleBody struct {
 	Name *string `json:"name,omitempty"`
 	// User's permissions.
 	// Max items: 100
-	Permissions *[]string `json:"permissions,omitempty"`
+	Permissions []string `json:"permissions,omitempty"`
 }
 
 // ListMerchantRoles200Response is a schema definition.

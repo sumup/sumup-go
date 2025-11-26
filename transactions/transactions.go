@@ -179,7 +179,7 @@ type TransactionFull struct {
 	EntryMode *TransactionFullEntryMode `json:"entry_mode,omitempty"`
 	// List of events related to the transaction.
 	// Unique items only
-	Events *[]Event `json:"events,omitempty"`
+	Events []Event `json:"events,omitempty"`
 	// Indication of the precision of the geographical position received from the payment terminal.
 	HorizontalAccuracy *HorizontalAccuracy `json:"horizontal_accuracy,omitempty"`
 	// Unique ID of the transaction.
@@ -195,7 +195,7 @@ type TransactionFull struct {
 	Lat *Lat `json:"lat,omitempty"`
 	// List of hyperlinks for accessing related resources.
 	// Unique items only
-	Links *[]interface{} `json:"links,omitempty"`
+	Links []interface{} `json:"links,omitempty"`
 	// Local date and time of the creation of the transaction.
 	LocalTime *time.Time `json:"local_time,omitempty"`
 	// Details of the payment location as received from the payment terminal.
@@ -219,7 +219,7 @@ type TransactionFull struct {
 	// Short description of the payment. The value is taken from the `description` property of the related checkout resource.
 	ProductSummary *string `json:"product_summary,omitempty"`
 	// List of products from the merchant's catalogue for which the transaction serves as a payment.
-	Products *[]Product `json:"products,omitempty"`
+	Products []Product `json:"products,omitempty"`
 	// Simple name of the payment type.
 	SimplePaymentType *TransactionFullSimplePaymentType `json:"simple_payment_type,omitempty"`
 	// Status generated from the processing status and the latest transaction state.
@@ -235,14 +235,14 @@ type TransactionFull struct {
 	// Transaction code returned by the acquirer/processing entity after processing the transaction.
 	TransactionCode *string `json:"transaction_code,omitempty"`
 	// List of transaction events related to the transaction.
-	TransactionEvents *[]TransactionEvent `json:"transaction_events,omitempty"`
+	TransactionEvents []TransactionEvent `json:"transaction_events,omitempty"`
 	// Email address of the registered user (merchant) to whom the payment is made.
 	// Format: email
 	Username *string `json:"username,omitempty"`
 	// Amount of the applicable VAT (out of the total transaction amount).
 	VatAmount *float64 `json:"vat_amount,omitempty"`
 	// List of VAT rates applicable to the transaction.
-	VatRates *[]interface{} `json:"vat_rates,omitempty"`
+	VatRates []interface{} `json:"vat_rates,omitempty"`
 	// Verification method used for the transaction.
 	VerificationMethod *TransactionFullVerificationMethod `json:"verification_method,omitempty"`
 }
@@ -500,15 +500,15 @@ type ListTransactionsParams struct {
 	// Specifies the order in which the returned results are displayed.
 	Order *string
 	// Filters the returned results by the specified list of payment types used for the transactions.
-	PaymentTypes *[]string
+	PaymentTypes []string
 	// Filters the returned results by the specified list of final statuses of the transactions.
-	Statuses *[]string
+	Statuses []string
 	// Retrieves the transaction resource with the specified transaction code.
 	TransactionCode *string
 	// Filters the returned results by the specified list of transaction types.
-	Types *[]string
+	Types []string
 	// Filters the returned results by user email.
-	Users *[]string
+	Users []string
 }
 
 // QueryValues converts [ListTransactionsParams] into [url.Values].
@@ -543,32 +543,24 @@ func (p *ListTransactionsParams) QueryValues() url.Values {
 		q.Set("order", *p.Order)
 	}
 
-	if p.PaymentTypes != nil {
-		for _, v := range *p.PaymentTypes {
-			q.Add("payment_types", v)
-		}
+	for _, v := range p.PaymentTypes {
+		q.Add("payment_types", v)
 	}
 
-	if p.Statuses != nil {
-		for _, v := range *p.Statuses {
-			q.Add("statuses", v)
-		}
+	for _, v := range p.Statuses {
+		q.Add("statuses", v)
 	}
 
 	if p.TransactionCode != nil {
 		q.Set("transaction_code", *p.TransactionCode)
 	}
 
-	if p.Types != nil {
-		for _, v := range *p.Types {
-			q.Add("types", v)
-		}
+	for _, v := range p.Types {
+		q.Add("types", v)
 	}
 
-	if p.Users != nil {
-		for _, v := range *p.Users {
-			q.Add("users", v)
-		}
+	for _, v := range p.Users {
+		q.Add("users", v)
 	}
 
 	return q
@@ -629,15 +621,15 @@ type ListTransactionsV21Params struct {
 	// Specifies the order in which the returned results are displayed.
 	Order *string
 	// Filters the returned results by the specified list of payment types used for the transactions.
-	PaymentTypes *[]string
+	PaymentTypes []string
 	// Filters the returned results by the specified list of final statuses of the transactions.
-	Statuses *[]string
+	Statuses []string
 	// Retrieves the transaction resource with the specified transaction code.
 	TransactionCode *string
 	// Filters the returned results by the specified list of transaction types.
-	Types *[]string
+	Types []string
 	// Filters the returned results by user email.
-	Users *[]string
+	Users []string
 }
 
 // QueryValues converts [ListTransactionsV21Params] into [url.Values].
@@ -672,32 +664,24 @@ func (p *ListTransactionsV21Params) QueryValues() url.Values {
 		q.Set("order", *p.Order)
 	}
 
-	if p.PaymentTypes != nil {
-		for _, v := range *p.PaymentTypes {
-			q.Add("payment_types", v)
-		}
+	for _, v := range p.PaymentTypes {
+		q.Add("payment_types", v)
 	}
 
-	if p.Statuses != nil {
-		for _, v := range *p.Statuses {
-			q.Add("statuses", v)
-		}
+	for _, v := range p.Statuses {
+		q.Add("statuses", v)
 	}
 
 	if p.TransactionCode != nil {
 		q.Set("transaction_code", *p.TransactionCode)
 	}
 
-	if p.Types != nil {
-		for _, v := range *p.Types {
-			q.Add("types", v)
-		}
+	for _, v := range p.Types {
+		q.Add("types", v)
 	}
 
-	if p.Users != nil {
-		for _, v := range *p.Users {
-			q.Add("users", v)
-		}
+	for _, v := range p.Users {
+		q.Add("users", v)
 	}
 
 	return q
@@ -747,14 +731,14 @@ func (p *GetTransactionV21Params) QueryValues() url.Values {
 
 // ListTransactions200Response is a schema definition.
 type ListTransactions200Response struct {
-	Items *[]TransactionHistory `json:"items,omitempty"`
-	Links *[]Link               `json:"links,omitempty"`
+	Items []TransactionHistory `json:"items,omitempty"`
+	Links []Link               `json:"links,omitempty"`
 }
 
 // ListTransactionsV21200Response is a schema definition.
 type ListTransactionsV21200Response struct {
-	Items *[]TransactionHistory `json:"items,omitempty"`
-	Links *[]Link               `json:"links,omitempty"`
+	Items []TransactionHistory `json:"items,omitempty"`
+	Links []Link               `json:"links,omitempty"`
 }
 
 type TransactionsService struct {

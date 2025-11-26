@@ -52,7 +52,7 @@ type CreateReaderCheckoutRequest struct {
 	// List of tipping rates to be displayed to the cardholder.
 	// The rates are in percentage and should be between 0.01 and 0.99.
 	// The list should be sorted in ascending order.
-	TipRates *[]float64 `json:"tip_rates,omitempty"`
+	TipRates []float64 `json:"tip_rates,omitempty"`
 	// Time in seconds the cardholder has to select a tip rate.
 	// If not provided, the default value is 30 seconds.
 	//
@@ -86,7 +86,7 @@ type CreateReaderCheckoutRequestAffiliate struct {
 	Key string `json:"key"`
 	// Additional metadata for the transaction.
 	// It is key-value object that can be associated with the transaction.
-	Tags *CreateReaderCheckoutRequestAffiliateTags `json:"tags,omitempty"`
+	Tags CreateReaderCheckoutRequestAffiliateTags `json:"tags,omitempty"`
 }
 
 // CreateReaderCheckoutRequestAffiliateTags: Additional metadata for the transaction.
@@ -195,7 +195,7 @@ type Reader struct {
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
 	// submit whole metadata. Maximum of 64 parameters are allowed in the object.
 	// Max properties: 64
-	Metadata *shared.Metadata `json:"metadata,omitempty"`
+	Metadata shared.Metadata `json:"metadata,omitempty"`
 	// Custom human-readable, user-defined name for easier identification of the reader.
 	// Max length: 500
 	Name ReaderName `json:"name"`
@@ -269,7 +269,7 @@ type CreateReaderBody struct {
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
 	// submit whole metadata. Maximum of 64 parameters are allowed in the object.
 	// Max properties: 64
-	Metadata *shared.Metadata `json:"metadata,omitempty"`
+	Metadata shared.Metadata `json:"metadata,omitempty"`
 	// Custom human-readable, user-defined name for easier identification of the reader.
 	// Max length: 500
 	Name ReaderName `json:"name"`
@@ -301,7 +301,7 @@ type CreateReaderCheckoutBody struct {
 	// List of tipping rates to be displayed to the cardholder.
 	// The rates are in percentage and should be between 0.01 and 0.99.
 	// The list should be sorted in ascending order.
-	TipRates *[]float64 `json:"tip_rates,omitempty"`
+	TipRates []float64 `json:"tip_rates,omitempty"`
 	// Time in seconds the cardholder has to select a tip rate.
 	// If not provided, the default value is 30 seconds.
 	//
@@ -335,7 +335,7 @@ type CreateReaderCheckoutBodyAffiliate struct {
 	Key string `json:"key"`
 	// Additional metadata for the transaction.
 	// It is key-value object that can be associated with the transaction.
-	Tags *CreateReaderCheckoutBodyAffiliateTags `json:"tags,omitempty"`
+	Tags CreateReaderCheckoutBodyAffiliateTags `json:"tags,omitempty"`
 }
 
 // CreateReaderCheckoutBodyAffiliateTags: Additional metadata for the transaction.
@@ -374,7 +374,7 @@ type UpdateReaderBody struct {
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
 	// submit whole metadata. Maximum of 64 parameters are allowed in the object.
 	// Max properties: 64
-	Metadata *shared.Metadata `json:"metadata,omitempty"`
+	Metadata shared.Metadata `json:"metadata,omitempty"`
 	// Custom human-readable, user-defined name for easier identification of the reader.
 	// Max length: 500
 	Name *ReaderName `json:"name,omitempty"`

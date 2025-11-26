@@ -288,7 +288,7 @@ type Checkout struct {
     Status *CheckoutStatus `json:"status,omitempty"`
     // List of transactions related to the payment.
     // Unique items only
-    Transactions *[]CheckoutTransaction `json:"transactions,omitempty"`
+    Transactions []CheckoutTransaction `json:"transactions,omitempty"`
     // Date and time of the checkout expiration before which the client application needs to send a processing request.
     // If no value is present, the checkout does not have an expiration time.
     ValidUntil *time.Time `json:"valid_until,omitempty"`
@@ -316,7 +316,7 @@ CheckoutAcceptedNextStep: Required action processing 3D Secure payments.
 type CheckoutAcceptedNextStep struct {
     // Indicates allowed mechanisms for redirecting an end user. If both values are provided to ensure a redirect takes
     // place in either.
-    Mechanism *[]CheckoutAcceptedNextStepMechanism `json:"mechanism,omitempty"`
+    Mechanism []CheckoutAcceptedNextStepMechanism `json:"mechanism,omitempty"`
     // Method used to complete the redirect.
     Method *string `json:"method,omitempty"`
     // Contains parameters essential for form redirection. Number of object keys and their content can vary.
@@ -407,7 +407,7 @@ type CheckoutCreateRequest struct {
     // List of transactions related to the payment.
     // Read only
     // Unique items only
-    Transactions *[]CheckoutCreateRequestTransaction `json:"transactions,omitempty"`
+    Transactions []CheckoutCreateRequestTransaction `json:"transactions,omitempty"`
     // Date and time of the checkout expiration before which the client application needs to send a processing request.
     // If no value is present, the checkout does not have an expiration time.
     ValidUntil *time.Time `json:"valid_until,omitempty"`
@@ -617,7 +617,7 @@ type CheckoutSuccess struct {
     TransactionId *string `json:"transaction_id,omitempty"`
     // List of transactions related to the payment.
     // Unique items only
-    Transactions *[]CheckoutSuccessTransaction `json:"transactions,omitempty"`
+    Transactions []CheckoutSuccessTransaction `json:"transactions,omitempty"`
     // Date and time of the checkout expiration before which the client application needs to send a processing request.
     // If no value is present, the checkout does not have an expiration time.
     ValidUntil *time.Time `json:"valid_until,omitempty"`
@@ -979,7 +979,7 @@ type CreateCheckoutBody struct {
     // List of transactions related to the payment.
     // Read only
     // Unique items only
-    Transactions *[]CreateCheckoutBodyTransaction `json:"transactions,omitempty"`
+    Transactions []CreateCheckoutBodyTransaction `json:"transactions,omitempty"`
     // Date and time of the checkout expiration before which the client application needs to send a processing request.
     // If no value is present, the checkout does not have an expiration time.
     ValidUntil *time.Time `json:"valid_until,omitempty"`
@@ -1129,8 +1129,8 @@ DetailsError: Error message structure.
 ```go
 type DetailsError struct {
     // Details of the error.
-    Details           *string                         `json:"details,omitempty"`
-    FailedConstraints *[]DetailsErrorFailedConstraint `json:"failed_constraints,omitempty"`
+    Details           *string                        `json:"details,omitempty"`
+    FailedConstraints []DetailsErrorFailedConstraint `json:"failed_constraints,omitempty"`
     // The status code.
     Status *float64 `json:"status,omitempty"`
     // Short title of the error.
@@ -1193,7 +1193,7 @@ GetPaymentMethods200Response is a schema definition.
 
 ```go
 type GetPaymentMethods200Response struct {
-    AvailablePaymentMethods *[]GetPaymentMethods200ResponseAvailablePaymentMethod `json:"available_payment_methods,omitempty"`
+    AvailablePaymentMethods []GetPaymentMethods200ResponseAvailablePaymentMethod `json:"available_payment_methods,omitempty"`
 }
 ```
 
@@ -1964,7 +1964,7 @@ CreateMerchantMemberBody is a schema definition.
 ```go
 type CreateMerchantMemberBody struct {
     // Object attributes that are modifiable only by SumUp applications.
-    Attributes *shared.Attributes `json:"attributes,omitempty"`
+    Attributes shared.Attributes `json:"attributes,omitempty"`
     // Email address of the member to add.
     // Format: email
     Email string `json:"email"`
@@ -1974,7 +1974,7 @@ type CreateMerchantMemberBody struct {
     // Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
     // submit whole metadata. Maximum of 64 parameters are allowed in the object.
     // Max properties: 64
-    Metadata *shared.Metadata `json:"metadata,omitempty"`
+    Metadata shared.Metadata `json:"metadata,omitempty"`
     // Nickname of the member to add. Only used if `is_managed_user` is true. Used for display purposes only.
     Nickname *string `json:"nickname,omitempty"`
     // Password of the member to add. Only used if `is_managed_user` is true. In the case of service accounts, the
@@ -1988,7 +1988,7 @@ type CreateMerchantMemberBody struct {
 ```
 
 <a name="ListMerchantMembers200Response"></a>
-## type [ListMerchantMembers200Response](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L184-L187>)
+## type [ListMerchantMembers200Response](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L182-L185>)
 
 ListMerchantMembers200Response is a schema definition.
 
@@ -2013,7 +2013,7 @@ type ListMerchantMembersParams struct {
     // Offset of the first member to return.
     Offset *int
     // Filter the returned members by role.
-    Roles *[]string
+    Roles []string
     // Indicates to skip count query.
     Scroll *bool
     // Filter the returned members by the membership status.
@@ -2040,7 +2040,7 @@ Member: A member is user within specific resource identified by resource id, res
 ```go
 type Member struct {
     // Object attributes that are modifiable only by SumUp applications.
-    Attributes *shared.Attributes `json:"attributes,omitempty"`
+    Attributes shared.Attributes `json:"attributes,omitempty"`
     // The timestamp of when the member was created.
     CreatedAt time.Time `json:"created_at"`
     // ID of the member.
@@ -2050,7 +2050,7 @@ type Member struct {
     // Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
     // submit whole metadata. Maximum of 64 parameters are allowed in the object.
     // Max properties: 64
-    Metadata *shared.Metadata `json:"metadata,omitempty"`
+    Metadata shared.Metadata `json:"metadata,omitempty"`
     // User's permissions.
     // Deprecated: Permissions include only legacy permissions, please use roles instead. Member access is based on
     // roles within a given resource and the permissions these roles grant.
@@ -2067,7 +2067,7 @@ type Member struct {
 ```
 
 <a name="MembersService"></a>
-## type [MembersService](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L189-L191>)
+## type [MembersService](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L187-L189>)
 
 
 
@@ -2078,7 +2078,7 @@ type MembersService struct {
 ```
 
 <a name="NewMembersService"></a>
-### func [NewMembersService](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L193>)
+### func [NewMembersService](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L191>)
 
 ```go
 func NewMembersService(c *client.Client) *MembersService
@@ -2087,7 +2087,7 @@ func NewMembersService(c *client.Client) *MembersService
 
 
 <a name="MembersService.Create"></a>
-### func \(\*MembersService\) [Create](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L230>)
+### func \(\*MembersService\) [Create](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L228>)
 
 ```go
 func (s *MembersService) Create(ctx context.Context, merchantCode string, body CreateMerchantMemberBody) (*Member, error)
@@ -2096,7 +2096,7 @@ func (s *MembersService) Create(ctx context.Context, merchantCode string, body C
 Create: Create a member Create a merchant member.
 
 <a name="MembersService.Delete"></a>
-### func \(\*MembersService\) [Delete](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L275>)
+### func \(\*MembersService\) [Delete](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L273>)
 
 ```go
 func (s *MembersService) Delete(ctx context.Context, merchantCode string, memberId string) error
@@ -2105,7 +2105,7 @@ func (s *MembersService) Delete(ctx context.Context, merchantCode string, member
 Delete: Delete a member Deletes a merchant member.
 
 <a name="MembersService.Get"></a>
-### func \(\*MembersService\) [Get](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L301>)
+### func \(\*MembersService\) [Get](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L299>)
 
 ```go
 func (s *MembersService) Get(ctx context.Context, merchantCode string, memberId string) (*Member, error)
@@ -2114,7 +2114,7 @@ func (s *MembersService) Get(ctx context.Context, merchantCode string, memberId 
 Get: Retrieve a member Retrieve a merchant member.
 
 <a name="MembersService.List"></a>
-### func \(\*MembersService\) [List](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L199>)
+### func \(\*MembersService\) [List](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L197>)
 
 ```go
 func (s *MembersService) List(ctx context.Context, merchantCode string, params ListMerchantMembersParams) (*ListMerchantMembers200Response, error)
@@ -2123,7 +2123,7 @@ func (s *MembersService) List(ctx context.Context, merchantCode string, params L
 List: List members Lists merchant members.
 
 <a name="MembersService.Update"></a>
-### func \(\*MembersService\) [Update](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L332>)
+### func \(\*MembersService\) [Update](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L330>)
 
 ```go
 func (s *MembersService) Update(ctx context.Context, merchantCode string, memberId string, body UpdateMerchantMemberBody) (*Member, error)
@@ -2183,12 +2183,12 @@ UpdateMerchantMemberBody is a schema definition.
 ```go
 type UpdateMerchantMemberBody struct {
     // Object attributes that are modifiable only by SumUp applications.
-    Attributes *shared.Attributes `json:"attributes,omitempty"`
+    Attributes shared.Attributes `json:"attributes,omitempty"`
     // Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
     // submit whole metadata. Maximum of 64 parameters are allowed in the object.
     // Max properties: 64
-    Metadata *shared.Metadata `json:"metadata,omitempty"`
-    Roles    *[]string        `json:"roles,omitempty"`
+    Metadata shared.Metadata `json:"metadata,omitempty"`
+    Roles    []string        `json:"roles,omitempty"`
     // Allows you to update user data of managed users.
     User *UpdateMerchantMemberBodyUser `json:"user,omitempty"`
 }
@@ -2282,7 +2282,7 @@ Membership: A membership associates a user with a resource, memberships is defin
 ```go
 type Membership struct {
     // Object attributes that are modifiable only by SumUp applications.
-    Attributes *shared.Attributes `json:"attributes,omitempty"`
+    Attributes shared.Attributes `json:"attributes,omitempty"`
     // The timestamp of when the membership was created.
     CreatedAt time.Time `json:"created_at"`
     // ID of the membership.
@@ -2292,7 +2292,7 @@ type Membership struct {
     // Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
     // submit whole metadata. Maximum of 64 parameters are allowed in the object.
     // Max properties: 64
-    Metadata *shared.Metadata `json:"metadata,omitempty"`
+    Metadata shared.Metadata `json:"metadata,omitempty"`
     // User's permissions.
     // Deprecated: Permissions include only legacy permissions, please use roles instead. Member access is based on
     // their roles within a given resource and the permissions these roles grant.
@@ -2323,7 +2323,7 @@ MembershipResource: Information about the resource the membership is in.
 ```go
 type MembershipResource struct {
     // Object attributes that are modifiable only by SumUp applications.
-    Attributes *shared.Attributes `json:"attributes,omitempty"`
+    Attributes shared.Attributes `json:"attributes,omitempty"`
     // The timestamp of when the membership resource was created.
     CreatedAt time.Time `json:"created_at"`
     // ID of the resource the membership is in.
@@ -2527,7 +2527,7 @@ type AppSettings struct {
     // Terminal mode tutorial.
     TerminalModeTutorial *bool `json:"terminal_mode_tutorial,omitempty"`
     // Tip rates.
-    TipRates *[]float64 `json:"tip_rates,omitempty"`
+    TipRates []float64 `json:"tip_rates,omitempty"`
     // Tipping.
     Tipping *string `json:"tipping,omitempty"`
 }
@@ -2669,7 +2669,7 @@ GetAccountParams: query parameters for GetAccount
 type GetAccountParams struct {
     // A list of additional information you want to receive for the user. By default only personal and merchant profile
     // information will be returned.
-    Include *[]string
+    Include []string
 }
 ```
 
@@ -2729,9 +2729,9 @@ MerchantProfileLegacy: Account's merchant profile
 type MerchantProfileLegacy struct {
     // Details of the registered address.
     Address      *AddressWithDetails `json:"address,omitempty"`
-    BankAccounts *[]BankAccount      `json:"bank_accounts,omitempty"`
+    BankAccounts []BankAccount       `json:"bank_accounts,omitempty"`
     // Business owners information.
-    BusinessOwners *BusinessOwners `json:"business_owners,omitempty"`
+    BusinessOwners BusinessOwners `json:"business_owners,omitempty"`
     // Company name
     CompanyName *string `json:"company_name,omitempty"`
     // Company registration number
@@ -2771,7 +2771,7 @@ type MerchantProfileLegacy struct {
 ```
 
 <a name="MerchantService"></a>
-## type [MerchantService](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L372-L374>)
+## type [MerchantService](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L370-L372>)
 
 
 
@@ -2782,7 +2782,7 @@ type MerchantService struct {
 ```
 
 <a name="NewMerchantService"></a>
-### func [NewMerchantService](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L376>)
+### func [NewMerchantService](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L374>)
 
 ```go
 func NewMerchantService(c *client.Client) *MerchantService
@@ -2791,7 +2791,7 @@ func NewMerchantService(c *client.Client) *MerchantService
 
 
 <a name="MerchantService.Get"></a>
-### func \(\*MerchantService\) [Get](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L490>)
+### func \(\*MerchantService\) [Get](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L488>)
 
 ```go
 func (s *MerchantService) Get(ctx context.Context, params GetAccountParams) (*MerchantAccount, error)
@@ -2800,7 +2800,7 @@ func (s *MerchantService) Get(ctx context.Context, params GetAccountParams) (*Me
 Get: Retrieve a profile Returns user profile information. Deprecated: The \_Retrieve a profile\_ endpoint is deprecated, please use the \`Merchant\` object instead \(see \[Merchants\]\(https://developer.sumup.com/api/merchants\)\).
 
 <a name="MerchantService.GetDoingBusinessAs"></a>
-### func \(\*MerchantService\) [GetDoingBusinessAs](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L417>)
+### func \(\*MerchantService\) [GetDoingBusinessAs](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L415>)
 
 ```go
 func (s *MerchantService) GetDoingBusinessAs(ctx context.Context) (*DoingBusinessAsLegacy, error)
@@ -2809,7 +2809,7 @@ func (s *MerchantService) GetDoingBusinessAs(ctx context.Context) (*DoingBusines
 GetDoingBusinessAs: Retrieve DBA Retrieves Doing Business As profile. Deprecated: The \_Retrieve DBA\_ endpoint is deprecated, please use the \`business\_profile\` field of the \`Merchant\` object instead \(see \[Merchants\]\(https://developer.sumup.com/api/merchants\)\).
 
 <a name="MerchantService.GetMerchantProfile"></a>
-### func \(\*MerchantService\) [GetMerchantProfile](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L450>)
+### func \(\*MerchantService\) [GetMerchantProfile](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L448>)
 
 ```go
 func (s *MerchantService) GetMerchantProfile(ctx context.Context) (*MerchantProfileLegacy, error)
@@ -2818,7 +2818,7 @@ func (s *MerchantService) GetMerchantProfile(ctx context.Context) (*MerchantProf
 GetMerchantProfile: Retrieve a merchant profile Retrieves merchant profile data. Deprecated: The \_Retrieve a merchant profile\_ endpoint is deprecated, please use the \`Merchant\` object instead \(see \[Merchants\]\(https://developer.sumup.com/api/merchants\)\).
 
 <a name="MerchantService.GetPersonalProfile"></a>
-### func \(\*MerchantService\) [GetPersonalProfile](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L384>)
+### func \(\*MerchantService\) [GetPersonalProfile](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L382>)
 
 ```go
 func (s *MerchantService) GetPersonalProfile(ctx context.Context) (*PersonalProfileLegacy, error)
@@ -3076,7 +3076,7 @@ type Address struct {
     // Max length: 512
     State *string `json:"state,omitempty"`
     // Max items: 2
-    StreetAddress *[]string `json:"street_address,omitempty"`
+    StreetAddress []string `json:"street_address,omitempty"`
     // A US system of postal codes used by the United States Postal Service (USPS).
     // Max length: 512
     ZipCode *string `json:"zip_code,omitempty"`
@@ -3145,7 +3145,7 @@ type BasePerson struct {
     Id  string `json:"id"`
     // A list of country-specific personal identifiers.
     // Max items: 5
-    Identifiers *[]PersonalIdentifier `json:"identifiers,omitempty"`
+    Identifiers []PersonalIdentifier `json:"identifiers,omitempty"`
     // Middle name(s) of the End-User. Note that in some cultures, people can have multiple middle names; all can
     // be present, with the names being separated by space characters. Also note that in some cultures, middle names
     // are not used.
@@ -3162,7 +3162,7 @@ type BasePerson struct {
     // the relationship `representative`.
     // Min items: 1
     // Max items: 1
-    Relationships *[]string `json:"relationships,omitempty"`
+    Relationships []string `json:"relationships,omitempty"`
     // A corresponding identity user ID for the person, if they have a user account.
     UserId *string `json:"user_id,omitempty"`
     // The version of the resource. The version reflects a specific change submitted to the API via one of the `PATCH`
@@ -3279,9 +3279,9 @@ type Company struct {
     // Address documentation: https://sumup.roadie.so/docs/default/Component/merchants/merchant/#addresses
     Address *Address `json:"address,omitempty"`
     // Object attributes that are modifiable only by SumUp applications.
-    Attributes *shared.Attributes `json:"attributes,omitempty"`
+    Attributes shared.Attributes `json:"attributes,omitempty"`
     // A list of country-specific company identifiers.
-    Identifiers *CompanyIdentifiers `json:"identifiers,omitempty"`
+    Identifiers CompanyIdentifiers `json:"identifiers,omitempty"`
     // The unique legal type reference as defined in the country SDK. We do not rely on IDs as used by other services.
     // Consumers of this API are expected to use the country SDK to map to any other IDs, translation keys, or
     // descriptions.
@@ -3709,7 +3709,7 @@ type Merchant struct {
     //
     // **Warning**: Updating Meta will overwrite the existing data. Make sure to always include the complete JSON
     // object.
-    Meta *Meta `json:"meta,omitempty"`
+    Meta Meta `json:"meta,omitempty"`
     // ID of the organization the merchant belongs to (if any).
     OrganizationId *string `json:"organization_id,omitempty"`
     // True if the merchant is a sandbox for testing.
@@ -3844,7 +3844,7 @@ type Person struct {
     Id  string `json:"id"`
     // A list of country-specific personal identifiers.
     // Max items: 5
-    Identifiers *[]PersonalIdentifier `json:"identifiers,omitempty"`
+    Identifiers []PersonalIdentifier `json:"identifiers,omitempty"`
     // Middle name(s) of the End-User. Note that in some cultures, people can have multiple middle names; all can
     // be present, with the names being separated by space characters. Also note that in some cultures, middle names
     // are not used.
@@ -3861,7 +3861,7 @@ type Person struct {
     // the relationship `representative`.
     // Min items: 1
     // Max items: 1
-    Relationships *[]string `json:"relationships,omitempty"`
+    Relationships []string `json:"relationships,omitempty"`
     // A corresponding identity user ID for the person, if they have a user account.
     UserId *string `json:"user_id,omitempty"`
     // The version of the resource. The version reflects a specific change submitted to the API via one of the `PATCH`
@@ -4166,7 +4166,7 @@ type CreateReaderBody struct {
     // Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
     // submit whole metadata. Maximum of 64 parameters are allowed in the object.
     // Max properties: 64
-    Metadata *shared.Metadata `json:"metadata,omitempty"`
+    Metadata shared.Metadata `json:"metadata,omitempty"`
     // Custom human-readable, user-defined name for easier identification of the reader.
     // Max length: 500
     Name ReaderName `json:"name"`
@@ -4204,7 +4204,7 @@ type CreateReaderCheckoutBody struct {
     // List of tipping rates to be displayed to the cardholder.
     // The rates are in percentage and should be between 0.01 and 0.99.
     // The list should be sorted in ascending order.
-    TipRates *[]float64 `json:"tip_rates,omitempty"`
+    TipRates []float64 `json:"tip_rates,omitempty"`
     // Time in seconds the cardholder has to select a tip rate.
     // If not provided, the default value is 30 seconds.
     //
@@ -4243,7 +4243,7 @@ type CreateReaderCheckoutBodyAffiliate struct {
     Key string `json:"key"`
     // Additional metadata for the transaction.
     // It is key-value object that can be associated with the transaction.
-    Tags *CreateReaderCheckoutBodyAffiliateTags `json:"tags,omitempty"`
+    Tags CreateReaderCheckoutBodyAffiliateTags `json:"tags,omitempty"`
 }
 ```
 
@@ -4356,7 +4356,7 @@ type CreateReaderCheckoutRequest struct {
     // List of tipping rates to be displayed to the cardholder.
     // The rates are in percentage and should be between 0.01 and 0.99.
     // The list should be sorted in ascending order.
-    TipRates *[]float64 `json:"tip_rates,omitempty"`
+    TipRates []float64 `json:"tip_rates,omitempty"`
     // Time in seconds the cardholder has to select a tip rate.
     // If not provided, the default value is 30 seconds.
     //
@@ -4395,7 +4395,7 @@ type CreateReaderCheckoutRequestAffiliate struct {
     Key string `json:"key"`
     // Additional metadata for the transaction.
     // It is key-value object that can be associated with the transaction.
-    Tags *CreateReaderCheckoutRequestAffiliateTags `json:"tags,omitempty"`
+    Tags CreateReaderCheckoutRequestAffiliateTags `json:"tags,omitempty"`
 }
 ```
 
@@ -4625,7 +4625,7 @@ type Reader struct {
     // Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
     // submit whole metadata. Maximum of 64 parameters are allowed in the object.
     // Max properties: 64
-    Metadata *shared.Metadata `json:"metadata,omitempty"`
+    Metadata shared.Metadata `json:"metadata,omitempty"`
     // Custom human-readable, user-defined name for easier identification of the reader.
     // Max length: 500
     Name ReaderName `json:"name"`
@@ -4837,7 +4837,7 @@ type UpdateReaderBody struct {
     // Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
     // submit whole metadata. Maximum of 64 parameters are allowed in the object.
     // Max properties: 64
-    Metadata *shared.Metadata `json:"metadata,omitempty"`
+    Metadata shared.Metadata `json:"metadata,omitempty"`
     // Custom human-readable, user-defined name for easier identification of the reader.
     // Max length: 500
     Name *ReaderName `json:"name,omitempty"`
@@ -5029,13 +5029,13 @@ type ReceiptTransaction struct {
     // Transaction entry mode.
     EntryMode *string `json:"entry_mode,omitempty"`
     // Events
-    Events *[]ReceiptEvent `json:"events,omitempty"`
+    Events []ReceiptEvent `json:"events,omitempty"`
     // Number of installments.
     InstallmentsCount *int `json:"installments_count,omitempty"`
     // Transaction type.
     PaymentType *string `json:"payment_type,omitempty"`
     // Products
-    Products *[]ReceiptTransactionProduct `json:"products,omitempty"`
+    Products []ReceiptTransactionProduct `json:"products,omitempty"`
     // Receipt number
     ReceiptNo *string `json:"receipt_no,omitempty"`
     // Transaction processing status.
@@ -5049,7 +5049,7 @@ type ReceiptTransaction struct {
     // Transaction VAT amount.
     VatAmount *string `json:"vat_amount,omitempty"`
     // Vat rates.
-    VatRates *[]ReceiptTransactionVatRate `json:"vat_rates,omitempty"`
+    VatRates []ReceiptTransactionVatRate `json:"vat_rates,omitempty"`
     // Cardholder verification method.
     VerificationMethod *string `json:"verification_method,omitempty"`
 }
@@ -5155,7 +5155,7 @@ type CreateMerchantRoleBody struct {
     // Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
     // submit whole metadata. Maximum of 64 parameters are allowed in the object.
     // Max properties: 64
-    Metadata *shared.Metadata `json:"metadata,omitempty"`
+    Metadata shared.Metadata `json:"metadata,omitempty"`
     // User-defined name of the role.
     Name string `json:"name"`
     // User's permissions.
@@ -5193,7 +5193,7 @@ type Role struct {
     // Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
     // submit whole metadata. Maximum of 64 parameters are allowed in the object.
     // Max properties: 64
-    Metadata *shared.Metadata `json:"metadata,omitempty"`
+    Metadata shared.Metadata `json:"metadata,omitempty"`
     // User-defined name of the role.
     Name string `json:"name"`
     // List of permission granted by this role.
@@ -5282,7 +5282,7 @@ type UpdateMerchantRoleBody struct {
     Name *string `json:"name,omitempty"`
     // User's permissions.
     // Max items: 100
-    Permissions *[]string `json:"permissions,omitempty"`
+    Permissions []string `json:"permissions,omitempty"`
 }
 ```
 
@@ -6200,7 +6200,7 @@ type Event struct {
 ```
 
 <a name="GetTransactionParams"></a>
-## type [GetTransactionParams](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L578-L586>)
+## type [GetTransactionParams](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L570-L578>)
 
 GetTransactionParams: query parameters for GetTransaction
 
@@ -6217,7 +6217,7 @@ type GetTransactionParams struct {
 ```
 
 <a name="GetTransactionParams.QueryValues"></a>
-### func \(\*GetTransactionParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L589>)
+### func \(\*GetTransactionParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L581>)
 
 ```go
 func (p *GetTransactionParams) QueryValues() url.Values
@@ -6226,7 +6226,7 @@ func (p *GetTransactionParams) QueryValues() url.Values
 QueryValues converts [GetTransactionParams](<#GetTransactionParams>) into \[url.Values\].
 
 <a name="GetTransactionV21Params"></a>
-## type [GetTransactionV21Params](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L707-L719>)
+## type [GetTransactionV21Params](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L691-L703>)
 
 GetTransactionV21Params: query parameters for GetTransactionV2.1
 
@@ -6247,7 +6247,7 @@ type GetTransactionV21Params struct {
 ```
 
 <a name="GetTransactionV21Params.QueryValues"></a>
-### func \(\*GetTransactionV21Params\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L722>)
+### func \(\*GetTransactionV21Params\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L706>)
 
 ```go
 func (p *GetTransactionV21Params) QueryValues() url.Values
@@ -6314,14 +6314,14 @@ type LinkRefund struct {
 ```
 
 <a name="ListTransactions200Response"></a>
-## type [ListTransactions200Response](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L749-L752>)
+## type [ListTransactions200Response](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L733-L736>)
 
 ListTransactions200Response is a schema definition.
 
 ```go
 type ListTransactions200Response struct {
-    Items *[]TransactionHistory `json:"items,omitempty"`
-    Links *[]Link               `json:"links,omitempty"`
+    Items []TransactionHistory `json:"items,omitempty"`
+    Links []Link               `json:"links,omitempty"`
 }
 ```
 
@@ -6355,15 +6355,15 @@ type ListTransactionsParams struct {
     // Specifies the order in which the returned results are displayed.
     Order *string
     // Filters the returned results by the specified list of payment types used for the transactions.
-    PaymentTypes *[]string
+    PaymentTypes []string
     // Filters the returned results by the specified list of final statuses of the transactions.
-    Statuses *[]string
+    Statuses []string
     // Retrieves the transaction resource with the specified transaction code.
     TransactionCode *string
     // Filters the returned results by the specified list of transaction types.
-    Types *[]string
+    Types []string
     // Filters the returned results by user email.
-    Users *[]string
+    Users []string
 }
 ```
 
@@ -6377,19 +6377,19 @@ func (p *ListTransactionsParams) QueryValues() url.Values
 QueryValues converts [ListTransactionsParams](<#ListTransactionsParams>) into \[url.Values\].
 
 <a name="ListTransactionsV21200Response"></a>
-## type [ListTransactionsV21200Response](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L755-L758>)
+## type [ListTransactionsV21200Response](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L739-L742>)
 
 ListTransactionsV21200Response is a schema definition.
 
 ```go
 type ListTransactionsV21200Response struct {
-    Items *[]TransactionHistory `json:"items,omitempty"`
-    Links *[]Link               `json:"links,omitempty"`
+    Items []TransactionHistory `json:"items,omitempty"`
+    Links []Link               `json:"links,omitempty"`
 }
 ```
 
 <a name="ListTransactionsV21Params"></a>
-## type [ListTransactionsV21Params](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L608-L641>)
+## type [ListTransactionsV21Params](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L600-L633>)
 
 ListTransactionsV21Params: query parameters for ListTransactionsV2.1
 
@@ -6418,20 +6418,20 @@ type ListTransactionsV21Params struct {
     // Specifies the order in which the returned results are displayed.
     Order *string
     // Filters the returned results by the specified list of payment types used for the transactions.
-    PaymentTypes *[]string
+    PaymentTypes []string
     // Filters the returned results by the specified list of final statuses of the transactions.
-    Statuses *[]string
+    Statuses []string
     // Retrieves the transaction resource with the specified transaction code.
     TransactionCode *string
     // Filters the returned results by the specified list of transaction types.
-    Types *[]string
+    Types []string
     // Filters the returned results by user email.
-    Users *[]string
+    Users []string
 }
 ```
 
 <a name="ListTransactionsV21Params.QueryValues"></a>
-### func \(\*ListTransactionsV21Params\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L644>)
+### func \(\*ListTransactionsV21Params\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L636>)
 
 ```go
 func (p *ListTransactionsV21Params) QueryValues() url.Values
@@ -6544,7 +6544,7 @@ type TransactionFull struct {
     EntryMode *TransactionFullEntryMode `json:"entry_mode,omitempty"`
     // List of events related to the transaction.
     // Unique items only
-    Events *[]Event `json:"events,omitempty"`
+    Events []Event `json:"events,omitempty"`
     // Indication of the precision of the geographical position received from the payment terminal.
     HorizontalAccuracy *HorizontalAccuracy `json:"horizontal_accuracy,omitempty"`
     // Unique ID of the transaction.
@@ -6560,7 +6560,7 @@ type TransactionFull struct {
     Lat *Lat `json:"lat,omitempty"`
     // List of hyperlinks for accessing related resources.
     // Unique items only
-    Links *[]interface{} `json:"links,omitempty"`
+    Links []interface{} `json:"links,omitempty"`
     // Local date and time of the creation of the transaction.
     LocalTime *time.Time `json:"local_time,omitempty"`
     // Details of the payment location as received from the payment terminal.
@@ -6584,7 +6584,7 @@ type TransactionFull struct {
     // Short description of the payment. The value is taken from the `description` property of the related checkout resource.
     ProductSummary *string `json:"product_summary,omitempty"`
     // List of products from the merchant's catalogue for which the transaction serves as a payment.
-    Products *[]Product `json:"products,omitempty"`
+    Products []Product `json:"products,omitempty"`
     // Simple name of the payment type.
     SimplePaymentType *TransactionFullSimplePaymentType `json:"simple_payment_type,omitempty"`
     // Status generated from the processing status and the latest transaction state.
@@ -6600,14 +6600,14 @@ type TransactionFull struct {
     // Transaction code returned by the acquirer/processing entity after processing the transaction.
     TransactionCode *string `json:"transaction_code,omitempty"`
     // List of transaction events related to the transaction.
-    TransactionEvents *[]TransactionEvent `json:"transaction_events,omitempty"`
+    TransactionEvents []TransactionEvent `json:"transaction_events,omitempty"`
     // Email address of the registered user (merchant) to whom the payment is made.
     // Format: email
     Username *string `json:"username,omitempty"`
     // Amount of the applicable VAT (out of the total transaction amount).
     VatAmount *float64 `json:"vat_amount,omitempty"`
     // List of VAT rates applicable to the transaction.
-    VatRates *[]interface{} `json:"vat_rates,omitempty"`
+    VatRates []interface{} `json:"vat_rates,omitempty"`
     // Verification method used for the transaction.
     VerificationMethod *TransactionFullVerificationMethod `json:"verification_method,omitempty"`
 }
@@ -6992,7 +6992,7 @@ const (
 ```
 
 <a name="TransactionsService"></a>
-## type [TransactionsService](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L760-L762>)
+## type [TransactionsService](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L744-L746>)
 
 
 
@@ -7003,7 +7003,7 @@ type TransactionsService struct {
 ```
 
 <a name="NewTransactionsService"></a>
-### func [NewTransactionsService](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L764>)
+### func [NewTransactionsService](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L748>)
 
 ```go
 func NewTransactionsService(c *client.Client) *TransactionsService
@@ -7012,7 +7012,7 @@ func NewTransactionsService(c *client.Client) *TransactionsService
 
 
 <a name="TransactionsService.Get"></a>
-### func \(\*TransactionsService\) [Get](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L887>)
+### func \(\*TransactionsService\) [Get](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L871>)
 
 ```go
 func (s *TransactionsService) Get(ctx context.Context, merchantCode string, params GetTransactionV21Params) (*TransactionFull, error)
@@ -7027,7 +7027,7 @@ Get: Retrieve a transaction Retrieves the full details of an identified transact
 - \`client\_transaction\_id\`
 
 <a name="TransactionsService.GetDeprecated"></a>
-### func \(\*TransactionsService\) [GetDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L811>)
+### func \(\*TransactionsService\) [GetDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L795>)
 
 ```go
 func (s *TransactionsService) GetDeprecated(ctx context.Context, params GetTransactionParams) (*TransactionFull, error)
@@ -7044,7 +7044,7 @@ GetDeprecated: Retrieve a transaction Retrieves the full details of an identifie
 Deprecated: this operation is deprecated
 
 <a name="TransactionsService.List"></a>
-### func \(\*TransactionsService\) [List](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L849>)
+### func \(\*TransactionsService\) [List](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L833>)
 
 ```go
 func (s *TransactionsService) List(ctx context.Context, merchantCode string, params ListTransactionsV21Params) (*ListTransactionsV21200Response, error)
@@ -7053,7 +7053,7 @@ func (s *TransactionsService) List(ctx context.Context, merchantCode string, par
 List: List transactions Lists detailed history of all transactions associated with the merchant profile.
 
 <a name="TransactionsService.ListDeprecated"></a>
-### func \(\*TransactionsService\) [ListDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L771>)
+### func \(\*TransactionsService\) [ListDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L755>)
 
 ```go
 func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListTransactionsParams) (*ListTransactions200Response, error)
@@ -7062,7 +7062,7 @@ func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListTra
 ListDeprecated: List transactions Lists detailed history of all transactions associated with the merchant profile. Deprecated: this operation is deprecated
 
 <a name="TransactionsService.Refund"></a>
-### func \(\*TransactionsService\) [Refund](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L925>)
+### func \(\*TransactionsService\) [Refund](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L909>)
 
 ```go
 func (s *TransactionsService) Refund(ctx context.Context, txnId string, body RefundTransactionBody) error

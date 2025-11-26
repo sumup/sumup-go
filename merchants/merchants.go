@@ -80,7 +80,7 @@ type Address struct {
 	// Max length: 512
 	State *string `json:"state,omitempty"`
 	// Max items: 2
-	StreetAddress *[]string `json:"street_address,omitempty"`
+	StreetAddress []string `json:"street_address,omitempty"`
 	// A US system of postal codes used by the United States Postal Service (USPS).
 	// Max length: 512
 	ZipCode *string `json:"zip_code,omitempty"`
@@ -139,7 +139,7 @@ type BasePerson struct {
 	Id string `json:"id"`
 	// A list of country-specific personal identifiers.
 	// Max items: 5
-	Identifiers *[]PersonalIdentifier `json:"identifiers,omitempty"`
+	Identifiers []PersonalIdentifier `json:"identifiers,omitempty"`
 	// Middle name(s) of the End-User. Note that in some cultures, people can have multiple middle names; all can
 	// be present, with the names being separated by space characters. Also note that in some cultures, middle names
 	// are not used.
@@ -156,7 +156,7 @@ type BasePerson struct {
 	// the relationship `representative`.
 	// Min items: 1
 	// Max items: 1
-	Relationships *[]string `json:"relationships,omitempty"`
+	Relationships []string `json:"relationships,omitempty"`
 	// A corresponding identity user ID for the person, if they have a user account.
 	UserId *string `json:"user_id,omitempty"`
 	// The version of the resource. The version reflects a specific change submitted to the API via one of the `PATCH`
@@ -248,9 +248,9 @@ type Company struct {
 	// Address documentation: https://sumup.roadie.so/docs/default/Component/merchants/merchant/#addresses
 	Address *Address `json:"address,omitempty"`
 	// Object attributes that are modifiable only by SumUp applications.
-	Attributes *shared.Attributes `json:"attributes,omitempty"`
+	Attributes shared.Attributes `json:"attributes,omitempty"`
 	// A list of country-specific company identifiers.
-	Identifiers *CompanyIdentifiers `json:"identifiers,omitempty"`
+	Identifiers CompanyIdentifiers `json:"identifiers,omitempty"`
 	// The unique legal type reference as defined in the country SDK. We do not rely on IDs as used by other services.
 	// Consumers of this API are expected to use the country SDK to map to any other IDs, translation keys, or
 	// descriptions.
@@ -405,7 +405,7 @@ type Merchant struct {
 	//
 	// **Warning**: Updating Meta will overwrite the existing data. Make sure to always include the complete JSON
 	// object.
-	Meta *Meta `json:"meta,omitempty"`
+	Meta Meta `json:"meta,omitempty"`
 	// ID of the organization the merchant belongs to (if any).
 	OrganizationId *string `json:"organization_id,omitempty"`
 	// True if the merchant is a sandbox for testing.
@@ -477,7 +477,7 @@ type Person struct {
 	Id string `json:"id"`
 	// A list of country-specific personal identifiers.
 	// Max items: 5
-	Identifiers *[]PersonalIdentifier `json:"identifiers,omitempty"`
+	Identifiers []PersonalIdentifier `json:"identifiers,omitempty"`
 	// Middle name(s) of the End-User. Note that in some cultures, people can have multiple middle names; all can
 	// be present, with the names being separated by space characters. Also note that in some cultures, middle names
 	// are not used.
@@ -494,7 +494,7 @@ type Person struct {
 	// the relationship `representative`.
 	// Min items: 1
 	// Max items: 1
-	Relationships *[]string `json:"relationships,omitempty"`
+	Relationships []string `json:"relationships,omitempty"`
 	// A corresponding identity user ID for the person, if they have a user account.
 	UserId *string `json:"user_id,omitempty"`
 	// The version of the resource. The version reflects a specific change submitted to the API via one of the `PATCH`

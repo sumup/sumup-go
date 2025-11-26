@@ -41,7 +41,7 @@ func main() {
 	}
 
 	if accepted, ok := checkoutSuccess.AsCheckoutSuccess(); ok {
-		log.Printf("[INFO] checkout success: id=%q, transaction_id=%q", *accepted.Id, *(*accepted.Transactions)[0].Id)
+		log.Printf("[INFO] checkout success: id=%q, transaction_id=%q", *accepted.Id, *accepted.Transactions[0].Id)
 	}
 
 	if accepted, ok := checkoutSuccess.AsCheckoutAccepted(); ok {

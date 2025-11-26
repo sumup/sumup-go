@@ -123,7 +123,7 @@ type Checkout struct {
 	Status *CheckoutStatus `json:"status,omitempty"`
 	// List of transactions related to the payment.
 	// Unique items only
-	Transactions *[]CheckoutTransaction `json:"transactions,omitempty"`
+	Transactions []CheckoutTransaction `json:"transactions,omitempty"`
 	// Date and time of the checkout expiration before which the client application needs to send a processing request.
 	// If no value is present, the checkout does not have an expiration time.
 	ValidUntil *time.Time `json:"valid_until,omitempty"`
@@ -210,7 +210,7 @@ type CheckoutAccepted struct {
 type CheckoutAcceptedNextStep struct {
 	// Indicates allowed mechanisms for redirecting an end user. If both values are provided to ensure a redirect takes
 	// place in either.
-	Mechanism *[]CheckoutAcceptedNextStepMechanism `json:"mechanism,omitempty"`
+	Mechanism []CheckoutAcceptedNextStepMechanism `json:"mechanism,omitempty"`
 	// Method used to complete the redirect.
 	Method *string `json:"method,omitempty"`
 	// Contains parameters essential for form redirection. Number of object keys and their content can vary.
@@ -280,7 +280,7 @@ type CheckoutCreateRequest struct {
 	// List of transactions related to the payment.
 	// Read only
 	// Unique items only
-	Transactions *[]CheckoutCreateRequestTransaction `json:"transactions,omitempty"`
+	Transactions []CheckoutCreateRequestTransaction `json:"transactions,omitempty"`
 	// Date and time of the checkout expiration before which the client application needs to send a processing request.
 	// If no value is present, the checkout does not have an expiration time.
 	ValidUntil *time.Time `json:"valid_until,omitempty"`
@@ -411,7 +411,7 @@ type CheckoutSuccess struct {
 	TransactionId *string `json:"transaction_id,omitempty"`
 	// List of transactions related to the payment.
 	// Unique items only
-	Transactions *[]CheckoutSuccessTransaction `json:"transactions,omitempty"`
+	Transactions []CheckoutSuccessTransaction `json:"transactions,omitempty"`
 	// Date and time of the checkout expiration before which the client application needs to send a processing request.
 	// If no value is present, the checkout does not have an expiration time.
 	ValidUntil *time.Time `json:"valid_until,omitempty"`
@@ -497,8 +497,8 @@ type CheckoutSuccessPaymentInstrument struct {
 // DetailsError: Error message structure.
 type DetailsError struct {
 	// Details of the error.
-	Details           *string                         `json:"details,omitempty"`
-	FailedConstraints *[]DetailsErrorFailedConstraint `json:"failed_constraints,omitempty"`
+	Details           *string                        `json:"details,omitempty"`
+	FailedConstraints []DetailsErrorFailedConstraint `json:"failed_constraints,omitempty"`
 	// The status code.
 	Status *float64 `json:"status,omitempty"`
 	// Short title of the error.
@@ -627,7 +627,7 @@ type CreateCheckoutBody struct {
 	// List of transactions related to the payment.
 	// Read only
 	// Unique items only
-	Transactions *[]CreateCheckoutBodyTransaction `json:"transactions,omitempty"`
+	Transactions []CreateCheckoutBodyTransaction `json:"transactions,omitempty"`
 	// Date and time of the checkout expiration before which the client application needs to send a processing request.
 	// If no value is present, the checkout does not have an expiration time.
 	ValidUntil *time.Time `json:"valid_until,omitempty"`
@@ -792,7 +792,7 @@ type ListCheckouts200Response []CheckoutSuccess
 
 // GetPaymentMethods200Response is a schema definition.
 type GetPaymentMethods200Response struct {
-	AvailablePaymentMethods *[]GetPaymentMethods200ResponseAvailablePaymentMethod `json:"available_payment_methods,omitempty"`
+	AvailablePaymentMethods []GetPaymentMethods200ResponseAvailablePaymentMethod `json:"available_payment_methods,omitempty"`
 }
 
 // GetPaymentMethods200ResponseAvailablePaymentMethod is a schema definition.

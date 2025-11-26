@@ -19,7 +19,7 @@ import (
 // Member: A member is user within specific resource identified by resource id, resource type, and associated roles.
 type Member struct {
 	// Object attributes that are modifiable only by SumUp applications.
-	Attributes *shared.Attributes `json:"attributes,omitempty"`
+	Attributes shared.Attributes `json:"attributes,omitempty"`
 	// The timestamp of when the member was created.
 	CreatedAt time.Time `json:"created_at"`
 	// ID of the member.
@@ -29,7 +29,7 @@ type Member struct {
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
 	// submit whole metadata. Maximum of 64 parameters are allowed in the object.
 	// Max properties: 64
-	Metadata *shared.Metadata `json:"metadata,omitempty"`
+	Metadata shared.Metadata `json:"metadata,omitempty"`
 	// User's permissions.
 	// Deprecated: Permissions include only legacy permissions, please use roles instead. Member access is based on
 	// roles within a given resource and the permissions these roles grant.
@@ -80,7 +80,7 @@ type MembershipUserClassic struct {
 // CreateMerchantMemberBody is a schema definition.
 type CreateMerchantMemberBody struct {
 	// Object attributes that are modifiable only by SumUp applications.
-	Attributes *shared.Attributes `json:"attributes,omitempty"`
+	Attributes shared.Attributes `json:"attributes,omitempty"`
 	// Email address of the member to add.
 	// Format: email
 	Email string `json:"email"`
@@ -90,7 +90,7 @@ type CreateMerchantMemberBody struct {
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
 	// submit whole metadata. Maximum of 64 parameters are allowed in the object.
 	// Max properties: 64
-	Metadata *shared.Metadata `json:"metadata,omitempty"`
+	Metadata shared.Metadata `json:"metadata,omitempty"`
 	// Nickname of the member to add. Only used if `is_managed_user` is true. Used for display purposes only.
 	Nickname *string `json:"nickname,omitempty"`
 	// Password of the member to add. Only used if `is_managed_user` is true. In the case of service accounts, the
@@ -105,12 +105,12 @@ type CreateMerchantMemberBody struct {
 // UpdateMerchantMemberBody is a schema definition.
 type UpdateMerchantMemberBody struct {
 	// Object attributes that are modifiable only by SumUp applications.
-	Attributes *shared.Attributes `json:"attributes,omitempty"`
+	Attributes shared.Attributes `json:"attributes,omitempty"`
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
 	// submit whole metadata. Maximum of 64 parameters are allowed in the object.
 	// Max properties: 64
-	Metadata *shared.Metadata `json:"metadata,omitempty"`
-	Roles    *[]string        `json:"roles,omitempty"`
+	Metadata shared.Metadata `json:"metadata,omitempty"`
+	Roles    []string        `json:"roles,omitempty"`
 	// Allows you to update user data of managed users.
 	User *UpdateMerchantMemberBodyUser `json:"user,omitempty"`
 }
@@ -134,7 +134,7 @@ type ListMerchantMembersParams struct {
 	// Offset of the first member to return.
 	Offset *int
 	// Filter the returned members by role.
-	Roles *[]string
+	Roles []string
 	// Indicates to skip count query.
 	Scroll *bool
 	// Filter the returned members by the membership status.
@@ -159,10 +159,8 @@ func (p *ListMerchantMembersParams) QueryValues() url.Values {
 		q.Set("offset", strconv.Itoa(*p.Offset))
 	}
 
-	if p.Roles != nil {
-		for _, v := range *p.Roles {
-			q.Add("roles", v)
-		}
+	for _, v := range p.Roles {
+		q.Add("roles", v)
 	}
 
 	if p.Scroll != nil {
