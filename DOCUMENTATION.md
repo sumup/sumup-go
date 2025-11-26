@@ -1317,7 +1317,7 @@ New creates new HTTP API client. The client is by default configured with enviro
 func (c *Client) Call(ctx context.Context, method, path string, opts ...RequestOption) (*http.Response, error)
 ```
 
-Call executes a SumUp API call. Use \[RequestOption\]s to configure the request.
+Call executes an API call. Use \[RequestOption\]s to configure the request.
 
 <a name="Client.Do"></a>
 ### func \(\*Client\) [Do](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L156>)
@@ -1342,7 +1342,7 @@ NewRequest returns a Request suitable for use with [Client.Do](<#Client.Do>).
 <a name="ClientOption"></a>
 ## type [ClientOption](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L40>)
 
-ClientOption is an option for the SumUp API client.
+ClientOption is an option for the API client.
 
 ```go
 type ClientOption func(c *Client) error
@@ -1378,7 +1378,7 @@ WithClient returns a [ClientOption](<#ClientOption>) that configures the client 
 <a name="RequestOption"></a>
 ## type [RequestOption](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L166>)
 
-RequestOption is an option for the request made by the SumUp [Client](<#Client>).
+RequestOption is an option for the request made by the [Client](<#Client>).
 
 ```go
 type RequestOption func(req *request) error
@@ -1419,6 +1419,36 @@ func WithQueryValues(q url.Values) RequestOption
 ```
 
 WithQueryValues returns a [RequestOption](<#RequestOption>) that sets the request query params.
+
+# codegen
+
+```go
+import "github.com/sumup/go-sdk-gen"
+```
+
+## Index
+
+- [func App\(\) \*cli.App](<#App>)
+- [func Generate\(\) \*cli.Command](<#Generate>)
+
+
+<a name="App"></a>
+## func [App](<https://github.com/sumup/sumup-go/blob/main/codegen/main.go#L19>)
+
+```go
+func App() *cli.App
+```
+
+
+
+<a name="Generate"></a>
+## func [Generate](<https://github.com/sumup/sumup-go/blob/main/codegen/generate.go#L15>)
+
+```go
+func Generate() *cli.Command
+```
+
+
 
 # customers
 
@@ -7216,6 +7246,25 @@ func (s *TransactionsService) Refund(ctx context.Context, txnId string, body Ref
 
 Refund: Refund a transaction Refunds an identified transaction either in full or partially.
 
+# templates
+
+```go
+import "github.com/sumup/go-sdk-gen/templates"
+```
+
+## Index
+
+- [Variables](<#variables>)
+
+
+## Variables
+
+<a name="Templates"></a>
+
+```go
+var Templates embed.FS
+```
+
 # checkout
 
 ```go
@@ -7294,5 +7343,346 @@ import "github.com/sumup/sumup-go/example/simple"
 ## Index
 
 
+
+# stringx
+
+```go
+import "github.com/sumup/go-sdk-gen/internal/stringx"
+```
+
+## Index
+
+- [func MakePlural\(s string\) string](<#MakePlural>)
+- [func MakeSingular\(s string\) string](<#MakeSingular>)
+- [func ToLowerFirstLetter\(str string\) string](<#ToLowerFirstLetter>)
+
+
+<a name="MakePlural"></a>
+## func [MakePlural](<https://github.com/sumup/sumup-go/blob/main/codegen/internal/stringx/strings.go#L25>)
+
+```go
+func MakePlural(s string) string
+```
+
+MakePlural returns the given string but plural.
+
+<a name="MakeSingular"></a>
+## func [MakeSingular](<https://github.com/sumup/sumup-go/blob/main/codegen/internal/stringx/strings.go#L17>)
+
+```go
+func MakeSingular(s string) string
+```
+
+MakeSingular returns the given string but singular.
+
+<a name="ToLowerFirstLetter"></a>
+## func [ToLowerFirstLetter](<https://github.com/sumup/sumup-go/blob/main/codegen/internal/stringx/strings.go#L9>)
+
+```go
+func ToLowerFirstLetter(str string) string
+```
+
+ToLowerFirstLetter returns the given string with the first letter converted to lower case.
+
+# builder
+
+```go
+import "github.com/sumup/go-sdk-gen/pkg/builder"
+```
+
+## Index
+
+- [func ResolveRef\(spec \*openapi3.T, ref string\) \(\*openapi3.SchemaRef, error\)](<#ResolveRef>)
+- [type Builder](<#Builder>)
+  - [func New\(cfg Config, opts ...Option\) \*Builder](<#New>)
+  - [func \(b \*Builder\) Build\(\) error](<#Builder.Build>)
+  - [func \(b \*Builder\) Load\(spec \*openapi3.T\) error](<#Builder.Load>)
+- [type Config](<#Config>)
+- [type EnumDeclaration](<#EnumDeclaration>)
+  - [func \(et \*EnumDeclaration\[E\]\) String\(\) string](<#EnumDeclaration[E].String>)
+- [type EnumOption](<#EnumOption>)
+- [type Method](<#Method>)
+  - [func \(mt Method\) ParamsString\(\) string](<#Method.ParamsString>)
+- [type OneOfDeclaration](<#OneOfDeclaration>)
+  - [func \(o \*OneOfDeclaration\) String\(\) string](<#OneOfDeclaration.String>)
+- [type Option](<#Option>)
+- [type Parameter](<#Parameter>)
+- [type Response](<#Response>)
+- [type ResponseType](<#ResponseType>)
+- [type StructField](<#StructField>)
+  - [func \(f \*StructField\) String\(\) string](<#StructField.String>)
+- [type TypeDeclaration](<#TypeDeclaration>)
+  - [func \(tt \*TypeDeclaration\) String\(\) string](<#TypeDeclaration.String>)
+- [type Writable](<#Writable>)
+
+
+<a name="ResolveRef"></a>
+## func [ResolveRef](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/resolve.go#L11>)
+
+```go
+func ResolveRef(spec *openapi3.T, ref string) (*openapi3.SchemaRef, error)
+```
+
+ResolveRef resolves a schema reference.
+
+<a name="Builder"></a>
+## type [Builder](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/builder.go#L53-L74>)
+
+Builder is an SDK builder. Builder works in two steps: First, it loads the OpenAPI specs and pre\-processes them for code generation by transforming the specs into intermediary representation. Secondly, it generates and writes the SDK to desired destination.
+
+```go
+type Builder struct {
+    // contains filtered or unexported fields
+}
+```
+
+<a name="New"></a>
+### func [New](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/builder.go#L88>)
+
+```go
+func New(cfg Config, opts ...Option) *Builder
+```
+
+New creates a new [Builder](<#Builder>). Call \[Build.Load\] to load in OpenAPI specs and \[Build.Build\] to generate SDK based on provided config.
+
+<a name="Builder.Build"></a>
+### func \(\*Builder\) [Build](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/builder.go#L135>)
+
+```go
+func (b *Builder) Build() error
+```
+
+Build the SDK and write it to designated output directory. The OpenAPI specs first need to be loaded using [Builder.Load](<#Builder.Load>).
+
+<a name="Builder.Load"></a>
+### func \(\*Builder\) [Load](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/builder.go#L116>)
+
+```go
+func (b *Builder) Load(spec *openapi3.T) error
+```
+
+Load loads OpenAPI specs into the builder. To generated the SDK, call [Builder.Build](<#Builder.Build>).
+
+<a name="Config"></a>
+## type [Config](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/builder.go#L77-L82>)
+
+Config is builder configuration which configures output options.
+
+```go
+type Config struct {
+    // Out is the output directory that the SDK will be written to.
+    Out string
+    // Name is the name of the product / service.
+    Name string
+}
+```
+
+<a name="EnumDeclaration"></a>
+## type [EnumDeclaration](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/intermediate_representation.go#L60-L63>)
+
+EnumDeclaration holds the information for enum types
+
+```go
+type EnumDeclaration[E cmp.Ordered] struct {
+    Type   TypeDeclaration
+    Values []EnumOption[E]
+}
+```
+
+<a name="EnumDeclaration[E].String"></a>
+### func \(\*EnumDeclaration\[E\]\) [String](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/types.go#L94>)
+
+```go
+func (et *EnumDeclaration[E]) String() string
+```
+
+
+
+<a name="EnumOption"></a>
+## type [EnumOption](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/intermediate_representation.go#L54-L57>)
+
+
+
+```go
+type EnumOption[E cmp.Ordered] struct {
+    Name  string
+    Value E
+}
+```
+
+<a name="Method"></a>
+## type [Method](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/methods.go#L30-L40>)
+
+Method describes a client method. Methods map one\-to\-one to OpenAPI operations.
+
+```go
+type Method struct {
+    Description  string
+    HTTPMethod   string
+    FunctionName string
+    ResponseType *ResponseType
+    Path         string
+    PathParams   []Parameter
+    QueryParams  *Parameter
+    HasBody      bool
+    Responses    []Response
+}
+```
+
+<a name="Method.ParamsString"></a>
+### func \(Method\) [ParamsString](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/methods.go#L42>)
+
+```go
+func (mt Method) ParamsString() string
+```
+
+
+
+<a name="OneOfDeclaration"></a>
+## type [OneOfDeclaration](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/intermediate_representation.go#L29-L32>)
+
+
+
+```go
+type OneOfDeclaration struct {
+    Name    string
+    Options []string
+}
+```
+
+<a name="OneOfDeclaration.String"></a>
+### func \(\*OneOfDeclaration\) [String](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/types.go#L38>)
+
+```go
+func (o *OneOfDeclaration) String() string
+```
+
+
+
+<a name="Option"></a>
+## type [Option](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/builder.go#L84>)
+
+
+
+```go
+type Option func(b *Builder)
+```
+
+<a name="Parameter"></a>
+## type [Parameter](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/methods.go#L24-L27>)
+
+Parameter is a method parameter.
+
+```go
+type Parameter struct {
+    Name string
+    Type string
+}
+```
+
+<a name="Response"></a>
+## type [Response](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/intermediate_representation.go#L65-L72>)
+
+
+
+```go
+type Response struct {
+    IsErr          bool
+    IsDefault      bool
+    IsUnexpected   bool
+    Type           string
+    Code           int
+    ErrDescription string
+}
+```
+
+<a name="ResponseType"></a>
+## type [ResponseType](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/methods.go#L227-L230>)
+
+
+
+```go
+type ResponseType struct {
+    Type    string
+    IsOneOf bool
+}
+```
+
+<a name="StructField"></a>
+## type [StructField](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/intermediate_representation.go#L35-L52>)
+
+StructField holds the information for StructField of a type.
+
+```go
+type StructField struct {
+    // Name of the field
+    Name string
+    // Type of the field, either primitive type (e.g. string) or if the field
+    // is a schema reference then the type of the schema.
+    Type string
+    // Tags to apply to the field, this would usually be json serialization
+    // information.
+    Tags map[string][]string
+    // Optional field.
+    Optional bool
+    // Pointer indicates whether the field should be a pointer in the generated struct.
+    Pointer bool
+
+    Comment string
+
+    Parameter *openapi3.Parameter
+}
+```
+
+<a name="StructField.String"></a>
+### func \(\*StructField\) [String](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/types.go#L56>)
+
+```go
+func (f *StructField) String() string
+```
+
+
+
+<a name="TypeDeclaration"></a>
+## type [TypeDeclaration](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/intermediate_representation.go#L11-L27>)
+
+TypeDeclaration holds the information for generating a type. TODO: split into struct, alias, etc.
+
+```go
+type TypeDeclaration struct {
+    // Name of the type
+    Name string
+    // Type describes the type of the type (e.g. struct, int64, string)
+    Type string
+    // Fields holds the information for the field
+    Fields []StructField
+    // Comment holds the description of the type
+    Comment string
+
+    Response  *openapi3.Response
+    Operation *openapi3.Operation
+    Schema    *openapi3.Schema
+}
+```
+
+<a name="TypeDeclaration.String"></a>
+### func \(\*TypeDeclaration\) [String](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/types.go#L17>)
+
+```go
+func (tt *TypeDeclaration) String() string
+```
+
+
+
+<a name="Writable"></a>
+## type [Writable](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/types.go#L13-L15>)
+
+
+
+```go
+type Writable interface {
+    String() string
+}
+```
 
 Generated by [gomarkdoc](<https://github.com/princjef/gomarkdoc>)

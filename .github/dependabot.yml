@@ -14,3 +14,10 @@ updates:
       interval: "weekly"
     cooldown:
       default-days: 7
+  - package-ecosystem: "gomod"
+    directory: "/codegen"
+    open-pull-requests-limit: 5
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7

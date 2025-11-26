@@ -37,14 +37,14 @@ jobs:
 
       # Would be nice to run this from go-sdk-gen but goimports can't be imported as a pkg
       - run: go install golang.org/x/tools/cmd/goimports@latest
-      - run: go install github.com/sumup/go-sdk-gen/cmd/go-sdk-gen@latest
       - run: go install github.com/princjef/gomarkdoc/cmd/gomarkdoc@latest
 
       - name: Generate SDK
-        run: go-sdk-gen generate --mod github.com/sumup/sumup-go --pkg sumup  --name SumUp ./openapi.json
+        working-directory: codegen
+        run: go run ./... generate --out ../ ../openapi.json
 
       - name: Generate docs
-        run: gomarkdoc --repository.url https://github.com/sumup/sumup-go --repository.default-branch main --output DOCUMENTATION.md ./...
+        run: gomarkdoc --repository.url https://github.com/sumup/sumup-go --repository.default-branch main --exclude-dirs ./codegen --output DOCUMENTATION.md ./...
 
       - name: Create GitHub App token
         id: app-token
