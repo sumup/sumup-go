@@ -27,7 +27,8 @@ type Membership struct {
 	// Pending invitation for membership.
 	Invite *shared.Invite `json:"invite,omitempty"`
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
-	// submit whole metadata.
+	// submit whole metadata. Maximum of 64 parameters are allowed in the object.
+	// Max properties: 64
 	Metadata *shared.Metadata `json:"metadata,omitempty"`
 	// User's permissions.
 	// Deprecated: Permissions include only legacy permissions, please use roles instead. Member access is based on

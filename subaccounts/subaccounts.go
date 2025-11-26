@@ -12,19 +12,8 @@ import (
 	"time"
 
 	"github.com/sumup/sumup-go/client"
+	"github.com/sumup/sumup-go/shared"
 )
-
-// CompatError: Error object for compat API calls.
-type CompatError struct {
-	ErrorCode string `json:"error_code"`
-	Message   string `json:"message"`
-}
-
-func (e *CompatError) Error() string {
-	return fmt.Sprintf("error_code=%v, message=%v", e.ErrorCode, e.Message)
-}
-
-var _ error = (*CompatError)(nil)
 
 // Operator: Operator account for a merchant.
 type Operator struct {
@@ -181,7 +170,7 @@ func (s *SubaccountsService) CreateSubAccount(ctx context.Context, body CreateSu
 
 		return &v, nil
 	case http.StatusForbidden:
-		var apiErr CompatError
+		var apiErr shared.Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
@@ -266,7 +255,7 @@ func (s *SubaccountsService) UpdateSubAccount(ctx context.Context, operatorId in
 
 		return &v, nil
 	case http.StatusBadRequest:
-		var apiErr CompatError
+		var apiErr shared.Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}

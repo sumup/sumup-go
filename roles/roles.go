@@ -5,7 +5,6 @@ package roles
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"time"
@@ -25,7 +24,8 @@ type Role struct {
 	// True if the role is provided by SumUp.
 	IsPredefined bool `json:"is_predefined"`
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
-	// submit whole metadata.
+	// submit whole metadata. Maximum of 64 parameters are allowed in the object.
+	// Max properties: 64
 	Metadata *shared.Metadata `json:"metadata,omitempty"`
 	// User-defined name of the role.
 	Name string `json:"name"`
@@ -41,7 +41,8 @@ type CreateMerchantRoleBody struct {
 	// User-defined description of the role.
 	Description *string `json:"description,omitempty"`
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
-	// submit whole metadata.
+	// submit whole metadata. Maximum of 64 parameters are allowed in the object.
+	// Max properties: 64
 	Metadata *shared.Metadata `json:"metadata,omitempty"`
 	// User-defined name of the role.
 	Name string `json:"name"`
@@ -94,7 +95,12 @@ func (s *RolesService) List(ctx context.Context, merchantCode string) (*ListMerc
 
 		return &v, nil
 	case http.StatusNotFound:
-		return nil, errors.New("Merchant not found.")
+		var apiErr shared.Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	default:
 		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
@@ -121,9 +127,19 @@ func (s *RolesService) Create(ctx context.Context, merchantCode string, body Cre
 
 		return &v, nil
 	case http.StatusBadRequest:
-		return nil, errors.New("Invalid request.")
+		var apiErr shared.Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	case http.StatusNotFound:
-		return nil, errors.New("Merchant not found.")
+		var apiErr shared.Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	default:
 		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
@@ -144,9 +160,19 @@ func (s *RolesService) Delete(ctx context.Context, merchantCode string, roleId s
 	case http.StatusOK:
 		return nil
 	case http.StatusBadRequest:
-		return errors.New("Invalid request.")
+		var apiErr shared.Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return &apiErr
 	case http.StatusNotFound:
-		return errors.New("Merchant not found.")
+		var apiErr shared.Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return &apiErr
 	default:
 		return fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
@@ -172,7 +198,12 @@ func (s *RolesService) Get(ctx context.Context, merchantCode string, roleId stri
 
 		return &v, nil
 	case http.StatusNotFound:
-		return nil, errors.New("Merchant or role not found.")
+		var apiErr shared.Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	default:
 		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
@@ -198,9 +229,19 @@ func (s *RolesService) Update(ctx context.Context, merchantCode string, roleId s
 
 		return &v, nil
 	case http.StatusBadRequest:
-		return nil, errors.New("Invalid request.")
+		var apiErr shared.Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	case http.StatusNotFound:
-		return nil, errors.New("Merchant not found.")
+		var apiErr shared.Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	default:
 		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}

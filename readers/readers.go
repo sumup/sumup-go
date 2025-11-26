@@ -5,7 +5,6 @@ package readers
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -186,18 +185,17 @@ type Reader struct {
 	// Information about the underlying physical device.
 	Device ReaderDevice `json:"device"`
 	// Unique identifier of the object.
-	// Note that this identifies the instance of the physical devices pairing with your SumUp account.
-	// If you DELETE a reader, and pair the device again, the ID will be different. Do not use this ID to refer to
-	// a physical device.
+	//
+	// Note that this identifies the instance of the physical devices pairing with your SumUp account. If you [delete](https://developer.sumup.com/api/readers/delete-reader)
+	// a reader, and pair the device again, the ID will be different. Do not use this ID to refer to a physical device.
+	//
 	// Min length: 30
 	// Max length: 30
 	Id ReaderId `json:"id"`
-	// A set of key-value pairs that you can attach to an object. This can be useful for storing additional information
-	// about the object in a structured format.
-	//
-	// **Warning**: Updating Meta will overwrite the existing data. Make sure to always include the complete JSON
-	// object.
-	Meta *shared.Meta `json:"meta,omitempty"`
+	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
+	// submit whole metadata. Maximum of 64 parameters are allowed in the object.
+	// Max properties: 64
+	Metadata *shared.Metadata `json:"metadata,omitempty"`
 	// Custom human-readable, user-defined name for easier identification of the reader.
 	// Max length: 500
 	Name ReaderName `json:"name"`
@@ -231,9 +229,10 @@ const (
 )
 
 // ReaderId: Unique identifier of the object.
-// Note that this identifies the instance of the physical devices pairing with your SumUp account.
-// If you DELETE a reader, and pair the device again, the ID will be different. Do not use this ID to refer to
-// a physical device.
+//
+// Note that this identifies the instance of the physical devices pairing with your SumUp account. If you [delete](https://developer.sumup.com/api/readers/delete-reader)
+// a reader, and pair the device again, the ID will be different. Do not use this ID to refer to a physical device.
+//
 // Min length: 30
 // Max length: 30
 type ReaderId string
@@ -267,12 +266,10 @@ const (
 
 // CreateReaderBody is a schema definition.
 type CreateReaderBody struct {
-	// A set of key-value pairs that you can attach to an object. This can be useful for storing additional information
-	// about the object in a structured format.
-	//
-	// **Warning**: Updating Meta will overwrite the existing data. Make sure to always include the complete JSON
-	// object.
-	Meta *shared.Meta `json:"meta,omitempty"`
+	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
+	// submit whole metadata. Maximum of 64 parameters are allowed in the object.
+	// Max properties: 64
+	Metadata *shared.Metadata `json:"metadata,omitempty"`
 	// Custom human-readable, user-defined name for easier identification of the reader.
 	// Max length: 500
 	Name ReaderName `json:"name"`
@@ -374,12 +371,10 @@ type CreateReaderCheckoutBodyTotalAmount struct {
 
 // UpdateReaderBody is a schema definition.
 type UpdateReaderBody struct {
-	// A set of key-value pairs that you can attach to an object. This can be useful for storing additional information
-	// about the object in a structured format.
-	//
-	// **Warning**: Updating Meta will overwrite the existing data. Make sure to always include the complete JSON
-	// object.
-	Meta *shared.Meta `json:"meta,omitempty"`
+	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
+	// submit whole metadata. Maximum of 64 parameters are allowed in the object.
+	// Max properties: 64
+	Metadata *shared.Metadata `json:"metadata,omitempty"`
 	// Custom human-readable, user-defined name for easier identification of the reader.
 	// Max length: 500
 	Name *ReaderName `json:"name,omitempty"`
@@ -464,6 +459,27 @@ func (s *ReadersService) Create(ctx context.Context, merchantCode string, body C
 		}
 
 		return &v, nil
+	case http.StatusBadRequest:
+		var apiErr shared.Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	case http.StatusNotFound:
+		var apiErr shared.Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	case http.StatusConflict:
+		var apiErr shared.Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	default:
 		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
@@ -618,9 +634,9 @@ func (s *ReadersService) CreateCheckout(ctx context.Context, merchantCode string
 	}
 }
 
-// DeleteReader: Delete a reader
+// Delete: Delete a reader
 // Delete a reader.
-func (s *ReadersService) DeleteReader(ctx context.Context, merchantCode string, id ReaderId) error {
+func (s *ReadersService) Delete(ctx context.Context, merchantCode string, id ReaderId) error {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, id)
 
 	resp, err := s.c.Call(ctx, http.MethodDelete, path)
@@ -632,6 +648,13 @@ func (s *ReadersService) DeleteReader(ctx context.Context, merchantCode string, 
 	switch resp.StatusCode {
 	case http.StatusOK:
 		return nil
+	case http.StatusNotFound:
+		var apiErr shared.Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return &apiErr
 	default:
 		return fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
@@ -657,7 +680,12 @@ func (s *ReadersService) Get(ctx context.Context, merchantCode string, id Reader
 
 		return &v, nil
 	case http.StatusNotFound:
-		return nil, errors.New("The requested Reader resource does not exists.")
+		var apiErr shared.Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	default:
 		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
@@ -683,7 +711,19 @@ func (s *ReadersService) Update(ctx context.Context, merchantCode string, id Rea
 
 		return &v, nil
 	case http.StatusForbidden:
-		return nil, errors.New("The reader is not linked to the merchant account.")
+		var apiErr shared.Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	case http.StatusNotFound:
+		var apiErr shared.Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	default:
 		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}

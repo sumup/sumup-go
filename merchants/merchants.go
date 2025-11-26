@@ -405,7 +405,7 @@ type Merchant struct {
 	//
 	// **Warning**: Updating Meta will overwrite the existing data. Make sure to always include the complete JSON
 	// object.
-	Meta *shared.Meta `json:"meta,omitempty"`
+	Meta *Meta `json:"meta,omitempty"`
 	// ID of the organization the merchant belongs to (if any).
 	OrganizationId *string `json:"organization_id,omitempty"`
 	// True if the merchant is a sandbox for testing.
@@ -418,6 +418,13 @@ type Merchant struct {
 	// endpoints.
 	Version *Version `json:"version,omitempty"`
 }
+
+// Meta: A set of key-value pairs that you can attach to an object. This can be useful for storing additional information
+// about the object in a structured format.
+//
+// **Warning**: Updating Meta will overwrite the existing data. Make sure to always include the complete JSON
+// object.
+type Meta map[string]any
 
 // Ownership is a schema definition.
 type Ownership struct {
