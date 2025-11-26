@@ -94,7 +94,7 @@ type AppSettings struct {
 	// Terminal mode tutorial.
 	TerminalModeTutorial *bool `json:"terminal_mode_tutorial,omitempty"`
 	// Tip rates.
-	TipRates *[]float64 `json:"tip_rates,omitempty"`
+	TipRates []float64 `json:"tip_rates,omitempty"`
 	// Tipping.
 	Tipping *string `json:"tipping,omitempty"`
 }
@@ -220,9 +220,9 @@ type MerchantAccount struct {
 type MerchantProfileLegacy struct {
 	// Details of the registered address.
 	Address      *AddressWithDetails `json:"address,omitempty"`
-	BankAccounts *[]BankAccount      `json:"bank_accounts,omitempty"`
+	BankAccounts []BankAccount       `json:"bank_accounts,omitempty"`
 	// Business owners information.
-	BusinessOwners *BusinessOwners `json:"business_owners,omitempty"`
+	BusinessOwners BusinessOwners `json:"business_owners,omitempty"`
 	// Company name
 	CompanyName *string `json:"company_name,omitempty"`
 	// Company registration number
@@ -353,17 +353,15 @@ type VatRates struct {
 type GetAccountParams struct {
 	// A list of additional information you want to receive for the user. By default only personal and merchant profile
 	// information will be returned.
-	Include *[]string
+	Include []string
 }
 
 // QueryValues converts [GetAccountParams] into [url.Values].
 func (p *GetAccountParams) QueryValues() url.Values {
 	q := make(url.Values)
 
-	if p.Include != nil {
-		for _, v := range *p.Include {
-			q.Add("include[]", v)
-		}
+	for _, v := range p.Include {
+		q.Add("include[]", v)
 	}
 
 	return q

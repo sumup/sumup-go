@@ -98,13 +98,13 @@ type ReceiptTransaction struct {
 	// Transaction entry mode.
 	EntryMode *string `json:"entry_mode,omitempty"`
 	// Events
-	Events *[]ReceiptEvent `json:"events,omitempty"`
+	Events []ReceiptEvent `json:"events,omitempty"`
 	// Number of installments.
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Transaction type.
 	PaymentType *string `json:"payment_type,omitempty"`
 	// Products
-	Products *[]ReceiptTransactionProduct `json:"products,omitempty"`
+	Products []ReceiptTransactionProduct `json:"products,omitempty"`
 	// Receipt number
 	ReceiptNo *string `json:"receipt_no,omitempty"`
 	// Transaction processing status.
@@ -118,7 +118,7 @@ type ReceiptTransaction struct {
 	// Transaction VAT amount.
 	VatAmount *string `json:"vat_amount,omitempty"`
 	// Vat rates.
-	VatRates *[]ReceiptTransactionVatRate `json:"vat_rates,omitempty"`
+	VatRates []ReceiptTransactionVatRate `json:"vat_rates,omitempty"`
 	// Cardholder verification method.
 	VerificationMethod *string `json:"verification_method,omitempty"`
 }

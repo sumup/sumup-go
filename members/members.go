@@ -5,7 +5,6 @@ package members
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -20,7 +19,7 @@ import (
 // Member: A member is user within specific resource identified by resource id, resource type, and associated roles.
 type Member struct {
 	// Object attributes that are modifiable only by SumUp applications.
-	Attributes *shared.Attributes `json:"attributes,omitempty"`
+	Attributes shared.Attributes `json:"attributes,omitempty"`
 	// The timestamp of when the member was created.
 	CreatedAt time.Time `json:"created_at"`
 	// ID of the member.
@@ -28,8 +27,9 @@ type Member struct {
 	// Pending invitation for membership.
 	Invite *shared.Invite `json:"invite,omitempty"`
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
-	// submit whole metadata.
-	Metadata *shared.Metadata `json:"metadata,omitempty"`
+	// submit whole metadata. Maximum of 64 parameters are allowed in the object.
+	// Max properties: 64
+	Metadata shared.Metadata `json:"metadata,omitempty"`
 	// User's permissions.
 	// Deprecated: Permissions include only legacy permissions, please use roles instead. Member access is based on
 	// roles within a given resource and the permissions these roles grant.
@@ -80,7 +80,7 @@ type MembershipUserClassic struct {
 // CreateMerchantMemberBody is a schema definition.
 type CreateMerchantMemberBody struct {
 	// Object attributes that are modifiable only by SumUp applications.
-	Attributes *shared.Attributes `json:"attributes,omitempty"`
+	Attributes shared.Attributes `json:"attributes,omitempty"`
 	// Email address of the member to add.
 	// Format: email
 	Email string `json:"email"`
@@ -88,8 +88,9 @@ type CreateMerchantMemberBody struct {
 	// and nickname.
 	IsManagedUser *bool `json:"is_managed_user,omitempty"`
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
-	// submit whole metadata.
-	Metadata *shared.Metadata `json:"metadata,omitempty"`
+	// submit whole metadata. Maximum of 64 parameters are allowed in the object.
+	// Max properties: 64
+	Metadata shared.Metadata `json:"metadata,omitempty"`
 	// Nickname of the member to add. Only used if `is_managed_user` is true. Used for display purposes only.
 	Nickname *string `json:"nickname,omitempty"`
 	// Password of the member to add. Only used if `is_managed_user` is true. In the case of service accounts, the
@@ -104,11 +105,12 @@ type CreateMerchantMemberBody struct {
 // UpdateMerchantMemberBody is a schema definition.
 type UpdateMerchantMemberBody struct {
 	// Object attributes that are modifiable only by SumUp applications.
-	Attributes *shared.Attributes `json:"attributes,omitempty"`
+	Attributes shared.Attributes `json:"attributes,omitempty"`
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
-	// submit whole metadata.
-	Metadata *shared.Metadata `json:"metadata,omitempty"`
-	Roles    *[]string        `json:"roles,omitempty"`
+	// submit whole metadata. Maximum of 64 parameters are allowed in the object.
+	// Max properties: 64
+	Metadata shared.Metadata `json:"metadata,omitempty"`
+	Roles    []string        `json:"roles,omitempty"`
 	// Allows you to update user data of managed users.
 	User *UpdateMerchantMemberBodyUser `json:"user,omitempty"`
 }
@@ -132,7 +134,7 @@ type ListMerchantMembersParams struct {
 	// Offset of the first member to return.
 	Offset *int
 	// Filter the returned members by role.
-	Roles *[]string
+	Roles []string
 	// Indicates to skip count query.
 	Scroll *bool
 	// Filter the returned members by the membership status.
@@ -157,10 +159,8 @@ func (p *ListMerchantMembersParams) QueryValues() url.Values {
 		q.Set("offset", strconv.Itoa(*p.Offset))
 	}
 
-	if p.Roles != nil {
-		for _, v := range *p.Roles {
-			q.Add("roles", v)
-		}
+	for _, v := range p.Roles {
+		q.Add("roles", v)
 	}
 
 	if p.Scroll != nil {
@@ -212,7 +212,12 @@ func (s *MembersService) List(ctx context.Context, merchantCode string, params L
 
 		return &v, nil
 	case http.StatusNotFound:
-		return nil, errors.New("Merchant not found.")
+		var apiErr shared.Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	default:
 		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
@@ -238,11 +243,26 @@ func (s *MembersService) Create(ctx context.Context, merchantCode string, body C
 
 		return &v, nil
 	case http.StatusBadRequest:
-		return nil, errors.New("Invalid request.")
+		var apiErr shared.Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	case http.StatusNotFound:
-		return nil, errors.New("Merchant not found.")
+		var apiErr shared.Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	case http.StatusTooManyRequests:
-		return nil, errors.New("Too many invitations sent to that user. The limit is 10 requests per 5 minutes and the Retry-After header is set to the number of minutes until the reset of the limit.")
+		var apiErr shared.Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	default:
 		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
@@ -263,7 +283,12 @@ func (s *MembersService) Delete(ctx context.Context, merchantCode string, member
 	case http.StatusOK:
 		return nil
 	case http.StatusNotFound:
-		return errors.New("Merchant or member not found.")
+		var apiErr shared.Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return &apiErr
 	default:
 		return fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
@@ -289,7 +314,12 @@ func (s *MembersService) Get(ctx context.Context, merchantCode string, memberId 
 
 		return &v, nil
 	case http.StatusNotFound:
-		return nil, errors.New("Merchant or member not found.")
+		var apiErr shared.Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	default:
 		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
@@ -315,13 +345,33 @@ func (s *MembersService) Update(ctx context.Context, merchantCode string, member
 
 		return &v, nil
 	case http.StatusBadRequest:
-		return nil, errors.New("Cannot set password or nickname for an invited user.")
+		var apiErr shared.Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	case http.StatusForbidden:
-		return nil, errors.New("Cannot change password for managed user. Password was already used before.")
+		var apiErr shared.Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	case http.StatusNotFound:
-		return nil, errors.New("Merchant or member not found.")
+		var apiErr shared.Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	case http.StatusConflict:
-		return nil, errors.New("Cannot update member as some data conflict with existing members.")
+		var apiErr shared.Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	default:
 		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
