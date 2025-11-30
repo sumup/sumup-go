@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.7.0](https://github.com/sumup/sumup-go/compare/v0.6.0...v0.7.0) (2025-11-30)
+
+
+### Features
+
+* **example:** oauth2 flow ([#130](https://github.com/sumup/sumup-go/issues/130)) ([be3b6f1](https://github.com/sumup/sumup-go/commit/be3b6f194fb99eca985b09efa967885f57a01c68))
+
+
+### Bug Fixes
+
+* **ci:** use bot for release PRs ([72bdf15](https://github.com/sumup/sumup-go/commit/72bdf155b3450c163350ce53a3acc1b1e33e2811))
+
 ## [0.6.0](https://github.com/sumup/sumup-go/compare/v0.5.0...v0.6.0) (2025-11-11)
 
 
