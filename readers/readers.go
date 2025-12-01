@@ -191,7 +191,7 @@ type Reader struct {
 	//
 	// Min length: 30
 	// Max length: 30
-	Id ReaderId `json:"id"`
+	ID ReaderId `json:"id"`
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
 	// submit whole metadata. Maximum of 64 parameters are allowed in the object.
 	// Max properties: 64
@@ -636,8 +636,8 @@ func (s *ReadersService) CreateCheckout(ctx context.Context, merchantCode string
 
 // Delete: Delete a reader
 // Delete a reader.
-func (s *ReadersService) Delete(ctx context.Context, merchantCode string, id ReaderId) error {
-	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, id)
+func (s *ReadersService) Delete(ctx context.Context, merchantCode string, iD ReaderId) error {
+	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, iD)
 
 	resp, err := s.c.Call(ctx, http.MethodDelete, path)
 	if err != nil {
@@ -662,8 +662,8 @@ func (s *ReadersService) Delete(ctx context.Context, merchantCode string, id Rea
 
 // Get: Retrieve a Reader
 // Retrieve a Reader.
-func (s *ReadersService) Get(ctx context.Context, merchantCode string, id ReaderId, params GetReaderParams) (*Reader, error) {
-	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, id)
+func (s *ReadersService) Get(ctx context.Context, merchantCode string, iD ReaderId, params GetReaderParams) (*Reader, error) {
+	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, iD)
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
@@ -693,8 +693,8 @@ func (s *ReadersService) Get(ctx context.Context, merchantCode string, id Reader
 
 // Update: Update a Reader
 // Update a Reader.
-func (s *ReadersService) Update(ctx context.Context, merchantCode string, id ReaderId, body UpdateReaderBody) (*Reader, error) {
-	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, id)
+func (s *ReadersService) Update(ctx context.Context, merchantCode string, iD ReaderId, body UpdateReaderBody) (*Reader, error) {
+	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, iD)
 
 	resp, err := s.c.Call(ctx, http.MethodPatch, path, client.WithJSONBody(body))
 	if err != nil {

@@ -61,7 +61,7 @@ type Event struct {
 	FeeAmount *float64 `json:"fee_amount,omitempty"`
 	// Unique ID of the transaction event.
 	// Format: int64
-	Id *shared.EventId `json:"id,omitempty"`
+	ID *shared.EventId `json:"id,omitempty"`
 	// Consecutive number of the installment.
 	InstallmentNumber *int `json:"installment_number,omitempty"`
 	// Status of the transaction event.
@@ -155,7 +155,7 @@ type TransactionEvent struct {
 	EventType *shared.EventType `json:"event_type,omitempty"`
 	// Unique ID of the transaction event.
 	// Format: int64
-	Id *shared.EventId `json:"id,omitempty"`
+	ID *shared.EventId `json:"id,omitempty"`
 	// Consecutive number of the installment that is paid. Applicable only payout events, i.e. `event_type = PAYOUT`.
 	InstallmentNumber *int `json:"installment_number,omitempty"`
 	// Status of the transaction event.
@@ -183,7 +183,7 @@ type TransactionFull struct {
 	// Indication of the precision of the geographical position received from the payment terminal.
 	HorizontalAccuracy *HorizontalAccuracy `json:"horizontal_accuracy,omitempty"`
 	// Unique ID of the transaction.
-	Id *string `json:"id,omitempty"`
+	ID *string `json:"id,omitempty"`
 	// Current number of the installment for deferred payments.
 	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
@@ -359,7 +359,7 @@ type TransactionHistory struct {
 	// currency values are enumerated above.
 	Currency *shared.Currency `json:"currency,omitempty"`
 	// Unique ID of the transaction.
-	Id *string `json:"id,omitempty"`
+	ID *string `json:"id,omitempty"`
 	// Current number of the installment for deferred payments.
 	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
@@ -569,7 +569,7 @@ func (p *ListTransactionsParams) QueryValues() url.Values {
 // GetTransactionParams: query parameters for GetTransaction
 type GetTransactionParams struct {
 	// Retrieves the transaction resource with the specified transaction ID (the `id` parameter in the transaction resource).
-	Id *string
+	ID *string
 	// Retrieves the transaction resource with the specified internal transaction ID (the `internal_id` parameter in
 	// the transaction resource).
 	InternalId *string
@@ -581,8 +581,8 @@ type GetTransactionParams struct {
 func (p *GetTransactionParams) QueryValues() url.Values {
 	q := make(url.Values)
 
-	if p.Id != nil {
-		q.Set("id", *p.Id)
+	if p.ID != nil {
+		q.Set("id", *p.ID)
 	}
 
 	if p.InternalId != nil {
@@ -694,7 +694,7 @@ type GetTransactionV21Params struct {
 	// External/foreign transaction id (passed by clients).
 	ForeignTransactionId *string
 	// Retrieves the transaction resource with the specified transaction ID (the `id` parameter in the transaction resource).
-	Id *string
+	ID *string
 	// Retrieves the transaction resource with the specified internal transaction ID (the `internal_id` parameter in
 	// the transaction resource).
 	InternalId *string
@@ -714,8 +714,8 @@ func (p *GetTransactionV21Params) QueryValues() url.Values {
 		q.Set("foreign_transaction_id", *p.ForeignTransactionId)
 	}
 
-	if p.Id != nil {
-		q.Set("id", *p.Id)
+	if p.ID != nil {
+		q.Set("id", *p.ID)
 	}
 
 	if p.InternalId != nil {

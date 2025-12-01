@@ -22,7 +22,7 @@ type FinancialPayout struct {
 	// Format: date
 	Date            *datetime.Date         `json:"date,omitempty"`
 	Fee             *float64               `json:"fee,omitempty"`
-	Id              *int                   `json:"id,omitempty"`
+	ID              *int                   `json:"id,omitempty"`
 	Reference       *string                `json:"reference,omitempty"`
 	Status          *FinancialPayoutStatus `json:"status,omitempty"`
 	TransactionCode *string                `json:"transaction_code,omitempty"`

@@ -36,21 +36,21 @@ type Attributes map[string]any
 type Currency string
 
 const (
-	CurrencyBgn Currency = "BGN"
-	CurrencyBrl Currency = "BRL"
-	CurrencyChf Currency = "CHF"
-	CurrencyClp Currency = "CLP"
-	CurrencyCzk Currency = "CZK"
-	CurrencyDkk Currency = "DKK"
-	CurrencyEur Currency = "EUR"
-	CurrencyGbp Currency = "GBP"
-	CurrencyHrk Currency = "HRK"
-	CurrencyHuf Currency = "HUF"
-	CurrencyNok Currency = "NOK"
-	CurrencyPln Currency = "PLN"
-	CurrencyRon Currency = "RON"
-	CurrencySek Currency = "SEK"
-	CurrencyUsd Currency = "USD"
+	CurrencyBGN Currency = "BGN"
+	CurrencyBRL Currency = "BRL"
+	CurrencyCHF Currency = "CHF"
+	CurrencyCLP Currency = "CLP"
+	CurrencyCZK Currency = "CZK"
+	CurrencyDKK Currency = "DKK"
+	CurrencyEUR Currency = "EUR"
+	CurrencyGBP Currency = "GBP"
+	CurrencyHRK Currency = "HRK"
+	CurrencyHUF Currency = "HUF"
+	CurrencyNOK Currency = "NOK"
+	CurrencyPLN Currency = "PLN"
+	CurrencyRON Currency = "RON"
+	CurrencySEK Currency = "SEK"
+	CurrencyUSD Currency = "USD"
 )
 
 // Error: Error message structure.
@@ -200,7 +200,7 @@ type TransactionBase struct {
 	// currency values are enumerated above.
 	Currency *Currency `json:"currency,omitempty"`
 	// Unique ID of the transaction.
-	Id *string `json:"id,omitempty"`
+	ID *string `json:"id,omitempty"`
 	// Current number of the installment for deferred payments.
 	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
