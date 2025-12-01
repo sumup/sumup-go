@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/sumup/sumup-go/compare/v0.7.0...v0.8.0) (2025-12-01)
+
+
+### Features
+
+* handle properly initialisms for well-known strings ([#144](https://github.com/sumup/sumup-go/issues/144)) ([ee7b270](https://github.com/sumup/sumup-go/commit/ee7b270e203f7fdccbb714a1e3e1c3f70984b953))
+
 ## [0.7.0](https://github.com/sumup/sumup-go/compare/v0.6.0...v0.7.0) (2025-11-30)
 
 
