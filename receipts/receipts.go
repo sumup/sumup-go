@@ -51,7 +51,7 @@ type ReceiptEvent struct {
 	Amount *shared.AmountEvent `json:"amount,omitempty"`
 	// Unique ID of the transaction event.
 	// Format: int64
-	Id        *shared.EventId `json:"id,omitempty"`
+	ID        *shared.EventId `json:"id,omitempty"`
 	ReceiptNo *string         `json:"receipt_no,omitempty"`
 	// Status of the transaction event.
 	Status *shared.EventStatus `json:"status,omitempty"`
@@ -180,8 +180,8 @@ func NewReceiptsService(c *client.Client) *ReceiptsService {
 
 // Get: Retrieve receipt details
 // Retrieves receipt specific data for a transaction.
-func (s *ReceiptsService) Get(ctx context.Context, id string, params GetReceiptParams) (*Receipt, error) {
-	path := fmt.Sprintf("/v1.1/receipts/%v", id)
+func (s *ReceiptsService) Get(ctx context.Context, iD string, params GetReceiptParams) (*Receipt, error) {
+	path := fmt.Sprintf("/v1.1/receipts/%v", iD)
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {

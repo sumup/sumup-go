@@ -20,7 +20,7 @@ type Role struct {
 	// User-defined description of the role.
 	Description *string `json:"description,omitempty"`
 	// Unique identifier of the role.
-	Id string `json:"id"`
+	ID string `json:"id"`
 	// True if the role is provided by SumUp.
 	IsPredefined bool `json:"is_predefined"`
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always

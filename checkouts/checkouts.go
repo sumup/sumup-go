@@ -111,7 +111,7 @@ type Checkout struct {
 	Description *string `json:"description,omitempty"`
 	// Unique ID of the checkout resource.
 	// Read only
-	Id *string `json:"id,omitempty"`
+	ID *string `json:"id,omitempty"`
 	// Created mandate
 	Mandate *shared.MandateResponse `json:"mandate,omitempty"`
 	// Unique identifying code of the merchant profile.
@@ -150,7 +150,7 @@ type CheckoutTransaction struct {
 	// Entry mode of the payment details.
 	EntryMode *CheckoutTransactionEntryMode `json:"entry_mode,omitempty"`
 	// Unique ID of the transaction.
-	Id *string `json:"id,omitempty"`
+	ID *string `json:"id,omitempty"`
 	// Current number of the installment for deferred payments.
 	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
@@ -218,7 +218,7 @@ type CheckoutAcceptedNextStep struct {
 	// Refers to a url where the end user is redirected once the payment processing completes.
 	RedirectUrl *string `json:"redirect_url,omitempty"`
 	// Where the end user is redirected.
-	Url *string `json:"url,omitempty"`
+	URL *string `json:"url,omitempty"`
 }
 
 // CheckoutAcceptedNextStepMechanism is a schema definition.
@@ -259,7 +259,7 @@ type CheckoutCreateRequest struct {
 	Description *string `json:"description,omitempty"`
 	// Unique ID of the checkout resource.
 	// Read only
-	Id *string `json:"id,omitempty"`
+	ID *string `json:"id,omitempty"`
 	// Unique identifying code of the merchant profile.
 	MerchantCode string `json:"merchant_code"`
 	// Purpose of the checkout.
@@ -317,7 +317,7 @@ type CheckoutCreateRequestTransaction struct {
 	// Entry mode of the payment details.
 	EntryMode *CheckoutCreateRequestTransactionEntryMode `json:"entry_mode,omitempty"`
 	// Unique ID of the transaction.
-	Id *string `json:"id,omitempty"`
+	ID *string `json:"id,omitempty"`
 	// Current number of the installment for deferred payments.
 	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
@@ -387,7 +387,7 @@ type CheckoutSuccess struct {
 	Description *string `json:"description,omitempty"`
 	// Unique ID of the checkout resource.
 	// Read only
-	Id *string `json:"id,omitempty"`
+	ID *string `json:"id,omitempty"`
 	// Created mandate
 	Mandate *shared.MandateResponse `json:"mandate,omitempty"`
 	// Unique identifying code of the merchant profile.
@@ -438,7 +438,7 @@ type CheckoutSuccessTransaction struct {
 	// Entry mode of the payment details.
 	EntryMode *CheckoutSuccessTransactionEntryMode `json:"entry_mode,omitempty"`
 	// Unique ID of the transaction.
-	Id *string `json:"id,omitempty"`
+	ID *string `json:"id,omitempty"`
 	// Current number of the installment for deferred payments.
 	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
@@ -606,7 +606,7 @@ type CreateCheckoutBody struct {
 	Description *string `json:"description,omitempty"`
 	// Unique ID of the checkout resource.
 	// Read only
-	Id *string `json:"id,omitempty"`
+	ID *string `json:"id,omitempty"`
 	// Unique identifying code of the merchant profile.
 	MerchantCode string `json:"merchant_code"`
 	// Purpose of the checkout.
@@ -664,7 +664,7 @@ type CreateCheckoutBodyTransaction struct {
 	// Entry mode of the payment details.
 	EntryMode *CreateCheckoutBodyTransactionEntryMode `json:"entry_mode,omitempty"`
 	// Unique ID of the transaction.
-	Id *string `json:"id,omitempty"`
+	ID *string `json:"id,omitempty"`
 	// Current number of the installment for deferred payments.
 	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
@@ -798,7 +798,7 @@ type GetPaymentMethods200Response struct {
 // GetPaymentMethods200ResponseAvailablePaymentMethod is a schema definition.
 type GetPaymentMethods200ResponseAvailablePaymentMethod struct {
 	// The ID of the payment method.
-	Id string `json:"id"`
+	ID string `json:"id"`
 }
 
 // ProcessCheckout400Response is a schema definition.
@@ -967,8 +967,8 @@ func (s *CheckoutsService) ListAvailablePaymentMethods(ctx context.Context, merc
 
 // Deactivate: Deactivate a checkout
 // Deactivates an identified checkout resource. If the checkout has already been processed it can not be deactivated.
-func (s *CheckoutsService) Deactivate(ctx context.Context, id string) (*Checkout, error) {
-	path := fmt.Sprintf("/v0.1/checkouts/%v", id)
+func (s *CheckoutsService) Deactivate(ctx context.Context, iD string) (*Checkout, error) {
+	path := fmt.Sprintf("/v0.1/checkouts/%v", iD)
 
 	resp, err := s.c.Call(ctx, http.MethodDelete, path)
 	if err != nil {
@@ -1013,8 +1013,8 @@ func (s *CheckoutsService) Deactivate(ctx context.Context, id string) (*Checkout
 // Get: Retrieve a checkout
 // Retrieves an identified checkout resource. Use this request after processing a checkout to confirm its status
 // and inform the end user respectively.
-func (s *CheckoutsService) Get(ctx context.Context, id string) (*CheckoutSuccess, error) {
-	path := fmt.Sprintf("/v0.1/checkouts/%v", id)
+func (s *CheckoutsService) Get(ctx context.Context, iD string) (*CheckoutSuccess, error) {
+	path := fmt.Sprintf("/v0.1/checkouts/%v", iD)
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
@@ -1054,8 +1054,8 @@ func (s *CheckoutsService) Get(ctx context.Context, id string) (*CheckoutSuccess
 // resource initiated in the `Create a checkout` endpoint.
 //
 // Follow this request with `Retrieve a checkout` to confirm its status.
-func (s *CheckoutsService) Process(ctx context.Context, id string, body ProcessCheckoutBody) (*ProcessCheckoutResponse, error) {
-	path := fmt.Sprintf("/v0.1/checkouts/%v", id)
+func (s *CheckoutsService) Process(ctx context.Context, iD string, body ProcessCheckoutBody) (*ProcessCheckoutResponse, error) {
+	path := fmt.Sprintf("/v0.1/checkouts/%v", iD)
 
 	resp, err := s.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))
 	if err != nil {

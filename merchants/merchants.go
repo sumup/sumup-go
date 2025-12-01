@@ -136,7 +136,7 @@ type BasePerson struct {
 	GivenName *string `json:"given_name,omitempty"`
 	// The unique identifier for the person. This is a [typeid](https://github.com/sumup/typeid).
 	// Read only
-	Id string `json:"id"`
+	ID string `json:"id"`
 	// A list of country-specific personal identifiers.
 	// Max items: 5
 	Identifiers []PersonalIdentifier `json:"identifiers,omitempty"`
@@ -233,7 +233,7 @@ type ClassicMerchantIdentifiers struct {
 	// Classic (serial) merchant ID.
 	// Format: int64
 	// Deprecated: this operation is deprecated
-	Id int `json:"id"`
+	ID int `json:"id"`
 }
 
 // Company: Information about the company or business. This is legal information that is used for verification.
@@ -474,7 +474,7 @@ type Person struct {
 	GivenName *string `json:"given_name,omitempty"`
 	// The unique identifier for the person. This is a [typeid](https://github.com/sumup/typeid).
 	// Read only
-	Id string `json:"id"`
+	ID string `json:"id"`
 	// A list of country-specific personal identifiers.
 	// Max items: 5
 	Identifiers []PersonalIdentifier `json:"identifiers,omitempty"`

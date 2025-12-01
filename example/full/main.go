@@ -134,12 +134,12 @@ func main() {
 			return
 		}
 
-		slog.Info("Checkout created", "id", *checkout.Id, "amount", req.Amount, "currency", merchant.DefaultCurrency, "reference", checkoutID)
+		slog.Info("Checkout created", "id", *checkout.ID, "amount", req.Amount, "currency", merchant.DefaultCurrency, "reference", checkoutID)
 
 		// Return checkout ID to the client
 		w.Header().Set("Content-Type", "application/json")
 		_ = json.NewEncoder(w).Encode(map[string]string{
-			"checkoutId": *checkout.Id,
+			"checkoutId": *checkout.ID,
 		})
 	})
 

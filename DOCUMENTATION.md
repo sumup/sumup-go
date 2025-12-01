@@ -114,11 +114,11 @@ import "github.com/sumup/sumup-go/checkouts"
 - [type CheckoutsService](<#CheckoutsService>)
   - [func NewCheckoutsService\(c \*client.Client\) \*CheckoutsService](<#NewCheckoutsService>)
   - [func \(s \*CheckoutsService\) Create\(ctx context.Context, body CreateCheckoutBody\) \(\*Checkout, error\)](<#CheckoutsService.Create>)
-  - [func \(s \*CheckoutsService\) Deactivate\(ctx context.Context, id string\) \(\*Checkout, error\)](<#CheckoutsService.Deactivate>)
-  - [func \(s \*CheckoutsService\) Get\(ctx context.Context, id string\) \(\*CheckoutSuccess, error\)](<#CheckoutsService.Get>)
+  - [func \(s \*CheckoutsService\) Deactivate\(ctx context.Context, iD string\) \(\*Checkout, error\)](<#CheckoutsService.Deactivate>)
+  - [func \(s \*CheckoutsService\) Get\(ctx context.Context, iD string\) \(\*CheckoutSuccess, error\)](<#CheckoutsService.Get>)
   - [func \(s \*CheckoutsService\) List\(ctx context.Context, params ListCheckoutsParams\) \(\*ListCheckouts200Response, error\)](<#CheckoutsService.List>)
   - [func \(s \*CheckoutsService\) ListAvailablePaymentMethods\(ctx context.Context, merchantCode string, params GetPaymentMethodsParams\) \(\*GetPaymentMethods200Response, error\)](<#CheckoutsService.ListAvailablePaymentMethods>)
-  - [func \(s \*CheckoutsService\) Process\(ctx context.Context, id string, body ProcessCheckoutBody\) \(\*ProcessCheckoutResponse, error\)](<#CheckoutsService.Process>)
+  - [func \(s \*CheckoutsService\) Process\(ctx context.Context, iD string, body ProcessCheckoutBody\) \(\*ProcessCheckoutResponse, error\)](<#CheckoutsService.Process>)
 - [type CreateCheckoutBody](<#CreateCheckoutBody>)
 - [type CreateCheckoutBodyPurpose](<#CreateCheckoutBodyPurpose>)
 - [type CreateCheckoutBodyStatus](<#CreateCheckoutBodyStatus>)
@@ -276,7 +276,7 @@ type Checkout struct {
     Description *string `json:"description,omitempty"`
     // Unique ID of the checkout resource.
     // Read only
-    Id  *string `json:"id,omitempty"`
+    ID  *string `json:"id,omitempty"`
     // Created mandate
     Mandate *shared.MandateResponse `json:"mandate,omitempty"`
     // Unique identifying code of the merchant profile.
@@ -324,7 +324,7 @@ type CheckoutAcceptedNextStep struct {
     // Refers to a url where the end user is redirected once the payment processing completes.
     RedirectUrl *string `json:"redirect_url,omitempty"`
     // Where the end user is redirected.
-    Url *string `json:"url,omitempty"`
+    URL *string `json:"url,omitempty"`
 }
 ```
 
@@ -386,7 +386,7 @@ type CheckoutCreateRequest struct {
     Description *string `json:"description,omitempty"`
     // Unique ID of the checkout resource.
     // Read only
-    Id  *string `json:"id,omitempty"`
+    ID  *string `json:"id,omitempty"`
     // Unique identifying code of the merchant profile.
     MerchantCode string `json:"merchant_code"`
     // Purpose of the checkout.
@@ -468,7 +468,7 @@ type CheckoutCreateRequestTransaction struct {
     // Entry mode of the payment details.
     EntryMode *CheckoutCreateRequestTransactionEntryMode `json:"entry_mode,omitempty"`
     // Unique ID of the transaction.
-    Id  *string `json:"id,omitempty"`
+    ID  *string `json:"id,omitempty"`
     // Current number of the installment for deferred payments.
     // Min: 1
     InstallmentsCount *int `json:"installments_count,omitempty"`
@@ -593,7 +593,7 @@ type CheckoutSuccess struct {
     Description *string `json:"description,omitempty"`
     // Unique ID of the checkout resource.
     // Read only
-    Id  *string `json:"id,omitempty"`
+    ID  *string `json:"id,omitempty"`
     // Created mandate
     Mandate *shared.MandateResponse `json:"mandate,omitempty"`
     // Unique identifying code of the merchant profile.
@@ -672,7 +672,7 @@ type CheckoutSuccessTransaction struct {
     // Entry mode of the payment details.
     EntryMode *CheckoutSuccessTransactionEntryMode `json:"entry_mode,omitempty"`
     // Unique ID of the transaction.
-    Id  *string `json:"id,omitempty"`
+    ID  *string `json:"id,omitempty"`
     // Current number of the installment for deferred payments.
     // Min: 1
     InstallmentsCount *int `json:"installments_count,omitempty"`
@@ -770,7 +770,7 @@ type CheckoutTransaction struct {
     // Entry mode of the payment details.
     EntryMode *CheckoutTransactionEntryMode `json:"entry_mode,omitempty"`
     // Unique ID of the transaction.
-    Id  *string `json:"id,omitempty"`
+    ID  *string `json:"id,omitempty"`
     // Current number of the installment for deferred payments.
     // Min: 1
     InstallmentsCount *int `json:"installments_count,omitempty"`
@@ -888,7 +888,7 @@ Follow by processing a checkout to charge the provided payment instrument.
 ### func \(\*CheckoutsService\) [Deactivate](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L970>)
 
 ```go
-func (s *CheckoutsService) Deactivate(ctx context.Context, id string) (*Checkout, error)
+func (s *CheckoutsService) Deactivate(ctx context.Context, iD string) (*Checkout, error)
 ```
 
 Deactivate: Deactivate a checkout Deactivates an identified checkout resource. If the checkout has already been processed it can not be deactivated.
@@ -897,7 +897,7 @@ Deactivate: Deactivate a checkout Deactivates an identified checkout resource. I
 ### func \(\*CheckoutsService\) [Get](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L1016>)
 
 ```go
-func (s *CheckoutsService) Get(ctx context.Context, id string) (*CheckoutSuccess, error)
+func (s *CheckoutsService) Get(ctx context.Context, iD string) (*CheckoutSuccess, error)
 ```
 
 Get: Retrieve a checkout Retrieves an identified checkout resource. Use this request after processing a checkout to confirm its status and inform the end user respectively.
@@ -924,7 +924,7 @@ ListAvailablePaymentMethods: Get available payment methods Get payment methods a
 ### func \(\*CheckoutsService\) [Process](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L1057>)
 
 ```go
-func (s *CheckoutsService) Process(ctx context.Context, id string, body ProcessCheckoutBody) (*ProcessCheckoutResponse, error)
+func (s *CheckoutsService) Process(ctx context.Context, iD string, body ProcessCheckoutBody) (*ProcessCheckoutResponse, error)
 ```
 
 Process: Process a checkout Processing a checkout will attempt to charge the provided payment instrument for the amount of the specified checkout resource initiated in the \`Create a checkout\` endpoint.
@@ -958,7 +958,7 @@ type CreateCheckoutBody struct {
     Description *string `json:"description,omitempty"`
     // Unique ID of the checkout resource.
     // Read only
-    Id  *string `json:"id,omitempty"`
+    ID  *string `json:"id,omitempty"`
     // Unique identifying code of the merchant profile.
     MerchantCode string `json:"merchant_code"`
     // Purpose of the checkout.
@@ -1040,7 +1040,7 @@ type CreateCheckoutBodyTransaction struct {
     // Entry mode of the payment details.
     EntryMode *CreateCheckoutBodyTransactionEntryMode `json:"entry_mode,omitempty"`
     // Unique ID of the transaction.
-    Id  *string `json:"id,omitempty"`
+    ID  *string `json:"id,omitempty"`
     // Current number of the installment for deferred payments.
     // Min: 1
     InstallmentsCount *int `json:"installments_count,omitempty"`
@@ -1205,7 +1205,7 @@ GetPaymentMethods200ResponseAvailablePaymentMethod is a schema definition.
 ```go
 type GetPaymentMethods200ResponseAvailablePaymentMethod struct {
     // The ID of the payment method.
-    Id string `json:"id"`
+    ID string `json:"id"`
 }
 ```
 
@@ -2044,7 +2044,7 @@ type Member struct {
     // The timestamp of when the member was created.
     CreatedAt time.Time `json:"created_at"`
     // ID of the member.
-    Id  string `json:"id"`
+    ID  string `json:"id"`
     // Pending invitation for membership.
     Invite *shared.Invite `json:"invite,omitempty"`
     // Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
@@ -2147,7 +2147,7 @@ type MembershipUser struct {
     // RP MUST NOT rely upon this value being unique, for unique identification use ID instead.
     Email string `json:"email"`
     // Identifier for the End-User (also called Subject).
-    Id  string `json:"id"`
+    ID  string `json:"id"`
     // True if the user has enabled MFA on login.
     MfaOnLoginEnabled bool `json:"mfa_on_login_enabled"`
     // User's preferred name. Used for display purposes only.
@@ -2286,7 +2286,7 @@ type Membership struct {
     // The timestamp of when the membership was created.
     CreatedAt time.Time `json:"created_at"`
     // ID of the membership.
-    Id  string `json:"id"`
+    ID  string `json:"id"`
     // Pending invitation for membership.
     Invite *shared.Invite `json:"invite,omitempty"`
     // Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
@@ -2327,7 +2327,7 @@ type MembershipResource struct {
     // The timestamp of when the membership resource was created.
     CreatedAt time.Time `json:"created_at"`
     // ID of the resource the membership is in.
-    Id  string `json:"id"`
+    ID  string `json:"id"`
     // Logo fo the resource.
     // Format: uri
     // Max length: 256
@@ -2694,7 +2694,7 @@ type LegalTypeLegacy struct {
     // Legal type description
     FullDescription *string `json:"full_description,omitempty"`
     // Unique id
-    Id  *float64 `json:"id,omitempty"`
+    ID  *float64 `json:"id,omitempty"`
     // Sole trader legal type if true
     SoleTrader *bool `json:"sole_trader,omitempty"`
 }
@@ -2947,7 +2947,7 @@ type VatRates struct {
     // Description
     Description *string `json:"description,omitempty"`
     // Internal ID
-    Id  *float64 `json:"id,omitempty"`
+    ID  *float64 `json:"id,omitempty"`
     // Ordering
     Ordering *float64 `json:"ordering,omitempty"`
     // Rate
@@ -3142,7 +3142,7 @@ type BasePerson struct {
     GivenName *string `json:"given_name,omitempty"`
     // The unique identifier for the person. This is a [typeid](https://github.com/sumup/typeid).
     // Read only
-    Id  string `json:"id"`
+    ID  string `json:"id"`
     // A list of country-specific personal identifiers.
     // Max items: 5
     Identifiers []PersonalIdentifier `json:"identifiers,omitempty"`
@@ -3258,7 +3258,7 @@ type ClassicMerchantIdentifiers struct {
     // Classic (serial) merchant ID.
     // Format: int64
     // Deprecated: this operation is deprecated
-    Id int `json:"id"`
+    ID int `json:"id"`
 }
 ```
 
@@ -3841,7 +3841,7 @@ type Person struct {
     GivenName *string `json:"given_name,omitempty"`
     // The unique identifier for the person. This is a [typeid](https://github.com/sumup/typeid).
     // Read only
-    Id  string `json:"id"`
+    ID  string `json:"id"`
     // A list of country-specific personal identifiers.
     // Max items: 5
     Identifiers []PersonalIdentifier `json:"identifiers,omitempty"`
@@ -3955,7 +3955,7 @@ type FinancialPayout struct {
     // Format: date
     Date            *datetime.Date         `json:"date,omitempty"`
     Fee             *float64               `json:"fee,omitempty"`
-    Id              *int                   `json:"id,omitempty"`
+    ID              *int                   `json:"id,omitempty"`
     Reference       *string                `json:"reference,omitempty"`
     Status          *FinancialPayoutStatus `json:"status,omitempty"`
     TransactionCode *string                `json:"transaction_code,omitempty"`
@@ -4148,11 +4148,11 @@ import "github.com/sumup/sumup-go/readers"
   - [func NewReadersService\(c \*client.Client\) \*ReadersService](<#NewReadersService>)
   - [func \(s \*ReadersService\) Create\(ctx context.Context, merchantCode string, body CreateReaderBody\) \(\*Reader, error\)](<#ReadersService.Create>)
   - [func \(s \*ReadersService\) CreateCheckout\(ctx context.Context, merchantCode string, readerId string, body CreateReaderCheckoutBody\) \(\*CreateReaderCheckoutResponse, error\)](<#ReadersService.CreateCheckout>)
-  - [func \(s \*ReadersService\) Delete\(ctx context.Context, merchantCode string, id ReaderId\) error](<#ReadersService.Delete>)
-  - [func \(s \*ReadersService\) Get\(ctx context.Context, merchantCode string, id ReaderId, params GetReaderParams\) \(\*Reader, error\)](<#ReadersService.Get>)
+  - [func \(s \*ReadersService\) Delete\(ctx context.Context, merchantCode string, iD ReaderId\) error](<#ReadersService.Delete>)
+  - [func \(s \*ReadersService\) Get\(ctx context.Context, merchantCode string, iD ReaderId, params GetReaderParams\) \(\*Reader, error\)](<#ReadersService.Get>)
   - [func \(s \*ReadersService\) List\(ctx context.Context, merchantCode string\) \(\*ListReaders200Response, error\)](<#ReadersService.List>)
   - [func \(s \*ReadersService\) TerminateCheckout\(ctx context.Context, merchantCode string, readerId string\) error](<#ReadersService.TerminateCheckout>)
-  - [func \(s \*ReadersService\) Update\(ctx context.Context, merchantCode string, id ReaderId, body UpdateReaderBody\) \(\*Reader, error\)](<#ReadersService.Update>)
+  - [func \(s \*ReadersService\) Update\(ctx context.Context, merchantCode string, iD ReaderId, body UpdateReaderBody\) \(\*Reader, error\)](<#ReadersService.Update>)
 - [type UpdateReaderBody](<#UpdateReaderBody>)
 
 
@@ -4621,7 +4621,7 @@ type Reader struct {
     //
     // Min length: 30
     // Max length: 30
-    Id  ReaderId `json:"id"`
+    ID  ReaderId `json:"id"`
     // Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
     // submit whole metadata. Maximum of 64 parameters are allowed in the object.
     // Max properties: 64
@@ -4778,7 +4778,7 @@ There are some caveats when using this endpoint: \* The target device must be on
 ### func \(\*ReadersService\) [Delete](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L639>)
 
 ```go
-func (s *ReadersService) Delete(ctx context.Context, merchantCode string, id ReaderId) error
+func (s *ReadersService) Delete(ctx context.Context, merchantCode string, iD ReaderId) error
 ```
 
 Delete: Delete a reader Delete a reader.
@@ -4787,7 +4787,7 @@ Delete: Delete a reader Delete a reader.
 ### func \(\*ReadersService\) [Get](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L665>)
 
 ```go
-func (s *ReadersService) Get(ctx context.Context, merchantCode string, id ReaderId, params GetReaderParams) (*Reader, error)
+func (s *ReadersService) Get(ctx context.Context, merchantCode string, iD ReaderId, params GetReaderParams) (*Reader, error)
 ```
 
 Get: Retrieve a Reader Retrieve a Reader.
@@ -4822,7 +4822,7 @@ If a transaction is successfully terminated and \`return\_url\` was provided on 
 ### func \(\*ReadersService\) [Update](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L696>)
 
 ```go
-func (s *ReadersService) Update(ctx context.Context, merchantCode string, id ReaderId, body UpdateReaderBody) (*Reader, error)
+func (s *ReadersService) Update(ctx context.Context, merchantCode string, iD ReaderId, body UpdateReaderBody) (*Reader, error)
 ```
 
 Update: Update a Reader Update a Reader.
@@ -4867,7 +4867,7 @@ import "github.com/sumup/sumup-go/receipts"
 - [type ReceiptTransactionVatRate](<#ReceiptTransactionVatRate>)
 - [type ReceiptsService](<#ReceiptsService>)
   - [func NewReceiptsService\(c \*client.Client\) \*ReceiptsService](<#NewReceiptsService>)
-  - [func \(s \*ReceiptsService\) Get\(ctx context.Context, id string, params GetReceiptParams\) \(\*Receipt, error\)](<#ReceiptsService.Get>)
+  - [func \(s \*ReceiptsService\) Get\(ctx context.Context, iD string, params GetReceiptParams\) \(\*Receipt, error\)](<#ReceiptsService.Get>)
 
 
 <a name="GetReceiptParams"></a>
@@ -4958,7 +4958,7 @@ type ReceiptEvent struct {
     Amount *shared.AmountEvent `json:"amount,omitempty"`
     // Unique ID of the transaction event.
     // Format: int64
-    Id        *shared.EventId `json:"id,omitempty"`
+    ID        *shared.EventId `json:"id,omitempty"`
     ReceiptNo *string         `json:"receipt_no,omitempty"`
     // Status of the transaction event.
     Status *shared.EventStatus `json:"status,omitempty"`
@@ -5117,7 +5117,7 @@ func NewReceiptsService(c *client.Client) *ReceiptsService
 ### func \(\*ReceiptsService\) [Get](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L183>)
 
 ```go
-func (s *ReceiptsService) Get(ctx context.Context, id string, params GetReceiptParams) (*Receipt, error)
+func (s *ReceiptsService) Get(ctx context.Context, iD string, params GetReceiptParams) (*Receipt, error)
 ```
 
 Get: Retrieve receipt details Retrieves receipt specific data for a transaction.
@@ -5187,7 +5187,7 @@ type Role struct {
     // User-defined description of the role.
     Description *string `json:"description,omitempty"`
     // Unique identifier of the role.
-    Id  string `json:"id"`
+    ID  string `json:"id"`
     // True if the role is provided by SumUp.
     IsPredefined bool `json:"is_predefined"`
     // Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
@@ -5452,25 +5452,25 @@ Currency: Three\-letter \[ISO4217\]\(https://en.wikipedia.org/wiki/ISO_4217\) co
 type Currency string
 ```
 
-<a name="CurrencyBgn"></a>
+<a name="CurrencyBGN"></a>
 
 ```go
 const (
-    CurrencyBgn Currency = "BGN"
-    CurrencyBrl Currency = "BRL"
-    CurrencyChf Currency = "CHF"
-    CurrencyClp Currency = "CLP"
-    CurrencyCzk Currency = "CZK"
-    CurrencyDkk Currency = "DKK"
-    CurrencyEur Currency = "EUR"
-    CurrencyGbp Currency = "GBP"
-    CurrencyHrk Currency = "HRK"
-    CurrencyHuf Currency = "HUF"
-    CurrencyNok Currency = "NOK"
-    CurrencyPln Currency = "PLN"
-    CurrencyRon Currency = "RON"
-    CurrencySek Currency = "SEK"
-    CurrencyUsd Currency = "USD"
+    CurrencyBGN Currency = "BGN"
+    CurrencyBRL Currency = "BRL"
+    CurrencyCHF Currency = "CHF"
+    CurrencyCLP Currency = "CLP"
+    CurrencyCZK Currency = "CZK"
+    CurrencyDKK Currency = "DKK"
+    CurrencyEUR Currency = "EUR"
+    CurrencyGBP Currency = "GBP"
+    CurrencyHRK Currency = "HRK"
+    CurrencyHUF Currency = "HUF"
+    CurrencyNOK Currency = "NOK"
+    CurrencyPLN Currency = "PLN"
+    CurrencyRON Currency = "RON"
+    CurrencySEK Currency = "SEK"
+    CurrencyUSD Currency = "USD"
 )
 ```
 
@@ -5716,7 +5716,7 @@ type TransactionBase struct {
     // currency values are enumerated above.
     Currency *Currency `json:"currency,omitempty"`
     // Unique ID of the transaction.
-    Id  *string `json:"id,omitempty"`
+    ID  *string `json:"id,omitempty"`
     // Current number of the installment for deferred payments.
     // Min: 1
     InstallmentsCount *int `json:"installments_count,omitempty"`
@@ -5924,7 +5924,7 @@ type Operator struct {
     CreatedAt time.Time `json:"created_at"`
     Disabled  bool      `json:"disabled"`
     // Format: int32
-    Id       int     `json:"id"`
+    ID       int     `json:"id"`
     Nickname *string `json:"nickname,omitempty"`
     // Permissions assigned to an operator or user.
     Permissions Permissions `json:"permissions"`
@@ -6185,7 +6185,7 @@ type Event struct {
     FeeAmount *float64 `json:"fee_amount,omitempty"`
     // Unique ID of the transaction event.
     // Format: int64
-    Id  *shared.EventId `json:"id,omitempty"`
+    ID  *shared.EventId `json:"id,omitempty"`
     // Consecutive number of the installment.
     InstallmentNumber *int `json:"installment_number,omitempty"`
     // Status of the transaction event.
@@ -6207,7 +6207,7 @@ GetTransactionParams: query parameters for GetTransaction
 ```go
 type GetTransactionParams struct {
     // Retrieves the transaction resource with the specified transaction ID (the `id` parameter in the transaction resource).
-    Id  *string
+    ID  *string
     // Retrieves the transaction resource with the specified internal transaction ID (the `internal_id` parameter in
     // the transaction resource).
     InternalId *string
@@ -6237,7 +6237,7 @@ type GetTransactionV21Params struct {
     // External/foreign transaction id (passed by clients).
     ForeignTransactionId *string
     // Retrieves the transaction resource with the specified transaction ID (the `id` parameter in the transaction resource).
-    Id  *string
+    ID  *string
     // Retrieves the transaction resource with the specified internal transaction ID (the `internal_id` parameter in
     // the transaction resource).
     InternalId *string
@@ -6514,7 +6514,7 @@ type TransactionEvent struct {
     EventType *shared.EventType `json:"event_type,omitempty"`
     // Unique ID of the transaction event.
     // Format: int64
-    Id  *shared.EventId `json:"id,omitempty"`
+    ID  *shared.EventId `json:"id,omitempty"`
     // Consecutive number of the installment that is paid. Applicable only payout events, i.e. `event_type = PAYOUT`.
     InstallmentNumber *int `json:"installment_number,omitempty"`
     // Status of the transaction event.
@@ -6548,7 +6548,7 @@ type TransactionFull struct {
     // Indication of the precision of the geographical position received from the payment terminal.
     HorizontalAccuracy *HorizontalAccuracy `json:"horizontal_accuracy,omitempty"`
     // Unique ID of the transaction.
-    Id  *string `json:"id,omitempty"`
+    ID  *string `json:"id,omitempty"`
     // Current number of the installment for deferred payments.
     // Min: 1
     InstallmentsCount *int `json:"installments_count,omitempty"`
@@ -6816,7 +6816,7 @@ type TransactionHistory struct {
     // currency values are enumerated above.
     Currency *shared.Currency `json:"currency,omitempty"`
     // Unique ID of the transaction.
-    Id  *string `json:"id,omitempty"`
+    ID  *string `json:"id,omitempty"`
     // Current number of the installment for deferred payments.
     // Min: 1
     InstallmentsCount *int `json:"installments_count,omitempty"`

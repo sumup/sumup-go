@@ -23,7 +23,7 @@ type Member struct {
 	// The timestamp of when the member was created.
 	CreatedAt time.Time `json:"created_at"`
 	// ID of the member.
-	Id string `json:"id"`
+	ID string `json:"id"`
 	// Pending invitation for membership.
 	Invite *shared.Invite `json:"invite,omitempty"`
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
@@ -55,7 +55,7 @@ type MembershipUser struct {
 	// RP MUST NOT rely upon this value being unique, for unique identification use ID instead.
 	Email string `json:"email"`
 	// Identifier for the End-User (also called Subject).
-	Id string `json:"id"`
+	ID string `json:"id"`
 	// True if the user has enabled MFA on login.
 	MfaOnLoginEnabled bool `json:"mfa_on_login_enabled"`
 	// User's preferred name. Used for display purposes only.

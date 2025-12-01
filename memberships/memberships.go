@@ -23,7 +23,7 @@ type Membership struct {
 	// The timestamp of when the membership was created.
 	CreatedAt time.Time `json:"created_at"`
 	// ID of the membership.
-	Id string `json:"id"`
+	ID string `json:"id"`
 	// Pending invitation for membership.
 	Invite *shared.Invite `json:"invite,omitempty"`
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
@@ -58,7 +58,7 @@ type MembershipResource struct {
 	// The timestamp of when the membership resource was created.
 	CreatedAt time.Time `json:"created_at"`
 	// ID of the resource the membership is in.
-	Id string `json:"id"`
+	ID string `json:"id"`
 	// Logo fo the resource.
 	// Format: uri
 	// Max length: 256

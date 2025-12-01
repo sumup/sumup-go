@@ -197,7 +197,7 @@ type LegalTypeLegacy struct {
 	// Legal type description
 	FullDescription *string `json:"full_description,omitempty"`
 	// Unique id
-	Id *float64 `json:"id,omitempty"`
+	ID *float64 `json:"id,omitempty"`
 	// Sole trader legal type if true
 	SoleTrader *bool `json:"sole_trader,omitempty"`
 }
@@ -342,7 +342,7 @@ type VatRates struct {
 	// Description
 	Description *string `json:"description,omitempty"`
 	// Internal ID
-	Id *float64 `json:"id,omitempty"`
+	ID *float64 `json:"id,omitempty"`
 	// Ordering
 	Ordering *float64 `json:"ordering,omitempty"`
 	// Rate

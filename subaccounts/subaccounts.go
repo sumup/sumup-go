@@ -22,7 +22,7 @@ type Operator struct {
 	CreatedAt time.Time `json:"created_at"`
 	Disabled  bool      `json:"disabled"`
 	// Format: int32
-	Id       int     `json:"id"`
+	ID       int     `json:"id"`
 	Nickname *string `json:"nickname,omitempty"`
 	// Permissions assigned to an operator or user.
 	Permissions Permissions `json:"permissions"`

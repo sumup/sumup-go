@@ -23,9 +23,9 @@ func main() {
 		return
 	}
 
-	log.Printf("[INFO] checkout created: id=%q, amount=%v, currency=%q", *checkout.Id, *checkout.Amount, string(*checkout.Currency))
+	log.Printf("[INFO] checkout created: id=%q, amount=%v, currency=%q", *checkout.ID, *checkout.Amount, string(*checkout.Currency))
 
-	checkoutSuccess, err := client.Checkouts.Process(ctx, *checkout.Id, checkouts.ProcessCheckoutBody{
+	checkoutSuccess, err := client.Checkouts.Process(ctx, *checkout.ID, checkouts.ProcessCheckoutBody{
 		Card: &checkouts.Card{
 			Cvv:         "123",
 			ExpiryMonth: "12",
@@ -41,7 +41,7 @@ func main() {
 	}
 
 	if accepted, ok := checkoutSuccess.AsCheckoutSuccess(); ok {
-		log.Printf("[INFO] checkout success: id=%q, transaction_id=%q", *accepted.Id, *accepted.Transactions[0].Id)
+		log.Printf("[INFO] checkout success: id=%q, transaction_id=%q", *accepted.ID, *accepted.Transactions[0].ID)
 	}
 
 	if accepted, ok := checkoutSuccess.AsCheckoutAccepted(); ok {
