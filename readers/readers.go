@@ -44,6 +44,10 @@ type CreateReaderCheckoutRequest struct {
 	// Number of installments for the transaction.
 	// It may vary according to the merchant country.
 	// For example, in Brazil, the maximum number of installments is 12.
+	//
+	// Omit if the merchant country does support installments.
+	// Otherwise, the checkout will be rejected.
+	// Min: 1
 	Installments *int `json:"installments,omitempty"`
 	// Webhook URL to which the payment result will be sent.
 	// It must be a HTTPS url.
@@ -293,6 +297,10 @@ type CreateReaderCheckoutBody struct {
 	// Number of installments for the transaction.
 	// It may vary according to the merchant country.
 	// For example, in Brazil, the maximum number of installments is 12.
+	//
+	// Omit if the merchant country does support installments.
+	// Otherwise, the checkout will be rejected.
+	// Min: 1
 	Installments *int `json:"installments,omitempty"`
 	// Webhook URL to which the payment result will be sent.
 	// It must be a HTTPS url.

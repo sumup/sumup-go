@@ -188,6 +188,7 @@ type TransactionFull struct {
 	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Internal unique ID of the transaction on the SumUp platform.
+	// Format: int64
 	InternalId *int `json:"internal_id,omitempty"`
 	// Latitude value from the coordinates of the payment location (as received from the payment terminal reader).
 	// Min: 0
