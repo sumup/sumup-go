@@ -233,7 +233,7 @@ type ClassicMerchantIdentifiers struct {
 	// Classic (serial) merchant ID.
 	// Format: int64
 	// Deprecated: this operation is deprecated
-	ID int `json:"id"`
+	ID int64 `json:"id"`
 }
 
 // Company: Information about the company or business. This is legal information that is used for verification.
@@ -433,7 +433,7 @@ type Ownership struct {
 	// Format: int32
 	// Min: 25000
 	// Max: 100000
-	Share int `json:"share"`
+	Share int32 `json:"share"`
 }
 
 // Person is a schema definition.

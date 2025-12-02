@@ -74,7 +74,7 @@ type MembershipUser struct {
 // Deprecated: this operation is deprecated
 type MembershipUserClassic struct {
 	// Format: int32
-	UserId int `json:"user_id"`
+	UserId int32 `json:"user_id"`
 }
 
 // CreateMerchantMemberBody is a schema definition.

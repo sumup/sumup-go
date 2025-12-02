@@ -22,7 +22,7 @@ type Operator struct {
 	CreatedAt time.Time `json:"created_at"`
 	Disabled  bool      `json:"disabled"`
 	// Format: int32
-	ID       int     `json:"id"`
+	ID       int32   `json:"id"`
 	Nickname *string `json:"nickname,omitempty"`
 	// Permissions assigned to an operator or user.
 	Permissions Permissions `json:"permissions"`
@@ -185,7 +185,7 @@ func (s *SubaccountsService) CreateSubAccount(ctx context.Context, body CreateSu
 // Disable the specified operator for the merchant account.
 // Deprecated: Subaccounts API is deprecated, to remove a user that's a member of your merchant account please
 // use [Delete member](https://developer.sumup.com/api/members/delete) instead.
-func (s *SubaccountsService) DeactivateSubAccount(ctx context.Context, operatorId int) (*Operator, error) {
+func (s *SubaccountsService) DeactivateSubAccount(ctx context.Context, operatorId int32) (*Operator, error) {
 	path := fmt.Sprintf("/v0.1/me/accounts/%v", operatorId)
 
 	resp, err := s.c.Call(ctx, http.MethodDelete, path)
@@ -211,7 +211,7 @@ func (s *SubaccountsService) DeactivateSubAccount(ctx context.Context, operatorI
 // Returns specific operator.
 // Deprecated: Subaccounts API is deprecated, to get a user that's a member of your merchant account please use
 // [Get member](https://developer.sumup.com/api/members/get) instead.
-func (s *SubaccountsService) CompatGetOperator(ctx context.Context, operatorId int) (*Operator, error) {
+func (s *SubaccountsService) CompatGetOperator(ctx context.Context, operatorId int32) (*Operator, error) {
 	path := fmt.Sprintf("/v0.1/me/accounts/%v", operatorId)
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path)
@@ -237,7 +237,7 @@ func (s *SubaccountsService) CompatGetOperator(ctx context.Context, operatorId i
 // Updates operator. If the operator was disabled and their password is updated they will be unblocked.
 // Deprecated: Subaccounts API is deprecated, to update a user that's a member of your merchant account please
 // use [Update member](https://developer.sumup.com/api/members/update) instead.
-func (s *SubaccountsService) UpdateSubAccount(ctx context.Context, operatorId int, body UpdateSubAccountBody) (*Operator, error) {
+func (s *SubaccountsService) UpdateSubAccount(ctx context.Context, operatorId int32, body UpdateSubAccountBody) (*Operator, error) {
 	path := fmt.Sprintf("/v0.1/me/accounts/%v", operatorId)
 
 	resp, err := s.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))

@@ -130,23 +130,23 @@ type ReceiptTransactionProduct struct {
 	// Product name.
 	Name *string `json:"name,omitempty"`
 	// Product price.
-	Price *float64 `json:"price,omitempty"`
+	Price *float32 `json:"price,omitempty"`
 	// Product quantity.
 	Quantity *int `json:"quantity,omitempty"`
 	// Quantity x product price.
-	TotalPrice *float64 `json:"total_price,omitempty"`
+	TotalPrice *float32 `json:"total_price,omitempty"`
 }
 
 // ReceiptTransactionVatRate is a schema definition.
 type ReceiptTransactionVatRate struct {
 	// Gross
-	Gross *float64 `json:"gross,omitempty"`
+	Gross *float32 `json:"gross,omitempty"`
 	// Net
-	Net *float64 `json:"net,omitempty"`
+	Net *float32 `json:"net,omitempty"`
 	// Rate
-	Rate *float64 `json:"rate,omitempty"`
+	Rate *float32 `json:"rate,omitempty"`
 	// Vat
-	Vat *float64 `json:"vat,omitempty"`
+	Vat *float32 `json:"vat,omitempty"`
 }
 
 // GetReceiptParams: query parameters for GetReceipt

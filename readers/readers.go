@@ -52,7 +52,7 @@ type CreateReaderCheckoutRequest struct {
 	// List of tipping rates to be displayed to the cardholder.
 	// The rates are in percentage and should be between 0.01 and 0.99.
 	// The list should be sorted in ascending order.
-	TipRates []float64 `json:"tip_rates,omitempty"`
+	TipRates []float32 `json:"tip_rates,omitempty"`
 	// Time in seconds the cardholder has to select a tip rate.
 	// If not provided, the default value is 30 seconds.
 	//
@@ -301,7 +301,7 @@ type CreateReaderCheckoutBody struct {
 	// List of tipping rates to be displayed to the cardholder.
 	// The rates are in percentage and should be between 0.01 and 0.99.
 	// The list should be sorted in ascending order.
-	TipRates []float64 `json:"tip_rates,omitempty"`
+	TipRates []float32 `json:"tip_rates,omitempty"`
 	// Time in seconds the cardholder has to select a tip rate.
 	// If not provided, the default value is 30 seconds.
 	//

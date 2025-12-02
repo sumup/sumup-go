@@ -94,7 +94,7 @@ type AppSettings struct {
 	// Terminal mode tutorial.
 	TerminalModeTutorial *bool `json:"terminal_mode_tutorial,omitempty"`
 	// Tip rates.
-	TipRates []float64 `json:"tip_rates,omitempty"`
+	TipRates []float32 `json:"tip_rates,omitempty"`
 	// Tipping.
 	Tipping *string `json:"tipping,omitempty"`
 }

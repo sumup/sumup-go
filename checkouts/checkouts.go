@@ -94,7 +94,7 @@ const (
 // Checkout: Details of the payment checkout.
 type Checkout struct {
 	// Amount of the payment.
-	Amount *float64 `json:"amount,omitempty"`
+	Amount *float32 `json:"amount,omitempty"`
 	// Unique ID of the payment checkout specified by the client application when creating the checkout resource.
 	// Max length: 90
 	CheckoutReference *string `json:"checkout_reference,omitempty"`
@@ -141,7 +141,7 @@ const (
 // CheckoutTransaction is a schema definition.
 type CheckoutTransaction struct {
 	// Total amount of the transaction.
-	Amount *float64 `json:"amount,omitempty"`
+	Amount *float32 `json:"amount,omitempty"`
 	// Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
 	AuthCode *string `json:"auth_code,omitempty"`
 	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
@@ -165,11 +165,11 @@ type CheckoutTransaction struct {
 	// Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
 	// Amount of the tip (out of the total transaction amount).
-	TipAmount *float64 `json:"tip_amount,omitempty"`
+	TipAmount *float32 `json:"tip_amount,omitempty"`
 	// Transaction code returned by the acquirer/processing entity after processing the transaction.
 	TransactionCode *string `json:"transaction_code,omitempty"`
 	// Amount of the applicable VAT (out of the total transaction amount).
-	VatAmount *float64 `json:"vat_amount,omitempty"`
+	VatAmount *float32 `json:"vat_amount,omitempty"`
 }
 
 // CheckoutTransactionPaymentType: Payment type used for the transaction.
@@ -240,7 +240,7 @@ type CheckoutAcceptedNextStepPayload struct {
 // CheckoutCreateRequest: Details of the payment checkout.
 type CheckoutCreateRequest struct {
 	// Amount of the payment.
-	Amount float64 `json:"amount"`
+	Amount float32 `json:"amount"`
 	// Unique ID of the payment checkout specified by the client application when creating the checkout resource.
 	// Max length: 90
 	CheckoutReference string `json:"checkout_reference"`
@@ -308,7 +308,7 @@ const (
 // CheckoutCreateRequestTransaction is a schema definition.
 type CheckoutCreateRequestTransaction struct {
 	// Total amount of the transaction.
-	Amount *float64 `json:"amount,omitempty"`
+	Amount *float32 `json:"amount,omitempty"`
 	// Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
 	AuthCode *string `json:"auth_code,omitempty"`
 	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
@@ -332,11 +332,11 @@ type CheckoutCreateRequestTransaction struct {
 	// Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
 	// Amount of the tip (out of the total transaction amount).
-	TipAmount *float64 `json:"tip_amount,omitempty"`
+	TipAmount *float32 `json:"tip_amount,omitempty"`
 	// Transaction code returned by the acquirer/processing entity after processing the transaction.
 	TransactionCode *string `json:"transaction_code,omitempty"`
 	// Amount of the applicable VAT (out of the total transaction amount).
-	VatAmount *float64 `json:"vat_amount,omitempty"`
+	VatAmount *float32 `json:"vat_amount,omitempty"`
 }
 
 // CheckoutCreateRequestTransactionPaymentType: Payment type used for the transaction.
@@ -370,7 +370,7 @@ const (
 // CheckoutSuccess is a schema definition.
 type CheckoutSuccess struct {
 	// Amount of the payment.
-	Amount *float64 `json:"amount,omitempty"`
+	Amount *float32 `json:"amount,omitempty"`
 	// Unique ID of the payment checkout specified by the client application when creating the checkout resource.
 	// Max length: 90
 	CheckoutReference *string `json:"checkout_reference,omitempty"`
@@ -429,7 +429,7 @@ const (
 // CheckoutSuccessTransaction is a schema definition.
 type CheckoutSuccessTransaction struct {
 	// Total amount of the transaction.
-	Amount *float64 `json:"amount,omitempty"`
+	Amount *float32 `json:"amount,omitempty"`
 	// Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
 	AuthCode *string `json:"auth_code,omitempty"`
 	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
@@ -453,11 +453,11 @@ type CheckoutSuccessTransaction struct {
 	// Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
 	// Amount of the tip (out of the total transaction amount).
-	TipAmount *float64 `json:"tip_amount,omitempty"`
+	TipAmount *float32 `json:"tip_amount,omitempty"`
 	// Transaction code returned by the acquirer/processing entity after processing the transaction.
 	TransactionCode *string `json:"transaction_code,omitempty"`
 	// Amount of the applicable VAT (out of the total transaction amount).
-	VatAmount *float64 `json:"vat_amount,omitempty"`
+	VatAmount *float32 `json:"vat_amount,omitempty"`
 }
 
 // CheckoutSuccessTransactionPaymentType: Payment type used for the transaction.
@@ -587,7 +587,7 @@ const (
 // CreateCheckoutBody: Details of the payment checkout.
 type CreateCheckoutBody struct {
 	// Amount of the payment.
-	Amount float64 `json:"amount"`
+	Amount float32 `json:"amount"`
 	// Unique ID of the payment checkout specified by the client application when creating the checkout resource.
 	// Max length: 90
 	CheckoutReference string `json:"checkout_reference"`
@@ -655,7 +655,7 @@ const (
 // CreateCheckoutBodyTransaction is a schema definition.
 type CreateCheckoutBodyTransaction struct {
 	// Total amount of the transaction.
-	Amount *float64 `json:"amount,omitempty"`
+	Amount *float32 `json:"amount,omitempty"`
 	// Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
 	AuthCode *string `json:"auth_code,omitempty"`
 	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
@@ -679,11 +679,11 @@ type CreateCheckoutBodyTransaction struct {
 	// Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
 	// Amount of the tip (out of the total transaction amount).
-	TipAmount *float64 `json:"tip_amount,omitempty"`
+	TipAmount *float32 `json:"tip_amount,omitempty"`
 	// Transaction code returned by the acquirer/processing entity after processing the transaction.
 	TransactionCode *string `json:"transaction_code,omitempty"`
 	// Amount of the applicable VAT (out of the total transaction amount).
-	VatAmount *float64 `json:"vat_amount,omitempty"`
+	VatAmount *float32 `json:"vat_amount,omitempty"`
 }
 
 // CreateCheckoutBodyTransactionPaymentType: Payment type used for the transaction.
