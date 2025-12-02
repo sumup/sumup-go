@@ -26,7 +26,7 @@ type AddressLegacy struct {
 }
 
 // AmountEvent: Amount of the event.
-type AmountEvent float64
+type AmountEvent float32
 
 // Attributes: Object attributes that are modifiable only by SumUp applications.
 type Attributes map[string]any
@@ -195,7 +195,7 @@ type TimestampEvent string
 // TransactionBase: Details of the transaction.
 type TransactionBase struct {
 	// Total amount of the transaction.
-	Amount *float64 `json:"amount,omitempty"`
+	Amount *float32 `json:"amount,omitempty"`
 	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
 	// currency values are enumerated above.
 	Currency *Currency `json:"currency,omitempty"`
@@ -242,13 +242,13 @@ type TransactionCheckoutInfo struct {
 	EntryMode *TransactionCheckoutInfoEntryMode `json:"entry_mode,omitempty"`
 	// Internal unique ID of the transaction on the SumUp platform.
 	// Format: int64
-	InternalId *int `json:"internal_id,omitempty"`
+	InternalId *int64 `json:"internal_id,omitempty"`
 	// Unique code of the registered merchant to whom the payment is made.
 	MerchantCode *string `json:"merchant_code,omitempty"`
 	// Amount of the tip (out of the total transaction amount).
-	TipAmount *float64 `json:"tip_amount,omitempty"`
+	TipAmount *float32 `json:"tip_amount,omitempty"`
 	// Amount of the applicable VAT (out of the total transaction amount).
-	VatAmount *float64 `json:"vat_amount,omitempty"`
+	VatAmount *float32 `json:"vat_amount,omitempty"`
 }
 
 // TransactionCheckoutInfoEntryMode: Entry mode of the payment details.

@@ -54,11 +54,11 @@ type Event struct {
 	// Amount of the event.
 	Amount *shared.AmountEvent `json:"amount,omitempty"`
 	// Amount deducted for the event.
-	DeductedAmount *float64 `json:"deducted_amount,omitempty"`
+	DeductedAmount *float32 `json:"deducted_amount,omitempty"`
 	// Amount of the fee deducted for the event.
-	DeductedFeeAmount *float64 `json:"deducted_fee_amount,omitempty"`
+	DeductedFeeAmount *float32 `json:"deducted_fee_amount,omitempty"`
 	// Amount of the fee related to the event.
-	FeeAmount *float64 `json:"fee_amount,omitempty"`
+	FeeAmount *float32 `json:"fee_amount,omitempty"`
 	// Unique ID of the transaction event.
 	// Format: int64
 	ID *shared.EventId `json:"id,omitempty"`
@@ -75,13 +75,13 @@ type Event struct {
 }
 
 // HorizontalAccuracy: Indication of the precision of the geographical position received from the payment terminal.
-type HorizontalAccuracy float64
+type HorizontalAccuracy float32
 
 // Lat: Latitude value from the coordinates of the payment location (as received from the payment terminal reader).
 //
 // Min: 0
 // Max: 90
-type Lat float64
+type Lat float32
 
 // Link: Details of a link to a related resource.
 type Link struct {
@@ -100,9 +100,9 @@ type LinkRefund struct {
 	// Format: uri
 	Href *string `json:"href,omitempty"`
 	// Maximum allowed amount for the refund.
-	MaxAmount *float64 `json:"max_amount,omitempty"`
+	MaxAmount *float32 `json:"max_amount,omitempty"`
 	// Minimum allowed amount for the refund.
-	MinAmount *float64 `json:"min_amount,omitempty"`
+	MinAmount *float32 `json:"min_amount,omitempty"`
 	// Specifies the relation to the current resource.
 	Rel *string `json:"rel,omitempty"`
 	// Specifies the media type of the related resource.
@@ -113,32 +113,32 @@ type LinkRefund struct {
 //
 // Min: 0
 // Max: 180
-type Lon float64
+type Lon float32
 
 // Product: Details of the product for which the payment is made.
 type Product struct {
 	// Name of the product from the merchant's catalog.
 	Name *string `json:"name,omitempty"`
 	// Price of the product without VAT.
-	Price *float64 `json:"price,omitempty"`
+	Price *float32 `json:"price,omitempty"`
 	// Price of a single product item with VAT.
-	PriceWithVat *float64 `json:"price_with_vat,omitempty"`
+	PriceWithVat *float32 `json:"price_with_vat,omitempty"`
 	// Number of product items for the purchase.
 	Quantity *float64 `json:"quantity,omitempty"`
 	// Amount of the VAT for a single product item (calculated as the product of `price` and `vat_rate`, i.e. `single_vat_amount
 	// = price * vat_rate`).
-	SingleVatAmount *float64 `json:"single_vat_amount,omitempty"`
+	SingleVatAmount *float32 `json:"single_vat_amount,omitempty"`
 	// Total price of the product items without VAT (calculated as the product of `price` and `quantity`, i.e. `total_price
 	// = price * quantity`).
-	TotalPrice *float64 `json:"total_price,omitempty"`
+	TotalPrice *float32 `json:"total_price,omitempty"`
 	// Total price of the product items including VAT (calculated as the product of `price_with_vat` and `quantity`, i.e.
 	// `total_with_vat = price_with_vat * quantity`).
-	TotalWithVat *float64 `json:"total_with_vat,omitempty"`
+	TotalWithVat *float32 `json:"total_with_vat,omitempty"`
 	// Total VAT amount for the purchase (calculated as the product of `single_vat_amount` and `quantity`, i.e. `vat_amount
 	// = single_vat_amount * quantity`).
-	VatAmount *float64 `json:"vat_amount,omitempty"`
+	VatAmount *float32 `json:"vat_amount,omitempty"`
 	// VAT rate applicable to the product.
-	VatRate *float64 `json:"vat_rate,omitempty"`
+	VatRate *float32 `json:"vat_rate,omitempty"`
 }
 
 // TransactionEvent: Details of a transaction event.
@@ -167,7 +167,7 @@ type TransactionEvent struct {
 // TransactionFull is a schema definition.
 type TransactionFull struct {
 	// Total amount of the transaction.
-	Amount *float64 `json:"amount,omitempty"`
+	Amount *float32 `json:"amount,omitempty"`
 	// Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
 	AuthCode *string `json:"auth_code,omitempty"`
 	// Details of the payment card.
@@ -189,7 +189,7 @@ type TransactionFull struct {
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Internal unique ID of the transaction on the SumUp platform.
 	// Format: int64
-	InternalId *int `json:"internal_id,omitempty"`
+	InternalId *int64 `json:"internal_id,omitempty"`
 	// Latitude value from the coordinates of the payment location (as received from the payment terminal reader).
 	// Min: 0
 	// Max: 90
@@ -232,7 +232,7 @@ type TransactionFull struct {
 	// Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
 	// Amount of the tip (out of the total transaction amount).
-	TipAmount *float64 `json:"tip_amount,omitempty"`
+	TipAmount *float32 `json:"tip_amount,omitempty"`
 	// Transaction code returned by the acquirer/processing entity after processing the transaction.
 	TransactionCode *string `json:"transaction_code,omitempty"`
 	// List of transaction events related to the transaction.
@@ -241,7 +241,7 @@ type TransactionFull struct {
 	// Format: email
 	Username *string `json:"username,omitempty"`
 	// Amount of the applicable VAT (out of the total transaction amount).
-	VatAmount *float64 `json:"vat_amount,omitempty"`
+	VatAmount *float32 `json:"vat_amount,omitempty"`
 	// List of VAT rates applicable to the transaction.
 	VatRates []interface{} `json:"vat_rates,omitempty"`
 	// Verification method used for the transaction.
@@ -351,7 +351,7 @@ const (
 // TransactionHistory is a schema definition.
 type TransactionHistory struct {
 	// Total amount of the transaction.
-	Amount *float64 `json:"amount,omitempty"`
+	Amount *float32 `json:"amount,omitempty"`
 	// Issuing card network of the payment card used for the transaction.
 	CardType *TransactionHistoryCardType `json:"card_type,omitempty"`
 	// Client-specific ID of the transaction.
@@ -473,7 +473,7 @@ const (
 type RefundTransactionBody struct {
 	// Amount to be refunded. Eligible amount can't exceed the amount of the transaction and varies based on country
 	// and currency. If you do not specify a value, the system performs a full refund of the transaction.
-	Amount *float64 `json:"amount,omitempty"`
+	Amount *float32 `json:"amount,omitempty"`
 }
 
 // ListTransactionsParams: query parameters for ListTransactions

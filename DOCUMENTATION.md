@@ -259,7 +259,7 @@ Checkout: Details of the payment checkout.
 ```go
 type Checkout struct {
     // Amount of the payment.
-    Amount *float64 `json:"amount,omitempty"`
+    Amount *float32 `json:"amount,omitempty"`
     // Unique ID of the payment checkout specified by the client application when creating the checkout resource.
     // Max length: 90
     CheckoutReference *string `json:"checkout_reference,omitempty"`
@@ -367,7 +367,7 @@ CheckoutCreateRequest: Details of the payment checkout.
 ```go
 type CheckoutCreateRequest struct {
     // Amount of the payment.
-    Amount float64 `json:"amount"`
+    Amount float32 `json:"amount"`
     // Unique ID of the payment checkout specified by the client application when creating the checkout resource.
     // Max length: 90
     CheckoutReference string `json:"checkout_reference"`
@@ -459,7 +459,7 @@ CheckoutCreateRequestTransaction is a schema definition.
 ```go
 type CheckoutCreateRequestTransaction struct {
     // Total amount of the transaction.
-    Amount *float64 `json:"amount,omitempty"`
+    Amount *float32 `json:"amount,omitempty"`
     // Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
     AuthCode *string `json:"auth_code,omitempty"`
     // Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
@@ -474,7 +474,7 @@ type CheckoutCreateRequestTransaction struct {
     InstallmentsCount *int `json:"installments_count,omitempty"`
     // Internal unique ID of the transaction on the SumUp platform.
     // Format: int64
-    InternalId *int `json:"internal_id,omitempty"`
+    InternalId *int64 `json:"internal_id,omitempty"`
     // Unique code of the registered merchant to whom the payment is made.
     MerchantCode *string `json:"merchant_code,omitempty"`
     // Payment type used for the transaction.
@@ -484,11 +484,11 @@ type CheckoutCreateRequestTransaction struct {
     // Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
     Timestamp *time.Time `json:"timestamp,omitempty"`
     // Amount of the tip (out of the total transaction amount).
-    TipAmount *float64 `json:"tip_amount,omitempty"`
+    TipAmount *float32 `json:"tip_amount,omitempty"`
     // Transaction code returned by the acquirer/processing entity after processing the transaction.
     TransactionCode *string `json:"transaction_code,omitempty"`
     // Amount of the applicable VAT (out of the total transaction amount).
-    VatAmount *float64 `json:"vat_amount,omitempty"`
+    VatAmount *float32 `json:"vat_amount,omitempty"`
 }
 ```
 
@@ -577,7 +577,7 @@ CheckoutSuccess is a schema definition.
 ```go
 type CheckoutSuccess struct {
     // Amount of the payment.
-    Amount *float64 `json:"amount,omitempty"`
+    Amount *float32 `json:"amount,omitempty"`
     // Unique ID of the payment checkout specified by the client application when creating the checkout resource.
     // Max length: 90
     CheckoutReference *string `json:"checkout_reference,omitempty"`
@@ -664,7 +664,7 @@ CheckoutSuccessTransaction is a schema definition.
 ```go
 type CheckoutSuccessTransaction struct {
     // Total amount of the transaction.
-    Amount *float64 `json:"amount,omitempty"`
+    Amount *float32 `json:"amount,omitempty"`
     // Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
     AuthCode *string `json:"auth_code,omitempty"`
     // Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
@@ -679,7 +679,7 @@ type CheckoutSuccessTransaction struct {
     InstallmentsCount *int `json:"installments_count,omitempty"`
     // Internal unique ID of the transaction on the SumUp platform.
     // Format: int64
-    InternalId *int `json:"internal_id,omitempty"`
+    InternalId *int64 `json:"internal_id,omitempty"`
     // Unique code of the registered merchant to whom the payment is made.
     MerchantCode *string `json:"merchant_code,omitempty"`
     // Payment type used for the transaction.
@@ -689,11 +689,11 @@ type CheckoutSuccessTransaction struct {
     // Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
     Timestamp *time.Time `json:"timestamp,omitempty"`
     // Amount of the tip (out of the total transaction amount).
-    TipAmount *float64 `json:"tip_amount,omitempty"`
+    TipAmount *float32 `json:"tip_amount,omitempty"`
     // Transaction code returned by the acquirer/processing entity after processing the transaction.
     TransactionCode *string `json:"transaction_code,omitempty"`
     // Amount of the applicable VAT (out of the total transaction amount).
-    VatAmount *float64 `json:"vat_amount,omitempty"`
+    VatAmount *float32 `json:"vat_amount,omitempty"`
 }
 ```
 
@@ -763,7 +763,7 @@ CheckoutTransaction is a schema definition.
 ```go
 type CheckoutTransaction struct {
     // Total amount of the transaction.
-    Amount *float64 `json:"amount,omitempty"`
+    Amount *float32 `json:"amount,omitempty"`
     // Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
     AuthCode *string `json:"auth_code,omitempty"`
     // Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
@@ -778,7 +778,7 @@ type CheckoutTransaction struct {
     InstallmentsCount *int `json:"installments_count,omitempty"`
     // Internal unique ID of the transaction on the SumUp platform.
     // Format: int64
-    InternalId *int `json:"internal_id,omitempty"`
+    InternalId *int64 `json:"internal_id,omitempty"`
     // Unique code of the registered merchant to whom the payment is made.
     MerchantCode *string `json:"merchant_code,omitempty"`
     // Payment type used for the transaction.
@@ -788,11 +788,11 @@ type CheckoutTransaction struct {
     // Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
     Timestamp *time.Time `json:"timestamp,omitempty"`
     // Amount of the tip (out of the total transaction amount).
-    TipAmount *float64 `json:"tip_amount,omitempty"`
+    TipAmount *float32 `json:"tip_amount,omitempty"`
     // Transaction code returned by the acquirer/processing entity after processing the transaction.
     TransactionCode *string `json:"transaction_code,omitempty"`
     // Amount of the applicable VAT (out of the total transaction amount).
-    VatAmount *float64 `json:"vat_amount,omitempty"`
+    VatAmount *float32 `json:"vat_amount,omitempty"`
 }
 ```
 
@@ -942,7 +942,7 @@ CreateCheckoutBody: Details of the payment checkout.
 ```go
 type CreateCheckoutBody struct {
     // Amount of the payment.
-    Amount float64 `json:"amount"`
+    Amount float32 `json:"amount"`
     // Unique ID of the payment checkout specified by the client application when creating the checkout resource.
     // Max length: 90
     CheckoutReference string `json:"checkout_reference"`
@@ -1034,7 +1034,7 @@ CreateCheckoutBodyTransaction is a schema definition.
 ```go
 type CreateCheckoutBodyTransaction struct {
     // Total amount of the transaction.
-    Amount *float64 `json:"amount,omitempty"`
+    Amount *float32 `json:"amount,omitempty"`
     // Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
     AuthCode *string `json:"auth_code,omitempty"`
     // Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
@@ -1049,7 +1049,7 @@ type CreateCheckoutBodyTransaction struct {
     InstallmentsCount *int `json:"installments_count,omitempty"`
     // Internal unique ID of the transaction on the SumUp platform.
     // Format: int64
-    InternalId *int `json:"internal_id,omitempty"`
+    InternalId *int64 `json:"internal_id,omitempty"`
     // Unique code of the registered merchant to whom the payment is made.
     MerchantCode *string `json:"merchant_code,omitempty"`
     // Payment type used for the transaction.
@@ -1059,11 +1059,11 @@ type CreateCheckoutBodyTransaction struct {
     // Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
     Timestamp *time.Time `json:"timestamp,omitempty"`
     // Amount of the tip (out of the total transaction amount).
-    TipAmount *float64 `json:"tip_amount,omitempty"`
+    TipAmount *float32 `json:"tip_amount,omitempty"`
     // Transaction code returned by the acquirer/processing entity after processing the transaction.
     TransactionCode *string `json:"transaction_code,omitempty"`
     // Amount of the applicable VAT (out of the total transaction amount).
-    VatAmount *float64 `json:"vat_amount,omitempty"`
+    VatAmount *float32 `json:"vat_amount,omitempty"`
 }
 ```
 
@@ -2175,7 +2175,7 @@ MembershipUserClassic: Classic identifiers of the user. Deprecated: this operati
 ```go
 type MembershipUserClassic struct {
     // Format: int32
-    UserId int `json:"user_id"`
+    UserId int32 `json:"user_id"`
 }
 ```
 
@@ -2537,7 +2537,7 @@ type AppSettings struct {
     // Terminal mode tutorial.
     TerminalModeTutorial *bool `json:"terminal_mode_tutorial,omitempty"`
     // Tip rates.
-    TipRates []float64 `json:"tip_rates,omitempty"`
+    TipRates []float32 `json:"tip_rates,omitempty"`
     // Tipping.
     Tipping *string `json:"tipping,omitempty"`
 }
@@ -3268,7 +3268,7 @@ type ClassicMerchantIdentifiers struct {
     // Classic (serial) merchant ID.
     // Format: int64
     // Deprecated: this operation is deprecated
-    ID int `json:"id"`
+    ID int64 `json:"id"`
 }
 ```
 
@@ -3804,7 +3804,7 @@ type Ownership struct {
     // Format: int32
     // Min: 25000
     // Max: 100000
-    Share int `json:"share"`
+    Share int32 `json:"share"`
 }
 ```
 
@@ -3960,11 +3960,11 @@ FinancialPayout is a schema definition.
 
 ```go
 type FinancialPayout struct {
-    Amount   *float64 `json:"amount,omitempty"`
+    Amount   *float32 `json:"amount,omitempty"`
     Currency *string  `json:"currency,omitempty"`
     // Format: date
     Date            *datetime.Date         `json:"date,omitempty"`
-    Fee             *float64               `json:"fee,omitempty"`
+    Fee             *float32               `json:"fee,omitempty"`
     ID              *int                   `json:"id,omitempty"`
     Reference       *string                `json:"reference,omitempty"`
     Status          *FinancialPayoutStatus `json:"status,omitempty"`
@@ -4218,7 +4218,7 @@ type CreateReaderCheckoutBody struct {
     // List of tipping rates to be displayed to the cardholder.
     // The rates are in percentage and should be between 0.01 and 0.99.
     // The list should be sorted in ascending order.
-    TipRates []float64 `json:"tip_rates,omitempty"`
+    TipRates []float32 `json:"tip_rates,omitempty"`
     // Time in seconds the cardholder has to select a tip rate.
     // If not provided, the default value is 30 seconds.
     //
@@ -4374,7 +4374,7 @@ type CreateReaderCheckoutRequest struct {
     // List of tipping rates to be displayed to the cardholder.
     // The rates are in percentage and should be between 0.01 and 0.99.
     // The list should be sorted in ascending order.
-    TipRates []float64 `json:"tip_rates,omitempty"`
+    TipRates []float32 `json:"tip_rates,omitempty"`
     // Time in seconds the cardholder has to select a tip rate.
     // If not provided, the default value is 30 seconds.
     //
@@ -5085,11 +5085,11 @@ type ReceiptTransactionProduct struct {
     // Product name.
     Name *string `json:"name,omitempty"`
     // Product price.
-    Price *float64 `json:"price,omitempty"`
+    Price *float32 `json:"price,omitempty"`
     // Product quantity.
     Quantity *int `json:"quantity,omitempty"`
     // Quantity x product price.
-    TotalPrice *float64 `json:"total_price,omitempty"`
+    TotalPrice *float32 `json:"total_price,omitempty"`
 }
 ```
 
@@ -5101,13 +5101,13 @@ ReceiptTransactionVatRate is a schema definition.
 ```go
 type ReceiptTransactionVatRate struct {
     // Gross
-    Gross *float64 `json:"gross,omitempty"`
+    Gross *float32 `json:"gross,omitempty"`
     // Net
-    Net *float64 `json:"net,omitempty"`
+    Net *float32 `json:"net,omitempty"`
     // Rate
-    Rate *float64 `json:"rate,omitempty"`
+    Rate *float32 `json:"rate,omitempty"`
     // Vat
-    Vat *float64 `json:"vat,omitempty"`
+    Vat *float32 `json:"vat,omitempty"`
 }
 ```
 
@@ -5449,7 +5449,7 @@ type AddressLegacy struct {
 AmountEvent: Amount of the event.
 
 ```go
-type AmountEvent float64
+type AmountEvent float32
 ```
 
 <a name="Attributes"></a>
@@ -5729,7 +5729,7 @@ TransactionBase: Details of the transaction.
 ```go
 type TransactionBase struct {
     // Total amount of the transaction.
-    Amount *float64 `json:"amount,omitempty"`
+    Amount *float32 `json:"amount,omitempty"`
     // Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
     // currency values are enumerated above.
     Currency *Currency `json:"currency,omitempty"`
@@ -5802,13 +5802,13 @@ type TransactionCheckoutInfo struct {
     EntryMode *TransactionCheckoutInfoEntryMode `json:"entry_mode,omitempty"`
     // Internal unique ID of the transaction on the SumUp platform.
     // Format: int64
-    InternalId *int `json:"internal_id,omitempty"`
+    InternalId *int64 `json:"internal_id,omitempty"`
     // Unique code of the registered merchant to whom the payment is made.
     MerchantCode *string `json:"merchant_code,omitempty"`
     // Amount of the tip (out of the total transaction amount).
-    TipAmount *float64 `json:"tip_amount,omitempty"`
+    TipAmount *float32 `json:"tip_amount,omitempty"`
     // Amount of the applicable VAT (out of the total transaction amount).
-    VatAmount *float64 `json:"vat_amount,omitempty"`
+    VatAmount *float32 `json:"vat_amount,omitempty"`
 }
 ```
 
@@ -5857,11 +5857,11 @@ import "github.com/sumup/sumup-go/subaccounts"
 - [type Permissions](<#Permissions>)
 - [type SubaccountsService](<#SubaccountsService>)
   - [func NewSubaccountsService\(c \*client.Client\) \*SubaccountsService](<#NewSubaccountsService>)
-  - [func \(s \*SubaccountsService\) CompatGetOperator\(ctx context.Context, operatorId int\) \(\*Operator, error\)](<#SubaccountsService.CompatGetOperator>)
+  - [func \(s \*SubaccountsService\) CompatGetOperator\(ctx context.Context, operatorId int32\) \(\*Operator, error\)](<#SubaccountsService.CompatGetOperator>)
   - [func \(s \*SubaccountsService\) CreateSubAccount\(ctx context.Context, body CreateSubAccountBody\) \(\*Operator, error\)](<#SubaccountsService.CreateSubAccount>)
-  - [func \(s \*SubaccountsService\) DeactivateSubAccount\(ctx context.Context, operatorId int\) \(\*Operator, error\)](<#SubaccountsService.DeactivateSubAccount>)
+  - [func \(s \*SubaccountsService\) DeactivateSubAccount\(ctx context.Context, operatorId int32\) \(\*Operator, error\)](<#SubaccountsService.DeactivateSubAccount>)
   - [func \(s \*SubaccountsService\) ListSubAccounts\(ctx context.Context, params ListSubAccountsParams\) \(\*ListSubAccounts200Response, error\)](<#SubaccountsService.ListSubAccounts>)
-  - [func \(s \*SubaccountsService\) UpdateSubAccount\(ctx context.Context, operatorId int, body UpdateSubAccountBody\) \(\*Operator, error\)](<#SubaccountsService.UpdateSubAccount>)
+  - [func \(s \*SubaccountsService\) UpdateSubAccount\(ctx context.Context, operatorId int32, body UpdateSubAccountBody\) \(\*Operator, error\)](<#SubaccountsService.UpdateSubAccount>)
 - [type UpdateSubAccountBody](<#UpdateSubAccountBody>)
 - [type UpdateSubAccountBodyPermissions](<#UpdateSubAccountBodyPermissions>)
 
@@ -5943,7 +5943,7 @@ type Operator struct {
     CreatedAt time.Time `json:"created_at"`
     Disabled  bool      `json:"disabled"`
     // Format: int32
-    ID       int     `json:"id"`
+    ID       int32   `json:"id"`
     Nickname *string `json:"nickname,omitempty"`
     // Permissions assigned to an operator or user.
     Permissions Permissions `json:"permissions"`
@@ -6010,7 +6010,7 @@ func NewSubaccountsService(c *client.Client) *SubaccountsService
 ### func \(\*SubaccountsService\) [CompatGetOperator](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L214>)
 
 ```go
-func (s *SubaccountsService) CompatGetOperator(ctx context.Context, operatorId int) (*Operator, error)
+func (s *SubaccountsService) CompatGetOperator(ctx context.Context, operatorId int32) (*Operator, error)
 ```
 
 CompatGetOperator: Retrieve an operator Returns specific operator. Deprecated: Subaccounts API is deprecated, to get a user that's a member of your merchant account please use \[Get member\]\(https://developer.sumup.com/api/members/get\) instead.
@@ -6028,7 +6028,7 @@ CreateSubAccount: Create an operator Creates new operator for currently authoriz
 ### func \(\*SubaccountsService\) [DeactivateSubAccount](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L188>)
 
 ```go
-func (s *SubaccountsService) DeactivateSubAccount(ctx context.Context, operatorId int) (*Operator, error)
+func (s *SubaccountsService) DeactivateSubAccount(ctx context.Context, operatorId int32) (*Operator, error)
 ```
 
 DeactivateSubAccount: Disable an operator. Disable the specified operator for the merchant account. Deprecated: Subaccounts API is deprecated, to remove a user that's a member of your merchant account please use \[Delete member\]\(https://developer.sumup.com/api/members/delete\) instead.
@@ -6046,7 +6046,7 @@ ListSubAccounts: List operators Returns list of operators for currently authoriz
 ### func \(\*SubaccountsService\) [UpdateSubAccount](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L240>)
 
 ```go
-func (s *SubaccountsService) UpdateSubAccount(ctx context.Context, operatorId int, body UpdateSubAccountBody) (*Operator, error)
+func (s *SubaccountsService) UpdateSubAccount(ctx context.Context, operatorId int32, body UpdateSubAccountBody) (*Operator, error)
 ```
 
 UpdateSubAccount: Update an operator Updates operator. If the operator was disabled and their password is updated they will be unblocked. Deprecated: Subaccounts API is deprecated, to update a user that's a member of your merchant account please use \[Update member\]\(https://developer.sumup.com/api/members/update\) instead.
@@ -6197,11 +6197,11 @@ type Event struct {
     // Amount of the event.
     Amount *shared.AmountEvent `json:"amount,omitempty"`
     // Amount deducted for the event.
-    DeductedAmount *float64 `json:"deducted_amount,omitempty"`
+    DeductedAmount *float32 `json:"deducted_amount,omitempty"`
     // Amount of the fee deducted for the event.
-    DeductedFeeAmount *float64 `json:"deducted_fee_amount,omitempty"`
+    DeductedFeeAmount *float32 `json:"deducted_fee_amount,omitempty"`
     // Amount of the fee related to the event.
-    FeeAmount *float64 `json:"fee_amount,omitempty"`
+    FeeAmount *float32 `json:"fee_amount,omitempty"`
     // Unique ID of the transaction event.
     // Format: int64
     ID  *shared.EventId `json:"id,omitempty"`
@@ -6280,7 +6280,7 @@ QueryValues converts [GetTransactionV21Params](<#GetTransactionV21Params>) into 
 HorizontalAccuracy: Indication of the precision of the geographical position received from the payment terminal.
 
 ```go
-type HorizontalAccuracy float64
+type HorizontalAccuracy float32
 ```
 
 <a name="Lat"></a>
@@ -6291,7 +6291,7 @@ Lat: Latitude value from the coordinates of the payment location \(as received f
 Min: 0 Max: 90
 
 ```go
-type Lat float64
+type Lat float32
 ```
 
 <a name="Link"></a>
@@ -6322,9 +6322,9 @@ type LinkRefund struct {
     // Format: uri
     Href *string `json:"href,omitempty"`
     // Maximum allowed amount for the refund.
-    MaxAmount *float64 `json:"max_amount,omitempty"`
+    MaxAmount *float32 `json:"max_amount,omitempty"`
     // Minimum allowed amount for the refund.
-    MinAmount *float64 `json:"min_amount,omitempty"`
+    MinAmount *float32 `json:"min_amount,omitempty"`
     // Specifies the relation to the current resource.
     Rel *string `json:"rel,omitempty"`
     // Specifies the media type of the related resource.
@@ -6466,7 +6466,7 @@ Lon: Longitude value from the coordinates of the payment location \(as received 
 Min: 0 Max: 180
 
 ```go
-type Lon float64
+type Lon float32
 ```
 
 <a name="Product"></a>
@@ -6479,25 +6479,25 @@ type Product struct {
     // Name of the product from the merchant's catalog.
     Name *string `json:"name,omitempty"`
     // Price of the product without VAT.
-    Price *float64 `json:"price,omitempty"`
+    Price *float32 `json:"price,omitempty"`
     // Price of a single product item with VAT.
-    PriceWithVat *float64 `json:"price_with_vat,omitempty"`
+    PriceWithVat *float32 `json:"price_with_vat,omitempty"`
     // Number of product items for the purchase.
     Quantity *float64 `json:"quantity,omitempty"`
     // Amount of the VAT for a single product item (calculated as the product of `price` and `vat_rate`, i.e. `single_vat_amount
     // = price * vat_rate`).
-    SingleVatAmount *float64 `json:"single_vat_amount,omitempty"`
+    SingleVatAmount *float32 `json:"single_vat_amount,omitempty"`
     // Total price of the product items without VAT (calculated as the product of `price` and `quantity`, i.e. `total_price
     // = price * quantity`).
-    TotalPrice *float64 `json:"total_price,omitempty"`
+    TotalPrice *float32 `json:"total_price,omitempty"`
     // Total price of the product items including VAT (calculated as the product of `price_with_vat` and `quantity`, i.e.
     // `total_with_vat = price_with_vat * quantity`).
-    TotalWithVat *float64 `json:"total_with_vat,omitempty"`
+    TotalWithVat *float32 `json:"total_with_vat,omitempty"`
     // Total VAT amount for the purchase (calculated as the product of `single_vat_amount` and `quantity`, i.e. `vat_amount
     // = single_vat_amount * quantity`).
-    VatAmount *float64 `json:"vat_amount,omitempty"`
+    VatAmount *float32 `json:"vat_amount,omitempty"`
     // VAT rate applicable to the product.
-    VatRate *float64 `json:"vat_rate,omitempty"`
+    VatRate *float32 `json:"vat_rate,omitempty"`
 }
 ```
 
@@ -6510,7 +6510,7 @@ RefundTransactionBody: Optional amount for partial refunds of transactions.
 type RefundTransactionBody struct {
     // Amount to be refunded. Eligible amount can't exceed the amount of the transaction and varies based on country
     // and currency. If you do not specify a value, the system performs a full refund of the transaction.
-    Amount *float64 `json:"amount,omitempty"`
+    Amount *float32 `json:"amount,omitempty"`
 }
 ```
 
@@ -6551,7 +6551,7 @@ TransactionFull is a schema definition.
 ```go
 type TransactionFull struct {
     // Total amount of the transaction.
-    Amount *float64 `json:"amount,omitempty"`
+    Amount *float32 `json:"amount,omitempty"`
     // Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
     AuthCode *string `json:"auth_code,omitempty"`
     // Details of the payment card.
@@ -6573,7 +6573,7 @@ type TransactionFull struct {
     InstallmentsCount *int `json:"installments_count,omitempty"`
     // Internal unique ID of the transaction on the SumUp platform.
     // Format: int64
-    InternalId *int `json:"internal_id,omitempty"`
+    InternalId *int64 `json:"internal_id,omitempty"`
     // Latitude value from the coordinates of the payment location (as received from the payment terminal reader).
     // Min: 0
     // Max: 90
@@ -6616,7 +6616,7 @@ type TransactionFull struct {
     // Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
     Timestamp *time.Time `json:"timestamp,omitempty"`
     // Amount of the tip (out of the total transaction amount).
-    TipAmount *float64 `json:"tip_amount,omitempty"`
+    TipAmount *float32 `json:"tip_amount,omitempty"`
     // Transaction code returned by the acquirer/processing entity after processing the transaction.
     TransactionCode *string `json:"transaction_code,omitempty"`
     // List of transaction events related to the transaction.
@@ -6625,7 +6625,7 @@ type TransactionFull struct {
     // Format: email
     Username *string `json:"username,omitempty"`
     // Amount of the applicable VAT (out of the total transaction amount).
-    VatAmount *float64 `json:"vat_amount,omitempty"`
+    VatAmount *float32 `json:"vat_amount,omitempty"`
     // List of VAT rates applicable to the transaction.
     VatRates []interface{} `json:"vat_rates,omitempty"`
     // Verification method used for the transaction.
@@ -6827,7 +6827,7 @@ TransactionHistory is a schema definition.
 ```go
 type TransactionHistory struct {
     // Total amount of the transaction.
-    Amount *float64 `json:"amount,omitempty"`
+    Amount *float32 `json:"amount,omitempty"`
     // Issuing card network of the payment card used for the transaction.
     CardType *TransactionHistoryCardType `json:"card_type,omitempty"`
     // Client-specific ID of the transaction.
