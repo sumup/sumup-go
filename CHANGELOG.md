@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://github.com/sumup/sumup-go/compare/v0.8.0...v0.9.0) (2025-12-02)
+
+
+### Features
+
+* use latest codegen ([31fadb7](https://github.com/sumup/sumup-go/commit/31fadb700465ef21ec8d8f6e73d7c3b0fae5ca1c))
+
 ## [0.8.0](https://github.com/sumup/sumup-go/compare/v0.7.0...v0.8.0) (2025-12-01)
 
 
