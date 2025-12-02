@@ -105,7 +105,7 @@ func main() {
 
 		// Parse request body
 		var req struct {
-			Amount float64 `json:"amount"`
+			Amount float32 `json:"amount"`
 		}
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			slog.Error("Failed to decode request", "error", err)

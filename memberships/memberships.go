@@ -92,6 +92,12 @@ type ListMembershipsParams struct {
 	ResourceAttributesSandbox *bool
 	// Filter memberships by the name of the resource the membership is in.
 	ResourceName *string
+	// Filter memberships by the parent of the resource the membership is in.
+	// When filtering by parent both `resource.parent.id` and `resource.parent.type` must be present.
+	ResourceParentId *string
+	// Filter memberships by the parent of the resource the membership is in.
+	// When filtering by parent both `resource.parent.id` and `resource.parent.type` must be present.
+	ResourceParentType *ResourceType
 	// Filter memberships by resource kind.
 	ResourceType *ResourceType
 	// Filter the returned memberships by the membership status.
@@ -120,6 +126,14 @@ func (p *ListMembershipsParams) QueryValues() url.Values {
 
 	if p.ResourceName != nil {
 		q.Set("resource.name", *p.ResourceName)
+	}
+
+	if p.ResourceParentId != nil {
+		q.Set("resource.parent.id", *p.ResourceParentId)
+	}
+
+	if p.ResourceParentType != nil {
+		q.Set("resource.parent.type", string(*p.ResourceParentType))
 	}
 
 	if p.ResourceType != nil {

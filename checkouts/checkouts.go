@@ -155,7 +155,8 @@ type CheckoutTransaction struct {
 	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Internal unique ID of the transaction on the SumUp platform.
-	InternalId *int `json:"internal_id,omitempty"`
+	// Format: int64
+	InternalId *int64 `json:"internal_id,omitempty"`
 	// Unique code of the registered merchant to whom the payment is made.
 	MerchantCode *string `json:"merchant_code,omitempty"`
 	// Payment type used for the transaction.
@@ -322,7 +323,8 @@ type CheckoutCreateRequestTransaction struct {
 	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Internal unique ID of the transaction on the SumUp platform.
-	InternalId *int `json:"internal_id,omitempty"`
+	// Format: int64
+	InternalId *int64 `json:"internal_id,omitempty"`
 	// Unique code of the registered merchant to whom the payment is made.
 	MerchantCode *string `json:"merchant_code,omitempty"`
 	// Payment type used for the transaction.
@@ -443,7 +445,8 @@ type CheckoutSuccessTransaction struct {
 	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Internal unique ID of the transaction on the SumUp platform.
-	InternalId *int `json:"internal_id,omitempty"`
+	// Format: int64
+	InternalId *int64 `json:"internal_id,omitempty"`
 	// Unique code of the registered merchant to whom the payment is made.
 	MerchantCode *string `json:"merchant_code,omitempty"`
 	// Payment type used for the transaction.
@@ -669,7 +672,8 @@ type CreateCheckoutBodyTransaction struct {
 	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Internal unique ID of the transaction on the SumUp platform.
-	InternalId *int `json:"internal_id,omitempty"`
+	// Format: int64
+	InternalId *int64 `json:"internal_id,omitempty"`
 	// Unique code of the registered merchant to whom the payment is made.
 	MerchantCode *string `json:"merchant_code,omitempty"`
 	// Payment type used for the transaction.
