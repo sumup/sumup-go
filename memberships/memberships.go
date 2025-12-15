@@ -100,6 +100,8 @@ type ListMembershipsParams struct {
 	ResourceParentType *ResourceType
 	// Filter memberships by resource kind.
 	ResourceType *ResourceType
+	// Filter the returned memberships by role.
+	Roles []string
 	// Filter the returned memberships by the membership status.
 	Status *shared.MembershipStatus
 }
@@ -138,6 +140,10 @@ func (p *ListMembershipsParams) QueryValues() url.Values {
 
 	if p.ResourceType != nil {
 		q.Set("resource.type", string(*p.ResourceType))
+	}
+
+	for _, v := range p.Roles {
+		q.Add("roles", v)
 	}
 
 	if p.Status != nil {

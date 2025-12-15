@@ -133,6 +133,7 @@ type Checkout struct {
 type CheckoutStatus string
 
 const (
+	CheckoutStatusExpired CheckoutStatus = "EXPIRED"
 	CheckoutStatusFailed  CheckoutStatus = "FAILED"
 	CheckoutStatusPaid    CheckoutStatus = "PAID"
 	CheckoutStatusPending CheckoutStatus = "PENDING"
@@ -423,6 +424,7 @@ type CheckoutSuccess struct {
 type CheckoutSuccessStatus string
 
 const (
+	CheckoutSuccessStatusExpired CheckoutSuccessStatus = "EXPIRED"
 	CheckoutSuccessStatusFailed  CheckoutSuccessStatus = "FAILED"
 	CheckoutSuccessStatusPaid    CheckoutSuccessStatus = "PAID"
 	CheckoutSuccessStatusPending CheckoutSuccessStatus = "PENDING"
