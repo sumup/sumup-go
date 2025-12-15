@@ -341,10 +341,11 @@ type TransactionFullVerificationMethod string
 
 const (
 	TransactionFullVerificationMethodConfirmationCodeVerified TransactionFullVerificationMethod = "confirmation code verified"
+	TransactionFullVerificationMethodNa                       TransactionFullVerificationMethod = "na"
 	TransactionFullVerificationMethodNone                     TransactionFullVerificationMethod = "none"
-	TransactionFullVerificationMethodOfflinePin               TransactionFullVerificationMethod = "offline pin"
-	TransactionFullVerificationMethodOfflinePinSignature      TransactionFullVerificationMethod = "offline pin + signature"
-	TransactionFullVerificationMethodOnlinePin                TransactionFullVerificationMethod = "online pin"
+	TransactionFullVerificationMethodOfflinePin               TransactionFullVerificationMethod = "offline PIN"
+	TransactionFullVerificationMethodOfflinePinSignature      TransactionFullVerificationMethod = "offline PIN + signature"
+	TransactionFullVerificationMethodOnlinePin                TransactionFullVerificationMethod = "online PIN"
 	TransactionFullVerificationMethodSignature                TransactionFullVerificationMethod = "signature"
 )
 
