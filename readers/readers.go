@@ -367,8 +367,61 @@ const (
 
 // StatusResponse: Status of a device
 type StatusResponse struct {
-	Data interface{} `json:"data"`
+	Data StatusResponseData `json:"data"`
 }
+
+// StatusResponseData is a schema definition.
+type StatusResponseData struct {
+	// Battery level percentage
+	// Min: 0
+	// Max: 100
+	BatteryLevel *interface{} `json:"battery_level,omitempty"`
+	// Battery temperature in Celsius
+	BatteryTemperature *int `json:"battery_temperature,omitempty"`
+	// Type of connection used by the device
+	ConnectionType *StatusResponseDataConnectionType `json:"connection_type,omitempty"`
+	// Firmware version of the device
+	FirmwareVersion *string `json:"firmware_version,omitempty"`
+	// Timestamp of the last activity from the device
+	LastActivity *time.Time `json:"last_activity,omitempty"`
+	// Latest state of the device
+	State *StatusResponseDataState `json:"state,omitempty"`
+	// Status of a device
+	Status StatusResponseDataStatus `json:"status"`
+}
+
+// StatusResponseDataConnectionType: Type of connection used by the device
+type StatusResponseDataConnectionType string
+
+const (
+	StatusResponseDataConnectionTypeBtle StatusResponseDataConnectionType = "btle"
+	StatusResponseDataConnectionTypeEdge StatusResponseDataConnectionType = "edge"
+	StatusResponseDataConnectionTypeGprs StatusResponseDataConnectionType = "gprs"
+	StatusResponseDataConnectionTypeLte  StatusResponseDataConnectionType = "lte"
+	StatusResponseDataConnectionTypeUmts StatusResponseDataConnectionType = "umts"
+	StatusResponseDataConnectionTypeUsb  StatusResponseDataConnectionType = "usb"
+	StatusResponseDataConnectionTypeWiFi StatusResponseDataConnectionType = "Wi-Fi"
+)
+
+// StatusResponseDataState: Latest state of the device
+type StatusResponseDataState string
+
+const (
+	StatusResponseDataStateIdle                StatusResponseDataState = "IDLE"
+	StatusResponseDataStateSelectingTip        StatusResponseDataState = "SELECTING_TIP"
+	StatusResponseDataStateUpdatingFirmware    StatusResponseDataState = "UPDATING_FIRMWARE"
+	StatusResponseDataStateWaitingForCard      StatusResponseDataState = "WAITING_FOR_CARD"
+	StatusResponseDataStateWaitingForPin       StatusResponseDataState = "WAITING_FOR_PIN"
+	StatusResponseDataStateWaitingForSignature StatusResponseDataState = "WAITING_FOR_SIGNATURE"
+)
+
+// StatusResponseDataStatus: Status of a device
+type StatusResponseDataStatus string
+
+const (
+	StatusResponseDataStatusOffline StatusResponseDataStatus = "OFFLINE"
+	StatusResponseDataStatusOnline  StatusResponseDataStatus = "ONLINE"
+)
 
 // Unauthorized: 401 Unauthorized
 type Unauthorized struct {
