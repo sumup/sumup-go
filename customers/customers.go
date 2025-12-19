@@ -48,31 +48,9 @@ type PaymentInstrumentResponseCard struct {
 	// Min length: 4
 	// Max length: 4
 	Last4Digits *string `json:"last_4_digits,omitempty"`
-	// Issuing card network of the payment card.
-	// Read only
-	Type *PaymentInstrumentResponseCardType `json:"type,omitempty"`
+	// Issuing card network of the payment card used for the transaction.
+	Type *shared.CardType `json:"type,omitempty"`
 }
-
-// PaymentInstrumentResponseCardType: Issuing card network of the payment card.
-// Read only
-type PaymentInstrumentResponseCardType string
-
-const (
-	PaymentInstrumentResponseCardTypeAmex         PaymentInstrumentResponseCardType = "AMEX"
-	PaymentInstrumentResponseCardTypeCup          PaymentInstrumentResponseCardType = "CUP"
-	PaymentInstrumentResponseCardTypeDiners       PaymentInstrumentResponseCardType = "DINERS"
-	PaymentInstrumentResponseCardTypeDiscover     PaymentInstrumentResponseCardType = "DISCOVER"
-	PaymentInstrumentResponseCardTypeElo          PaymentInstrumentResponseCardType = "ELO"
-	PaymentInstrumentResponseCardTypeElv          PaymentInstrumentResponseCardType = "ELV"
-	PaymentInstrumentResponseCardTypeHipercard    PaymentInstrumentResponseCardType = "HIPERCARD"
-	PaymentInstrumentResponseCardTypeJcb          PaymentInstrumentResponseCardType = "JCB"
-	PaymentInstrumentResponseCardTypeMaestro      PaymentInstrumentResponseCardType = "MAESTRO"
-	PaymentInstrumentResponseCardTypeMastercard   PaymentInstrumentResponseCardType = "MASTERCARD"
-	PaymentInstrumentResponseCardTypeUnknown      PaymentInstrumentResponseCardType = "UNKNOWN"
-	PaymentInstrumentResponseCardTypeVisa         PaymentInstrumentResponseCardType = "VISA"
-	PaymentInstrumentResponseCardTypeVisaElectron PaymentInstrumentResponseCardType = "VISA_ELECTRON"
-	PaymentInstrumentResponseCardTypeVisaVpay     PaymentInstrumentResponseCardType = "VISA_VPAY"
-)
 
 // PaymentInstrumentResponseType: Type of the payment instrument.
 type PaymentInstrumentResponseType string
