@@ -41,9 +41,8 @@ type Card struct {
 	// Number of the payment card (without spaces).
 	// Write only
 	Number string `json:"number"`
-	// Issuing card network of the payment card.
-	// Read only
-	Type CardType `json:"type"`
+	// Issuing card network of the payment card used for the transaction.
+	Type shared.CardType `json:"type"`
 	// Required five-digit ZIP code. Applicable only to merchant users in the USA.
 	// Write only
 	// Min length: 5
@@ -68,27 +67,6 @@ const (
 	CardExpiryMonth10 CardExpiryMonth = "10"
 	CardExpiryMonth11 CardExpiryMonth = "11"
 	CardExpiryMonth12 CardExpiryMonth = "12"
-)
-
-// CardType: Issuing card network of the payment card.
-// Read only
-type CardType string
-
-const (
-	CardTypeAmex         CardType = "AMEX"
-	CardTypeCup          CardType = "CUP"
-	CardTypeDiners       CardType = "DINERS"
-	CardTypeDiscover     CardType = "DISCOVER"
-	CardTypeElo          CardType = "ELO"
-	CardTypeElv          CardType = "ELV"
-	CardTypeHipercard    CardType = "HIPERCARD"
-	CardTypeJcb          CardType = "JCB"
-	CardTypeMaestro      CardType = "MAESTRO"
-	CardTypeMastercard   CardType = "MASTERCARD"
-	CardTypeUnknown      CardType = "UNKNOWN"
-	CardTypeVisa         CardType = "VISA"
-	CardTypeVisaElectron CardType = "VISA_ELECTRON"
-	CardTypeVisaVpay     CardType = "VISA_VPAY"
 )
 
 // Checkout: Details of the payment checkout.
@@ -149,7 +127,7 @@ type CheckoutTransaction struct {
 	// currency values are enumerated above.
 	Currency *shared.Currency `json:"currency,omitempty"`
 	// Entry mode of the payment details.
-	EntryMode *CheckoutTransactionEntryMode `json:"entry_mode,omitempty"`
+	EntryMode *shared.EntryMode `json:"entry_mode,omitempty"`
 	// Unique ID of the transaction.
 	ID *string `json:"id,omitempty"`
 	// Current number of the installment for deferred payments.
@@ -161,7 +139,7 @@ type CheckoutTransaction struct {
 	// Unique code of the registered merchant to whom the payment is made.
 	MerchantCode *string `json:"merchant_code,omitempty"`
 	// Payment type used for the transaction.
-	PaymentType *CheckoutTransactionPaymentType `json:"payment_type,omitempty"`
+	PaymentType *shared.PaymentType `json:"payment_type,omitempty"`
 	// Current status of the transaction.
 	Status *CheckoutTransactionStatus `json:"status,omitempty"`
 	// Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
@@ -174,23 +152,6 @@ type CheckoutTransaction struct {
 	VatAmount *float32 `json:"vat_amount,omitempty"`
 }
 
-// CheckoutTransactionPaymentType: Payment type used for the transaction.
-type CheckoutTransactionPaymentType string
-
-const (
-	CheckoutTransactionPaymentTypeApm         CheckoutTransactionPaymentType = "APM"
-	CheckoutTransactionPaymentTypeBalance     CheckoutTransactionPaymentType = "BALANCE"
-	CheckoutTransactionPaymentTypeBitcoin     CheckoutTransactionPaymentType = "BITCOIN"
-	CheckoutTransactionPaymentTypeBoleto      CheckoutTransactionPaymentType = "BOLETO"
-	CheckoutTransactionPaymentTypeCash        CheckoutTransactionPaymentType = "CASH"
-	CheckoutTransactionPaymentTypeDirectDebit CheckoutTransactionPaymentType = "DIRECT_DEBIT"
-	CheckoutTransactionPaymentTypeEcom        CheckoutTransactionPaymentType = "ECOM"
-	CheckoutTransactionPaymentTypeMoto        CheckoutTransactionPaymentType = "MOTO"
-	CheckoutTransactionPaymentTypePos         CheckoutTransactionPaymentType = "POS"
-	CheckoutTransactionPaymentTypeRecurring   CheckoutTransactionPaymentType = "RECURRING"
-	CheckoutTransactionPaymentTypeUnknown     CheckoutTransactionPaymentType = "UNKNOWN"
-)
-
 // CheckoutTransactionStatus: Current status of the transaction.
 type CheckoutTransactionStatus string
 
@@ -199,38 +160,6 @@ const (
 	CheckoutTransactionStatusFailed     CheckoutTransactionStatus = "FAILED"
 	CheckoutTransactionStatusPending    CheckoutTransactionStatus = "PENDING"
 	CheckoutTransactionStatusSuccessful CheckoutTransactionStatus = "SUCCESSFUL"
-)
-
-// CheckoutTransactionEntryMode: Entry mode of the payment details.
-type CheckoutTransactionEntryMode string
-
-const (
-	CheckoutTransactionEntryModeApplePay             CheckoutTransactionEntryMode = "APPLE_PAY"
-	CheckoutTransactionEntryModeBancontact           CheckoutTransactionEntryMode = "BANCONTACT"
-	CheckoutTransactionEntryModeBlik                 CheckoutTransactionEntryMode = "BLIK"
-	CheckoutTransactionEntryModeBoleto               CheckoutTransactionEntryMode = "BOLETO"
-	CheckoutTransactionEntryModeChip                 CheckoutTransactionEntryMode = "CHIP"
-	CheckoutTransactionEntryModeContactless          CheckoutTransactionEntryMode = "CONTACTLESS"
-	CheckoutTransactionEntryModeContactlessMagstripe CheckoutTransactionEntryMode = "CONTACTLESS_MAGSTRIPE"
-	CheckoutTransactionEntryModeCustomerEntry        CheckoutTransactionEntryMode = "CUSTOMER_ENTRY"
-	CheckoutTransactionEntryModeDirectDebit          CheckoutTransactionEntryMode = "DIRECT_DEBIT"
-	CheckoutTransactionEntryModeEps                  CheckoutTransactionEntryMode = "EPS"
-	CheckoutTransactionEntryModeGiropay              CheckoutTransactionEntryMode = "GIROPAY"
-	CheckoutTransactionEntryModeGooglePay            CheckoutTransactionEntryMode = "GOOGLE_PAY"
-	CheckoutTransactionEntryModeIdeal                CheckoutTransactionEntryMode = "IDEAL"
-	CheckoutTransactionEntryModeMagstripe            CheckoutTransactionEntryMode = "MAGSTRIPE"
-	CheckoutTransactionEntryModeMagstripeFallback    CheckoutTransactionEntryMode = "MAGSTRIPE_FALLBACK"
-	CheckoutTransactionEntryModeManualEntry          CheckoutTransactionEntryMode = "MANUAL_ENTRY"
-	CheckoutTransactionEntryModeMoto                 CheckoutTransactionEntryMode = "MOTO"
-	CheckoutTransactionEntryModeMybank               CheckoutTransactionEntryMode = "MYBANK"
-	CheckoutTransactionEntryModeNA                   CheckoutTransactionEntryMode = "N/A"
-	CheckoutTransactionEntryModeNone                 CheckoutTransactionEntryMode = "NONE"
-	CheckoutTransactionEntryModeP24                  CheckoutTransactionEntryMode = "P24"
-	CheckoutTransactionEntryModePaypal               CheckoutTransactionEntryMode = "PAYPAL"
-	CheckoutTransactionEntryModePix                  CheckoutTransactionEntryMode = "PIX"
-	CheckoutTransactionEntryModeQrCodePix            CheckoutTransactionEntryMode = "QR_CODE_PIX"
-	CheckoutTransactionEntryModeSatispay             CheckoutTransactionEntryMode = "SATISPAY"
-	CheckoutTransactionEntryModeSofort               CheckoutTransactionEntryMode = "SOFORT"
 )
 
 // CheckoutAccepted: 3DS Response
@@ -348,7 +277,7 @@ type CheckoutCreateRequestTransaction struct {
 	// currency values are enumerated above.
 	Currency *shared.Currency `json:"currency,omitempty"`
 	// Entry mode of the payment details.
-	EntryMode *CheckoutCreateRequestTransactionEntryMode `json:"entry_mode,omitempty"`
+	EntryMode *shared.EntryMode `json:"entry_mode,omitempty"`
 	// Unique ID of the transaction.
 	ID *string `json:"id,omitempty"`
 	// Current number of the installment for deferred payments.
@@ -360,7 +289,7 @@ type CheckoutCreateRequestTransaction struct {
 	// Unique code of the registered merchant to whom the payment is made.
 	MerchantCode *string `json:"merchant_code,omitempty"`
 	// Payment type used for the transaction.
-	PaymentType *CheckoutCreateRequestTransactionPaymentType `json:"payment_type,omitempty"`
+	PaymentType *shared.PaymentType `json:"payment_type,omitempty"`
 	// Current status of the transaction.
 	Status *CheckoutCreateRequestTransactionStatus `json:"status,omitempty"`
 	// Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
@@ -373,23 +302,6 @@ type CheckoutCreateRequestTransaction struct {
 	VatAmount *float32 `json:"vat_amount,omitempty"`
 }
 
-// CheckoutCreateRequestTransactionPaymentType: Payment type used for the transaction.
-type CheckoutCreateRequestTransactionPaymentType string
-
-const (
-	CheckoutCreateRequestTransactionPaymentTypeApm         CheckoutCreateRequestTransactionPaymentType = "APM"
-	CheckoutCreateRequestTransactionPaymentTypeBalance     CheckoutCreateRequestTransactionPaymentType = "BALANCE"
-	CheckoutCreateRequestTransactionPaymentTypeBitcoin     CheckoutCreateRequestTransactionPaymentType = "BITCOIN"
-	CheckoutCreateRequestTransactionPaymentTypeBoleto      CheckoutCreateRequestTransactionPaymentType = "BOLETO"
-	CheckoutCreateRequestTransactionPaymentTypeCash        CheckoutCreateRequestTransactionPaymentType = "CASH"
-	CheckoutCreateRequestTransactionPaymentTypeDirectDebit CheckoutCreateRequestTransactionPaymentType = "DIRECT_DEBIT"
-	CheckoutCreateRequestTransactionPaymentTypeEcom        CheckoutCreateRequestTransactionPaymentType = "ECOM"
-	CheckoutCreateRequestTransactionPaymentTypeMoto        CheckoutCreateRequestTransactionPaymentType = "MOTO"
-	CheckoutCreateRequestTransactionPaymentTypePos         CheckoutCreateRequestTransactionPaymentType = "POS"
-	CheckoutCreateRequestTransactionPaymentTypeRecurring   CheckoutCreateRequestTransactionPaymentType = "RECURRING"
-	CheckoutCreateRequestTransactionPaymentTypeUnknown     CheckoutCreateRequestTransactionPaymentType = "UNKNOWN"
-)
-
 // CheckoutCreateRequestTransactionStatus: Current status of the transaction.
 type CheckoutCreateRequestTransactionStatus string
 
@@ -398,38 +310,6 @@ const (
 	CheckoutCreateRequestTransactionStatusFailed     CheckoutCreateRequestTransactionStatus = "FAILED"
 	CheckoutCreateRequestTransactionStatusPending    CheckoutCreateRequestTransactionStatus = "PENDING"
 	CheckoutCreateRequestTransactionStatusSuccessful CheckoutCreateRequestTransactionStatus = "SUCCESSFUL"
-)
-
-// CheckoutCreateRequestTransactionEntryMode: Entry mode of the payment details.
-type CheckoutCreateRequestTransactionEntryMode string
-
-const (
-	CheckoutCreateRequestTransactionEntryModeApplePay             CheckoutCreateRequestTransactionEntryMode = "APPLE_PAY"
-	CheckoutCreateRequestTransactionEntryModeBancontact           CheckoutCreateRequestTransactionEntryMode = "BANCONTACT"
-	CheckoutCreateRequestTransactionEntryModeBlik                 CheckoutCreateRequestTransactionEntryMode = "BLIK"
-	CheckoutCreateRequestTransactionEntryModeBoleto               CheckoutCreateRequestTransactionEntryMode = "BOLETO"
-	CheckoutCreateRequestTransactionEntryModeChip                 CheckoutCreateRequestTransactionEntryMode = "CHIP"
-	CheckoutCreateRequestTransactionEntryModeContactless          CheckoutCreateRequestTransactionEntryMode = "CONTACTLESS"
-	CheckoutCreateRequestTransactionEntryModeContactlessMagstripe CheckoutCreateRequestTransactionEntryMode = "CONTACTLESS_MAGSTRIPE"
-	CheckoutCreateRequestTransactionEntryModeCustomerEntry        CheckoutCreateRequestTransactionEntryMode = "CUSTOMER_ENTRY"
-	CheckoutCreateRequestTransactionEntryModeDirectDebit          CheckoutCreateRequestTransactionEntryMode = "DIRECT_DEBIT"
-	CheckoutCreateRequestTransactionEntryModeEps                  CheckoutCreateRequestTransactionEntryMode = "EPS"
-	CheckoutCreateRequestTransactionEntryModeGiropay              CheckoutCreateRequestTransactionEntryMode = "GIROPAY"
-	CheckoutCreateRequestTransactionEntryModeGooglePay            CheckoutCreateRequestTransactionEntryMode = "GOOGLE_PAY"
-	CheckoutCreateRequestTransactionEntryModeIdeal                CheckoutCreateRequestTransactionEntryMode = "IDEAL"
-	CheckoutCreateRequestTransactionEntryModeMagstripe            CheckoutCreateRequestTransactionEntryMode = "MAGSTRIPE"
-	CheckoutCreateRequestTransactionEntryModeMagstripeFallback    CheckoutCreateRequestTransactionEntryMode = "MAGSTRIPE_FALLBACK"
-	CheckoutCreateRequestTransactionEntryModeManualEntry          CheckoutCreateRequestTransactionEntryMode = "MANUAL_ENTRY"
-	CheckoutCreateRequestTransactionEntryModeMoto                 CheckoutCreateRequestTransactionEntryMode = "MOTO"
-	CheckoutCreateRequestTransactionEntryModeMybank               CheckoutCreateRequestTransactionEntryMode = "MYBANK"
-	CheckoutCreateRequestTransactionEntryModeNA                   CheckoutCreateRequestTransactionEntryMode = "N/A"
-	CheckoutCreateRequestTransactionEntryModeNone                 CheckoutCreateRequestTransactionEntryMode = "NONE"
-	CheckoutCreateRequestTransactionEntryModeP24                  CheckoutCreateRequestTransactionEntryMode = "P24"
-	CheckoutCreateRequestTransactionEntryModePaypal               CheckoutCreateRequestTransactionEntryMode = "PAYPAL"
-	CheckoutCreateRequestTransactionEntryModePix                  CheckoutCreateRequestTransactionEntryMode = "PIX"
-	CheckoutCreateRequestTransactionEntryModeQrCodePix            CheckoutCreateRequestTransactionEntryMode = "QR_CODE_PIX"
-	CheckoutCreateRequestTransactionEntryModeSatispay             CheckoutCreateRequestTransactionEntryMode = "SATISPAY"
-	CheckoutCreateRequestTransactionEntryModeSofort               CheckoutCreateRequestTransactionEntryMode = "SOFORT"
 )
 
 // CheckoutSuccess is a schema definition.
@@ -502,7 +382,7 @@ type CheckoutSuccessTransaction struct {
 	// currency values are enumerated above.
 	Currency *shared.Currency `json:"currency,omitempty"`
 	// Entry mode of the payment details.
-	EntryMode *CheckoutSuccessTransactionEntryMode `json:"entry_mode,omitempty"`
+	EntryMode *shared.EntryMode `json:"entry_mode,omitempty"`
 	// Unique ID of the transaction.
 	ID *string `json:"id,omitempty"`
 	// Current number of the installment for deferred payments.
@@ -514,7 +394,7 @@ type CheckoutSuccessTransaction struct {
 	// Unique code of the registered merchant to whom the payment is made.
 	MerchantCode *string `json:"merchant_code,omitempty"`
 	// Payment type used for the transaction.
-	PaymentType *CheckoutSuccessTransactionPaymentType `json:"payment_type,omitempty"`
+	PaymentType *shared.PaymentType `json:"payment_type,omitempty"`
 	// Current status of the transaction.
 	Status *CheckoutSuccessTransactionStatus `json:"status,omitempty"`
 	// Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
@@ -527,23 +407,6 @@ type CheckoutSuccessTransaction struct {
 	VatAmount *float32 `json:"vat_amount,omitempty"`
 }
 
-// CheckoutSuccessTransactionPaymentType: Payment type used for the transaction.
-type CheckoutSuccessTransactionPaymentType string
-
-const (
-	CheckoutSuccessTransactionPaymentTypeApm         CheckoutSuccessTransactionPaymentType = "APM"
-	CheckoutSuccessTransactionPaymentTypeBalance     CheckoutSuccessTransactionPaymentType = "BALANCE"
-	CheckoutSuccessTransactionPaymentTypeBitcoin     CheckoutSuccessTransactionPaymentType = "BITCOIN"
-	CheckoutSuccessTransactionPaymentTypeBoleto      CheckoutSuccessTransactionPaymentType = "BOLETO"
-	CheckoutSuccessTransactionPaymentTypeCash        CheckoutSuccessTransactionPaymentType = "CASH"
-	CheckoutSuccessTransactionPaymentTypeDirectDebit CheckoutSuccessTransactionPaymentType = "DIRECT_DEBIT"
-	CheckoutSuccessTransactionPaymentTypeEcom        CheckoutSuccessTransactionPaymentType = "ECOM"
-	CheckoutSuccessTransactionPaymentTypeMoto        CheckoutSuccessTransactionPaymentType = "MOTO"
-	CheckoutSuccessTransactionPaymentTypePos         CheckoutSuccessTransactionPaymentType = "POS"
-	CheckoutSuccessTransactionPaymentTypeRecurring   CheckoutSuccessTransactionPaymentType = "RECURRING"
-	CheckoutSuccessTransactionPaymentTypeUnknown     CheckoutSuccessTransactionPaymentType = "UNKNOWN"
-)
-
 // CheckoutSuccessTransactionStatus: Current status of the transaction.
 type CheckoutSuccessTransactionStatus string
 
@@ -552,38 +415,6 @@ const (
 	CheckoutSuccessTransactionStatusFailed     CheckoutSuccessTransactionStatus = "FAILED"
 	CheckoutSuccessTransactionStatusPending    CheckoutSuccessTransactionStatus = "PENDING"
 	CheckoutSuccessTransactionStatusSuccessful CheckoutSuccessTransactionStatus = "SUCCESSFUL"
-)
-
-// CheckoutSuccessTransactionEntryMode: Entry mode of the payment details.
-type CheckoutSuccessTransactionEntryMode string
-
-const (
-	CheckoutSuccessTransactionEntryModeApplePay             CheckoutSuccessTransactionEntryMode = "APPLE_PAY"
-	CheckoutSuccessTransactionEntryModeBancontact           CheckoutSuccessTransactionEntryMode = "BANCONTACT"
-	CheckoutSuccessTransactionEntryModeBlik                 CheckoutSuccessTransactionEntryMode = "BLIK"
-	CheckoutSuccessTransactionEntryModeBoleto               CheckoutSuccessTransactionEntryMode = "BOLETO"
-	CheckoutSuccessTransactionEntryModeChip                 CheckoutSuccessTransactionEntryMode = "CHIP"
-	CheckoutSuccessTransactionEntryModeContactless          CheckoutSuccessTransactionEntryMode = "CONTACTLESS"
-	CheckoutSuccessTransactionEntryModeContactlessMagstripe CheckoutSuccessTransactionEntryMode = "CONTACTLESS_MAGSTRIPE"
-	CheckoutSuccessTransactionEntryModeCustomerEntry        CheckoutSuccessTransactionEntryMode = "CUSTOMER_ENTRY"
-	CheckoutSuccessTransactionEntryModeDirectDebit          CheckoutSuccessTransactionEntryMode = "DIRECT_DEBIT"
-	CheckoutSuccessTransactionEntryModeEps                  CheckoutSuccessTransactionEntryMode = "EPS"
-	CheckoutSuccessTransactionEntryModeGiropay              CheckoutSuccessTransactionEntryMode = "GIROPAY"
-	CheckoutSuccessTransactionEntryModeGooglePay            CheckoutSuccessTransactionEntryMode = "GOOGLE_PAY"
-	CheckoutSuccessTransactionEntryModeIdeal                CheckoutSuccessTransactionEntryMode = "IDEAL"
-	CheckoutSuccessTransactionEntryModeMagstripe            CheckoutSuccessTransactionEntryMode = "MAGSTRIPE"
-	CheckoutSuccessTransactionEntryModeMagstripeFallback    CheckoutSuccessTransactionEntryMode = "MAGSTRIPE_FALLBACK"
-	CheckoutSuccessTransactionEntryModeManualEntry          CheckoutSuccessTransactionEntryMode = "MANUAL_ENTRY"
-	CheckoutSuccessTransactionEntryModeMoto                 CheckoutSuccessTransactionEntryMode = "MOTO"
-	CheckoutSuccessTransactionEntryModeMybank               CheckoutSuccessTransactionEntryMode = "MYBANK"
-	CheckoutSuccessTransactionEntryModeNA                   CheckoutSuccessTransactionEntryMode = "N/A"
-	CheckoutSuccessTransactionEntryModeNone                 CheckoutSuccessTransactionEntryMode = "NONE"
-	CheckoutSuccessTransactionEntryModeP24                  CheckoutSuccessTransactionEntryMode = "P24"
-	CheckoutSuccessTransactionEntryModePaypal               CheckoutSuccessTransactionEntryMode = "PAYPAL"
-	CheckoutSuccessTransactionEntryModePix                  CheckoutSuccessTransactionEntryMode = "PIX"
-	CheckoutSuccessTransactionEntryModeQrCodePix            CheckoutSuccessTransactionEntryMode = "QR_CODE_PIX"
-	CheckoutSuccessTransactionEntryModeSatispay             CheckoutSuccessTransactionEntryMode = "SATISPAY"
-	CheckoutSuccessTransactionEntryModeSofort               CheckoutSuccessTransactionEntryMode = "SOFORT"
 )
 
 // CheckoutSuccessPaymentInstrument: Object containing token information for the specified payment instrument
@@ -760,7 +591,7 @@ type CreateCheckoutBodyTransaction struct {
 	// currency values are enumerated above.
 	Currency *shared.Currency `json:"currency,omitempty"`
 	// Entry mode of the payment details.
-	EntryMode *CreateCheckoutBodyTransactionEntryMode `json:"entry_mode,omitempty"`
+	EntryMode *shared.EntryMode `json:"entry_mode,omitempty"`
 	// Unique ID of the transaction.
 	ID *string `json:"id,omitempty"`
 	// Current number of the installment for deferred payments.
@@ -772,7 +603,7 @@ type CreateCheckoutBodyTransaction struct {
 	// Unique code of the registered merchant to whom the payment is made.
 	MerchantCode *string `json:"merchant_code,omitempty"`
 	// Payment type used for the transaction.
-	PaymentType *CreateCheckoutBodyTransactionPaymentType `json:"payment_type,omitempty"`
+	PaymentType *shared.PaymentType `json:"payment_type,omitempty"`
 	// Current status of the transaction.
 	Status *CreateCheckoutBodyTransactionStatus `json:"status,omitempty"`
 	// Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
@@ -785,23 +616,6 @@ type CreateCheckoutBodyTransaction struct {
 	VatAmount *float32 `json:"vat_amount,omitempty"`
 }
 
-// CreateCheckoutBodyTransactionPaymentType: Payment type used for the transaction.
-type CreateCheckoutBodyTransactionPaymentType string
-
-const (
-	CreateCheckoutBodyTransactionPaymentTypeApm         CreateCheckoutBodyTransactionPaymentType = "APM"
-	CreateCheckoutBodyTransactionPaymentTypeBalance     CreateCheckoutBodyTransactionPaymentType = "BALANCE"
-	CreateCheckoutBodyTransactionPaymentTypeBitcoin     CreateCheckoutBodyTransactionPaymentType = "BITCOIN"
-	CreateCheckoutBodyTransactionPaymentTypeBoleto      CreateCheckoutBodyTransactionPaymentType = "BOLETO"
-	CreateCheckoutBodyTransactionPaymentTypeCash        CreateCheckoutBodyTransactionPaymentType = "CASH"
-	CreateCheckoutBodyTransactionPaymentTypeDirectDebit CreateCheckoutBodyTransactionPaymentType = "DIRECT_DEBIT"
-	CreateCheckoutBodyTransactionPaymentTypeEcom        CreateCheckoutBodyTransactionPaymentType = "ECOM"
-	CreateCheckoutBodyTransactionPaymentTypeMoto        CreateCheckoutBodyTransactionPaymentType = "MOTO"
-	CreateCheckoutBodyTransactionPaymentTypePos         CreateCheckoutBodyTransactionPaymentType = "POS"
-	CreateCheckoutBodyTransactionPaymentTypeRecurring   CreateCheckoutBodyTransactionPaymentType = "RECURRING"
-	CreateCheckoutBodyTransactionPaymentTypeUnknown     CreateCheckoutBodyTransactionPaymentType = "UNKNOWN"
-)
-
 // CreateCheckoutBodyTransactionStatus: Current status of the transaction.
 type CreateCheckoutBodyTransactionStatus string
 
@@ -810,38 +624,6 @@ const (
 	CreateCheckoutBodyTransactionStatusFailed     CreateCheckoutBodyTransactionStatus = "FAILED"
 	CreateCheckoutBodyTransactionStatusPending    CreateCheckoutBodyTransactionStatus = "PENDING"
 	CreateCheckoutBodyTransactionStatusSuccessful CreateCheckoutBodyTransactionStatus = "SUCCESSFUL"
-)
-
-// CreateCheckoutBodyTransactionEntryMode: Entry mode of the payment details.
-type CreateCheckoutBodyTransactionEntryMode string
-
-const (
-	CreateCheckoutBodyTransactionEntryModeApplePay             CreateCheckoutBodyTransactionEntryMode = "APPLE_PAY"
-	CreateCheckoutBodyTransactionEntryModeBancontact           CreateCheckoutBodyTransactionEntryMode = "BANCONTACT"
-	CreateCheckoutBodyTransactionEntryModeBlik                 CreateCheckoutBodyTransactionEntryMode = "BLIK"
-	CreateCheckoutBodyTransactionEntryModeBoleto               CreateCheckoutBodyTransactionEntryMode = "BOLETO"
-	CreateCheckoutBodyTransactionEntryModeChip                 CreateCheckoutBodyTransactionEntryMode = "CHIP"
-	CreateCheckoutBodyTransactionEntryModeContactless          CreateCheckoutBodyTransactionEntryMode = "CONTACTLESS"
-	CreateCheckoutBodyTransactionEntryModeContactlessMagstripe CreateCheckoutBodyTransactionEntryMode = "CONTACTLESS_MAGSTRIPE"
-	CreateCheckoutBodyTransactionEntryModeCustomerEntry        CreateCheckoutBodyTransactionEntryMode = "CUSTOMER_ENTRY"
-	CreateCheckoutBodyTransactionEntryModeDirectDebit          CreateCheckoutBodyTransactionEntryMode = "DIRECT_DEBIT"
-	CreateCheckoutBodyTransactionEntryModeEps                  CreateCheckoutBodyTransactionEntryMode = "EPS"
-	CreateCheckoutBodyTransactionEntryModeGiropay              CreateCheckoutBodyTransactionEntryMode = "GIROPAY"
-	CreateCheckoutBodyTransactionEntryModeGooglePay            CreateCheckoutBodyTransactionEntryMode = "GOOGLE_PAY"
-	CreateCheckoutBodyTransactionEntryModeIdeal                CreateCheckoutBodyTransactionEntryMode = "IDEAL"
-	CreateCheckoutBodyTransactionEntryModeMagstripe            CreateCheckoutBodyTransactionEntryMode = "MAGSTRIPE"
-	CreateCheckoutBodyTransactionEntryModeMagstripeFallback    CreateCheckoutBodyTransactionEntryMode = "MAGSTRIPE_FALLBACK"
-	CreateCheckoutBodyTransactionEntryModeManualEntry          CreateCheckoutBodyTransactionEntryMode = "MANUAL_ENTRY"
-	CreateCheckoutBodyTransactionEntryModeMoto                 CreateCheckoutBodyTransactionEntryMode = "MOTO"
-	CreateCheckoutBodyTransactionEntryModeMybank               CreateCheckoutBodyTransactionEntryMode = "MYBANK"
-	CreateCheckoutBodyTransactionEntryModeNA                   CreateCheckoutBodyTransactionEntryMode = "N/A"
-	CreateCheckoutBodyTransactionEntryModeNone                 CreateCheckoutBodyTransactionEntryMode = "NONE"
-	CreateCheckoutBodyTransactionEntryModeP24                  CreateCheckoutBodyTransactionEntryMode = "P24"
-	CreateCheckoutBodyTransactionEntryModePaypal               CreateCheckoutBodyTransactionEntryMode = "PAYPAL"
-	CreateCheckoutBodyTransactionEntryModePix                  CreateCheckoutBodyTransactionEntryMode = "PIX"
-	CreateCheckoutBodyTransactionEntryModeQrCodePix            CreateCheckoutBodyTransactionEntryMode = "QR_CODE_PIX"
-	CreateCheckoutBodyTransactionEntryModeSatispay             CreateCheckoutBodyTransactionEntryMode = "SATISPAY"
-	CreateCheckoutBodyTransactionEntryModeSofort               CreateCheckoutBodyTransactionEntryMode = "SOFORT"
 )
 
 // ProcessCheckoutBody: Details of the payment instrument for processing the checkout.

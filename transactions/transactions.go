@@ -23,31 +23,9 @@ type CardResponse struct {
 	// Min length: 4
 	// Max length: 4
 	Last4Digits *string `json:"last_4_digits,omitempty"`
-	// Issuing card network of the payment card.
-	// Read only
-	Type *CardResponseType `json:"type,omitempty"`
+	// Issuing card network of the payment card used for the transaction.
+	Type *shared.CardType `json:"type,omitempty"`
 }
-
-// CardResponseType: Issuing card network of the payment card.
-// Read only
-type CardResponseType string
-
-const (
-	CardResponseTypeAmex         CardResponseType = "AMEX"
-	CardResponseTypeCup          CardResponseType = "CUP"
-	CardResponseTypeDiners       CardResponseType = "DINERS"
-	CardResponseTypeDiscover     CardResponseType = "DISCOVER"
-	CardResponseTypeElo          CardResponseType = "ELO"
-	CardResponseTypeElv          CardResponseType = "ELV"
-	CardResponseTypeHipercard    CardResponseType = "HIPERCARD"
-	CardResponseTypeJcb          CardResponseType = "JCB"
-	CardResponseTypeMaestro      CardResponseType = "MAESTRO"
-	CardResponseTypeMastercard   CardResponseType = "MASTERCARD"
-	CardResponseTypeUnknown      CardResponseType = "UNKNOWN"
-	CardResponseTypeVisa         CardResponseType = "VISA"
-	CardResponseTypeVisaElectron CardResponseType = "VISA_ELECTRON"
-	CardResponseTypeVisaVpay     CardResponseType = "VISA_VPAY"
-)
 
 // Event is a schema definition.
 type Event struct {
@@ -176,7 +154,7 @@ type TransactionFull struct {
 	// currency values are enumerated above.
 	Currency *shared.Currency `json:"currency,omitempty"`
 	// Entry mode of the payment details.
-	EntryMode *TransactionFullEntryMode `json:"entry_mode,omitempty"`
+	EntryMode *shared.EntryMode `json:"entry_mode,omitempty"`
 	// List of events related to the transaction.
 	// Unique items only
 	Events []Event `json:"events,omitempty"`
@@ -208,7 +186,7 @@ type TransactionFull struct {
 	// Unique code of the registered merchant to whom the payment is made.
 	MerchantCode *string `json:"merchant_code,omitempty"`
 	// Payment type used for the transaction.
-	PaymentType *TransactionFullPaymentType `json:"payment_type,omitempty"`
+	PaymentType *shared.PaymentType `json:"payment_type,omitempty"`
 	// Payout plan of the registered user at the time when the transaction was made.
 	PayoutPlan *TransactionFullPayoutPlan `json:"payout_plan,omitempty"`
 	// Payout type for the transaction.
@@ -248,23 +226,6 @@ type TransactionFull struct {
 	VerificationMethod *TransactionFullVerificationMethod `json:"verification_method,omitempty"`
 }
 
-// TransactionFullPaymentType: Payment type used for the transaction.
-type TransactionFullPaymentType string
-
-const (
-	TransactionFullPaymentTypeApm         TransactionFullPaymentType = "APM"
-	TransactionFullPaymentTypeBalance     TransactionFullPaymentType = "BALANCE"
-	TransactionFullPaymentTypeBitcoin     TransactionFullPaymentType = "BITCOIN"
-	TransactionFullPaymentTypeBoleto      TransactionFullPaymentType = "BOLETO"
-	TransactionFullPaymentTypeCash        TransactionFullPaymentType = "CASH"
-	TransactionFullPaymentTypeDirectDebit TransactionFullPaymentType = "DIRECT_DEBIT"
-	TransactionFullPaymentTypeEcom        TransactionFullPaymentType = "ECOM"
-	TransactionFullPaymentTypeMoto        TransactionFullPaymentType = "MOTO"
-	TransactionFullPaymentTypePos         TransactionFullPaymentType = "POS"
-	TransactionFullPaymentTypeRecurring   TransactionFullPaymentType = "RECURRING"
-	TransactionFullPaymentTypeUnknown     TransactionFullPaymentType = "UNKNOWN"
-)
-
 // TransactionFullStatus: Current status of the transaction.
 type TransactionFullStatus string
 
@@ -273,38 +234,6 @@ const (
 	TransactionFullStatusFailed     TransactionFullStatus = "FAILED"
 	TransactionFullStatusPending    TransactionFullStatus = "PENDING"
 	TransactionFullStatusSuccessful TransactionFullStatus = "SUCCESSFUL"
-)
-
-// TransactionFullEntryMode: Entry mode of the payment details.
-type TransactionFullEntryMode string
-
-const (
-	TransactionFullEntryModeApplePay             TransactionFullEntryMode = "APPLE_PAY"
-	TransactionFullEntryModeBancontact           TransactionFullEntryMode = "BANCONTACT"
-	TransactionFullEntryModeBlik                 TransactionFullEntryMode = "BLIK"
-	TransactionFullEntryModeBoleto               TransactionFullEntryMode = "BOLETO"
-	TransactionFullEntryModeChip                 TransactionFullEntryMode = "CHIP"
-	TransactionFullEntryModeContactless          TransactionFullEntryMode = "CONTACTLESS"
-	TransactionFullEntryModeContactlessMagstripe TransactionFullEntryMode = "CONTACTLESS_MAGSTRIPE"
-	TransactionFullEntryModeCustomerEntry        TransactionFullEntryMode = "CUSTOMER_ENTRY"
-	TransactionFullEntryModeDirectDebit          TransactionFullEntryMode = "DIRECT_DEBIT"
-	TransactionFullEntryModeEps                  TransactionFullEntryMode = "EPS"
-	TransactionFullEntryModeGiropay              TransactionFullEntryMode = "GIROPAY"
-	TransactionFullEntryModeGooglePay            TransactionFullEntryMode = "GOOGLE_PAY"
-	TransactionFullEntryModeIdeal                TransactionFullEntryMode = "IDEAL"
-	TransactionFullEntryModeMagstripe            TransactionFullEntryMode = "MAGSTRIPE"
-	TransactionFullEntryModeMagstripeFallback    TransactionFullEntryMode = "MAGSTRIPE_FALLBACK"
-	TransactionFullEntryModeManualEntry          TransactionFullEntryMode = "MANUAL_ENTRY"
-	TransactionFullEntryModeMoto                 TransactionFullEntryMode = "MOTO"
-	TransactionFullEntryModeMybank               TransactionFullEntryMode = "MYBANK"
-	TransactionFullEntryModeNA                   TransactionFullEntryMode = "N/A"
-	TransactionFullEntryModeNone                 TransactionFullEntryMode = "NONE"
-	TransactionFullEntryModeP24                  TransactionFullEntryMode = "P24"
-	TransactionFullEntryModePaypal               TransactionFullEntryMode = "PAYPAL"
-	TransactionFullEntryModePix                  TransactionFullEntryMode = "PIX"
-	TransactionFullEntryModeQrCodePix            TransactionFullEntryMode = "QR_CODE_PIX"
-	TransactionFullEntryModeSatispay             TransactionFullEntryMode = "SATISPAY"
-	TransactionFullEntryModeSofort               TransactionFullEntryMode = "SOFORT"
 )
 
 // TransactionFullPayoutPlan: Payout plan of the registered user at the time when the transaction was made.
@@ -385,7 +314,7 @@ type TransactionHistory struct {
 	// Total amount of the transaction.
 	Amount *float32 `json:"amount,omitempty"`
 	// Issuing card network of the payment card used for the transaction.
-	CardType *TransactionHistoryCardType `json:"card_type,omitempty"`
+	CardType *shared.CardType `json:"card_type,omitempty"`
 	// Client-specific ID of the transaction.
 	ClientTransactionId *string `json:"client_transaction_id,omitempty"`
 	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
@@ -397,7 +326,7 @@ type TransactionHistory struct {
 	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Payment type used for the transaction.
-	PaymentType *TransactionHistoryPaymentType `json:"payment_type,omitempty"`
+	PaymentType *shared.PaymentType `json:"payment_type,omitempty"`
 	// Payout plan of the registered user at the time when the transaction was made.
 	PayoutPlan *TransactionHistoryPayoutPlan `json:"payout_plan,omitempty"`
 	// Number of payouts that are made to the registered user specified in the `user` property.
@@ -421,23 +350,6 @@ type TransactionHistory struct {
 	User *string `json:"user,omitempty"`
 }
 
-// TransactionHistoryPaymentType: Payment type used for the transaction.
-type TransactionHistoryPaymentType string
-
-const (
-	TransactionHistoryPaymentTypeApm         TransactionHistoryPaymentType = "APM"
-	TransactionHistoryPaymentTypeBalance     TransactionHistoryPaymentType = "BALANCE"
-	TransactionHistoryPaymentTypeBitcoin     TransactionHistoryPaymentType = "BITCOIN"
-	TransactionHistoryPaymentTypeBoleto      TransactionHistoryPaymentType = "BOLETO"
-	TransactionHistoryPaymentTypeCash        TransactionHistoryPaymentType = "CASH"
-	TransactionHistoryPaymentTypeDirectDebit TransactionHistoryPaymentType = "DIRECT_DEBIT"
-	TransactionHistoryPaymentTypeEcom        TransactionHistoryPaymentType = "ECOM"
-	TransactionHistoryPaymentTypeMoto        TransactionHistoryPaymentType = "MOTO"
-	TransactionHistoryPaymentTypePos         TransactionHistoryPaymentType = "POS"
-	TransactionHistoryPaymentTypeRecurring   TransactionHistoryPaymentType = "RECURRING"
-	TransactionHistoryPaymentTypeUnknown     TransactionHistoryPaymentType = "UNKNOWN"
-)
-
 // TransactionHistoryStatus: Current status of the transaction.
 type TransactionHistoryStatus string
 
@@ -455,26 +367,6 @@ const (
 	TransactionHistoryPayoutPlanAcceleratedInstallment TransactionHistoryPayoutPlan = "ACCELERATED_INSTALLMENT"
 	TransactionHistoryPayoutPlanSinglePayment          TransactionHistoryPayoutPlan = "SINGLE_PAYMENT"
 	TransactionHistoryPayoutPlanTrueInstallment        TransactionHistoryPayoutPlan = "TRUE_INSTALLMENT"
-)
-
-// TransactionHistoryCardType: Issuing card network of the payment card used for the transaction.
-type TransactionHistoryCardType string
-
-const (
-	TransactionHistoryCardTypeAmex         TransactionHistoryCardType = "AMEX"
-	TransactionHistoryCardTypeCup          TransactionHistoryCardType = "CUP"
-	TransactionHistoryCardTypeDiners       TransactionHistoryCardType = "DINERS"
-	TransactionHistoryCardTypeDiscover     TransactionHistoryCardType = "DISCOVER"
-	TransactionHistoryCardTypeElo          TransactionHistoryCardType = "ELO"
-	TransactionHistoryCardTypeElv          TransactionHistoryCardType = "ELV"
-	TransactionHistoryCardTypeHipercard    TransactionHistoryCardType = "HIPERCARD"
-	TransactionHistoryCardTypeJcb          TransactionHistoryCardType = "JCB"
-	TransactionHistoryCardTypeMaestro      TransactionHistoryCardType = "MAESTRO"
-	TransactionHistoryCardTypeMastercard   TransactionHistoryCardType = "MASTERCARD"
-	TransactionHistoryCardTypeUnknown      TransactionHistoryCardType = "UNKNOWN"
-	TransactionHistoryCardTypeVisa         TransactionHistoryCardType = "VISA"
-	TransactionHistoryCardTypeVisaElectron TransactionHistoryCardType = "VISA_ELECTRON"
-	TransactionHistoryCardTypeVisaVpay     TransactionHistoryCardType = "VISA_VPAY"
 )
 
 // TransactionHistoryType: Type of the transaction for the registered user specified in the `user` property.
@@ -540,7 +432,7 @@ type ListTransactionsParams struct {
 	// Specifies the order in which the returned results are displayed.
 	Order *string
 	// Filters the returned results by the specified list of payment types used for the transactions.
-	PaymentTypes []string
+	PaymentTypes []shared.PaymentType
 	// Filters the returned results by the specified list of final statuses of the transactions.
 	Statuses []string
 	// Retrieves the transaction resource with the specified transaction code.
@@ -584,7 +476,7 @@ func (p *ListTransactionsParams) QueryValues() url.Values {
 	}
 
 	for _, v := range p.PaymentTypes {
-		q.Add("payment_types", v)
+		q.Add("payment_types", string(v))
 	}
 
 	for _, v := range p.Statuses {
@@ -661,7 +553,7 @@ type ListTransactionsV21Params struct {
 	// Specifies the order in which the returned results are displayed.
 	Order *string
 	// Filters the returned results by the specified list of payment types used for the transactions.
-	PaymentTypes []string
+	PaymentTypes []shared.PaymentType
 	// Filters the returned results by the specified list of final statuses of the transactions.
 	Statuses []string
 	// Retrieves the transaction resource with the specified transaction code.
@@ -705,7 +597,7 @@ func (p *ListTransactionsV21Params) QueryValues() url.Values {
 	}
 
 	for _, v := range p.PaymentTypes {
-		q.Add("payment_types", v)
+		q.Add("payment_types", string(v))
 	}
 
 	for _, v := range p.Statuses {

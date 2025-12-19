@@ -31,6 +31,26 @@ type AmountEvent float32
 // Attributes: Object attributes that are modifiable only by SumUp applications.
 type Attributes map[string]any
 
+// CardType: Issuing card network of the payment card used for the transaction.
+type CardType string
+
+const (
+	CardTypeAmex         CardType = "AMEX"
+	CardTypeCup          CardType = "CUP"
+	CardTypeDiners       CardType = "DINERS"
+	CardTypeDiscover     CardType = "DISCOVER"
+	CardTypeElo          CardType = "ELO"
+	CardTypeElv          CardType = "ELV"
+	CardTypeHipercard    CardType = "HIPERCARD"
+	CardTypeJcb          CardType = "JCB"
+	CardTypeMaestro      CardType = "MAESTRO"
+	CardTypeMastercard   CardType = "MASTERCARD"
+	CardTypeUnknown      CardType = "UNKNOWN"
+	CardTypeVisa         CardType = "VISA"
+	CardTypeVisaElectron CardType = "VISA_ELECTRON"
+	CardTypeVisaVpay     CardType = "VISA_VPAY"
+)
+
 // Currency: Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount.
 // Currently supported currency values are enumerated above.
 type Currency string
@@ -51,6 +71,38 @@ const (
 	CurrencyRON Currency = "RON"
 	CurrencySEK Currency = "SEK"
 	CurrencyUSD Currency = "USD"
+)
+
+// EntryMode: Entry mode of the payment details.
+type EntryMode string
+
+const (
+	EntryModeApplePay             EntryMode = "APPLE_PAY"
+	EntryModeBancontact           EntryMode = "BANCONTACT"
+	EntryModeBlik                 EntryMode = "BLIK"
+	EntryModeBoleto               EntryMode = "BOLETO"
+	EntryModeChip                 EntryMode = "CHIP"
+	EntryModeContactless          EntryMode = "CONTACTLESS"
+	EntryModeContactlessMagstripe EntryMode = "CONTACTLESS_MAGSTRIPE"
+	EntryModeCustomerEntry        EntryMode = "CUSTOMER_ENTRY"
+	EntryModeDirectDebit          EntryMode = "DIRECT_DEBIT"
+	EntryModeEps                  EntryMode = "EPS"
+	EntryModeGiropay              EntryMode = "GIROPAY"
+	EntryModeGooglePay            EntryMode = "GOOGLE_PAY"
+	EntryModeIdeal                EntryMode = "IDEAL"
+	EntryModeMagstripe            EntryMode = "MAGSTRIPE"
+	EntryModeMagstripeFallback    EntryMode = "MAGSTRIPE_FALLBACK"
+	EntryModeManualEntry          EntryMode = "MANUAL_ENTRY"
+	EntryModeMoto                 EntryMode = "MOTO"
+	EntryModeMybank               EntryMode = "MYBANK"
+	EntryModeNA                   EntryMode = "N/A"
+	EntryModeNone                 EntryMode = "NONE"
+	EntryModeP24                  EntryMode = "P24"
+	EntryModePaypal               EntryMode = "PAYPAL"
+	EntryModePix                  EntryMode = "PIX"
+	EntryModeQrCodePix            EntryMode = "QR_CODE_PIX"
+	EntryModeSatispay             EntryMode = "SATISPAY"
+	EntryModeSofort               EntryMode = "SOFORT"
 )
 
 // Error: Error message structure.
@@ -143,6 +195,23 @@ const (
 // Max properties: 64
 type Metadata map[string]any
 
+// PaymentType: Payment type used for the transaction.
+type PaymentType string
+
+const (
+	PaymentTypeApm         PaymentType = "APM"
+	PaymentTypeBalance     PaymentType = "BALANCE"
+	PaymentTypeBitcoin     PaymentType = "BITCOIN"
+	PaymentTypeBoleto      PaymentType = "BOLETO"
+	PaymentTypeCash        PaymentType = "CASH"
+	PaymentTypeDirectDebit PaymentType = "DIRECT_DEBIT"
+	PaymentTypeEcom        PaymentType = "ECOM"
+	PaymentTypeMoto        PaymentType = "MOTO"
+	PaymentTypePos         PaymentType = "POS"
+	PaymentTypeRecurring   PaymentType = "RECURRING"
+	PaymentTypeUnknown     PaymentType = "UNKNOWN"
+)
+
 // PersonalDetails: Personal details for the customer.
 type PersonalDetails struct {
 	// Profile's personal address information.
@@ -205,7 +274,7 @@ type TransactionBase struct {
 	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Payment type used for the transaction.
-	PaymentType *TransactionBasePaymentType `json:"payment_type,omitempty"`
+	PaymentType *PaymentType `json:"payment_type,omitempty"`
 	// Current status of the transaction.
 	Status *TransactionBaseStatus `json:"status,omitempty"`
 	// Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
@@ -213,23 +282,6 @@ type TransactionBase struct {
 	// Transaction code returned by the acquirer/processing entity after processing the transaction.
 	TransactionCode *string `json:"transaction_code,omitempty"`
 }
-
-// TransactionBasePaymentType: Payment type used for the transaction.
-type TransactionBasePaymentType string
-
-const (
-	TransactionBasePaymentTypeApm         TransactionBasePaymentType = "APM"
-	TransactionBasePaymentTypeBalance     TransactionBasePaymentType = "BALANCE"
-	TransactionBasePaymentTypeBitcoin     TransactionBasePaymentType = "BITCOIN"
-	TransactionBasePaymentTypeBoleto      TransactionBasePaymentType = "BOLETO"
-	TransactionBasePaymentTypeCash        TransactionBasePaymentType = "CASH"
-	TransactionBasePaymentTypeDirectDebit TransactionBasePaymentType = "DIRECT_DEBIT"
-	TransactionBasePaymentTypeEcom        TransactionBasePaymentType = "ECOM"
-	TransactionBasePaymentTypeMoto        TransactionBasePaymentType = "MOTO"
-	TransactionBasePaymentTypePos         TransactionBasePaymentType = "POS"
-	TransactionBasePaymentTypeRecurring   TransactionBasePaymentType = "RECURRING"
-	TransactionBasePaymentTypeUnknown     TransactionBasePaymentType = "UNKNOWN"
-)
 
 // TransactionBaseStatus: Current status of the transaction.
 type TransactionBaseStatus string
@@ -246,7 +298,7 @@ type TransactionCheckoutInfo struct {
 	// Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
 	AuthCode *string `json:"auth_code,omitempty"`
 	// Entry mode of the payment details.
-	EntryMode *TransactionCheckoutInfoEntryMode `json:"entry_mode,omitempty"`
+	EntryMode *EntryMode `json:"entry_mode,omitempty"`
 	// Internal unique ID of the transaction on the SumUp platform.
 	// Format: int64
 	InternalId *int64 `json:"internal_id,omitempty"`
@@ -257,38 +309,6 @@ type TransactionCheckoutInfo struct {
 	// Amount of the applicable VAT (out of the total transaction amount).
 	VatAmount *float32 `json:"vat_amount,omitempty"`
 }
-
-// TransactionCheckoutInfoEntryMode: Entry mode of the payment details.
-type TransactionCheckoutInfoEntryMode string
-
-const (
-	TransactionCheckoutInfoEntryModeApplePay             TransactionCheckoutInfoEntryMode = "APPLE_PAY"
-	TransactionCheckoutInfoEntryModeBancontact           TransactionCheckoutInfoEntryMode = "BANCONTACT"
-	TransactionCheckoutInfoEntryModeBlik                 TransactionCheckoutInfoEntryMode = "BLIK"
-	TransactionCheckoutInfoEntryModeBoleto               TransactionCheckoutInfoEntryMode = "BOLETO"
-	TransactionCheckoutInfoEntryModeChip                 TransactionCheckoutInfoEntryMode = "CHIP"
-	TransactionCheckoutInfoEntryModeContactless          TransactionCheckoutInfoEntryMode = "CONTACTLESS"
-	TransactionCheckoutInfoEntryModeContactlessMagstripe TransactionCheckoutInfoEntryMode = "CONTACTLESS_MAGSTRIPE"
-	TransactionCheckoutInfoEntryModeCustomerEntry        TransactionCheckoutInfoEntryMode = "CUSTOMER_ENTRY"
-	TransactionCheckoutInfoEntryModeDirectDebit          TransactionCheckoutInfoEntryMode = "DIRECT_DEBIT"
-	TransactionCheckoutInfoEntryModeEps                  TransactionCheckoutInfoEntryMode = "EPS"
-	TransactionCheckoutInfoEntryModeGiropay              TransactionCheckoutInfoEntryMode = "GIROPAY"
-	TransactionCheckoutInfoEntryModeGooglePay            TransactionCheckoutInfoEntryMode = "GOOGLE_PAY"
-	TransactionCheckoutInfoEntryModeIdeal                TransactionCheckoutInfoEntryMode = "IDEAL"
-	TransactionCheckoutInfoEntryModeMagstripe            TransactionCheckoutInfoEntryMode = "MAGSTRIPE"
-	TransactionCheckoutInfoEntryModeMagstripeFallback    TransactionCheckoutInfoEntryMode = "MAGSTRIPE_FALLBACK"
-	TransactionCheckoutInfoEntryModeManualEntry          TransactionCheckoutInfoEntryMode = "MANUAL_ENTRY"
-	TransactionCheckoutInfoEntryModeMoto                 TransactionCheckoutInfoEntryMode = "MOTO"
-	TransactionCheckoutInfoEntryModeMybank               TransactionCheckoutInfoEntryMode = "MYBANK"
-	TransactionCheckoutInfoEntryModeNA                   TransactionCheckoutInfoEntryMode = "N/A"
-	TransactionCheckoutInfoEntryModeNone                 TransactionCheckoutInfoEntryMode = "NONE"
-	TransactionCheckoutInfoEntryModeP24                  TransactionCheckoutInfoEntryMode = "P24"
-	TransactionCheckoutInfoEntryModePaypal               TransactionCheckoutInfoEntryMode = "PAYPAL"
-	TransactionCheckoutInfoEntryModePix                  TransactionCheckoutInfoEntryMode = "PIX"
-	TransactionCheckoutInfoEntryModeQrCodePix            TransactionCheckoutInfoEntryMode = "QR_CODE_PIX"
-	TransactionCheckoutInfoEntryModeSatispay             TransactionCheckoutInfoEntryMode = "SATISPAY"
-	TransactionCheckoutInfoEntryModeSofort               TransactionCheckoutInfoEntryMode = "SOFORT"
-)
 
 // TransactionId: Unique ID of the transaction.
 type TransactionId string
