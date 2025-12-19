@@ -432,7 +432,7 @@ type ListTransactionsParams struct {
 	// Specifies the order in which the returned results are displayed.
 	Order *string
 	// Filters the returned results by the specified list of payment types used for the transactions.
-	PaymentTypes []PaymentType
+	PaymentTypes []shared.PaymentType
 	// Filters the returned results by the specified list of final statuses of the transactions.
 	Statuses []string
 	// Retrieves the transaction resource with the specified transaction code.
@@ -476,7 +476,7 @@ func (p *ListTransactionsParams) QueryValues() url.Values {
 	}
 
 	for _, v := range p.PaymentTypes {
-		q.Add("payment_types", v)
+		q.Add("payment_types", string(v))
 	}
 
 	for _, v := range p.Statuses {
@@ -553,7 +553,7 @@ type ListTransactionsV21Params struct {
 	// Specifies the order in which the returned results are displayed.
 	Order *string
 	// Filters the returned results by the specified list of payment types used for the transactions.
-	PaymentTypes []PaymentType
+	PaymentTypes []shared.PaymentType
 	// Filters the returned results by the specified list of final statuses of the transactions.
 	Statuses []string
 	// Retrieves the transaction resource with the specified transaction code.
@@ -597,7 +597,7 @@ func (p *ListTransactionsV21Params) QueryValues() url.Values {
 	}
 
 	for _, v := range p.PaymentTypes {
-		q.Add("payment_types", v)
+		q.Add("payment_types", string(v))
 	}
 
 	for _, v := range p.Statuses {

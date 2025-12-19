@@ -6494,7 +6494,7 @@ type ListTransactionsParams struct {
     // Specifies the order in which the returned results are displayed.
     Order *string
     // Filters the returned results by the specified list of payment types used for the transactions.
-    PaymentTypes []PaymentType
+    PaymentTypes []shared.PaymentType
     // Filters the returned results by the specified list of final statuses of the transactions.
     Statuses []string
     // Retrieves the transaction resource with the specified transaction code.
@@ -6557,7 +6557,7 @@ type ListTransactionsV21Params struct {
     // Specifies the order in which the returned results are displayed.
     Order *string
     // Filters the returned results by the specified list of payment types used for the transactions.
-    PaymentTypes []PaymentType
+    PaymentTypes []shared.PaymentType
     // Filters the returned results by the specified list of final statuses of the transactions.
     Statuses []string
     // Retrieves the transaction resource with the specified transaction code.
