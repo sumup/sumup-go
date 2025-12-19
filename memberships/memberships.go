@@ -93,10 +93,12 @@ type ListMembershipsParams struct {
 	// Filter memberships by the name of the resource the membership is in.
 	ResourceName *string
 	// Filter memberships by the parent of the resource the membership is in.
-	// When filtering by parent both `resource.parent.id` and `resource.parent.type` must be present.
+	// When filtering by parent both `resource.parent.id` and `resource.parent.type` must be present. Pass explicit null
+	// to filter for resources without a parent.
 	ResourceParentId *string
 	// Filter memberships by the parent of the resource the membership is in.
-	// When filtering by parent both `resource.parent.id` and `resource.parent.type` must be present.
+	// When filtering by parent both `resource.parent.id` and `resource.parent.type` must be present. Pass explicit null
+	// to filter for resources without a parent.
 	ResourceParentType *ResourceType
 	// Filter memberships by resource kind.
 	ResourceType *ResourceType

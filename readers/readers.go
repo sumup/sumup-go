@@ -14,6 +14,52 @@ import (
 	"github.com/sumup/sumup-go/shared"
 )
 
+// BadGateway: 502 Bad Gateway
+type BadGateway struct {
+	Errors BadGatewayErrors `json:"errors"`
+}
+
+// BadGatewayErrors is a schema definition.
+type BadGatewayErrors struct {
+	// Fuller message giving context to error
+	Detail string `json:"detail"`
+}
+
+func (e *BadGateway) Error() string {
+	return fmt.Sprintf("errors=%v", e.Errors)
+}
+
+var _ error = (*BadGateway)(nil)
+
+// BadRequest: 400 Bad Request
+type BadRequest struct {
+	Errors BadRequestErrors `json:"errors"`
+}
+
+// BadRequestErrors is a schema definition.
+type BadRequestErrors struct {
+	// Fuller message giving context to error
+	Detail *string `json:"detail,omitempty"`
+	// Key indicating type of error
+	Type BadRequestErrorsType `json:"type"`
+}
+
+// BadRequestErrorsType: Key indicating type of error
+type BadRequestErrorsType string
+
+const (
+	BadRequestErrorsTypeDuplicateHeaders       BadRequestErrorsType = "DUPLICATE_HEADERS"
+	BadRequestErrorsTypeInvalidBearerToken     BadRequestErrorsType = "INVALID_BEARER_TOKEN"
+	BadRequestErrorsTypeInvalidUserAgent       BadRequestErrorsType = "INVALID_USER_AGENT"
+	BadRequestErrorsTypeNotEnoughUnpaidPayouts BadRequestErrorsType = "NOT_ENOUGH_UNPAID_PAYOUTS"
+)
+
+func (e *BadRequest) Error() string {
+	return fmt.Sprintf("errors=%v", e.Errors)
+}
+
+var _ error = (*BadRequest)(nil)
+
 // CreateReaderCheckoutError: Error description
 type CreateReaderCheckoutError struct {
 	Errors CreateReaderCheckoutErrorErrors `json:"errors"`
@@ -182,6 +228,57 @@ func (e *CreateReaderTerminateUnprocessableEntity) Error() string {
 
 var _ error = (*CreateReaderTerminateUnprocessableEntity)(nil)
 
+// GatewayTimeout: 504 Gateway Timeout
+type GatewayTimeout struct {
+	Errors GatewayTimeoutErrors `json:"errors"`
+}
+
+// GatewayTimeoutErrors is a schema definition.
+type GatewayTimeoutErrors struct {
+	// Fuller message giving context to error
+	Detail string `json:"detail"`
+}
+
+func (e *GatewayTimeout) Error() string {
+	return fmt.Sprintf("errors=%v", e.Errors)
+}
+
+var _ error = (*GatewayTimeout)(nil)
+
+// InternalServerError: 500 Internal Server Error
+type InternalServerError struct {
+	Errors InternalServerErrorErrors `json:"errors"`
+}
+
+// InternalServerErrorErrors is a schema definition.
+type InternalServerErrorErrors struct {
+	// Fuller message giving context to error
+	Detail string `json:"detail"`
+}
+
+func (e *InternalServerError) Error() string {
+	return fmt.Sprintf("errors=%v", e.Errors)
+}
+
+var _ error = (*InternalServerError)(nil)
+
+// NotFound: 404 Not Found
+type NotFound struct {
+	Errors NotFoundErrors `json:"errors"`
+}
+
+// NotFoundErrors is a schema definition.
+type NotFoundErrors struct {
+	// Fuller message giving context to error
+	Detail string `json:"detail"`
+}
+
+func (e *NotFound) Error() string {
+	return fmt.Sprintf("errors=%v", e.Errors)
+}
+
+var _ error = (*NotFound)(nil)
+
 // Reader: A physical card reader device that can accept in-person payments.
 type Reader struct {
 	// The timestamp of when the reader was created.
@@ -267,6 +364,38 @@ const (
 	ReaderStatusProcessing ReaderStatus = "processing"
 	ReaderStatusUnknown    ReaderStatus = "unknown"
 )
+
+// StatusResponse: Status of a device
+type StatusResponse struct {
+	Data interface{} `json:"data"`
+}
+
+// Unauthorized: 401 Unauthorized
+type Unauthorized struct {
+	Errors UnauthorizedErrors `json:"errors"`
+}
+
+// UnauthorizedErrors is a schema definition.
+type UnauthorizedErrors struct {
+	// Fuller message giving context to error
+	Detail *string `json:"detail,omitempty"`
+	// Key indicating type of error
+	Type UnauthorizedErrorsType `json:"type"`
+}
+
+// UnauthorizedErrorsType: Key indicating type of error
+type UnauthorizedErrorsType string
+
+const (
+	UnauthorizedErrorsTypeInvalidAccessToken UnauthorizedErrorsType = "INVALID_ACCESS_TOKEN"
+	UnauthorizedErrorsTypeInvalidPassword    UnauthorizedErrorsType = "INVALID_PASSWORD"
+)
+
+func (e *Unauthorized) Error() string {
+	return fmt.Sprintf("errors=%v", e.Errors)
+}
+
+var _ error = (*Unauthorized)(nil)
 
 // CreateReaderBody is a schema definition.
 type CreateReaderBody struct {
@@ -386,6 +515,26 @@ type UpdateReaderBody struct {
 	// Custom human-readable, user-defined name for easier identification of the reader.
 	// Max length: 500
 	Name *ReaderName `json:"name,omitempty"`
+}
+
+// GetReaderStatusParams: query parameters for GetReaderStatus
+type GetReaderStatusParams struct {
+	Accept        string
+	Authorization string
+	ContentType   string
+}
+
+// QueryValues converts [GetReaderStatusParams] into [url.Values].
+func (p *GetReaderStatusParams) QueryValues() url.Values {
+	q := make(url.Values)
+
+	q.Set("Accept", p.Accept)
+
+	q.Set("Authorization", p.Authorization)
+
+	q.Set("Content-Type", p.ContentType)
+
+	return q
 }
 
 // GetReaderParams: query parameters for GetReader
@@ -564,6 +713,91 @@ func (s *ReadersService) TerminateCheckout(ctx context.Context, merchantCode str
 		return &apiErr
 	default:
 		return fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
+}
+
+// GetStatus: Get a Reader Status
+// Provides the last known status for a Reader.
+//
+// This endpoint allows you to retrieve updates from the connected card reader, including the current screen being
+// displayed during the payment process and the device status (battery level, connectivity, and update state).
+//
+// # Supported States
+//
+// * `IDLE` – Reader ready for next transaction
+// * `SELECTING_TIP` – Waiting for tip input
+// * `WAITING_FOR_CARD` – Awaiting card insert/tap
+// * `WAITING_FOR_PIN` – Waiting for PIN entry
+// * `WAITING_FOR_SIGNATURE` – Waiting for customer signature
+// * `UPDATING_FIRMWARE` – Firmware update in progress
+//
+// # Device Status
+//
+// * `ONLINE` – Device connected and operational
+// * `OFFLINE` – Device disconnected (last state persisted)
+//
+// **Note**: If the target device is a Solo, it must be in version 3.3.39.0 or higher.
+func (s *ReadersService) GetStatus(ctx context.Context, merchantCode string, readerId string, params GetReaderStatusParams) (*StatusResponse, error) {
+	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v/status", merchantCode, readerId)
+
+	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
+	if err != nil {
+		return nil, fmt.Errorf("error building request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v StatusResponse
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
+
+		return &v, nil
+	case http.StatusBadRequest:
+		var apiErr BadRequest
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	case http.StatusUnauthorized:
+		var apiErr Unauthorized
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	case http.StatusNotFound:
+		var apiErr NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	case http.StatusInternalServerError:
+		var apiErr InternalServerError
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	case http.StatusBadGateway:
+		var apiErr BadGateway
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	case http.StatusGatewayTimeout:
+		var apiErr GatewayTimeout
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
 }
 

@@ -218,10 +218,17 @@ type TransactionBase struct {
 type TransactionBasePaymentType string
 
 const (
-	TransactionBasePaymentTypeBoleto    TransactionBasePaymentType = "BOLETO"
-	TransactionBasePaymentTypeEcom      TransactionBasePaymentType = "ECOM"
-	TransactionBasePaymentTypePos       TransactionBasePaymentType = "POS"
-	TransactionBasePaymentTypeRecurring TransactionBasePaymentType = "RECURRING"
+	TransactionBasePaymentTypeApm         TransactionBasePaymentType = "APM"
+	TransactionBasePaymentTypeBalance     TransactionBasePaymentType = "BALANCE"
+	TransactionBasePaymentTypeBitcoin     TransactionBasePaymentType = "BITCOIN"
+	TransactionBasePaymentTypeBoleto      TransactionBasePaymentType = "BOLETO"
+	TransactionBasePaymentTypeCash        TransactionBasePaymentType = "CASH"
+	TransactionBasePaymentTypeDirectDebit TransactionBasePaymentType = "DIRECT_DEBIT"
+	TransactionBasePaymentTypeEcom        TransactionBasePaymentType = "ECOM"
+	TransactionBasePaymentTypeMoto        TransactionBasePaymentType = "MOTO"
+	TransactionBasePaymentTypePos         TransactionBasePaymentType = "POS"
+	TransactionBasePaymentTypeRecurring   TransactionBasePaymentType = "RECURRING"
+	TransactionBasePaymentTypeUnknown     TransactionBasePaymentType = "UNKNOWN"
 )
 
 // TransactionBaseStatus: Current status of the transaction.
@@ -255,8 +262,32 @@ type TransactionCheckoutInfo struct {
 type TransactionCheckoutInfoEntryMode string
 
 const (
-	TransactionCheckoutInfoEntryModeBoleto        TransactionCheckoutInfoEntryMode = "BOLETO"
-	TransactionCheckoutInfoEntryModeCustomerEntry TransactionCheckoutInfoEntryMode = "CUSTOMER_ENTRY"
+	TransactionCheckoutInfoEntryModeApplePay             TransactionCheckoutInfoEntryMode = "APPLE_PAY"
+	TransactionCheckoutInfoEntryModeBancontact           TransactionCheckoutInfoEntryMode = "BANCONTACT"
+	TransactionCheckoutInfoEntryModeBlik                 TransactionCheckoutInfoEntryMode = "BLIK"
+	TransactionCheckoutInfoEntryModeBoleto               TransactionCheckoutInfoEntryMode = "BOLETO"
+	TransactionCheckoutInfoEntryModeChip                 TransactionCheckoutInfoEntryMode = "CHIP"
+	TransactionCheckoutInfoEntryModeContactless          TransactionCheckoutInfoEntryMode = "CONTACTLESS"
+	TransactionCheckoutInfoEntryModeContactlessMagstripe TransactionCheckoutInfoEntryMode = "CONTACTLESS_MAGSTRIPE"
+	TransactionCheckoutInfoEntryModeCustomerEntry        TransactionCheckoutInfoEntryMode = "CUSTOMER_ENTRY"
+	TransactionCheckoutInfoEntryModeDirectDebit          TransactionCheckoutInfoEntryMode = "DIRECT_DEBIT"
+	TransactionCheckoutInfoEntryModeEps                  TransactionCheckoutInfoEntryMode = "EPS"
+	TransactionCheckoutInfoEntryModeGiropay              TransactionCheckoutInfoEntryMode = "GIROPAY"
+	TransactionCheckoutInfoEntryModeGooglePay            TransactionCheckoutInfoEntryMode = "GOOGLE_PAY"
+	TransactionCheckoutInfoEntryModeIdeal                TransactionCheckoutInfoEntryMode = "IDEAL"
+	TransactionCheckoutInfoEntryModeMagstripe            TransactionCheckoutInfoEntryMode = "MAGSTRIPE"
+	TransactionCheckoutInfoEntryModeMagstripeFallback    TransactionCheckoutInfoEntryMode = "MAGSTRIPE_FALLBACK"
+	TransactionCheckoutInfoEntryModeManualEntry          TransactionCheckoutInfoEntryMode = "MANUAL_ENTRY"
+	TransactionCheckoutInfoEntryModeMoto                 TransactionCheckoutInfoEntryMode = "MOTO"
+	TransactionCheckoutInfoEntryModeMybank               TransactionCheckoutInfoEntryMode = "MYBANK"
+	TransactionCheckoutInfoEntryModeNA                   TransactionCheckoutInfoEntryMode = "N/A"
+	TransactionCheckoutInfoEntryModeNone                 TransactionCheckoutInfoEntryMode = "NONE"
+	TransactionCheckoutInfoEntryModeP24                  TransactionCheckoutInfoEntryMode = "P24"
+	TransactionCheckoutInfoEntryModePaypal               TransactionCheckoutInfoEntryMode = "PAYPAL"
+	TransactionCheckoutInfoEntryModePix                  TransactionCheckoutInfoEntryMode = "PIX"
+	TransactionCheckoutInfoEntryModeQrCodePix            TransactionCheckoutInfoEntryMode = "QR_CODE_PIX"
+	TransactionCheckoutInfoEntryModeSatispay             TransactionCheckoutInfoEntryMode = "SATISPAY"
+	TransactionCheckoutInfoEntryModeSofort               TransactionCheckoutInfoEntryMode = "SOFORT"
 )
 
 // TransactionId: Unique ID of the transaction.
