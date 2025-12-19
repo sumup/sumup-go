@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.10.0](https://github.com/sumup/sumup-go/compare/v0.9.0...v0.10.0) (2025-12-19)
+
+
+### Features
+
+* improve enum types and use more shared schemas ([ac13d1e](https://github.com/sumup/sumup-go/commit/ac13d1e122f30052d57a02b8684be3848a508aa8))
+
+
+### Bug Fixes
+
+* reader status call response ([8b2a252](https://github.com/sumup/sumup-go/commit/8b2a2528ff69a2cd9cb5552474db9f8a864df8b3))
+
 ## [0.9.0](https://github.com/sumup/sumup-go/compare/v0.8.0...v0.9.0) (2025-12-02)
 
 
