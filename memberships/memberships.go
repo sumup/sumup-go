@@ -137,7 +137,7 @@ func (p *ListMembershipsParams) QueryValues() url.Values {
 	}
 
 	if p.ResourceParentType != nil {
-		q.Set("resource.parent.type", *p.ResourceParentType)
+		q.Set("resource.parent.type", string(*p.ResourceParentType))
 	}
 
 	if p.ResourceType != nil {
