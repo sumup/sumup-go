@@ -252,10 +252,17 @@ type TransactionFull struct {
 type TransactionFullPaymentType string
 
 const (
-	TransactionFullPaymentTypeBoleto    TransactionFullPaymentType = "BOLETO"
-	TransactionFullPaymentTypeEcom      TransactionFullPaymentType = "ECOM"
-	TransactionFullPaymentTypePos       TransactionFullPaymentType = "POS"
-	TransactionFullPaymentTypeRecurring TransactionFullPaymentType = "RECURRING"
+	TransactionFullPaymentTypeApm         TransactionFullPaymentType = "APM"
+	TransactionFullPaymentTypeBalance     TransactionFullPaymentType = "BALANCE"
+	TransactionFullPaymentTypeBitcoin     TransactionFullPaymentType = "BITCOIN"
+	TransactionFullPaymentTypeBoleto      TransactionFullPaymentType = "BOLETO"
+	TransactionFullPaymentTypeCash        TransactionFullPaymentType = "CASH"
+	TransactionFullPaymentTypeDirectDebit TransactionFullPaymentType = "DIRECT_DEBIT"
+	TransactionFullPaymentTypeEcom        TransactionFullPaymentType = "ECOM"
+	TransactionFullPaymentTypeMoto        TransactionFullPaymentType = "MOTO"
+	TransactionFullPaymentTypePos         TransactionFullPaymentType = "POS"
+	TransactionFullPaymentTypeRecurring   TransactionFullPaymentType = "RECURRING"
+	TransactionFullPaymentTypeUnknown     TransactionFullPaymentType = "UNKNOWN"
 )
 
 // TransactionFullStatus: Current status of the transaction.
@@ -272,8 +279,32 @@ const (
 type TransactionFullEntryMode string
 
 const (
-	TransactionFullEntryModeBoleto        TransactionFullEntryMode = "BOLETO"
-	TransactionFullEntryModeCustomerEntry TransactionFullEntryMode = "CUSTOMER_ENTRY"
+	TransactionFullEntryModeApplePay             TransactionFullEntryMode = "APPLE_PAY"
+	TransactionFullEntryModeBancontact           TransactionFullEntryMode = "BANCONTACT"
+	TransactionFullEntryModeBlik                 TransactionFullEntryMode = "BLIK"
+	TransactionFullEntryModeBoleto               TransactionFullEntryMode = "BOLETO"
+	TransactionFullEntryModeChip                 TransactionFullEntryMode = "CHIP"
+	TransactionFullEntryModeContactless          TransactionFullEntryMode = "CONTACTLESS"
+	TransactionFullEntryModeContactlessMagstripe TransactionFullEntryMode = "CONTACTLESS_MAGSTRIPE"
+	TransactionFullEntryModeCustomerEntry        TransactionFullEntryMode = "CUSTOMER_ENTRY"
+	TransactionFullEntryModeDirectDebit          TransactionFullEntryMode = "DIRECT_DEBIT"
+	TransactionFullEntryModeEps                  TransactionFullEntryMode = "EPS"
+	TransactionFullEntryModeGiropay              TransactionFullEntryMode = "GIROPAY"
+	TransactionFullEntryModeGooglePay            TransactionFullEntryMode = "GOOGLE_PAY"
+	TransactionFullEntryModeIdeal                TransactionFullEntryMode = "IDEAL"
+	TransactionFullEntryModeMagstripe            TransactionFullEntryMode = "MAGSTRIPE"
+	TransactionFullEntryModeMagstripeFallback    TransactionFullEntryMode = "MAGSTRIPE_FALLBACK"
+	TransactionFullEntryModeManualEntry          TransactionFullEntryMode = "MANUAL_ENTRY"
+	TransactionFullEntryModeMoto                 TransactionFullEntryMode = "MOTO"
+	TransactionFullEntryModeMybank               TransactionFullEntryMode = "MYBANK"
+	TransactionFullEntryModeNA                   TransactionFullEntryMode = "N/A"
+	TransactionFullEntryModeNone                 TransactionFullEntryMode = "NONE"
+	TransactionFullEntryModeP24                  TransactionFullEntryMode = "P24"
+	TransactionFullEntryModePaypal               TransactionFullEntryMode = "PAYPAL"
+	TransactionFullEntryModePix                  TransactionFullEntryMode = "PIX"
+	TransactionFullEntryModeQrCodePix            TransactionFullEntryMode = "QR_CODE_PIX"
+	TransactionFullEntryModeSatispay             TransactionFullEntryMode = "SATISPAY"
+	TransactionFullEntryModeSofort               TransactionFullEntryMode = "SOFORT"
 )
 
 // TransactionFullPayoutPlan: Payout plan of the registered user at the time when the transaction was made.
@@ -394,10 +425,17 @@ type TransactionHistory struct {
 type TransactionHistoryPaymentType string
 
 const (
-	TransactionHistoryPaymentTypeBoleto    TransactionHistoryPaymentType = "BOLETO"
-	TransactionHistoryPaymentTypeEcom      TransactionHistoryPaymentType = "ECOM"
-	TransactionHistoryPaymentTypePos       TransactionHistoryPaymentType = "POS"
-	TransactionHistoryPaymentTypeRecurring TransactionHistoryPaymentType = "RECURRING"
+	TransactionHistoryPaymentTypeApm         TransactionHistoryPaymentType = "APM"
+	TransactionHistoryPaymentTypeBalance     TransactionHistoryPaymentType = "BALANCE"
+	TransactionHistoryPaymentTypeBitcoin     TransactionHistoryPaymentType = "BITCOIN"
+	TransactionHistoryPaymentTypeBoleto      TransactionHistoryPaymentType = "BOLETO"
+	TransactionHistoryPaymentTypeCash        TransactionHistoryPaymentType = "CASH"
+	TransactionHistoryPaymentTypeDirectDebit TransactionHistoryPaymentType = "DIRECT_DEBIT"
+	TransactionHistoryPaymentTypeEcom        TransactionHistoryPaymentType = "ECOM"
+	TransactionHistoryPaymentTypeMoto        TransactionHistoryPaymentType = "MOTO"
+	TransactionHistoryPaymentTypePos         TransactionHistoryPaymentType = "POS"
+	TransactionHistoryPaymentTypeRecurring   TransactionHistoryPaymentType = "RECURRING"
+	TransactionHistoryPaymentTypeUnknown     TransactionHistoryPaymentType = "UNKNOWN"
 )
 
 // TransactionHistoryStatus: Current status of the transaction.

@@ -296,7 +296,7 @@ type Checkout struct {
 ```
 
 <a name="CheckoutAccepted"></a>
-## type [CheckoutAccepted](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L206-L209>)
+## type [CheckoutAccepted](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L237-L240>)
 
 CheckoutAccepted: 3DS Response
 
@@ -308,7 +308,7 @@ type CheckoutAccepted struct {
 ```
 
 <a name="CheckoutAcceptedNextStep"></a>
-## type [CheckoutAcceptedNextStep](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L212-L224>)
+## type [CheckoutAcceptedNextStep](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L243-L255>)
 
 CheckoutAcceptedNextStep: Required action processing 3D Secure payments.
 
@@ -329,7 +329,7 @@ type CheckoutAcceptedNextStep struct {
 ```
 
 <a name="CheckoutAcceptedNextStepMechanism"></a>
-## type [CheckoutAcceptedNextStepMechanism](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L227>)
+## type [CheckoutAcceptedNextStepMechanism](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L258>)
 
 CheckoutAcceptedNextStepMechanism is a schema definition.
 
@@ -347,7 +347,7 @@ const (
 ```
 
 <a name="CheckoutAcceptedNextStepPayload"></a>
-## type [CheckoutAcceptedNextStepPayload](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L236-L240>)
+## type [CheckoutAcceptedNextStepPayload](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L267-L271>)
 
 CheckoutAcceptedNextStepPayload: Contains parameters essential for form redirection. Number of object keys and their content can vary.
 
@@ -360,7 +360,7 @@ type CheckoutAcceptedNextStepPayload struct {
 ```
 
 <a name="CheckoutCreateRequest"></a>
-## type [CheckoutCreateRequest](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L243-L289>)
+## type [CheckoutCreateRequest](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L274-L320>)
 
 CheckoutCreateRequest: Details of the payment checkout.
 
@@ -415,7 +415,7 @@ type CheckoutCreateRequest struct {
 ```
 
 <a name="CheckoutCreateRequestPurpose"></a>
-## type [CheckoutCreateRequestPurpose](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L293>)
+## type [CheckoutCreateRequestPurpose](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L324>)
 
 CheckoutCreateRequestPurpose: Purpose of the checkout. Default: CHECKOUT
 
@@ -433,7 +433,7 @@ const (
 ```
 
 <a name="CheckoutCreateRequestStatus"></a>
-## type [CheckoutCreateRequestStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L302>)
+## type [CheckoutCreateRequestStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L333>)
 
 CheckoutCreateRequestStatus: Current status of the checkout. Read only
 
@@ -452,7 +452,7 @@ const (
 ```
 
 <a name="CheckoutCreateRequestTransaction"></a>
-## type [CheckoutCreateRequestTransaction](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L311-L343>)
+## type [CheckoutCreateRequestTransaction](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L342-L374>)
 
 CheckoutCreateRequestTransaction is a schema definition.
 
@@ -493,7 +493,7 @@ type CheckoutCreateRequestTransaction struct {
 ```
 
 <a name="CheckoutCreateRequestTransactionEntryMode"></a>
-## type [CheckoutCreateRequestTransactionEntryMode](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L366>)
+## type [CheckoutCreateRequestTransactionEntryMode](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L404>)
 
 CheckoutCreateRequestTransactionEntryMode: Entry mode of the payment details.
 
@@ -501,17 +501,41 @@ CheckoutCreateRequestTransactionEntryMode: Entry mode of the payment details.
 type CheckoutCreateRequestTransactionEntryMode string
 ```
 
-<a name="CheckoutCreateRequestTransactionEntryModeBoleto"></a>
+<a name="CheckoutCreateRequestTransactionEntryModeApplePay"></a>
 
 ```go
 const (
-    CheckoutCreateRequestTransactionEntryModeBoleto        CheckoutCreateRequestTransactionEntryMode = "BOLETO"
-    CheckoutCreateRequestTransactionEntryModeCustomerEntry CheckoutCreateRequestTransactionEntryMode = "CUSTOMER_ENTRY"
+    CheckoutCreateRequestTransactionEntryModeApplePay             CheckoutCreateRequestTransactionEntryMode = "APPLE_PAY"
+    CheckoutCreateRequestTransactionEntryModeBancontact           CheckoutCreateRequestTransactionEntryMode = "BANCONTACT"
+    CheckoutCreateRequestTransactionEntryModeBlik                 CheckoutCreateRequestTransactionEntryMode = "BLIK"
+    CheckoutCreateRequestTransactionEntryModeBoleto               CheckoutCreateRequestTransactionEntryMode = "BOLETO"
+    CheckoutCreateRequestTransactionEntryModeChip                 CheckoutCreateRequestTransactionEntryMode = "CHIP"
+    CheckoutCreateRequestTransactionEntryModeContactless          CheckoutCreateRequestTransactionEntryMode = "CONTACTLESS"
+    CheckoutCreateRequestTransactionEntryModeContactlessMagstripe CheckoutCreateRequestTransactionEntryMode = "CONTACTLESS_MAGSTRIPE"
+    CheckoutCreateRequestTransactionEntryModeCustomerEntry        CheckoutCreateRequestTransactionEntryMode = "CUSTOMER_ENTRY"
+    CheckoutCreateRequestTransactionEntryModeDirectDebit          CheckoutCreateRequestTransactionEntryMode = "DIRECT_DEBIT"
+    CheckoutCreateRequestTransactionEntryModeEps                  CheckoutCreateRequestTransactionEntryMode = "EPS"
+    CheckoutCreateRequestTransactionEntryModeGiropay              CheckoutCreateRequestTransactionEntryMode = "GIROPAY"
+    CheckoutCreateRequestTransactionEntryModeGooglePay            CheckoutCreateRequestTransactionEntryMode = "GOOGLE_PAY"
+    CheckoutCreateRequestTransactionEntryModeIdeal                CheckoutCreateRequestTransactionEntryMode = "IDEAL"
+    CheckoutCreateRequestTransactionEntryModeMagstripe            CheckoutCreateRequestTransactionEntryMode = "MAGSTRIPE"
+    CheckoutCreateRequestTransactionEntryModeMagstripeFallback    CheckoutCreateRequestTransactionEntryMode = "MAGSTRIPE_FALLBACK"
+    CheckoutCreateRequestTransactionEntryModeManualEntry          CheckoutCreateRequestTransactionEntryMode = "MANUAL_ENTRY"
+    CheckoutCreateRequestTransactionEntryModeMoto                 CheckoutCreateRequestTransactionEntryMode = "MOTO"
+    CheckoutCreateRequestTransactionEntryModeMybank               CheckoutCreateRequestTransactionEntryMode = "MYBANK"
+    CheckoutCreateRequestTransactionEntryModeNA                   CheckoutCreateRequestTransactionEntryMode = "N/A"
+    CheckoutCreateRequestTransactionEntryModeNone                 CheckoutCreateRequestTransactionEntryMode = "NONE"
+    CheckoutCreateRequestTransactionEntryModeP24                  CheckoutCreateRequestTransactionEntryMode = "P24"
+    CheckoutCreateRequestTransactionEntryModePaypal               CheckoutCreateRequestTransactionEntryMode = "PAYPAL"
+    CheckoutCreateRequestTransactionEntryModePix                  CheckoutCreateRequestTransactionEntryMode = "PIX"
+    CheckoutCreateRequestTransactionEntryModeQrCodePix            CheckoutCreateRequestTransactionEntryMode = "QR_CODE_PIX"
+    CheckoutCreateRequestTransactionEntryModeSatispay             CheckoutCreateRequestTransactionEntryMode = "SATISPAY"
+    CheckoutCreateRequestTransactionEntryModeSofort               CheckoutCreateRequestTransactionEntryMode = "SOFORT"
 )
 ```
 
 <a name="CheckoutCreateRequestTransactionPaymentType"></a>
-## type [CheckoutCreateRequestTransactionPaymentType](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L346>)
+## type [CheckoutCreateRequestTransactionPaymentType](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L377>)
 
 CheckoutCreateRequestTransactionPaymentType: Payment type used for the transaction.
 
@@ -519,19 +543,26 @@ CheckoutCreateRequestTransactionPaymentType: Payment type used for the transacti
 type CheckoutCreateRequestTransactionPaymentType string
 ```
 
-<a name="CheckoutCreateRequestTransactionPaymentTypeBoleto"></a>
+<a name="CheckoutCreateRequestTransactionPaymentTypeApm"></a>
 
 ```go
 const (
-    CheckoutCreateRequestTransactionPaymentTypeBoleto    CheckoutCreateRequestTransactionPaymentType = "BOLETO"
-    CheckoutCreateRequestTransactionPaymentTypeEcom      CheckoutCreateRequestTransactionPaymentType = "ECOM"
-    CheckoutCreateRequestTransactionPaymentTypePos       CheckoutCreateRequestTransactionPaymentType = "POS"
-    CheckoutCreateRequestTransactionPaymentTypeRecurring CheckoutCreateRequestTransactionPaymentType = "RECURRING"
+    CheckoutCreateRequestTransactionPaymentTypeApm         CheckoutCreateRequestTransactionPaymentType = "APM"
+    CheckoutCreateRequestTransactionPaymentTypeBalance     CheckoutCreateRequestTransactionPaymentType = "BALANCE"
+    CheckoutCreateRequestTransactionPaymentTypeBitcoin     CheckoutCreateRequestTransactionPaymentType = "BITCOIN"
+    CheckoutCreateRequestTransactionPaymentTypeBoleto      CheckoutCreateRequestTransactionPaymentType = "BOLETO"
+    CheckoutCreateRequestTransactionPaymentTypeCash        CheckoutCreateRequestTransactionPaymentType = "CASH"
+    CheckoutCreateRequestTransactionPaymentTypeDirectDebit CheckoutCreateRequestTransactionPaymentType = "DIRECT_DEBIT"
+    CheckoutCreateRequestTransactionPaymentTypeEcom        CheckoutCreateRequestTransactionPaymentType = "ECOM"
+    CheckoutCreateRequestTransactionPaymentTypeMoto        CheckoutCreateRequestTransactionPaymentType = "MOTO"
+    CheckoutCreateRequestTransactionPaymentTypePos         CheckoutCreateRequestTransactionPaymentType = "POS"
+    CheckoutCreateRequestTransactionPaymentTypeRecurring   CheckoutCreateRequestTransactionPaymentType = "RECURRING"
+    CheckoutCreateRequestTransactionPaymentTypeUnknown     CheckoutCreateRequestTransactionPaymentType = "UNKNOWN"
 )
 ```
 
 <a name="CheckoutCreateRequestTransactionStatus"></a>
-## type [CheckoutCreateRequestTransactionStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L356>)
+## type [CheckoutCreateRequestTransactionStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L394>)
 
 CheckoutCreateRequestTransactionStatus: Current status of the transaction.
 
@@ -571,7 +602,7 @@ const (
 ```
 
 <a name="CheckoutSuccess"></a>
-## type [CheckoutSuccess](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L374-L421>)
+## type [CheckoutSuccess](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L436-L483>)
 
 CheckoutSuccess is a schema definition.
 
@@ -627,7 +658,7 @@ type CheckoutSuccess struct {
 ```
 
 <a name="CheckoutSuccessPaymentInstrument"></a>
-## type [CheckoutSuccessPaymentInstrument](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L497-L500>)
+## type [CheckoutSuccessPaymentInstrument](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L590-L593>)
 
 CheckoutSuccessPaymentInstrument: Object containing token information for the specified payment instrument
 
@@ -639,7 +670,7 @@ type CheckoutSuccessPaymentInstrument struct {
 ```
 
 <a name="CheckoutSuccessStatus"></a>
-## type [CheckoutSuccessStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L424>)
+## type [CheckoutSuccessStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L486>)
 
 CheckoutSuccessStatus: Current status of the checkout.
 
@@ -659,7 +690,7 @@ const (
 ```
 
 <a name="CheckoutSuccessTransaction"></a>
-## type [CheckoutSuccessTransaction](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L434-L466>)
+## type [CheckoutSuccessTransaction](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L496-L528>)
 
 CheckoutSuccessTransaction is a schema definition.
 
@@ -700,7 +731,7 @@ type CheckoutSuccessTransaction struct {
 ```
 
 <a name="CheckoutSuccessTransactionEntryMode"></a>
-## type [CheckoutSuccessTransactionEntryMode](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L489>)
+## type [CheckoutSuccessTransactionEntryMode](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L558>)
 
 CheckoutSuccessTransactionEntryMode: Entry mode of the payment details.
 
@@ -708,17 +739,41 @@ CheckoutSuccessTransactionEntryMode: Entry mode of the payment details.
 type CheckoutSuccessTransactionEntryMode string
 ```
 
-<a name="CheckoutSuccessTransactionEntryModeBoleto"></a>
+<a name="CheckoutSuccessTransactionEntryModeApplePay"></a>
 
 ```go
 const (
-    CheckoutSuccessTransactionEntryModeBoleto        CheckoutSuccessTransactionEntryMode = "BOLETO"
-    CheckoutSuccessTransactionEntryModeCustomerEntry CheckoutSuccessTransactionEntryMode = "CUSTOMER_ENTRY"
+    CheckoutSuccessTransactionEntryModeApplePay             CheckoutSuccessTransactionEntryMode = "APPLE_PAY"
+    CheckoutSuccessTransactionEntryModeBancontact           CheckoutSuccessTransactionEntryMode = "BANCONTACT"
+    CheckoutSuccessTransactionEntryModeBlik                 CheckoutSuccessTransactionEntryMode = "BLIK"
+    CheckoutSuccessTransactionEntryModeBoleto               CheckoutSuccessTransactionEntryMode = "BOLETO"
+    CheckoutSuccessTransactionEntryModeChip                 CheckoutSuccessTransactionEntryMode = "CHIP"
+    CheckoutSuccessTransactionEntryModeContactless          CheckoutSuccessTransactionEntryMode = "CONTACTLESS"
+    CheckoutSuccessTransactionEntryModeContactlessMagstripe CheckoutSuccessTransactionEntryMode = "CONTACTLESS_MAGSTRIPE"
+    CheckoutSuccessTransactionEntryModeCustomerEntry        CheckoutSuccessTransactionEntryMode = "CUSTOMER_ENTRY"
+    CheckoutSuccessTransactionEntryModeDirectDebit          CheckoutSuccessTransactionEntryMode = "DIRECT_DEBIT"
+    CheckoutSuccessTransactionEntryModeEps                  CheckoutSuccessTransactionEntryMode = "EPS"
+    CheckoutSuccessTransactionEntryModeGiropay              CheckoutSuccessTransactionEntryMode = "GIROPAY"
+    CheckoutSuccessTransactionEntryModeGooglePay            CheckoutSuccessTransactionEntryMode = "GOOGLE_PAY"
+    CheckoutSuccessTransactionEntryModeIdeal                CheckoutSuccessTransactionEntryMode = "IDEAL"
+    CheckoutSuccessTransactionEntryModeMagstripe            CheckoutSuccessTransactionEntryMode = "MAGSTRIPE"
+    CheckoutSuccessTransactionEntryModeMagstripeFallback    CheckoutSuccessTransactionEntryMode = "MAGSTRIPE_FALLBACK"
+    CheckoutSuccessTransactionEntryModeManualEntry          CheckoutSuccessTransactionEntryMode = "MANUAL_ENTRY"
+    CheckoutSuccessTransactionEntryModeMoto                 CheckoutSuccessTransactionEntryMode = "MOTO"
+    CheckoutSuccessTransactionEntryModeMybank               CheckoutSuccessTransactionEntryMode = "MYBANK"
+    CheckoutSuccessTransactionEntryModeNA                   CheckoutSuccessTransactionEntryMode = "N/A"
+    CheckoutSuccessTransactionEntryModeNone                 CheckoutSuccessTransactionEntryMode = "NONE"
+    CheckoutSuccessTransactionEntryModeP24                  CheckoutSuccessTransactionEntryMode = "P24"
+    CheckoutSuccessTransactionEntryModePaypal               CheckoutSuccessTransactionEntryMode = "PAYPAL"
+    CheckoutSuccessTransactionEntryModePix                  CheckoutSuccessTransactionEntryMode = "PIX"
+    CheckoutSuccessTransactionEntryModeQrCodePix            CheckoutSuccessTransactionEntryMode = "QR_CODE_PIX"
+    CheckoutSuccessTransactionEntryModeSatispay             CheckoutSuccessTransactionEntryMode = "SATISPAY"
+    CheckoutSuccessTransactionEntryModeSofort               CheckoutSuccessTransactionEntryMode = "SOFORT"
 )
 ```
 
 <a name="CheckoutSuccessTransactionPaymentType"></a>
-## type [CheckoutSuccessTransactionPaymentType](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L469>)
+## type [CheckoutSuccessTransactionPaymentType](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L531>)
 
 CheckoutSuccessTransactionPaymentType: Payment type used for the transaction.
 
@@ -726,19 +781,26 @@ CheckoutSuccessTransactionPaymentType: Payment type used for the transaction.
 type CheckoutSuccessTransactionPaymentType string
 ```
 
-<a name="CheckoutSuccessTransactionPaymentTypeBoleto"></a>
+<a name="CheckoutSuccessTransactionPaymentTypeApm"></a>
 
 ```go
 const (
-    CheckoutSuccessTransactionPaymentTypeBoleto    CheckoutSuccessTransactionPaymentType = "BOLETO"
-    CheckoutSuccessTransactionPaymentTypeEcom      CheckoutSuccessTransactionPaymentType = "ECOM"
-    CheckoutSuccessTransactionPaymentTypePos       CheckoutSuccessTransactionPaymentType = "POS"
-    CheckoutSuccessTransactionPaymentTypeRecurring CheckoutSuccessTransactionPaymentType = "RECURRING"
+    CheckoutSuccessTransactionPaymentTypeApm         CheckoutSuccessTransactionPaymentType = "APM"
+    CheckoutSuccessTransactionPaymentTypeBalance     CheckoutSuccessTransactionPaymentType = "BALANCE"
+    CheckoutSuccessTransactionPaymentTypeBitcoin     CheckoutSuccessTransactionPaymentType = "BITCOIN"
+    CheckoutSuccessTransactionPaymentTypeBoleto      CheckoutSuccessTransactionPaymentType = "BOLETO"
+    CheckoutSuccessTransactionPaymentTypeCash        CheckoutSuccessTransactionPaymentType = "CASH"
+    CheckoutSuccessTransactionPaymentTypeDirectDebit CheckoutSuccessTransactionPaymentType = "DIRECT_DEBIT"
+    CheckoutSuccessTransactionPaymentTypeEcom        CheckoutSuccessTransactionPaymentType = "ECOM"
+    CheckoutSuccessTransactionPaymentTypeMoto        CheckoutSuccessTransactionPaymentType = "MOTO"
+    CheckoutSuccessTransactionPaymentTypePos         CheckoutSuccessTransactionPaymentType = "POS"
+    CheckoutSuccessTransactionPaymentTypeRecurring   CheckoutSuccessTransactionPaymentType = "RECURRING"
+    CheckoutSuccessTransactionPaymentTypeUnknown     CheckoutSuccessTransactionPaymentType = "UNKNOWN"
 )
 ```
 
 <a name="CheckoutSuccessTransactionStatus"></a>
-## type [CheckoutSuccessTransactionStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L479>)
+## type [CheckoutSuccessTransactionStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L548>)
 
 CheckoutSuccessTransactionStatus: Current status of the transaction.
 
@@ -799,7 +861,7 @@ type CheckoutTransaction struct {
 ```
 
 <a name="CheckoutTransactionEntryMode"></a>
-## type [CheckoutTransactionEntryMode](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L198>)
+## type [CheckoutTransactionEntryMode](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L205>)
 
 CheckoutTransactionEntryMode: Entry mode of the payment details.
 
@@ -807,12 +869,36 @@ CheckoutTransactionEntryMode: Entry mode of the payment details.
 type CheckoutTransactionEntryMode string
 ```
 
-<a name="CheckoutTransactionEntryModeBoleto"></a>
+<a name="CheckoutTransactionEntryModeApplePay"></a>
 
 ```go
 const (
-    CheckoutTransactionEntryModeBoleto        CheckoutTransactionEntryMode = "BOLETO"
-    CheckoutTransactionEntryModeCustomerEntry CheckoutTransactionEntryMode = "CUSTOMER_ENTRY"
+    CheckoutTransactionEntryModeApplePay             CheckoutTransactionEntryMode = "APPLE_PAY"
+    CheckoutTransactionEntryModeBancontact           CheckoutTransactionEntryMode = "BANCONTACT"
+    CheckoutTransactionEntryModeBlik                 CheckoutTransactionEntryMode = "BLIK"
+    CheckoutTransactionEntryModeBoleto               CheckoutTransactionEntryMode = "BOLETO"
+    CheckoutTransactionEntryModeChip                 CheckoutTransactionEntryMode = "CHIP"
+    CheckoutTransactionEntryModeContactless          CheckoutTransactionEntryMode = "CONTACTLESS"
+    CheckoutTransactionEntryModeContactlessMagstripe CheckoutTransactionEntryMode = "CONTACTLESS_MAGSTRIPE"
+    CheckoutTransactionEntryModeCustomerEntry        CheckoutTransactionEntryMode = "CUSTOMER_ENTRY"
+    CheckoutTransactionEntryModeDirectDebit          CheckoutTransactionEntryMode = "DIRECT_DEBIT"
+    CheckoutTransactionEntryModeEps                  CheckoutTransactionEntryMode = "EPS"
+    CheckoutTransactionEntryModeGiropay              CheckoutTransactionEntryMode = "GIROPAY"
+    CheckoutTransactionEntryModeGooglePay            CheckoutTransactionEntryMode = "GOOGLE_PAY"
+    CheckoutTransactionEntryModeIdeal                CheckoutTransactionEntryMode = "IDEAL"
+    CheckoutTransactionEntryModeMagstripe            CheckoutTransactionEntryMode = "MAGSTRIPE"
+    CheckoutTransactionEntryModeMagstripeFallback    CheckoutTransactionEntryMode = "MAGSTRIPE_FALLBACK"
+    CheckoutTransactionEntryModeManualEntry          CheckoutTransactionEntryMode = "MANUAL_ENTRY"
+    CheckoutTransactionEntryModeMoto                 CheckoutTransactionEntryMode = "MOTO"
+    CheckoutTransactionEntryModeMybank               CheckoutTransactionEntryMode = "MYBANK"
+    CheckoutTransactionEntryModeNA                   CheckoutTransactionEntryMode = "N/A"
+    CheckoutTransactionEntryModeNone                 CheckoutTransactionEntryMode = "NONE"
+    CheckoutTransactionEntryModeP24                  CheckoutTransactionEntryMode = "P24"
+    CheckoutTransactionEntryModePaypal               CheckoutTransactionEntryMode = "PAYPAL"
+    CheckoutTransactionEntryModePix                  CheckoutTransactionEntryMode = "PIX"
+    CheckoutTransactionEntryModeQrCodePix            CheckoutTransactionEntryMode = "QR_CODE_PIX"
+    CheckoutTransactionEntryModeSatispay             CheckoutTransactionEntryMode = "SATISPAY"
+    CheckoutTransactionEntryModeSofort               CheckoutTransactionEntryMode = "SOFORT"
 )
 ```
 
@@ -825,19 +911,26 @@ CheckoutTransactionPaymentType: Payment type used for the transaction.
 type CheckoutTransactionPaymentType string
 ```
 
-<a name="CheckoutTransactionPaymentTypeBoleto"></a>
+<a name="CheckoutTransactionPaymentTypeApm"></a>
 
 ```go
 const (
-    CheckoutTransactionPaymentTypeBoleto    CheckoutTransactionPaymentType = "BOLETO"
-    CheckoutTransactionPaymentTypeEcom      CheckoutTransactionPaymentType = "ECOM"
-    CheckoutTransactionPaymentTypePos       CheckoutTransactionPaymentType = "POS"
-    CheckoutTransactionPaymentTypeRecurring CheckoutTransactionPaymentType = "RECURRING"
+    CheckoutTransactionPaymentTypeApm         CheckoutTransactionPaymentType = "APM"
+    CheckoutTransactionPaymentTypeBalance     CheckoutTransactionPaymentType = "BALANCE"
+    CheckoutTransactionPaymentTypeBitcoin     CheckoutTransactionPaymentType = "BITCOIN"
+    CheckoutTransactionPaymentTypeBoleto      CheckoutTransactionPaymentType = "BOLETO"
+    CheckoutTransactionPaymentTypeCash        CheckoutTransactionPaymentType = "CASH"
+    CheckoutTransactionPaymentTypeDirectDebit CheckoutTransactionPaymentType = "DIRECT_DEBIT"
+    CheckoutTransactionPaymentTypeEcom        CheckoutTransactionPaymentType = "ECOM"
+    CheckoutTransactionPaymentTypeMoto        CheckoutTransactionPaymentType = "MOTO"
+    CheckoutTransactionPaymentTypePos         CheckoutTransactionPaymentType = "POS"
+    CheckoutTransactionPaymentTypeRecurring   CheckoutTransactionPaymentType = "RECURRING"
+    CheckoutTransactionPaymentTypeUnknown     CheckoutTransactionPaymentType = "UNKNOWN"
 )
 ```
 
 <a name="CheckoutTransactionStatus"></a>
-## type [CheckoutTransactionStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L188>)
+## type [CheckoutTransactionStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L195>)
 
 CheckoutTransactionStatus: Current status of the transaction.
 
@@ -857,7 +950,7 @@ const (
 ```
 
 <a name="CheckoutsService"></a>
-## type [CheckoutsService](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L840-L842>)
+## type [CheckoutsService](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L964-L966>)
 
 
 
@@ -868,7 +961,7 @@ type CheckoutsService struct {
 ```
 
 <a name="NewCheckoutsService"></a>
-### func [NewCheckoutsService](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L844>)
+### func [NewCheckoutsService](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L968>)
 
 ```go
 func NewCheckoutsService(c *client.Client) *CheckoutsService
@@ -877,7 +970,7 @@ func NewCheckoutsService(c *client.Client) *CheckoutsService
 
 
 <a name="CheckoutsService.Create"></a>
-### func \(\*CheckoutsService\) [Create](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L886>)
+### func \(\*CheckoutsService\) [Create](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L1010>)
 
 ```go
 func (s *CheckoutsService) Create(ctx context.Context, body CreateCheckoutBody) (*Checkout, error)
@@ -890,7 +983,7 @@ For 3DS checkouts, add the \`redirect\_url\` parameter to your request body sche
 Follow by processing a checkout to charge the provided payment instrument.
 
 <a name="CheckoutsService.Deactivate"></a>
-### func \(\*CheckoutsService\) [Deactivate](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L976>)
+### func \(\*CheckoutsService\) [Deactivate](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L1100>)
 
 ```go
 func (s *CheckoutsService) Deactivate(ctx context.Context, iD string) (*Checkout, error)
@@ -899,7 +992,7 @@ func (s *CheckoutsService) Deactivate(ctx context.Context, iD string) (*Checkout
 Deactivate: Deactivate a checkout Deactivates an identified checkout resource. If the checkout has already been processed it can not be deactivated.
 
 <a name="CheckoutsService.Get"></a>
-### func \(\*CheckoutsService\) [Get](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L1022>)
+### func \(\*CheckoutsService\) [Get](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L1146>)
 
 ```go
 func (s *CheckoutsService) Get(ctx context.Context, iD string) (*CheckoutSuccess, error)
@@ -908,7 +1001,7 @@ func (s *CheckoutsService) Get(ctx context.Context, iD string) (*CheckoutSuccess
 Get: Retrieve a checkout Retrieves an identified checkout resource. Use this request after processing a checkout to confirm its status and inform the end user respectively.
 
 <a name="CheckoutsService.List"></a>
-### func \(\*CheckoutsService\) [List](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L850>)
+### func \(\*CheckoutsService\) [List](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L974>)
 
 ```go
 func (s *CheckoutsService) List(ctx context.Context, params ListCheckoutsParams) (*ListCheckouts200Response, error)
@@ -917,7 +1010,7 @@ func (s *CheckoutsService) List(ctx context.Context, params ListCheckoutsParams)
 List: List checkouts Lists created checkout resources according to the applied \`checkout\_reference\`.
 
 <a name="CheckoutsService.ListAvailablePaymentMethods"></a>
-### func \(\*CheckoutsService\) [ListAvailablePaymentMethods](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L938>)
+### func \(\*CheckoutsService\) [ListAvailablePaymentMethods](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L1062>)
 
 ```go
 func (s *CheckoutsService) ListAvailablePaymentMethods(ctx context.Context, merchantCode string, params GetPaymentMethodsParams) (*GetPaymentMethods200Response, error)
@@ -926,7 +1019,7 @@ func (s *CheckoutsService) ListAvailablePaymentMethods(ctx context.Context, merc
 ListAvailablePaymentMethods: Get available payment methods Get payment methods available for the given merchant to use with a checkout.
 
 <a name="CheckoutsService.Process"></a>
-### func \(\*CheckoutsService\) [Process](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L1063>)
+### func \(\*CheckoutsService\) [Process](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L1187>)
 
 ```go
 func (s *CheckoutsService) Process(ctx context.Context, iD string, body ProcessCheckoutBody) (*ProcessCheckoutResponse, error)
@@ -937,7 +1030,7 @@ Process: Process a checkout Processing a checkout will attempt to charge the pro
 Follow this request with \`Retrieve a checkout\` to confirm its status.
 
 <a name="CreateCheckoutBody"></a>
-## type [CreateCheckoutBody](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L593-L639>)
+## type [CreateCheckoutBody](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L686-L732>)
 
 CreateCheckoutBody: Details of the payment checkout.
 
@@ -992,7 +1085,7 @@ type CreateCheckoutBody struct {
 ```
 
 <a name="CreateCheckoutBodyPurpose"></a>
-## type [CreateCheckoutBodyPurpose](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L643>)
+## type [CreateCheckoutBodyPurpose](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L736>)
 
 CreateCheckoutBodyPurpose: Purpose of the checkout. Default: CHECKOUT
 
@@ -1010,7 +1103,7 @@ const (
 ```
 
 <a name="CreateCheckoutBodyStatus"></a>
-## type [CreateCheckoutBodyStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L652>)
+## type [CreateCheckoutBodyStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L745>)
 
 CreateCheckoutBodyStatus: Current status of the checkout. Read only
 
@@ -1029,7 +1122,7 @@ const (
 ```
 
 <a name="CreateCheckoutBodyTransaction"></a>
-## type [CreateCheckoutBodyTransaction](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L661-L693>)
+## type [CreateCheckoutBodyTransaction](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L754-L786>)
 
 CreateCheckoutBodyTransaction is a schema definition.
 
@@ -1070,7 +1163,7 @@ type CreateCheckoutBodyTransaction struct {
 ```
 
 <a name="CreateCheckoutBodyTransactionEntryMode"></a>
-## type [CreateCheckoutBodyTransactionEntryMode](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L716>)
+## type [CreateCheckoutBodyTransactionEntryMode](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L816>)
 
 CreateCheckoutBodyTransactionEntryMode: Entry mode of the payment details.
 
@@ -1078,17 +1171,41 @@ CreateCheckoutBodyTransactionEntryMode: Entry mode of the payment details.
 type CreateCheckoutBodyTransactionEntryMode string
 ```
 
-<a name="CreateCheckoutBodyTransactionEntryModeBoleto"></a>
+<a name="CreateCheckoutBodyTransactionEntryModeApplePay"></a>
 
 ```go
 const (
-    CreateCheckoutBodyTransactionEntryModeBoleto        CreateCheckoutBodyTransactionEntryMode = "BOLETO"
-    CreateCheckoutBodyTransactionEntryModeCustomerEntry CreateCheckoutBodyTransactionEntryMode = "CUSTOMER_ENTRY"
+    CreateCheckoutBodyTransactionEntryModeApplePay             CreateCheckoutBodyTransactionEntryMode = "APPLE_PAY"
+    CreateCheckoutBodyTransactionEntryModeBancontact           CreateCheckoutBodyTransactionEntryMode = "BANCONTACT"
+    CreateCheckoutBodyTransactionEntryModeBlik                 CreateCheckoutBodyTransactionEntryMode = "BLIK"
+    CreateCheckoutBodyTransactionEntryModeBoleto               CreateCheckoutBodyTransactionEntryMode = "BOLETO"
+    CreateCheckoutBodyTransactionEntryModeChip                 CreateCheckoutBodyTransactionEntryMode = "CHIP"
+    CreateCheckoutBodyTransactionEntryModeContactless          CreateCheckoutBodyTransactionEntryMode = "CONTACTLESS"
+    CreateCheckoutBodyTransactionEntryModeContactlessMagstripe CreateCheckoutBodyTransactionEntryMode = "CONTACTLESS_MAGSTRIPE"
+    CreateCheckoutBodyTransactionEntryModeCustomerEntry        CreateCheckoutBodyTransactionEntryMode = "CUSTOMER_ENTRY"
+    CreateCheckoutBodyTransactionEntryModeDirectDebit          CreateCheckoutBodyTransactionEntryMode = "DIRECT_DEBIT"
+    CreateCheckoutBodyTransactionEntryModeEps                  CreateCheckoutBodyTransactionEntryMode = "EPS"
+    CreateCheckoutBodyTransactionEntryModeGiropay              CreateCheckoutBodyTransactionEntryMode = "GIROPAY"
+    CreateCheckoutBodyTransactionEntryModeGooglePay            CreateCheckoutBodyTransactionEntryMode = "GOOGLE_PAY"
+    CreateCheckoutBodyTransactionEntryModeIdeal                CreateCheckoutBodyTransactionEntryMode = "IDEAL"
+    CreateCheckoutBodyTransactionEntryModeMagstripe            CreateCheckoutBodyTransactionEntryMode = "MAGSTRIPE"
+    CreateCheckoutBodyTransactionEntryModeMagstripeFallback    CreateCheckoutBodyTransactionEntryMode = "MAGSTRIPE_FALLBACK"
+    CreateCheckoutBodyTransactionEntryModeManualEntry          CreateCheckoutBodyTransactionEntryMode = "MANUAL_ENTRY"
+    CreateCheckoutBodyTransactionEntryModeMoto                 CreateCheckoutBodyTransactionEntryMode = "MOTO"
+    CreateCheckoutBodyTransactionEntryModeMybank               CreateCheckoutBodyTransactionEntryMode = "MYBANK"
+    CreateCheckoutBodyTransactionEntryModeNA                   CreateCheckoutBodyTransactionEntryMode = "N/A"
+    CreateCheckoutBodyTransactionEntryModeNone                 CreateCheckoutBodyTransactionEntryMode = "NONE"
+    CreateCheckoutBodyTransactionEntryModeP24                  CreateCheckoutBodyTransactionEntryMode = "P24"
+    CreateCheckoutBodyTransactionEntryModePaypal               CreateCheckoutBodyTransactionEntryMode = "PAYPAL"
+    CreateCheckoutBodyTransactionEntryModePix                  CreateCheckoutBodyTransactionEntryMode = "PIX"
+    CreateCheckoutBodyTransactionEntryModeQrCodePix            CreateCheckoutBodyTransactionEntryMode = "QR_CODE_PIX"
+    CreateCheckoutBodyTransactionEntryModeSatispay             CreateCheckoutBodyTransactionEntryMode = "SATISPAY"
+    CreateCheckoutBodyTransactionEntryModeSofort               CreateCheckoutBodyTransactionEntryMode = "SOFORT"
 )
 ```
 
 <a name="CreateCheckoutBodyTransactionPaymentType"></a>
-## type [CreateCheckoutBodyTransactionPaymentType](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L696>)
+## type [CreateCheckoutBodyTransactionPaymentType](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L789>)
 
 CreateCheckoutBodyTransactionPaymentType: Payment type used for the transaction.
 
@@ -1096,19 +1213,26 @@ CreateCheckoutBodyTransactionPaymentType: Payment type used for the transaction.
 type CreateCheckoutBodyTransactionPaymentType string
 ```
 
-<a name="CreateCheckoutBodyTransactionPaymentTypeBoleto"></a>
+<a name="CreateCheckoutBodyTransactionPaymentTypeApm"></a>
 
 ```go
 const (
-    CreateCheckoutBodyTransactionPaymentTypeBoleto    CreateCheckoutBodyTransactionPaymentType = "BOLETO"
-    CreateCheckoutBodyTransactionPaymentTypeEcom      CreateCheckoutBodyTransactionPaymentType = "ECOM"
-    CreateCheckoutBodyTransactionPaymentTypePos       CreateCheckoutBodyTransactionPaymentType = "POS"
-    CreateCheckoutBodyTransactionPaymentTypeRecurring CreateCheckoutBodyTransactionPaymentType = "RECURRING"
+    CreateCheckoutBodyTransactionPaymentTypeApm         CreateCheckoutBodyTransactionPaymentType = "APM"
+    CreateCheckoutBodyTransactionPaymentTypeBalance     CreateCheckoutBodyTransactionPaymentType = "BALANCE"
+    CreateCheckoutBodyTransactionPaymentTypeBitcoin     CreateCheckoutBodyTransactionPaymentType = "BITCOIN"
+    CreateCheckoutBodyTransactionPaymentTypeBoleto      CreateCheckoutBodyTransactionPaymentType = "BOLETO"
+    CreateCheckoutBodyTransactionPaymentTypeCash        CreateCheckoutBodyTransactionPaymentType = "CASH"
+    CreateCheckoutBodyTransactionPaymentTypeDirectDebit CreateCheckoutBodyTransactionPaymentType = "DIRECT_DEBIT"
+    CreateCheckoutBodyTransactionPaymentTypeEcom        CreateCheckoutBodyTransactionPaymentType = "ECOM"
+    CreateCheckoutBodyTransactionPaymentTypeMoto        CreateCheckoutBodyTransactionPaymentType = "MOTO"
+    CreateCheckoutBodyTransactionPaymentTypePos         CreateCheckoutBodyTransactionPaymentType = "POS"
+    CreateCheckoutBodyTransactionPaymentTypeRecurring   CreateCheckoutBodyTransactionPaymentType = "RECURRING"
+    CreateCheckoutBodyTransactionPaymentTypeUnknown     CreateCheckoutBodyTransactionPaymentType = "UNKNOWN"
 )
 ```
 
 <a name="CreateCheckoutBodyTransactionStatus"></a>
-## type [CreateCheckoutBodyTransactionStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L706>)
+## type [CreateCheckoutBodyTransactionStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L806>)
 
 CreateCheckoutBodyTransactionStatus: Current status of the transaction.
 
@@ -1128,7 +1252,7 @@ const (
 ```
 
 <a name="DetailsError"></a>
-## type [DetailsError](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L503-L511>)
+## type [DetailsError](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L596-L604>)
 
 DetailsError: Error message structure.
 
@@ -1145,7 +1269,7 @@ type DetailsError struct {
 ```
 
 <a name="DetailsError.Error"></a>
-### func \(\*DetailsError\) [Error](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L519>)
+### func \(\*DetailsError\) [Error](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L612>)
 
 ```go
 func (e *DetailsError) Error() string
@@ -1154,7 +1278,7 @@ func (e *DetailsError) Error() string
 
 
 <a name="DetailsErrorFailedConstraint"></a>
-## type [DetailsErrorFailedConstraint](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L514-L517>)
+## type [DetailsErrorFailedConstraint](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L607-L610>)
 
 DetailsErrorFailedConstraint is a schema definition.
 
@@ -1166,7 +1290,7 @@ type DetailsErrorFailedConstraint struct {
 ```
 
 <a name="ErrorExtended"></a>
-## type [ErrorExtended](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L526-L535>)
+## type [ErrorExtended](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L619-L628>)
 
 ErrorExtended is a schema definition.
 
@@ -1184,7 +1308,7 @@ type ErrorExtended struct {
 ```
 
 <a name="ErrorExtended.Error"></a>
-### func \(\*ErrorExtended\) [Error](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L537>)
+### func \(\*ErrorExtended\) [Error](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L630>)
 
 ```go
 func (e *ErrorExtended) Error() string
@@ -1193,7 +1317,7 @@ func (e *ErrorExtended) Error() string
 
 
 <a name="GetPaymentMethods200Response"></a>
-## type [GetPaymentMethods200Response](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L800-L802>)
+## type [GetPaymentMethods200Response](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L924-L926>)
 
 GetPaymentMethods200Response is a schema definition.
 
@@ -1204,7 +1328,7 @@ type GetPaymentMethods200Response struct {
 ```
 
 <a name="GetPaymentMethods200ResponseAvailablePaymentMethod"></a>
-## type [GetPaymentMethods200ResponseAvailablePaymentMethod](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L805-L808>)
+## type [GetPaymentMethods200ResponseAvailablePaymentMethod](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L929-L932>)
 
 GetPaymentMethods200ResponseAvailablePaymentMethod is a schema definition.
 
@@ -1216,7 +1340,7 @@ type GetPaymentMethods200ResponseAvailablePaymentMethod struct {
 ```
 
 <a name="GetPaymentMethodsParams"></a>
-## type [GetPaymentMethodsParams](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L773-L779>)
+## type [GetPaymentMethodsParams](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L897-L903>)
 
 GetPaymentMethodsParams: query parameters for GetPaymentMethods
 
@@ -1231,7 +1355,7 @@ type GetPaymentMethodsParams struct {
 ```
 
 <a name="GetPaymentMethodsParams.QueryValues"></a>
-### func \(\*GetPaymentMethodsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L782>)
+### func \(\*GetPaymentMethodsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L906>)
 
 ```go
 func (p *GetPaymentMethodsParams) QueryValues() url.Values
@@ -1240,7 +1364,7 @@ func (p *GetPaymentMethodsParams) QueryValues() url.Values
 QueryValues converts [GetPaymentMethodsParams](<#GetPaymentMethodsParams>) into \[url.Values\].
 
 <a name="ListCheckouts200Response"></a>
-## type [ListCheckouts200Response](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L797>)
+## type [ListCheckouts200Response](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L921>)
 
 ListCheckouts200Response is a schema definition.
 
@@ -1249,7 +1373,7 @@ type ListCheckouts200Response []CheckoutSuccess
 ```
 
 <a name="ListCheckoutsParams"></a>
-## type [ListCheckoutsParams](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L756-L759>)
+## type [ListCheckoutsParams](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L880-L883>)
 
 ListCheckoutsParams: query parameters for ListCheckouts
 
@@ -1261,7 +1385,7 @@ type ListCheckoutsParams struct {
 ```
 
 <a name="ListCheckoutsParams.QueryValues"></a>
-### func \(\*ListCheckoutsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L762>)
+### func \(\*ListCheckoutsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L886>)
 
 ```go
 func (p *ListCheckoutsParams) QueryValues() url.Values
@@ -1270,7 +1394,7 @@ func (p *ListCheckoutsParams) QueryValues() url.Values
 QueryValues converts [ListCheckoutsParams](<#ListCheckoutsParams>) into \[url.Values\].
 
 <a name="MandatePayload"></a>
-## type [MandatePayload](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L544-L551>)
+## type [MandatePayload](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L637-L644>)
 
 MandatePayload: Mandate is passed when a card is to be tokenized
 
@@ -1286,7 +1410,7 @@ type MandatePayload struct {
 ```
 
 <a name="MandatePayloadType"></a>
-## type [MandatePayloadType](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L554>)
+## type [MandatePayloadType](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L647>)
 
 MandatePayloadType: Indicates the mandate type
 
@@ -1303,7 +1427,7 @@ const (
 ```
 
 <a name="ProcessCheckout"></a>
-## type [ProcessCheckout](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L561-L579>)
+## type [ProcessCheckout](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L654-L672>)
 
 ProcessCheckout: Details of the payment instrument for processing the checkout.
 
@@ -1330,7 +1454,7 @@ type ProcessCheckout struct {
 ```
 
 <a name="ProcessCheckout400Response"></a>
-## type [ProcessCheckout400Response](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L811>)
+## type [ProcessCheckout400Response](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L935>)
 
 ProcessCheckout400Response is a schema definition.
 
@@ -1339,7 +1463,7 @@ type ProcessCheckout400Response json.RawMessage
 ```
 
 <a name="ProcessCheckout400Response.Error"></a>
-### func \(\*ProcessCheckout400Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L813>)
+### func \(\*ProcessCheckout400Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L937>)
 
 ```go
 func (e *ProcessCheckout400Response) Error() string
@@ -1348,7 +1472,7 @@ func (e *ProcessCheckout400Response) Error() string
 
 
 <a name="ProcessCheckoutBody"></a>
-## type [ProcessCheckoutBody](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L724-L742>)
+## type [ProcessCheckoutBody](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L848-L866>)
 
 ProcessCheckoutBody: Details of the payment instrument for processing the checkout.
 
@@ -1375,7 +1499,7 @@ type ProcessCheckoutBody struct {
 ```
 
 <a name="ProcessCheckoutBodyPaymentType"></a>
-## type [ProcessCheckoutBodyPaymentType](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L745>)
+## type [ProcessCheckoutBodyPaymentType](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L869>)
 
 ProcessCheckoutBodyPaymentType: Describes the payment method used to attempt processing
 
@@ -1396,7 +1520,7 @@ const (
 ```
 
 <a name="ProcessCheckoutPaymentType"></a>
-## type [ProcessCheckoutPaymentType](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L582>)
+## type [ProcessCheckoutPaymentType](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L675>)
 
 ProcessCheckoutPaymentType: Describes the payment method used to attempt processing
 
@@ -1417,7 +1541,7 @@ const (
 ```
 
 <a name="ProcessCheckoutResponse"></a>
-## type [ProcessCheckoutResponse](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L819-L822>)
+## type [ProcessCheckoutResponse](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L943-L946>)
 
 
 
@@ -1429,7 +1553,7 @@ type ProcessCheckoutResponse struct {
 ```
 
 <a name="ProcessCheckoutResponse.AsCheckoutAccepted"></a>
-### func \(\*ProcessCheckoutResponse\) [AsCheckoutAccepted](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L832>)
+### func \(\*ProcessCheckoutResponse\) [AsCheckoutAccepted](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L956>)
 
 ```go
 func (r *ProcessCheckoutResponse) AsCheckoutAccepted() (*CheckoutAccepted, bool)
@@ -1438,7 +1562,7 @@ func (r *ProcessCheckoutResponse) AsCheckoutAccepted() (*CheckoutAccepted, bool)
 
 
 <a name="ProcessCheckoutResponse.AsCheckoutSuccess"></a>
-### func \(\*ProcessCheckoutResponse\) [AsCheckoutSuccess](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L824>)
+### func \(\*ProcessCheckoutResponse\) [AsCheckoutSuccess](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L948>)
 
 ```go
 func (r *ProcessCheckoutResponse) AsCheckoutSuccess() (*CheckoutSuccess, bool)
@@ -2236,7 +2360,7 @@ import "github.com/sumup/sumup-go/memberships"
 
 
 <a name="ListMemberships200Response"></a>
-## type [ListMemberships200Response](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L157-L160>)
+## type [ListMemberships200Response](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L159-L162>)
 
 ListMemberships200Response is a schema definition.
 
@@ -2248,7 +2372,7 @@ type ListMemberships200Response struct {
 ```
 
 <a name="ListMembershipsParams"></a>
-## type [ListMembershipsParams](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L84-L107>)
+## type [ListMembershipsParams](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L84-L109>)
 
 ListMembershipsParams: query parameters for ListMemberships
 
@@ -2265,10 +2389,12 @@ type ListMembershipsParams struct {
     // Filter memberships by the name of the resource the membership is in.
     ResourceName *string
     // Filter memberships by the parent of the resource the membership is in.
-    // When filtering by parent both `resource.parent.id` and `resource.parent.type` must be present.
+    // When filtering by parent both `resource.parent.id` and `resource.parent.type` must be present. Pass explicit null
+    // to filter for resources without a parent.
     ResourceParentId *string
     // Filter memberships by the parent of the resource the membership is in.
-    // When filtering by parent both `resource.parent.id` and `resource.parent.type` must be present.
+    // When filtering by parent both `resource.parent.id` and `resource.parent.type` must be present. Pass explicit null
+    // to filter for resources without a parent.
     ResourceParentType *ResourceType
     // Filter memberships by resource kind.
     ResourceType *ResourceType
@@ -2280,7 +2406,7 @@ type ListMembershipsParams struct {
 ```
 
 <a name="ListMembershipsParams.QueryValues"></a>
-### func \(\*ListMembershipsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L110>)
+### func \(\*ListMembershipsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L112>)
 
 ```go
 func (p *ListMembershipsParams) QueryValues() url.Values
@@ -2359,7 +2485,7 @@ type MembershipResource struct {
 ```
 
 <a name="MembershipsService"></a>
-## type [MembershipsService](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L162-L164>)
+## type [MembershipsService](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L164-L166>)
 
 
 
@@ -2370,7 +2496,7 @@ type MembershipsService struct {
 ```
 
 <a name="NewMembershipsService"></a>
-### func [NewMembershipsService](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L166>)
+### func [NewMembershipsService](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L168>)
 
 ```go
 func NewMembershipsService(c *client.Client) *MembershipsService
@@ -2379,7 +2505,7 @@ func NewMembershipsService(c *client.Client) *MembershipsService
 
 
 <a name="MembershipsService.List"></a>
-### func \(\*MembershipsService\) [List](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L172>)
+### func \(\*MembershipsService\) [List](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L174>)
 
 ```go
 func (s *MembershipsService) List(ctx context.Context, params ListMembershipsParams) (*ListMemberships200Response, error)
@@ -4123,6 +4249,13 @@ import "github.com/sumup/sumup-go/readers"
 
 ## Index
 
+- [type BadGateway](<#BadGateway>)
+  - [func \(e \*BadGateway\) Error\(\) string](<#BadGateway.Error>)
+- [type BadGatewayErrors](<#BadGatewayErrors>)
+- [type BadRequest](<#BadRequest>)
+  - [func \(e \*BadRequest\) Error\(\) string](<#BadRequest.Error>)
+- [type BadRequestErrors](<#BadRequestErrors>)
+- [type BadRequestErrorsType](<#BadRequestErrorsType>)
 - [type CreateReaderBody](<#CreateReaderBody>)
 - [type CreateReaderCheckoutBody](<#CreateReaderCheckoutBody>)
 - [type CreateReaderCheckoutBodyAffiliate](<#CreateReaderCheckoutBodyAffiliate>)
@@ -4148,9 +4281,20 @@ import "github.com/sumup/sumup-go/readers"
 - [type CreateReaderTerminateUnprocessableEntity](<#CreateReaderTerminateUnprocessableEntity>)
   - [func \(e \*CreateReaderTerminateUnprocessableEntity\) Error\(\) string](<#CreateReaderTerminateUnprocessableEntity.Error>)
 - [type CreateReaderTerminateUnprocessableEntityErrors](<#CreateReaderTerminateUnprocessableEntityErrors>)
+- [type GatewayTimeout](<#GatewayTimeout>)
+  - [func \(e \*GatewayTimeout\) Error\(\) string](<#GatewayTimeout.Error>)
+- [type GatewayTimeoutErrors](<#GatewayTimeoutErrors>)
 - [type GetReaderParams](<#GetReaderParams>)
   - [func \(p \*GetReaderParams\) QueryValues\(\) url.Values](<#GetReaderParams.QueryValues>)
+- [type GetReaderStatusParams](<#GetReaderStatusParams>)
+  - [func \(p \*GetReaderStatusParams\) QueryValues\(\) url.Values](<#GetReaderStatusParams.QueryValues>)
+- [type InternalServerError](<#InternalServerError>)
+  - [func \(e \*InternalServerError\) Error\(\) string](<#InternalServerError.Error>)
+- [type InternalServerErrorErrors](<#InternalServerErrorErrors>)
 - [type ListReaders200Response](<#ListReaders200Response>)
+- [type NotFound](<#NotFound>)
+  - [func \(e \*NotFound\) Error\(\) string](<#NotFound.Error>)
+- [type NotFoundErrors](<#NotFoundErrors>)
 - [type Reader](<#Reader>)
 - [type ReaderDevice](<#ReaderDevice>)
 - [type ReaderDeviceModel](<#ReaderDeviceModel>)
@@ -4164,14 +4308,106 @@ import "github.com/sumup/sumup-go/readers"
   - [func \(s \*ReadersService\) CreateCheckout\(ctx context.Context, merchantCode string, readerId string, body CreateReaderCheckoutBody\) \(\*CreateReaderCheckoutResponse, error\)](<#ReadersService.CreateCheckout>)
   - [func \(s \*ReadersService\) Delete\(ctx context.Context, merchantCode string, iD ReaderId\) error](<#ReadersService.Delete>)
   - [func \(s \*ReadersService\) Get\(ctx context.Context, merchantCode string, iD ReaderId, params GetReaderParams\) \(\*Reader, error\)](<#ReadersService.Get>)
+  - [func \(s \*ReadersService\) GetStatus\(ctx context.Context, merchantCode string, readerId string, params GetReaderStatusParams\) \(\*StatusResponse, error\)](<#ReadersService.GetStatus>)
   - [func \(s \*ReadersService\) List\(ctx context.Context, merchantCode string\) \(\*ListReaders200Response, error\)](<#ReadersService.List>)
   - [func \(s \*ReadersService\) TerminateCheckout\(ctx context.Context, merchantCode string, readerId string\) error](<#ReadersService.TerminateCheckout>)
   - [func \(s \*ReadersService\) Update\(ctx context.Context, merchantCode string, iD ReaderId, body UpdateReaderBody\) \(\*Reader, error\)](<#ReadersService.Update>)
+- [type StatusResponse](<#StatusResponse>)
+- [type Unauthorized](<#Unauthorized>)
+  - [func \(e \*Unauthorized\) Error\(\) string](<#Unauthorized.Error>)
+- [type UnauthorizedErrors](<#UnauthorizedErrors>)
+- [type UnauthorizedErrorsType](<#UnauthorizedErrorsType>)
 - [type UpdateReaderBody](<#UpdateReaderBody>)
 
 
+<a name="BadGateway"></a>
+## type [BadGateway](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L18-L20>)
+
+BadGateway: 502 Bad Gateway
+
+```go
+type BadGateway struct {
+    Errors BadGatewayErrors `json:"errors"`
+}
+```
+
+<a name="BadGateway.Error"></a>
+### func \(\*BadGateway\) [Error](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L28>)
+
+```go
+func (e *BadGateway) Error() string
+```
+
+
+
+<a name="BadGatewayErrors"></a>
+## type [BadGatewayErrors](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L23-L26>)
+
+BadGatewayErrors is a schema definition.
+
+```go
+type BadGatewayErrors struct {
+    // Fuller message giving context to error
+    Detail string `json:"detail"`
+}
+```
+
+<a name="BadRequest"></a>
+## type [BadRequest](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L35-L37>)
+
+BadRequest: 400 Bad Request
+
+```go
+type BadRequest struct {
+    Errors BadRequestErrors `json:"errors"`
+}
+```
+
+<a name="BadRequest.Error"></a>
+### func \(\*BadRequest\) [Error](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L57>)
+
+```go
+func (e *BadRequest) Error() string
+```
+
+
+
+<a name="BadRequestErrors"></a>
+## type [BadRequestErrors](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L40-L45>)
+
+BadRequestErrors is a schema definition.
+
+```go
+type BadRequestErrors struct {
+    // Fuller message giving context to error
+    Detail *string `json:"detail,omitempty"`
+    // Key indicating type of error
+    Type BadRequestErrorsType `json:"type"`
+}
+```
+
+<a name="BadRequestErrorsType"></a>
+## type [BadRequestErrorsType](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L48>)
+
+BadRequestErrorsType: Key indicating type of error
+
+```go
+type BadRequestErrorsType string
+```
+
+<a name="BadRequestErrorsTypeDuplicateHeaders"></a>
+
+```go
+const (
+    BadRequestErrorsTypeDuplicateHeaders       BadRequestErrorsType = "DUPLICATE_HEADERS"
+    BadRequestErrorsTypeInvalidBearerToken     BadRequestErrorsType = "INVALID_BEARER_TOKEN"
+    BadRequestErrorsTypeInvalidUserAgent       BadRequestErrorsType = "INVALID_USER_AGENT"
+    BadRequestErrorsTypeNotEnoughUnpaidPayouts BadRequestErrorsType = "NOT_ENOUGH_UNPAID_PAYOUTS"
+)
+```
+
 <a name="CreateReaderBody"></a>
-## type [CreateReaderBody](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L272-L285>)
+## type [CreateReaderBody](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L401-L414>)
 
 CreateReaderBody is a schema definition.
 
@@ -4193,7 +4429,7 @@ type CreateReaderBody struct {
 ```
 
 <a name="CreateReaderCheckoutBody"></a>
-## type [CreateReaderCheckoutBody](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L288-L329>)
+## type [CreateReaderCheckoutBody](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L417-L458>)
 
 CreateReaderCheckoutBody: Reader Checkout
 
@@ -4243,7 +4479,7 @@ type CreateReaderCheckoutBody struct {
 ```
 
 <a name="CreateReaderCheckoutBodyAffiliate"></a>
-## type [CreateReaderCheckoutBodyAffiliate](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L333-L347>)
+## type [CreateReaderCheckoutBodyAffiliate](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L462-L476>)
 
 CreateReaderCheckoutBodyAffiliate: Affiliate metadata for the transaction. It is a field that allow for integrators to track the source of the transaction.
 
@@ -4266,7 +4502,7 @@ type CreateReaderCheckoutBodyAffiliate struct {
 ```
 
 <a name="CreateReaderCheckoutBodyAffiliateTags"></a>
-## type [CreateReaderCheckoutBodyAffiliateTags](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L351>)
+## type [CreateReaderCheckoutBodyAffiliateTags](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L480>)
 
 CreateReaderCheckoutBodyAffiliateTags: Additional metadata for the transaction. It is key\-value object that can be associated with the transaction.
 
@@ -4275,7 +4511,7 @@ type CreateReaderCheckoutBodyAffiliateTags map[string]any
 ```
 
 <a name="CreateReaderCheckoutBodyCardType"></a>
-## type [CreateReaderCheckoutBodyCardType](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L355>)
+## type [CreateReaderCheckoutBodyCardType](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L484>)
 
 CreateReaderCheckoutBodyCardType: The card type of the card used for the transaction. Is is required only for some countries \(e.g: Brazil\).
 
@@ -4293,7 +4529,7 @@ const (
 ```
 
 <a name="CreateReaderCheckoutBodyTotalAmount"></a>
-## type [CreateReaderCheckoutBodyTotalAmount](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L367-L378>)
+## type [CreateReaderCheckoutBodyTotalAmount](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L496-L507>)
 
 CreateReaderCheckoutBodyTotalAmount: Amount structure.
 
@@ -4317,7 +4553,7 @@ type CreateReaderCheckoutBodyTotalAmount struct {
 ```
 
 <a name="CreateReaderCheckoutError"></a>
-## type [CreateReaderCheckoutError](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L18-L20>)
+## type [CreateReaderCheckoutError](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L64-L66>)
 
 CreateReaderCheckoutError: Error description
 
@@ -4328,7 +4564,7 @@ type CreateReaderCheckoutError struct {
 ```
 
 <a name="CreateReaderCheckoutError.Error"></a>
-### func \(\*CreateReaderCheckoutError\) [Error](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L28>)
+### func \(\*CreateReaderCheckoutError\) [Error](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L74>)
 
 ```go
 func (e *CreateReaderCheckoutError) Error() string
@@ -4337,7 +4573,7 @@ func (e *CreateReaderCheckoutError) Error() string
 
 
 <a name="CreateReaderCheckoutErrorErrors"></a>
-## type [CreateReaderCheckoutErrorErrors](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L23-L26>)
+## type [CreateReaderCheckoutErrorErrors](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L69-L72>)
 
 CreateReaderCheckoutErrorErrors is a schema definition.
 
@@ -4349,7 +4585,7 @@ type CreateReaderCheckoutErrorErrors struct {
 ```
 
 <a name="CreateReaderCheckoutRequest"></a>
-## type [CreateReaderCheckoutRequest](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L35-L76>)
+## type [CreateReaderCheckoutRequest](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L81-L122>)
 
 CreateReaderCheckoutRequest: Reader Checkout
 
@@ -4399,7 +4635,7 @@ type CreateReaderCheckoutRequest struct {
 ```
 
 <a name="CreateReaderCheckoutRequestAffiliate"></a>
-## type [CreateReaderCheckoutRequestAffiliate](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L80-L94>)
+## type [CreateReaderCheckoutRequestAffiliate](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L126-L140>)
 
 CreateReaderCheckoutRequestAffiliate: Affiliate metadata for the transaction. It is a field that allow for integrators to track the source of the transaction.
 
@@ -4422,7 +4658,7 @@ type CreateReaderCheckoutRequestAffiliate struct {
 ```
 
 <a name="CreateReaderCheckoutRequestAffiliateTags"></a>
-## type [CreateReaderCheckoutRequestAffiliateTags](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L98>)
+## type [CreateReaderCheckoutRequestAffiliateTags](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L144>)
 
 CreateReaderCheckoutRequestAffiliateTags: Additional metadata for the transaction. It is key\-value object that can be associated with the transaction.
 
@@ -4431,7 +4667,7 @@ type CreateReaderCheckoutRequestAffiliateTags map[string]any
 ```
 
 <a name="CreateReaderCheckoutRequestCardType"></a>
-## type [CreateReaderCheckoutRequestCardType](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L102>)
+## type [CreateReaderCheckoutRequestCardType](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L148>)
 
 CreateReaderCheckoutRequestCardType: The card type of the card used for the transaction. Is is required only for some countries \(e.g: Brazil\).
 
@@ -4449,7 +4685,7 @@ const (
 ```
 
 <a name="CreateReaderCheckoutRequestTotalAmount"></a>
-## type [CreateReaderCheckoutRequestTotalAmount](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L114-L125>)
+## type [CreateReaderCheckoutRequestTotalAmount](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L160-L171>)
 
 CreateReaderCheckoutRequestTotalAmount: Amount structure.
 
@@ -4473,7 +4709,7 @@ type CreateReaderCheckoutRequestTotalAmount struct {
 ```
 
 <a name="CreateReaderCheckoutResponse"></a>
-## type [CreateReaderCheckoutResponse](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L128-L130>)
+## type [CreateReaderCheckoutResponse](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L174-L176>)
 
 CreateReaderCheckoutResponse is a schema definition.
 
@@ -4484,7 +4720,7 @@ type CreateReaderCheckoutResponse struct {
 ```
 
 <a name="CreateReaderCheckoutResponseData"></a>
-## type [CreateReaderCheckoutResponseData](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L133-L138>)
+## type [CreateReaderCheckoutResponseData](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L179-L184>)
 
 CreateReaderCheckoutResponseData is a schema definition.
 
@@ -4498,7 +4734,7 @@ type CreateReaderCheckoutResponseData struct {
 ```
 
 <a name="CreateReaderCheckoutUnprocessableEntity"></a>
-## type [CreateReaderCheckoutUnprocessableEntity](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L141-L143>)
+## type [CreateReaderCheckoutUnprocessableEntity](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L187-L189>)
 
 CreateReaderCheckoutUnprocessableEntity: Unprocessable entity
 
@@ -4509,7 +4745,7 @@ type CreateReaderCheckoutUnprocessableEntity struct {
 ```
 
 <a name="CreateReaderCheckoutUnprocessableEntity.Error"></a>
-### func \(\*CreateReaderCheckoutUnprocessableEntity\) [Error](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L148>)
+### func \(\*CreateReaderCheckoutUnprocessableEntity\) [Error](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L194>)
 
 ```go
 func (e *CreateReaderCheckoutUnprocessableEntity) Error() string
@@ -4518,7 +4754,7 @@ func (e *CreateReaderCheckoutUnprocessableEntity) Error() string
 
 
 <a name="CreateReaderCheckoutUnprocessableEntityErrors"></a>
-## type [CreateReaderCheckoutUnprocessableEntityErrors](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L146>)
+## type [CreateReaderCheckoutUnprocessableEntityErrors](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L192>)
 
 CreateReaderCheckoutUnprocessableEntityErrors is a schema definition.
 
@@ -4527,7 +4763,7 @@ type CreateReaderCheckoutUnprocessableEntityErrors map[string]any
 ```
 
 <a name="CreateReaderTerminateError"></a>
-## type [CreateReaderTerminateError](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L155-L157>)
+## type [CreateReaderTerminateError](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L201-L203>)
 
 CreateReaderTerminateError: Error description
 
@@ -4538,7 +4774,7 @@ type CreateReaderTerminateError struct {
 ```
 
 <a name="CreateReaderTerminateError.Error"></a>
-### func \(\*CreateReaderTerminateError\) [Error](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L165>)
+### func \(\*CreateReaderTerminateError\) [Error](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L211>)
 
 ```go
 func (e *CreateReaderTerminateError) Error() string
@@ -4547,7 +4783,7 @@ func (e *CreateReaderTerminateError) Error() string
 
 
 <a name="CreateReaderTerminateErrorErrors"></a>
-## type [CreateReaderTerminateErrorErrors](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L160-L163>)
+## type [CreateReaderTerminateErrorErrors](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L206-L209>)
 
 CreateReaderTerminateErrorErrors is a schema definition.
 
@@ -4559,7 +4795,7 @@ type CreateReaderTerminateErrorErrors struct {
 ```
 
 <a name="CreateReaderTerminateUnprocessableEntity"></a>
-## type [CreateReaderTerminateUnprocessableEntity](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L172-L174>)
+## type [CreateReaderTerminateUnprocessableEntity](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L218-L220>)
 
 CreateReaderTerminateUnprocessableEntity: Unprocessable entity
 
@@ -4570,7 +4806,7 @@ type CreateReaderTerminateUnprocessableEntity struct {
 ```
 
 <a name="CreateReaderTerminateUnprocessableEntity.Error"></a>
-### func \(\*CreateReaderTerminateUnprocessableEntity\) [Error](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L179>)
+### func \(\*CreateReaderTerminateUnprocessableEntity\) [Error](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L225>)
 
 ```go
 func (e *CreateReaderTerminateUnprocessableEntity) Error() string
@@ -4579,7 +4815,7 @@ func (e *CreateReaderTerminateUnprocessableEntity) Error() string
 
 
 <a name="CreateReaderTerminateUnprocessableEntityErrors"></a>
-## type [CreateReaderTerminateUnprocessableEntityErrors](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L177>)
+## type [CreateReaderTerminateUnprocessableEntityErrors](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L223>)
 
 CreateReaderTerminateUnprocessableEntityErrors is a schema definition.
 
@@ -4587,8 +4823,40 @@ CreateReaderTerminateUnprocessableEntityErrors is a schema definition.
 type CreateReaderTerminateUnprocessableEntityErrors map[string]any
 ```
 
+<a name="GatewayTimeout"></a>
+## type [GatewayTimeout](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L232-L234>)
+
+GatewayTimeout: 504 Gateway Timeout
+
+```go
+type GatewayTimeout struct {
+    Errors GatewayTimeoutErrors `json:"errors"`
+}
+```
+
+<a name="GatewayTimeout.Error"></a>
+### func \(\*GatewayTimeout\) [Error](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L242>)
+
+```go
+func (e *GatewayTimeout) Error() string
+```
+
+
+
+<a name="GatewayTimeoutErrors"></a>
+## type [GatewayTimeoutErrors](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L237-L240>)
+
+GatewayTimeoutErrors is a schema definition.
+
+```go
+type GatewayTimeoutErrors struct {
+    // Fuller message giving context to error
+    Detail string `json:"detail"`
+}
+```
+
 <a name="GetReaderParams"></a>
-## type [GetReaderParams](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L392-L401>)
+## type [GetReaderParams](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L541-L550>)
 
 GetReaderParams: query parameters for GetReader
 
@@ -4606,7 +4874,7 @@ type GetReaderParams struct {
 ```
 
 <a name="GetReaderParams.QueryValues"></a>
-### func \(\*GetReaderParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L404>)
+### func \(\*GetReaderParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L553>)
 
 ```go
 func (p *GetReaderParams) QueryValues() url.Values
@@ -4614,8 +4882,62 @@ func (p *GetReaderParams) QueryValues() url.Values
 
 QueryValues converts [GetReaderParams](<#GetReaderParams>) into \[url.Values\].
 
+<a name="GetReaderStatusParams"></a>
+## type [GetReaderStatusParams](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L521-L525>)
+
+GetReaderStatusParams: query parameters for GetReaderStatus
+
+```go
+type GetReaderStatusParams struct {
+    Accept        string
+    Authorization string
+    ContentType   string
+}
+```
+
+<a name="GetReaderStatusParams.QueryValues"></a>
+### func \(\*GetReaderStatusParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L528>)
+
+```go
+func (p *GetReaderStatusParams) QueryValues() url.Values
+```
+
+QueryValues converts [GetReaderStatusParams](<#GetReaderStatusParams>) into \[url.Values\].
+
+<a name="InternalServerError"></a>
+## type [InternalServerError](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L249-L251>)
+
+InternalServerError: 500 Internal Server Error
+
+```go
+type InternalServerError struct {
+    Errors InternalServerErrorErrors `json:"errors"`
+}
+```
+
+<a name="InternalServerError.Error"></a>
+### func \(\*InternalServerError\) [Error](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L259>)
+
+```go
+func (e *InternalServerError) Error() string
+```
+
+
+
+<a name="InternalServerErrorErrors"></a>
+## type [InternalServerErrorErrors](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L254-L257>)
+
+InternalServerErrorErrors is a schema definition.
+
+```go
+type InternalServerErrorErrors struct {
+    // Fuller message giving context to error
+    Detail string `json:"detail"`
+}
+```
+
 <a name="ListReaders200Response"></a>
-## type [ListReaders200Response](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L415-L417>)
+## type [ListReaders200Response](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L564-L566>)
 
 ListReaders200Response is a schema definition.
 
@@ -4625,8 +4947,40 @@ type ListReaders200Response struct {
 }
 ```
 
+<a name="NotFound"></a>
+## type [NotFound](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L266-L268>)
+
+NotFound: 404 Not Found
+
+```go
+type NotFound struct {
+    Errors NotFoundErrors `json:"errors"`
+}
+```
+
+<a name="NotFound.Error"></a>
+### func \(\*NotFound\) [Error](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L276>)
+
+```go
+func (e *NotFound) Error() string
+```
+
+
+
+<a name="NotFoundErrors"></a>
+## type [NotFoundErrors](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L271-L274>)
+
+NotFoundErrors is a schema definition.
+
+```go
+type NotFoundErrors struct {
+    // Fuller message giving context to error
+    Detail string `json:"detail"`
+}
+```
+
 <a name="Reader"></a>
-## type [Reader](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L186-L217>)
+## type [Reader](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L283-L314>)
 
 Reader: A physical card reader device that can accept in\-person payments.
 
@@ -4666,7 +5020,7 @@ type Reader struct {
 ```
 
 <a name="ReaderDevice"></a>
-## type [ReaderDevice](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L220-L225>)
+## type [ReaderDevice](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L317-L322>)
 
 ReaderDevice: Information about the underlying physical device.
 
@@ -4680,7 +5034,7 @@ type ReaderDevice struct {
 ```
 
 <a name="ReaderDeviceModel"></a>
-## type [ReaderDeviceModel](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L228>)
+## type [ReaderDeviceModel](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L325>)
 
 ReaderDeviceModel: Identifier of the model of the device.
 
@@ -4698,7 +5052,7 @@ const (
 ```
 
 <a name="ReaderId"></a>
-## type [ReaderId](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L242>)
+## type [ReaderId](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L339>)
 
 ReaderId: Unique identifier of the object.
 
@@ -4711,7 +5065,7 @@ type ReaderId string
 ```
 
 <a name="ReaderName"></a>
-## type [ReaderName](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L246>)
+## type [ReaderName](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L343>)
 
 ReaderName: Custom human\-readable, user\-defined name for easier identification of the reader. Max length: 500
 
@@ -4720,7 +5074,7 @@ type ReaderName string
 ```
 
 <a name="ReaderPairingCode"></a>
-## type [ReaderPairingCode](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L252>)
+## type [ReaderPairingCode](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L349>)
 
 ReaderPairingCode: The pairing code is a 8 or 9 character alphanumeric string that is displayed on a SumUp Device after initiating the pairing. It is used to link the physical device to the created pairing. Min length: 8 Max length: 9
 
@@ -4729,7 +5083,7 @@ type ReaderPairingCode string
 ```
 
 <a name="ReaderStatus"></a>
-## type [ReaderStatus](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L262>)
+## type [ReaderStatus](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L359>)
 
 ReaderStatus: The status of the reader object gives information about the current state of the reader.
 
@@ -4753,7 +5107,7 @@ const (
 ```
 
 <a name="ReadersService"></a>
-## type [ReadersService](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L419-L421>)
+## type [ReadersService](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L568-L570>)
 
 
 
@@ -4764,7 +5118,7 @@ type ReadersService struct {
 ```
 
 <a name="NewReadersService"></a>
-### func [NewReadersService](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L423>)
+### func [NewReadersService](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L572>)
 
 ```go
 func NewReadersService(c *client.Client) *ReadersService
@@ -4773,7 +5127,7 @@ func NewReadersService(c *client.Client) *ReadersService
 
 
 <a name="ReadersService.Create"></a>
-### func \(\*ReadersService\) [Create](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L453>)
+### func \(\*ReadersService\) [Create](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L602>)
 
 ```go
 func (s *ReadersService) Create(ctx context.Context, merchantCode string, body CreateReaderBody) (*Reader, error)
@@ -4782,7 +5136,7 @@ func (s *ReadersService) Create(ctx context.Context, merchantCode string, body C
 Create: Create a Reader Create a new Reader for the merchant account.
 
 <a name="ReadersService.CreateCheckout"></a>
-### func \(\*ReadersService\) [CreateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L581>)
+### func \(\*ReadersService\) [CreateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L815>)
 
 ```go
 func (s *ReadersService) CreateCheckout(ctx context.Context, merchantCode string, readerId string, body CreateReaderCheckoutBody) (*CreateReaderCheckoutResponse, error)
@@ -4797,7 +5151,7 @@ There are some caveats when using this endpoint: \* The target device must be on
 \*\*Note\*\*: If the target device is a Solo, it must be in version 3.3.24.3 or higher.
 
 <a name="ReadersService.Delete"></a>
-### func \(\*ReadersService\) [Delete](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L647>)
+### func \(\*ReadersService\) [Delete](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L881>)
 
 ```go
 func (s *ReadersService) Delete(ctx context.Context, merchantCode string, iD ReaderId) error
@@ -4806,7 +5160,7 @@ func (s *ReadersService) Delete(ctx context.Context, merchantCode string, iD Rea
 Delete: Delete a reader Delete a reader.
 
 <a name="ReadersService.Get"></a>
-### func \(\*ReadersService\) [Get](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L673>)
+### func \(\*ReadersService\) [Get](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L907>)
 
 ```go
 func (s *ReadersService) Get(ctx context.Context, merchantCode string, iD ReaderId, params GetReaderParams) (*Reader, error)
@@ -4814,8 +5168,29 @@ func (s *ReadersService) Get(ctx context.Context, merchantCode string, iD Reader
 
 Get: Retrieve a Reader Retrieve a Reader.
 
+<a name="ReadersService.GetStatus"></a>
+### func \(\*ReadersService\) [GetStatus](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L740>)
+
+```go
+func (s *ReadersService) GetStatus(ctx context.Context, merchantCode string, readerId string, params GetReaderStatusParams) (*StatusResponse, error)
+```
+
+GetStatus: Get a Reader Status Provides the last known status for a Reader.
+
+This endpoint allows you to retrieve updates from the connected card reader, including the current screen being displayed during the payment process and the device status \(battery level, connectivity, and update state\).
+
+#### Supported States
+
+\* \`IDLE\` – Reader ready for next transaction \* \`SELECTING\_TIP\` – Waiting for tip input \* \`WAITING\_FOR\_CARD\` – Awaiting card insert/tap \* \`WAITING\_FOR\_PIN\` – Waiting for PIN entry \* \`WAITING\_FOR\_SIGNATURE\` – Waiting for customer signature \* \`UPDATING\_FIRMWARE\` – Firmware update in progress
+
+#### Device Status
+
+\* \`ONLINE\` – Device connected and operational \* \`OFFLINE\` – Device disconnected \(last state persisted\)
+
+\*\*Note\*\*: If the target device is a Solo, it must be in version 3.3.39.0 or higher.
+
 <a name="ReadersService.List"></a>
-### func \(\*ReadersService\) [List](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L429>)
+### func \(\*ReadersService\) [List](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L578>)
 
 ```go
 func (s *ReadersService) List(ctx context.Context, merchantCode string) (*ListReaders200Response, error)
@@ -4824,7 +5199,7 @@ func (s *ReadersService) List(ctx context.Context, merchantCode string) (*ListRe
 List: List Readers List all readers of the merchant.
 
 <a name="ReadersService.TerminateCheckout"></a>
-### func \(\*ReadersService\) [TerminateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L511>)
+### func \(\*ReadersService\) [TerminateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L660>)
 
 ```go
 func (s *ReadersService) TerminateCheckout(ctx context.Context, merchantCode string, readerId string) error
@@ -4841,7 +5216,7 @@ If a transaction is successfully terminated and \`return\_url\` was provided on 
 \*\*Note\*\*: If the target device is a Solo, it must be in version 3.3.28.0 or higher.
 
 <a name="ReadersService.Update"></a>
-### func \(\*ReadersService\) [Update](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L704>)
+### func \(\*ReadersService\) [Update](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L938>)
 
 ```go
 func (s *ReadersService) Update(ctx context.Context, merchantCode string, iD ReaderId, body UpdateReaderBody) (*Reader, error)
@@ -4849,8 +5224,71 @@ func (s *ReadersService) Update(ctx context.Context, merchantCode string, iD Rea
 
 Update: Update a Reader Update a Reader.
 
+<a name="StatusResponse"></a>
+## type [StatusResponse](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L369-L371>)
+
+StatusResponse: Status of a device
+
+```go
+type StatusResponse struct {
+    Data interface{} `json:"data"`
+}
+```
+
+<a name="Unauthorized"></a>
+## type [Unauthorized](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L374-L376>)
+
+Unauthorized: 401 Unauthorized
+
+```go
+type Unauthorized struct {
+    Errors UnauthorizedErrors `json:"errors"`
+}
+```
+
+<a name="Unauthorized.Error"></a>
+### func \(\*Unauthorized\) [Error](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L394>)
+
+```go
+func (e *Unauthorized) Error() string
+```
+
+
+
+<a name="UnauthorizedErrors"></a>
+## type [UnauthorizedErrors](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L379-L384>)
+
+UnauthorizedErrors is a schema definition.
+
+```go
+type UnauthorizedErrors struct {
+    // Fuller message giving context to error
+    Detail *string `json:"detail,omitempty"`
+    // Key indicating type of error
+    Type UnauthorizedErrorsType `json:"type"`
+}
+```
+
+<a name="UnauthorizedErrorsType"></a>
+## type [UnauthorizedErrorsType](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L387>)
+
+UnauthorizedErrorsType: Key indicating type of error
+
+```go
+type UnauthorizedErrorsType string
+```
+
+<a name="UnauthorizedErrorsTypeInvalidAccessToken"></a>
+
+```go
+const (
+    UnauthorizedErrorsTypeInvalidAccessToken UnauthorizedErrorsType = "INVALID_ACCESS_TOKEN"
+    UnauthorizedErrorsTypeInvalidPassword    UnauthorizedErrorsType = "INVALID_PASSWORD"
+)
+```
+
 <a name="UpdateReaderBody"></a>
-## type [UpdateReaderBody](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L381-L389>)
+## type [UpdateReaderBody](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L510-L518>)
 
 UpdateReaderBody is a schema definition.
 
@@ -5762,19 +6200,26 @@ TransactionBasePaymentType: Payment type used for the transaction.
 type TransactionBasePaymentType string
 ```
 
-<a name="TransactionBasePaymentTypeBoleto"></a>
+<a name="TransactionBasePaymentTypeApm"></a>
 
 ```go
 const (
-    TransactionBasePaymentTypeBoleto    TransactionBasePaymentType = "BOLETO"
-    TransactionBasePaymentTypeEcom      TransactionBasePaymentType = "ECOM"
-    TransactionBasePaymentTypePos       TransactionBasePaymentType = "POS"
-    TransactionBasePaymentTypeRecurring TransactionBasePaymentType = "RECURRING"
+    TransactionBasePaymentTypeApm         TransactionBasePaymentType = "APM"
+    TransactionBasePaymentTypeBalance     TransactionBasePaymentType = "BALANCE"
+    TransactionBasePaymentTypeBitcoin     TransactionBasePaymentType = "BITCOIN"
+    TransactionBasePaymentTypeBoleto      TransactionBasePaymentType = "BOLETO"
+    TransactionBasePaymentTypeCash        TransactionBasePaymentType = "CASH"
+    TransactionBasePaymentTypeDirectDebit TransactionBasePaymentType = "DIRECT_DEBIT"
+    TransactionBasePaymentTypeEcom        TransactionBasePaymentType = "ECOM"
+    TransactionBasePaymentTypeMoto        TransactionBasePaymentType = "MOTO"
+    TransactionBasePaymentTypePos         TransactionBasePaymentType = "POS"
+    TransactionBasePaymentTypeRecurring   TransactionBasePaymentType = "RECURRING"
+    TransactionBasePaymentTypeUnknown     TransactionBasePaymentType = "UNKNOWN"
 )
 ```
 
 <a name="TransactionBaseStatus"></a>
-## type [TransactionBaseStatus](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L228>)
+## type [TransactionBaseStatus](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L235>)
 
 TransactionBaseStatus: Current status of the transaction.
 
@@ -5794,7 +6239,7 @@ const (
 ```
 
 <a name="TransactionCheckoutInfo"></a>
-## type [TransactionCheckoutInfo](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L238-L252>)
+## type [TransactionCheckoutInfo](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L245-L259>)
 
 TransactionCheckoutInfo is a schema definition.
 
@@ -5817,7 +6262,7 @@ type TransactionCheckoutInfo struct {
 ```
 
 <a name="TransactionCheckoutInfoEntryMode"></a>
-## type [TransactionCheckoutInfoEntryMode](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L255>)
+## type [TransactionCheckoutInfoEntryMode](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L262>)
 
 TransactionCheckoutInfoEntryMode: Entry mode of the payment details.
 
@@ -5825,17 +6270,41 @@ TransactionCheckoutInfoEntryMode: Entry mode of the payment details.
 type TransactionCheckoutInfoEntryMode string
 ```
 
-<a name="TransactionCheckoutInfoEntryModeBoleto"></a>
+<a name="TransactionCheckoutInfoEntryModeApplePay"></a>
 
 ```go
 const (
-    TransactionCheckoutInfoEntryModeBoleto        TransactionCheckoutInfoEntryMode = "BOLETO"
-    TransactionCheckoutInfoEntryModeCustomerEntry TransactionCheckoutInfoEntryMode = "CUSTOMER_ENTRY"
+    TransactionCheckoutInfoEntryModeApplePay             TransactionCheckoutInfoEntryMode = "APPLE_PAY"
+    TransactionCheckoutInfoEntryModeBancontact           TransactionCheckoutInfoEntryMode = "BANCONTACT"
+    TransactionCheckoutInfoEntryModeBlik                 TransactionCheckoutInfoEntryMode = "BLIK"
+    TransactionCheckoutInfoEntryModeBoleto               TransactionCheckoutInfoEntryMode = "BOLETO"
+    TransactionCheckoutInfoEntryModeChip                 TransactionCheckoutInfoEntryMode = "CHIP"
+    TransactionCheckoutInfoEntryModeContactless          TransactionCheckoutInfoEntryMode = "CONTACTLESS"
+    TransactionCheckoutInfoEntryModeContactlessMagstripe TransactionCheckoutInfoEntryMode = "CONTACTLESS_MAGSTRIPE"
+    TransactionCheckoutInfoEntryModeCustomerEntry        TransactionCheckoutInfoEntryMode = "CUSTOMER_ENTRY"
+    TransactionCheckoutInfoEntryModeDirectDebit          TransactionCheckoutInfoEntryMode = "DIRECT_DEBIT"
+    TransactionCheckoutInfoEntryModeEps                  TransactionCheckoutInfoEntryMode = "EPS"
+    TransactionCheckoutInfoEntryModeGiropay              TransactionCheckoutInfoEntryMode = "GIROPAY"
+    TransactionCheckoutInfoEntryModeGooglePay            TransactionCheckoutInfoEntryMode = "GOOGLE_PAY"
+    TransactionCheckoutInfoEntryModeIdeal                TransactionCheckoutInfoEntryMode = "IDEAL"
+    TransactionCheckoutInfoEntryModeMagstripe            TransactionCheckoutInfoEntryMode = "MAGSTRIPE"
+    TransactionCheckoutInfoEntryModeMagstripeFallback    TransactionCheckoutInfoEntryMode = "MAGSTRIPE_FALLBACK"
+    TransactionCheckoutInfoEntryModeManualEntry          TransactionCheckoutInfoEntryMode = "MANUAL_ENTRY"
+    TransactionCheckoutInfoEntryModeMoto                 TransactionCheckoutInfoEntryMode = "MOTO"
+    TransactionCheckoutInfoEntryModeMybank               TransactionCheckoutInfoEntryMode = "MYBANK"
+    TransactionCheckoutInfoEntryModeNA                   TransactionCheckoutInfoEntryMode = "N/A"
+    TransactionCheckoutInfoEntryModeNone                 TransactionCheckoutInfoEntryMode = "NONE"
+    TransactionCheckoutInfoEntryModeP24                  TransactionCheckoutInfoEntryMode = "P24"
+    TransactionCheckoutInfoEntryModePaypal               TransactionCheckoutInfoEntryMode = "PAYPAL"
+    TransactionCheckoutInfoEntryModePix                  TransactionCheckoutInfoEntryMode = "PIX"
+    TransactionCheckoutInfoEntryModeQrCodePix            TransactionCheckoutInfoEntryMode = "QR_CODE_PIX"
+    TransactionCheckoutInfoEntryModeSatispay             TransactionCheckoutInfoEntryMode = "SATISPAY"
+    TransactionCheckoutInfoEntryModeSofort               TransactionCheckoutInfoEntryMode = "SOFORT"
 )
 ```
 
 <a name="TransactionId"></a>
-## type [TransactionId](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L263>)
+## type [TransactionId](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L294>)
 
 TransactionId: Unique ID of the transaction.
 
@@ -6223,7 +6692,7 @@ type Event struct {
 ```
 
 <a name="GetTransactionParams"></a>
-## type [GetTransactionParams](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L572-L580>)
+## type [GetTransactionParams](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L610-L618>)
 
 GetTransactionParams: query parameters for GetTransaction
 
@@ -6240,7 +6709,7 @@ type GetTransactionParams struct {
 ```
 
 <a name="GetTransactionParams.QueryValues"></a>
-### func \(\*GetTransactionParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L583>)
+### func \(\*GetTransactionParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L621>)
 
 ```go
 func (p *GetTransactionParams) QueryValues() url.Values
@@ -6249,7 +6718,7 @@ func (p *GetTransactionParams) QueryValues() url.Values
 QueryValues converts [GetTransactionParams](<#GetTransactionParams>) into \[url.Values\].
 
 <a name="GetTransactionV21Params"></a>
-## type [GetTransactionV21Params](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L693-L705>)
+## type [GetTransactionV21Params](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L731-L743>)
 
 GetTransactionV21Params: query parameters for GetTransactionV2.1
 
@@ -6270,7 +6739,7 @@ type GetTransactionV21Params struct {
 ```
 
 <a name="GetTransactionV21Params.QueryValues"></a>
-### func \(\*GetTransactionV21Params\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L708>)
+### func \(\*GetTransactionV21Params\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L746>)
 
 ```go
 func (p *GetTransactionV21Params) QueryValues() url.Values
@@ -6337,7 +6806,7 @@ type LinkRefund struct {
 ```
 
 <a name="ListTransactions200Response"></a>
-## type [ListTransactions200Response](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L735-L738>)
+## type [ListTransactions200Response](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L773-L776>)
 
 ListTransactions200Response is a schema definition.
 
@@ -6349,7 +6818,7 @@ type ListTransactions200Response struct {
 ```
 
 <a name="ListTransactionsParams"></a>
-## type [ListTransactionsParams](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L481-L514>)
+## type [ListTransactionsParams](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L519-L552>)
 
 ListTransactionsParams: query parameters for ListTransactions
 
@@ -6391,7 +6860,7 @@ type ListTransactionsParams struct {
 ```
 
 <a name="ListTransactionsParams.QueryValues"></a>
-### func \(\*ListTransactionsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L517>)
+### func \(\*ListTransactionsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L555>)
 
 ```go
 func (p *ListTransactionsParams) QueryValues() url.Values
@@ -6400,7 +6869,7 @@ func (p *ListTransactionsParams) QueryValues() url.Values
 QueryValues converts [ListTransactionsParams](<#ListTransactionsParams>) into \[url.Values\].
 
 <a name="ListTransactionsV21200Response"></a>
-## type [ListTransactionsV21200Response](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L741-L744>)
+## type [ListTransactionsV21200Response](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L779-L782>)
 
 ListTransactionsV21200Response is a schema definition.
 
@@ -6412,7 +6881,7 @@ type ListTransactionsV21200Response struct {
 ```
 
 <a name="ListTransactionsV21Params"></a>
-## type [ListTransactionsV21Params](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L602-L635>)
+## type [ListTransactionsV21Params](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L640-L673>)
 
 ListTransactionsV21Params: query parameters for ListTransactionsV2.1
 
@@ -6454,7 +6923,7 @@ type ListTransactionsV21Params struct {
 ```
 
 <a name="ListTransactionsV21Params.QueryValues"></a>
-### func \(\*ListTransactionsV21Params\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L638>)
+### func \(\*ListTransactionsV21Params\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L676>)
 
 ```go
 func (p *ListTransactionsV21Params) QueryValues() url.Values
@@ -6506,7 +6975,7 @@ type Product struct {
 ```
 
 <a name="RefundTransactionBody"></a>
-## type [RefundTransactionBody](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L474-L478>)
+## type [RefundTransactionBody](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L512-L516>)
 
 RefundTransactionBody: Optional amount for partial refunds of transactions.
 
@@ -6638,7 +7107,7 @@ type TransactionFull struct {
 ```
 
 <a name="TransactionFullEntryMode"></a>
-## type [TransactionFullEntryMode](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L272>)
+## type [TransactionFullEntryMode](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L279>)
 
 TransactionFullEntryMode: Entry mode of the payment details.
 
@@ -6646,17 +7115,41 @@ TransactionFullEntryMode: Entry mode of the payment details.
 type TransactionFullEntryMode string
 ```
 
-<a name="TransactionFullEntryModeBoleto"></a>
+<a name="TransactionFullEntryModeApplePay"></a>
 
 ```go
 const (
-    TransactionFullEntryModeBoleto        TransactionFullEntryMode = "BOLETO"
-    TransactionFullEntryModeCustomerEntry TransactionFullEntryMode = "CUSTOMER_ENTRY"
+    TransactionFullEntryModeApplePay             TransactionFullEntryMode = "APPLE_PAY"
+    TransactionFullEntryModeBancontact           TransactionFullEntryMode = "BANCONTACT"
+    TransactionFullEntryModeBlik                 TransactionFullEntryMode = "BLIK"
+    TransactionFullEntryModeBoleto               TransactionFullEntryMode = "BOLETO"
+    TransactionFullEntryModeChip                 TransactionFullEntryMode = "CHIP"
+    TransactionFullEntryModeContactless          TransactionFullEntryMode = "CONTACTLESS"
+    TransactionFullEntryModeContactlessMagstripe TransactionFullEntryMode = "CONTACTLESS_MAGSTRIPE"
+    TransactionFullEntryModeCustomerEntry        TransactionFullEntryMode = "CUSTOMER_ENTRY"
+    TransactionFullEntryModeDirectDebit          TransactionFullEntryMode = "DIRECT_DEBIT"
+    TransactionFullEntryModeEps                  TransactionFullEntryMode = "EPS"
+    TransactionFullEntryModeGiropay              TransactionFullEntryMode = "GIROPAY"
+    TransactionFullEntryModeGooglePay            TransactionFullEntryMode = "GOOGLE_PAY"
+    TransactionFullEntryModeIdeal                TransactionFullEntryMode = "IDEAL"
+    TransactionFullEntryModeMagstripe            TransactionFullEntryMode = "MAGSTRIPE"
+    TransactionFullEntryModeMagstripeFallback    TransactionFullEntryMode = "MAGSTRIPE_FALLBACK"
+    TransactionFullEntryModeManualEntry          TransactionFullEntryMode = "MANUAL_ENTRY"
+    TransactionFullEntryModeMoto                 TransactionFullEntryMode = "MOTO"
+    TransactionFullEntryModeMybank               TransactionFullEntryMode = "MYBANK"
+    TransactionFullEntryModeNA                   TransactionFullEntryMode = "N/A"
+    TransactionFullEntryModeNone                 TransactionFullEntryMode = "NONE"
+    TransactionFullEntryModeP24                  TransactionFullEntryMode = "P24"
+    TransactionFullEntryModePaypal               TransactionFullEntryMode = "PAYPAL"
+    TransactionFullEntryModePix                  TransactionFullEntryMode = "PIX"
+    TransactionFullEntryModeQrCodePix            TransactionFullEntryMode = "QR_CODE_PIX"
+    TransactionFullEntryModeSatispay             TransactionFullEntryMode = "SATISPAY"
+    TransactionFullEntryModeSofort               TransactionFullEntryMode = "SOFORT"
 )
 ```
 
 <a name="TransactionFullLocation"></a>
-## type [TransactionFullLocation](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L289-L300>)
+## type [TransactionFullLocation](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L320-L331>)
 
 TransactionFullLocation: Details of the payment location as received from the payment terminal.
 
@@ -6684,19 +7177,26 @@ TransactionFullPaymentType: Payment type used for the transaction.
 type TransactionFullPaymentType string
 ```
 
-<a name="TransactionFullPaymentTypeBoleto"></a>
+<a name="TransactionFullPaymentTypeApm"></a>
 
 ```go
 const (
-    TransactionFullPaymentTypeBoleto    TransactionFullPaymentType = "BOLETO"
-    TransactionFullPaymentTypeEcom      TransactionFullPaymentType = "ECOM"
-    TransactionFullPaymentTypePos       TransactionFullPaymentType = "POS"
-    TransactionFullPaymentTypeRecurring TransactionFullPaymentType = "RECURRING"
+    TransactionFullPaymentTypeApm         TransactionFullPaymentType = "APM"
+    TransactionFullPaymentTypeBalance     TransactionFullPaymentType = "BALANCE"
+    TransactionFullPaymentTypeBitcoin     TransactionFullPaymentType = "BITCOIN"
+    TransactionFullPaymentTypeBoleto      TransactionFullPaymentType = "BOLETO"
+    TransactionFullPaymentTypeCash        TransactionFullPaymentType = "CASH"
+    TransactionFullPaymentTypeDirectDebit TransactionFullPaymentType = "DIRECT_DEBIT"
+    TransactionFullPaymentTypeEcom        TransactionFullPaymentType = "ECOM"
+    TransactionFullPaymentTypeMoto        TransactionFullPaymentType = "MOTO"
+    TransactionFullPaymentTypePos         TransactionFullPaymentType = "POS"
+    TransactionFullPaymentTypeRecurring   TransactionFullPaymentType = "RECURRING"
+    TransactionFullPaymentTypeUnknown     TransactionFullPaymentType = "UNKNOWN"
 )
 ```
 
 <a name="TransactionFullPayoutPlan"></a>
-## type [TransactionFullPayoutPlan](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L280>)
+## type [TransactionFullPayoutPlan](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L311>)
 
 TransactionFullPayoutPlan: Payout plan of the registered user at the time when the transaction was made.
 
@@ -6715,7 +7215,7 @@ const (
 ```
 
 <a name="TransactionFullPayoutType"></a>
-## type [TransactionFullPayoutType](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L303>)
+## type [TransactionFullPayoutType](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L334>)
 
 TransactionFullPayoutType: Payout type for the transaction.
 
@@ -6734,7 +7234,7 @@ const (
 ```
 
 <a name="TransactionFullSimplePaymentType"></a>
-## type [TransactionFullSimplePaymentType](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L312>)
+## type [TransactionFullSimplePaymentType](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L343>)
 
 TransactionFullSimplePaymentType: Simple name of the payment type.
 
@@ -6757,7 +7257,7 @@ const (
 ```
 
 <a name="TransactionFullSimpleStatus"></a>
-## type [TransactionFullSimpleStatus](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L325>)
+## type [TransactionFullSimpleStatus](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L356>)
 
 TransactionFullSimpleStatus: Status generated from the processing status and the latest transaction state.
 
@@ -6782,7 +7282,7 @@ const (
 ```
 
 <a name="TransactionFullStatus"></a>
-## type [TransactionFullStatus](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L262>)
+## type [TransactionFullStatus](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L269>)
 
 TransactionFullStatus: Current status of the transaction.
 
@@ -6802,7 +7302,7 @@ const (
 ```
 
 <a name="TransactionFullVerificationMethod"></a>
-## type [TransactionFullVerificationMethod](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L340>)
+## type [TransactionFullVerificationMethod](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L371>)
 
 TransactionFullVerificationMethod: Verification method used for the transaction.
 
@@ -6825,7 +7325,7 @@ const (
 ```
 
 <a name="TransactionHistory"></a>
-## type [TransactionHistory](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L353-L391>)
+## type [TransactionHistory](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L384-L422>)
 
 TransactionHistory is a schema definition.
 
@@ -6872,7 +7372,7 @@ type TransactionHistory struct {
 ```
 
 <a name="TransactionHistoryCardType"></a>
-## type [TransactionHistoryCardType](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L423>)
+## type [TransactionHistoryCardType](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L461>)
 
 TransactionHistoryCardType: Issuing card network of the payment card used for the transaction.
 
@@ -6902,7 +7402,7 @@ const (
 ```
 
 <a name="TransactionHistoryPaymentType"></a>
-## type [TransactionHistoryPaymentType](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L394>)
+## type [TransactionHistoryPaymentType](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L425>)
 
 TransactionHistoryPaymentType: Payment type used for the transaction.
 
@@ -6910,19 +7410,26 @@ TransactionHistoryPaymentType: Payment type used for the transaction.
 type TransactionHistoryPaymentType string
 ```
 
-<a name="TransactionHistoryPaymentTypeBoleto"></a>
+<a name="TransactionHistoryPaymentTypeApm"></a>
 
 ```go
 const (
-    TransactionHistoryPaymentTypeBoleto    TransactionHistoryPaymentType = "BOLETO"
-    TransactionHistoryPaymentTypeEcom      TransactionHistoryPaymentType = "ECOM"
-    TransactionHistoryPaymentTypePos       TransactionHistoryPaymentType = "POS"
-    TransactionHistoryPaymentTypeRecurring TransactionHistoryPaymentType = "RECURRING"
+    TransactionHistoryPaymentTypeApm         TransactionHistoryPaymentType = "APM"
+    TransactionHistoryPaymentTypeBalance     TransactionHistoryPaymentType = "BALANCE"
+    TransactionHistoryPaymentTypeBitcoin     TransactionHistoryPaymentType = "BITCOIN"
+    TransactionHistoryPaymentTypeBoleto      TransactionHistoryPaymentType = "BOLETO"
+    TransactionHistoryPaymentTypeCash        TransactionHistoryPaymentType = "CASH"
+    TransactionHistoryPaymentTypeDirectDebit TransactionHistoryPaymentType = "DIRECT_DEBIT"
+    TransactionHistoryPaymentTypeEcom        TransactionHistoryPaymentType = "ECOM"
+    TransactionHistoryPaymentTypeMoto        TransactionHistoryPaymentType = "MOTO"
+    TransactionHistoryPaymentTypePos         TransactionHistoryPaymentType = "POS"
+    TransactionHistoryPaymentTypeRecurring   TransactionHistoryPaymentType = "RECURRING"
+    TransactionHistoryPaymentTypeUnknown     TransactionHistoryPaymentType = "UNKNOWN"
 )
 ```
 
 <a name="TransactionHistoryPayoutPlan"></a>
-## type [TransactionHistoryPayoutPlan](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L414>)
+## type [TransactionHistoryPayoutPlan](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L452>)
 
 TransactionHistoryPayoutPlan: Payout plan of the registered user at the time when the transaction was made.
 
@@ -6941,7 +7448,7 @@ const (
 ```
 
 <a name="TransactionHistoryStatus"></a>
-## type [TransactionHistoryStatus](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L404>)
+## type [TransactionHistoryStatus](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L442>)
 
 TransactionHistoryStatus: Current status of the transaction.
 
@@ -6961,7 +7468,7 @@ const (
 ```
 
 <a name="TransactionHistoryType"></a>
-## type [TransactionHistoryType](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L443>)
+## type [TransactionHistoryType](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L481>)
 
 TransactionHistoryType: Type of the transaction for the registered user specified in the \`user\` property.
 
@@ -6980,7 +7487,7 @@ const (
 ```
 
 <a name="TransactionMixinHistory"></a>
-## type [TransactionMixinHistory](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L452-L461>)
+## type [TransactionMixinHistory](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L490-L499>)
 
 TransactionMixinHistory is a schema definition.
 
@@ -6998,7 +7505,7 @@ type TransactionMixinHistory struct {
 ```
 
 <a name="TransactionMixinHistoryPayoutPlan"></a>
-## type [TransactionMixinHistoryPayoutPlan](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L465>)
+## type [TransactionMixinHistoryPayoutPlan](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L503>)
 
 TransactionMixinHistoryPayoutPlan: Payout plan of the registered user at the time when the transaction was made.
 
@@ -7017,7 +7524,7 @@ const (
 ```
 
 <a name="TransactionsService"></a>
-## type [TransactionsService](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L746-L748>)
+## type [TransactionsService](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L784-L786>)
 
 
 
@@ -7028,7 +7535,7 @@ type TransactionsService struct {
 ```
 
 <a name="NewTransactionsService"></a>
-### func [NewTransactionsService](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L750>)
+### func [NewTransactionsService](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L788>)
 
 ```go
 func NewTransactionsService(c *client.Client) *TransactionsService
@@ -7037,7 +7544,7 @@ func NewTransactionsService(c *client.Client) *TransactionsService
 
 
 <a name="TransactionsService.Get"></a>
-### func \(\*TransactionsService\) [Get](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L873>)
+### func \(\*TransactionsService\) [Get](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L911>)
 
 ```go
 func (s *TransactionsService) Get(ctx context.Context, merchantCode string, params GetTransactionV21Params) (*TransactionFull, error)
@@ -7052,7 +7559,7 @@ Get: Retrieve a transaction Retrieves the full details of an identified transact
 - \`client\_transaction\_id\`
 
 <a name="TransactionsService.GetDeprecated"></a>
-### func \(\*TransactionsService\) [GetDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L797>)
+### func \(\*TransactionsService\) [GetDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L835>)
 
 ```go
 func (s *TransactionsService) GetDeprecated(ctx context.Context, params GetTransactionParams) (*TransactionFull, error)
@@ -7069,7 +7576,7 @@ GetDeprecated: Retrieve a transaction Retrieves the full details of an identifie
 Deprecated: this operation is deprecated
 
 <a name="TransactionsService.List"></a>
-### func \(\*TransactionsService\) [List](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L835>)
+### func \(\*TransactionsService\) [List](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L873>)
 
 ```go
 func (s *TransactionsService) List(ctx context.Context, merchantCode string, params ListTransactionsV21Params) (*ListTransactionsV21200Response, error)
@@ -7078,7 +7585,7 @@ func (s *TransactionsService) List(ctx context.Context, merchantCode string, par
 List: List transactions Lists detailed history of all transactions associated with the merchant profile.
 
 <a name="TransactionsService.ListDeprecated"></a>
-### func \(\*TransactionsService\) [ListDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L757>)
+### func \(\*TransactionsService\) [ListDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L795>)
 
 ```go
 func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListTransactionsParams) (*ListTransactions200Response, error)
@@ -7087,7 +7594,7 @@ func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListTra
 ListDeprecated: List transactions Lists detailed history of all transactions associated with the merchant profile. Deprecated: this operation is deprecated
 
 <a name="TransactionsService.Refund"></a>
-### func \(\*TransactionsService\) [Refund](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L911>)
+### func \(\*TransactionsService\) [Refund](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L949>)
 
 ```go
 func (s *TransactionsService) Refund(ctx context.Context, txnId string, body RefundTransactionBody) error
