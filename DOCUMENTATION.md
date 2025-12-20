@@ -4901,7 +4901,7 @@ type StatusResponseData struct {
     // Battery level percentage
     // Min: 0
     // Max: 100
-    BatteryLevel *interface{} `json:"battery_level,omitempty"`
+    BatteryLevel *float32 `json:"battery_level,omitempty"`
     // Battery temperature in Celsius
     BatteryTemperature *int `json:"battery_temperature,omitempty"`
     // Type of connection used by the device
