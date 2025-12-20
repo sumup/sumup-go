@@ -13,6 +13,7 @@ import (
 
 	"github.com/sumup/sumup-go/client"
 	"github.com/sumup/sumup-go/internal/ptr"
+	"github.com/sumup/sumup-go/nullable"
 )
 
 // __Required when payment type is `card`.__ Details of the payment card.
@@ -104,7 +105,7 @@ type Checkout struct {
 	Transactions []CheckoutTransaction `json:"transactions,omitempty"`
 	// Date and time of the checkout expiration before which the client application needs to send a processing request.
 	// If no value is present, the checkout does not have an expiration time.
-	ValidUntil *time.Time `json:"valid_until,omitempty"`
+	ValidUntil nullable.Field[time.Time] `json:"valid_until,omitzero"`
 }
 
 // Current status of the checkout.
@@ -244,7 +245,7 @@ type CheckoutCreateRequest struct {
 	Transactions []CheckoutCreateRequestTransaction `json:"transactions,omitempty"`
 	// Date and time of the checkout expiration before which the client application needs to send a processing request.
 	// If no value is present, the checkout does not have an expiration time.
-	ValidUntil *time.Time `json:"valid_until,omitempty"`
+	ValidUntil nullable.Field[time.Time] `json:"valid_until,omitzero"`
 }
 
 // Purpose of the checkout.
@@ -358,7 +359,7 @@ type CheckoutSuccess struct {
 	Transactions []CheckoutSuccessTransaction `json:"transactions,omitempty"`
 	// Date and time of the checkout expiration before which the client application needs to send a processing request.
 	// If no value is present, the checkout does not have an expiration time.
-	ValidUntil *time.Time `json:"valid_until,omitempty"`
+	ValidUntil nullable.Field[time.Time] `json:"valid_until,omitzero"`
 }
 
 // Current status of the checkout.

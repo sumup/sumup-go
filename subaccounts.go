@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/sumup/sumup-go/client"
+	"github.com/sumup/sumup-go/nullable"
 )
 
 // Operator account for a merchant.
@@ -21,8 +22,8 @@ type Operator struct {
 	CreatedAt time.Time `json:"created_at"`
 	Disabled  bool      `json:"disabled"`
 	// Format: int32
-	ID       int32   `json:"id"`
-	Nickname *string `json:"nickname,omitempty"`
+	ID       int32                  `json:"id"`
+	Nickname nullable.Field[string] `json:"nickname,omitzero"`
 	// Permissions assigned to an operator or user.
 	Permissions Permissions `json:"permissions"`
 	// The timestamp of when the operator was last updated.

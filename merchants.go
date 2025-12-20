@@ -12,6 +12,7 @@ import (
 
 	"github.com/sumup/sumup-go/client"
 	"github.com/sumup/sumup-go/datetime"
+	"github.com/sumup/sumup-go/nullable"
 )
 
 // An address somewhere in the world. The address fields used depend on the country conventions. For example, in
@@ -120,7 +121,7 @@ type BasePerson struct {
 	// where the person resides.
 	// Min length: 2
 	// Max length: 2
-	CountryOfResidence *string `json:"country_of_residence,omitempty"`
+	CountryOfResidence nullable.Field[string] `json:"country_of_residence,omitzero"`
 	// The last name(s) of the individual.
 	// Max length: 60
 	FamilyName *string `json:"family_name,omitempty"`
@@ -140,8 +141,8 @@ type BasePerson struct {
 	MiddleName *string `json:"middle_name,omitempty"`
 	// The persons nationality. May be an [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country
 	// code, but legacy data may not conform to this standard.
-	Nationality *string    `json:"nationality,omitempty"`
-	Ownership   *Ownership `json:"ownership,omitempty"`
+	Nationality nullable.Field[string] `json:"nationality,omitzero"`
+	Ownership   *Ownership             `json:"ownership,omitempty"`
 	// A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
 	// Max length: 64
 	PhoneNumber *PhoneNumber `json:"phone_number,omitempty"`
@@ -269,7 +270,7 @@ type Company struct {
 	TradingAddress *Address `json:"trading_address,omitempty"`
 	// HTTP(S) URL of the company's website.
 	// Max length: 255
-	Website *string `json:"website,omitempty"`
+	Website nullable.Field[string] `json:"website,omitzero"`
 }
 
 // CompanyIdentifier is a schema definition.
@@ -432,7 +433,7 @@ type Person struct {
 	// where the person resides.
 	// Min length: 2
 	// Max length: 2
-	CountryOfResidence *string `json:"country_of_residence,omitempty"`
+	CountryOfResidence nullable.Field[string] `json:"country_of_residence,omitzero"`
 	// The last name(s) of the individual.
 	// Max length: 60
 	FamilyName *string `json:"family_name,omitempty"`
@@ -452,8 +453,8 @@ type Person struct {
 	MiddleName *string `json:"middle_name,omitempty"`
 	// The persons nationality. May be an [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country
 	// code, but legacy data may not conform to this standard.
-	Nationality *string    `json:"nationality,omitempty"`
-	Ownership   *Ownership `json:"ownership,omitempty"`
+	Nationality nullable.Field[string] `json:"nationality,omitzero"`
+	Ownership   *Ownership             `json:"ownership,omitempty"`
 	// A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
 	// Max length: 64
 	PhoneNumber *PhoneNumber `json:"phone_number,omitempty"`
