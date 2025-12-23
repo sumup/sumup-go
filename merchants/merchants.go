@@ -158,7 +158,7 @@ type BasePerson struct {
 	// Max items: 1
 	Relationships []string `json:"relationships,omitempty"`
 	// A corresponding identity user ID for the person, if they have a user account.
-	UserId *string `json:"user_id,omitempty"`
+	UserID *string `json:"user_id,omitempty"`
 	// The version of the resource. The version reflects a specific change submitted to the API via one of the `PATCH`
 	// endpoints.
 	Version *Version `json:"version,omitempty"`
@@ -407,7 +407,7 @@ type Merchant struct {
 	// object.
 	Meta Meta `json:"meta,omitempty"`
 	// ID of the organization the merchant belongs to (if any).
-	OrganizationId *string `json:"organization_id,omitempty"`
+	OrganizationID *string `json:"organization_id,omitempty"`
 	// True if the merchant is a sandbox for testing.
 	Sandbox *bool `json:"sandbox,omitempty"`
 	// The date and time when the resource was last updated. This is a string as defined in [RFC 3339, section 5.6](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6).
@@ -496,7 +496,7 @@ type Person struct {
 	// Max items: 1
 	Relationships []string `json:"relationships,omitempty"`
 	// A corresponding identity user ID for the person, if they have a user account.
-	UserId *string `json:"user_id,omitempty"`
+	UserID *string `json:"user_id,omitempty"`
 	// The version of the resource. The version reflects a specific change submitted to the API via one of the `PATCH`
 	// endpoints.
 	Version *Version `json:"version,omitempty"`
@@ -762,8 +762,8 @@ func (s *MerchantsService) Get(ctx context.Context, merchantCode string, params 
 // GetPerson: Retrieve a Person
 // Returns a single person related to the merchant.
 // Persons documentation: https://developer.sumup.com/tools/models/merchant#persons
-func (s *MerchantsService) GetPerson(ctx context.Context, merchantCode string, personId string, params GetPersonParams) (*Person, error) {
-	path := fmt.Sprintf("/v1/merchants/%v/persons/%v", merchantCode, personId)
+func (s *MerchantsService) GetPerson(ctx context.Context, merchantCode string, personID string, params GetPersonParams) (*Person, error) {
+	path := fmt.Sprintf("/v1/merchants/%v/persons/%v", merchantCode, personID)
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {

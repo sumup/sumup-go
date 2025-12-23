@@ -4,7 +4,6 @@ go 1.23.0
 
 require (
 	github.com/getkin/kin-openapi v0.133.0
-	github.com/iancoleman/strcase v0.3.0
 	github.com/lmittmann/tint v1.1.2
 	github.com/urfave/cli/v2 v2.27.7
 )

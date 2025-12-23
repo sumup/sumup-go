@@ -11,40 +11,9 @@ import (
 	"time"
 
 	"github.com/getkin/kin-openapi/openapi3"
-	"github.com/iancoleman/strcase"
 
 	"github.com/sumup/go-sdk-gen/templates"
 )
-
-func init() {
-	configureAcronyms()
-}
-
-// configureAcronyms configures strcase to preserve well-known abbreviations
-// and currency codes in uppercase when converting to PascalCase.
-// We register both lowercase and uppercase variants to ensure uppercase
-// enums are preserved.
-func configureAcronyms() {
-	// Currency codes (ISO 4217)
-	currencies := []string{
-		"eur", "usd", "gbp", "chf", "jpy", "cad", "aud", "nzd", "sek", "nok", "dkk",
-		"pln", "czk", "huf", "ron", "bgn", "hrk", "brl", "clp",
-	}
-	for _, c := range currencies {
-		strcase.ConfigureAcronym(c, strings.ToUpper(c))
-		strcase.ConfigureAcronym(strings.ToUpper(c), strings.ToUpper(c))
-	}
-
-	// Common tech abbreviations
-	abbreviations := []string{
-		"api", "sdk", "http", "https", "url", "uri", "json", "xml", "html", "css",
-		"sql", "tcp", "udp", "dns", "ssl", "tls", "jwt", "uuid", "id",
-	}
-	for _, a := range abbreviations {
-		strcase.ConfigureAcronym(a, strings.ToUpper(a))
-		strcase.ConfigureAcronym(strings.ToUpper(a), strings.ToUpper(a))
-	}
-}
 
 // Builder is an SDK builder. Builder works in two steps:
 // First, it loads the OpenAPI specs and pre-processes them for code generation

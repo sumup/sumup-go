@@ -107,11 +107,11 @@ import "github.com/sumup/sumup-go/checkouts"
 - [type CheckoutsService](<#CheckoutsService>)
   - [func NewCheckoutsService\(c \*client.Client\) \*CheckoutsService](<#NewCheckoutsService>)
   - [func \(s \*CheckoutsService\) Create\(ctx context.Context, body CreateCheckoutBody\) \(\*Checkout, error\)](<#CheckoutsService.Create>)
-  - [func \(s \*CheckoutsService\) Deactivate\(ctx context.Context, iD string\) \(\*Checkout, error\)](<#CheckoutsService.Deactivate>)
-  - [func \(s \*CheckoutsService\) Get\(ctx context.Context, iD string\) \(\*CheckoutSuccess, error\)](<#CheckoutsService.Get>)
+  - [func \(s \*CheckoutsService\) Deactivate\(ctx context.Context, id string\) \(\*Checkout, error\)](<#CheckoutsService.Deactivate>)
+  - [func \(s \*CheckoutsService\) Get\(ctx context.Context, id string\) \(\*CheckoutSuccess, error\)](<#CheckoutsService.Get>)
   - [func \(s \*CheckoutsService\) List\(ctx context.Context, params ListCheckoutsParams\) \(\*ListCheckouts200Response, error\)](<#CheckoutsService.List>)
   - [func \(s \*CheckoutsService\) ListAvailablePaymentMethods\(ctx context.Context, merchantCode string, params GetPaymentMethodsParams\) \(\*GetPaymentMethods200Response, error\)](<#CheckoutsService.ListAvailablePaymentMethods>)
-  - [func \(s \*CheckoutsService\) Process\(ctx context.Context, iD string, body ProcessCheckoutBody\) \(\*ProcessCheckoutResponse, error\)](<#CheckoutsService.Process>)
+  - [func \(s \*CheckoutsService\) Process\(ctx context.Context, id string, body ProcessCheckoutBody\) \(\*ProcessCheckoutResponse, error\)](<#CheckoutsService.Process>)
 - [type CreateCheckoutBody](<#CreateCheckoutBody>)
 - [type CreateCheckoutBodyPurpose](<#CreateCheckoutBodyPurpose>)
 - [type CreateCheckoutBodyStatus](<#CreateCheckoutBodyStatus>)
@@ -228,7 +228,7 @@ type Checkout struct {
     Currency *shared.Currency `json:"currency,omitempty"`
     // Unique identification of a customer. If specified, the checkout session and payment instrument are associated with
     // the referenced customer.
-    CustomerId *string `json:"customer_id,omitempty"`
+    CustomerID *string `json:"customer_id,omitempty"`
     // Date and time of the creation of the payment checkout. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
     Date *time.Time `json:"date,omitempty"`
     // Short description of the checkout visible in the SumUp dashboard. The description can contribute to reporting, allowing
@@ -243,7 +243,7 @@ type Checkout struct {
     MerchantCode *string `json:"merchant_code,omitempty"`
     // URL to which the SumUp platform sends the processing status of the payment checkout.
     // Format: uri
-    ReturnUrl *string `json:"return_url,omitempty"`
+    ReturnURL *string `json:"return_url,omitempty"`
     // Current status of the checkout.
     Status *CheckoutStatus `json:"status,omitempty"`
     // List of transactions related to the payment.
@@ -282,7 +282,7 @@ type CheckoutAcceptedNextStep struct {
     // Contains parameters essential for form redirection. Number of object keys and their content can vary.
     Payload *CheckoutAcceptedNextStepPayload `json:"payload,omitempty"`
     // Refers to a url where the end user is redirected once the payment processing completes.
-    RedirectUrl *string `json:"redirect_url,omitempty"`
+    RedirectURL *string `json:"redirect_url,omitempty"`
     // Where the end user is redirected.
     URL *string `json:"url,omitempty"`
 }
@@ -315,7 +315,7 @@ CheckoutAcceptedNextStepPayload: Contains parameters essential for form redirect
 type CheckoutAcceptedNextStepPayload struct {
     Md      *interface{} `json:"md,omitempty"`
     PaReq   *interface{} `json:"pa_req,omitempty"`
-    TermUrl *interface{} `json:"term_url,omitempty"`
+    TermURL *interface{} `json:"term_url,omitempty"`
 }
 ```
 
@@ -336,7 +336,7 @@ type CheckoutCreateRequest struct {
     Currency shared.Currency `json:"currency"`
     // Unique identification of a customer. If specified, the checkout session and payment instrument are associated with
     // the referenced customer.
-    CustomerId *string `json:"customer_id,omitempty"`
+    CustomerID *string `json:"customer_id,omitempty"`
     // Date and time of the creation of the payment checkout. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
     //
     // Read only
@@ -357,10 +357,10 @@ type CheckoutCreateRequest struct {
     // not specified, the [Payment Widget](https://developer.sumup.com/online-payments/tools/card-widget) renders [3DS
     // challenge](https://developer.sumup.com/online-payments/features/3ds) within an iframe instead of performing a
     // full-page redirect.
-    RedirectUrl *string `json:"redirect_url,omitempty"`
+    RedirectURL *string `json:"redirect_url,omitempty"`
     // URL to which the SumUp platform sends the processing status of the payment checkout.
     // Format: uri
-    ReturnUrl *string `json:"return_url,omitempty"`
+    ReturnURL *string `json:"return_url,omitempty"`
     // Current status of the checkout.
     // Read only
     Status *CheckoutCreateRequestStatus `json:"status,omitempty"`
@@ -434,7 +434,7 @@ type CheckoutCreateRequestTransaction struct {
     InstallmentsCount *int `json:"installments_count,omitempty"`
     // Internal unique ID of the transaction on the SumUp platform.
     // Format: int64
-    InternalId *int64 `json:"internal_id,omitempty"`
+    InternalID *int64 `json:"internal_id,omitempty"`
     // Unique code of the registered merchant to whom the payment is made.
     MerchantCode *string `json:"merchant_code,omitempty"`
     // Payment type used for the transaction.
@@ -448,7 +448,7 @@ type CheckoutCreateRequestTransaction struct {
     // Transaction code returned by the acquirer/processing entity after processing the transaction.
     TransactionCode *string `json:"transaction_code,omitempty"`
     // Amount of the applicable VAT (out of the total transaction amount).
-    VatAmount *float32 `json:"vat_amount,omitempty"`
+    VATAmount *float32 `json:"vat_amount,omitempty"`
 }
 ```
 
@@ -509,7 +509,7 @@ type CheckoutSuccess struct {
     Currency *shared.Currency `json:"currency,omitempty"`
     // Unique identification of a customer. If specified, the checkout session and payment instrument are associated with
     // the referenced customer.
-    CustomerId *string `json:"customer_id,omitempty"`
+    CustomerID *string `json:"customer_id,omitempty"`
     // Date and time of the creation of the payment checkout. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
     Date *time.Time `json:"date,omitempty"`
     // Short description of the checkout visible in the SumUp dashboard. The description can contribute to reporting, allowing
@@ -527,10 +527,10 @@ type CheckoutSuccess struct {
     // Object containing token information for the specified payment instrument
     PaymentInstrument *CheckoutSuccessPaymentInstrument `json:"payment_instrument,omitempty"`
     // Refers to a url where the end user is redirected once the payment processing completes.
-    RedirectUrl *string `json:"redirect_url,omitempty"`
+    RedirectURL *string `json:"redirect_url,omitempty"`
     // URL to which the SumUp platform sends the processing status of the payment checkout.
     // Format: uri
-    ReturnUrl *string `json:"return_url,omitempty"`
+    ReturnURL *string `json:"return_url,omitempty"`
     // Current status of the checkout.
     Status *CheckoutSuccessStatus `json:"status,omitempty"`
     // Transaction code of the successful transaction with which the payment for the checkout is completed.
@@ -538,7 +538,7 @@ type CheckoutSuccess struct {
     TransactionCode *string `json:"transaction_code,omitempty"`
     // Transaction ID of the successful transaction with which the payment for the checkout is completed.
     // Read only
-    TransactionId *string `json:"transaction_id,omitempty"`
+    TransactionID *string `json:"transaction_id,omitempty"`
     // List of transactions related to the payment.
     // Unique items only
     Transactions []CheckoutSuccessTransaction `json:"transactions,omitempty"`
@@ -603,7 +603,7 @@ type CheckoutSuccessTransaction struct {
     InstallmentsCount *int `json:"installments_count,omitempty"`
     // Internal unique ID of the transaction on the SumUp platform.
     // Format: int64
-    InternalId *int64 `json:"internal_id,omitempty"`
+    InternalID *int64 `json:"internal_id,omitempty"`
     // Unique code of the registered merchant to whom the payment is made.
     MerchantCode *string `json:"merchant_code,omitempty"`
     // Payment type used for the transaction.
@@ -617,7 +617,7 @@ type CheckoutSuccessTransaction struct {
     // Transaction code returned by the acquirer/processing entity after processing the transaction.
     TransactionCode *string `json:"transaction_code,omitempty"`
     // Amount of the applicable VAT (out of the total transaction amount).
-    VatAmount *float32 `json:"vat_amount,omitempty"`
+    VATAmount *float32 `json:"vat_amount,omitempty"`
 }
 ```
 
@@ -664,7 +664,7 @@ type CheckoutTransaction struct {
     InstallmentsCount *int `json:"installments_count,omitempty"`
     // Internal unique ID of the transaction on the SumUp platform.
     // Format: int64
-    InternalId *int64 `json:"internal_id,omitempty"`
+    InternalID *int64 `json:"internal_id,omitempty"`
     // Unique code of the registered merchant to whom the payment is made.
     MerchantCode *string `json:"merchant_code,omitempty"`
     // Payment type used for the transaction.
@@ -678,7 +678,7 @@ type CheckoutTransaction struct {
     // Transaction code returned by the acquirer/processing entity after processing the transaction.
     TransactionCode *string `json:"transaction_code,omitempty"`
     // Amount of the applicable VAT (out of the total transaction amount).
-    VatAmount *float32 `json:"vat_amount,omitempty"`
+    VATAmount *float32 `json:"vat_amount,omitempty"`
 }
 ```
 
@@ -739,7 +739,7 @@ Follow by processing a checkout to charge the provided payment instrument.
 ### func \(\*CheckoutsService\) [Deactivate](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L882>)
 
 ```go
-func (s *CheckoutsService) Deactivate(ctx context.Context, iD string) (*Checkout, error)
+func (s *CheckoutsService) Deactivate(ctx context.Context, id string) (*Checkout, error)
 ```
 
 Deactivate: Deactivate a checkout Deactivates an identified checkout resource. If the checkout has already been processed it can not be deactivated.
@@ -748,7 +748,7 @@ Deactivate: Deactivate a checkout Deactivates an identified checkout resource. I
 ### func \(\*CheckoutsService\) [Get](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L928>)
 
 ```go
-func (s *CheckoutsService) Get(ctx context.Context, iD string) (*CheckoutSuccess, error)
+func (s *CheckoutsService) Get(ctx context.Context, id string) (*CheckoutSuccess, error)
 ```
 
 Get: Retrieve a checkout Retrieves an identified checkout resource. Use this request after processing a checkout to confirm its status and inform the end user respectively.
@@ -775,7 +775,7 @@ ListAvailablePaymentMethods: Get available payment methods Get payment methods a
 ### func \(\*CheckoutsService\) [Process](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L969>)
 
 ```go
-func (s *CheckoutsService) Process(ctx context.Context, iD string, body ProcessCheckoutBody) (*ProcessCheckoutResponse, error)
+func (s *CheckoutsService) Process(ctx context.Context, id string, body ProcessCheckoutBody) (*ProcessCheckoutResponse, error)
 ```
 
 Process: Process a checkout Processing a checkout will attempt to charge the provided payment instrument for the amount of the specified checkout resource initiated in the \`Create a checkout\` endpoint.
@@ -799,7 +799,7 @@ type CreateCheckoutBody struct {
     Currency shared.Currency `json:"currency"`
     // Unique identification of a customer. If specified, the checkout session and payment instrument are associated with
     // the referenced customer.
-    CustomerId *string `json:"customer_id,omitempty"`
+    CustomerID *string `json:"customer_id,omitempty"`
     // Date and time of the creation of the payment checkout. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
     //
     // Read only
@@ -820,10 +820,10 @@ type CreateCheckoutBody struct {
     // not specified, the [Payment Widget](https://developer.sumup.com/online-payments/tools/card-widget) renders [3DS
     // challenge](https://developer.sumup.com/online-payments/features/3ds) within an iframe instead of performing a
     // full-page redirect.
-    RedirectUrl *string `json:"redirect_url,omitempty"`
+    RedirectURL *string `json:"redirect_url,omitempty"`
     // URL to which the SumUp platform sends the processing status of the payment checkout.
     // Format: uri
-    ReturnUrl *string `json:"return_url,omitempty"`
+    ReturnURL *string `json:"return_url,omitempty"`
     // Current status of the checkout.
     // Read only
     Status *CreateCheckoutBodyStatus `json:"status,omitempty"`
@@ -897,7 +897,7 @@ type CreateCheckoutBodyTransaction struct {
     InstallmentsCount *int `json:"installments_count,omitempty"`
     // Internal unique ID of the transaction on the SumUp platform.
     // Format: int64
-    InternalId *int64 `json:"internal_id,omitempty"`
+    InternalID *int64 `json:"internal_id,omitempty"`
     // Unique code of the registered merchant to whom the payment is made.
     MerchantCode *string `json:"merchant_code,omitempty"`
     // Payment type used for the transaction.
@@ -911,7 +911,7 @@ type CreateCheckoutBodyTransaction struct {
     // Transaction code returned by the acquirer/processing entity after processing the transaction.
     TransactionCode *string `json:"transaction_code,omitempty"`
     // Amount of the applicable VAT (out of the total transaction amount).
-    VatAmount *float32 `json:"vat_amount,omitempty"`
+    VATAmount *float32 `json:"vat_amount,omitempty"`
 }
 ```
 
@@ -1089,7 +1089,7 @@ type MandatePayload struct {
     // Operating system and web client used by the end-user
     UserAgent string `json:"user_agent"`
     // IP address of the end user. Supports IPv4 and IPv6
-    UserIp *string `json:"user_ip,omitempty"`
+    UserIP *string `json:"user_ip,omitempty"`
 }
 ```
 
@@ -1120,7 +1120,7 @@ type ProcessCheckout struct {
     // __Required when payment type is `card`.__ Details of the payment card.
     Card *Card `json:"card,omitempty"`
     // __Required when `token` is provided.__ Unique ID of the customer.
-    CustomerId *string `json:"customer_id,omitempty"`
+    CustomerID *string `json:"customer_id,omitempty"`
     // Number of installments for deferred payments. Available only to merchant users in Brazil.
     // Min: 1
     // Max: 12
@@ -1165,7 +1165,7 @@ type ProcessCheckoutBody struct {
     // __Required when payment type is `card`.__ Details of the payment card.
     Card *Card `json:"card,omitempty"`
     // __Required when `token` is provided.__ Unique ID of the customer.
-    CustomerId *string `json:"customer_id,omitempty"`
+    CustomerID *string `json:"customer_id,omitempty"`
     // Number of installments for deferred payments. Available only to merchant users in Brazil.
     // Min: 1
     // Max: 12
@@ -1433,10 +1433,10 @@ import "github.com/sumup/sumup-go/customers"
 - [type CustomersService](<#CustomersService>)
   - [func NewCustomersService\(c \*client.Client\) \*CustomersService](<#NewCustomersService>)
   - [func \(s \*CustomersService\) Create\(ctx context.Context, body CreateCustomerBody\) \(\*Customer, error\)](<#CustomersService.Create>)
-  - [func \(s \*CustomersService\) DeactivatePaymentInstrument\(ctx context.Context, customerId string, token string\) error](<#CustomersService.DeactivatePaymentInstrument>)
-  - [func \(s \*CustomersService\) Get\(ctx context.Context, customerId string\) \(\*Customer, error\)](<#CustomersService.Get>)
-  - [func \(s \*CustomersService\) ListPaymentInstruments\(ctx context.Context, customerId string\) \(\*ListPaymentInstruments200Response, error\)](<#CustomersService.ListPaymentInstruments>)
-  - [func \(s \*CustomersService\) Update\(ctx context.Context, customerId string, body UpdateCustomerBody\) \(\*Customer, error\)](<#CustomersService.Update>)
+  - [func \(s \*CustomersService\) DeactivatePaymentInstrument\(ctx context.Context, customerID string, token string\) error](<#CustomersService.DeactivatePaymentInstrument>)
+  - [func \(s \*CustomersService\) Get\(ctx context.Context, customerID string\) \(\*Customer, error\)](<#CustomersService.Get>)
+  - [func \(s \*CustomersService\) ListPaymentInstruments\(ctx context.Context, customerID string\) \(\*ListPaymentInstruments200Response, error\)](<#CustomersService.ListPaymentInstruments>)
+  - [func \(s \*CustomersService\) Update\(ctx context.Context, customerID string, body UpdateCustomerBody\) \(\*Customer, error\)](<#CustomersService.Update>)
 - [type ListPaymentInstruments200Response](<#ListPaymentInstruments200Response>)
 - [type PaymentInstrumentResponse](<#PaymentInstrumentResponse>)
 - [type PaymentInstrumentResponseCard](<#PaymentInstrumentResponseCard>)
@@ -1452,7 +1452,7 @@ CreateCustomerBody is a schema definition.
 ```go
 type CreateCustomerBody struct {
     // Unique ID of the customer.
-    CustomerId string `json:"customer_id"`
+    CustomerID string `json:"customer_id"`
     // Personal details for the customer.
     PersonalDetails *shared.PersonalDetails `json:"personal_details,omitempty"`
 }
@@ -1466,7 +1466,7 @@ Customer is a schema definition.
 ```go
 type Customer struct {
     // Unique ID of the customer.
-    CustomerId string `json:"customer_id"`
+    CustomerID string `json:"customer_id"`
     // Personal details for the customer.
     PersonalDetails *shared.PersonalDetails `json:"personal_details,omitempty"`
 }
@@ -1505,7 +1505,7 @@ Create: Create a customer Creates a new saved customer resource which you can la
 ### func \(\*CustomersService\) [DeactivatePaymentInstrument](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L273>)
 
 ```go
-func (s *CustomersService) DeactivatePaymentInstrument(ctx context.Context, customerId string, token string) error
+func (s *CustomersService) DeactivatePaymentInstrument(ctx context.Context, customerID string, token string) error
 ```
 
 DeactivatePaymentInstrument: Deactivate a payment instrument Deactivates an identified card payment instrument resource for a customer.
@@ -1514,7 +1514,7 @@ DeactivatePaymentInstrument: Deactivate a payment instrument Deactivates an iden
 ### func \(\*CustomersService\) [Get](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L180>)
 
 ```go
-func (s *CustomersService) Get(ctx context.Context, customerId string) (*Customer, error)
+func (s *CustomersService) Get(ctx context.Context, customerID string) (*Customer, error)
 ```
 
 Get: Retrieve a customer Retrieves an identified saved customer resource through the unique \`customer\_id\` parameter, generated upon customer creation.
@@ -1523,7 +1523,7 @@ Get: Retrieve a customer Retrieves an identified saved customer resource through
 ### func \(\*CustomersService\) [ListPaymentInstruments](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L134>)
 
 ```go
-func (s *CustomersService) ListPaymentInstruments(ctx context.Context, customerId string) (*ListPaymentInstruments200Response, error)
+func (s *CustomersService) ListPaymentInstruments(ctx context.Context, customerID string) (*ListPaymentInstruments200Response, error)
 ```
 
 ListPaymentInstruments: List payment instruments Lists all payment instrument resources that are saved for an identified customer.
@@ -1532,7 +1532,7 @@ ListPaymentInstruments: List payment instruments Lists all payment instrument re
 ### func \(\*CustomersService\) [Update](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L228>)
 
 ```go
-func (s *CustomersService) Update(ctx context.Context, customerId string, body UpdateCustomerBody) (*Customer, error)
+func (s *CustomersService) Update(ctx context.Context, customerID string, body UpdateCustomerBody) (*Customer, error)
 ```
 
 Update: Update a customer Updates an identified saved customer resource's personal details.
@@ -1728,10 +1728,10 @@ import "github.com/sumup/sumup-go/members"
 - [type MembersService](<#MembersService>)
   - [func NewMembersService\(c \*client.Client\) \*MembersService](<#NewMembersService>)
   - [func \(s \*MembersService\) Create\(ctx context.Context, merchantCode string, body CreateMerchantMemberBody\) \(\*Member, error\)](<#MembersService.Create>)
-  - [func \(s \*MembersService\) Delete\(ctx context.Context, merchantCode string, memberId string\) error](<#MembersService.Delete>)
-  - [func \(s \*MembersService\) Get\(ctx context.Context, merchantCode string, memberId string\) \(\*Member, error\)](<#MembersService.Get>)
+  - [func \(s \*MembersService\) Delete\(ctx context.Context, merchantCode string, memberID string\) error](<#MembersService.Delete>)
+  - [func \(s \*MembersService\) Get\(ctx context.Context, merchantCode string, memberID string\) \(\*Member, error\)](<#MembersService.Get>)
   - [func \(s \*MembersService\) List\(ctx context.Context, merchantCode string, params ListMerchantMembersParams\) \(\*ListMerchantMembers200Response, error\)](<#MembersService.List>)
-  - [func \(s \*MembersService\) Update\(ctx context.Context, merchantCode string, memberId string, body UpdateMerchantMemberBody\) \(\*Member, error\)](<#MembersService.Update>)
+  - [func \(s \*MembersService\) Update\(ctx context.Context, merchantCode string, memberID string, body UpdateMerchantMemberBody\) \(\*Member, error\)](<#MembersService.Update>)
 - [type MembershipUser](<#MembershipUser>)
 - [type MembershipUserClassic](<#MembershipUserClassic>)
 - [type UpdateMerchantMemberBody](<#UpdateMerchantMemberBody>)
@@ -1801,7 +1801,7 @@ type ListMerchantMembersParams struct {
     // Filter the returned members by the membership status.
     Status *shared.MembershipStatus
     // Search for a member by user id.
-    UserId *string
+    UserID *string
 }
 ```
 
@@ -1881,7 +1881,7 @@ Create: Create a member Create a merchant member.
 ### func \(\*MembersService\) [Delete](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L273>)
 
 ```go
-func (s *MembersService) Delete(ctx context.Context, merchantCode string, memberId string) error
+func (s *MembersService) Delete(ctx context.Context, merchantCode string, memberID string) error
 ```
 
 Delete: Delete a member Deletes a merchant member.
@@ -1890,7 +1890,7 @@ Delete: Delete a member Deletes a merchant member.
 ### func \(\*MembersService\) [Get](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L299>)
 
 ```go
-func (s *MembersService) Get(ctx context.Context, merchantCode string, memberId string) (*Member, error)
+func (s *MembersService) Get(ctx context.Context, merchantCode string, memberID string) (*Member, error)
 ```
 
 Get: Retrieve a member Retrieve a merchant member.
@@ -1908,7 +1908,7 @@ List: List members Lists merchant members.
 ### func \(\*MembersService\) [Update](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L330>)
 
 ```go
-func (s *MembersService) Update(ctx context.Context, merchantCode string, memberId string, body UpdateMerchantMemberBody) (*Member, error)
+func (s *MembersService) Update(ctx context.Context, merchantCode string, memberID string, body UpdateMerchantMemberBody) (*Member, error)
 ```
 
 Update: Update a member Update the merchant member.
@@ -1953,7 +1953,7 @@ MembershipUserClassic: Classic identifiers of the user. Deprecated: this operati
 ```go
 type MembershipUserClassic struct {
     // Format: int32
-    UserId int32 `json:"user_id"`
+    UserID int32 `json:"user_id"`
 }
 ```
 
@@ -2043,7 +2043,7 @@ type ListMembershipsParams struct {
     // Filter memberships by the parent of the resource the membership is in.
     // When filtering by parent both `resource.parent.id` and `resource.parent.type` must be present. Pass explicit null
     // to filter for resources without a parent.
-    ResourceParentId *string
+    ResourceParentID *string
     // Filter memberships by the parent of the resource the membership is in.
     // When filtering by parent both `resource.parent.id` and `resource.parent.type` must be present. Pass explicit null
     // to filter for resources without a parent.
@@ -2092,7 +2092,7 @@ type Membership struct {
     // Information about the resource the membership is in.
     Resource MembershipResource `json:"resource"`
     // ID of the resource the membership is in.
-    ResourceId string `json:"resource_id"`
+    ResourceID string `json:"resource_id"`
     // User's roles.
     Roles []string `json:"roles"`
     // The status of the membership.
@@ -2208,7 +2208,7 @@ import "github.com/sumup/sumup-go/merchant"
 - [type PermissionsLegacy](<#PermissionsLegacy>)
 - [type PersonalProfileLegacy](<#PersonalProfileLegacy>)
 - [type TimeoffsetDetails](<#TimeoffsetDetails>)
-- [type VatRates](<#VatRates>)
+- [type VATRates](<#VATRates>)
 
 
 <a name="AccountLegacy"></a>
@@ -2273,11 +2273,11 @@ type AddressWithDetails struct {
     // Region code
     RegionCode *string `json:"region_code,omitempty"`
     // Country region id
-    RegionId *float64 `json:"region_id,omitempty"`
+    RegionID *float64 `json:"region_id,omitempty"`
     // Region name
     RegionName *string `json:"region_name,omitempty"`
     // undefined
-    StateId *string `json:"state_id,omitempty"`
+    StateID *string `json:"state_id,omitempty"`
     // TimeOffset Details
     TimeoffsetDetails *TimeoffsetDetails `json:"timeoffset_details,omitempty"`
 }
@@ -2301,7 +2301,7 @@ type AppSettings struct {
     // Expected max transaction amount.
     ExpectedMaxTransactionAmount *float64 `json:"expected_max_transaction_amount,omitempty"`
     // Include vat.
-    IncludeVat *bool `json:"include_vat,omitempty"`
+    IncludeVAT *bool `json:"include_vat,omitempty"`
     // Manual entry.
     ManualEntry *string `json:"manual_entry,omitempty"`
     // Manual entry tutorial.
@@ -2348,7 +2348,7 @@ type BankAccount struct {
     // Creation date of the bank account
     CreatedAt *string `json:"created_at,omitempty"`
     // IBAN
-    Iban *string `json:"iban,omitempty"`
+    IBAN *string `json:"iban,omitempty"`
     // The primary bank account is the one used for payouts
     Primary *bool `json:"primary,omitempty"`
     // Status in the verification process
@@ -2422,7 +2422,7 @@ type DoingBusinessAsLegacy struct {
     // Doing business as email
     Email *string `json:"email,omitempty"`
     // Doing business as VAT ID
-    VatId *string `json:"vat_id,omitempty"`
+    VATID *string `json:"vat_id,omitempty"`
     // Doing business as website
     Website *string `json:"website,omitempty"`
 }
@@ -2446,7 +2446,7 @@ type DoingBusinessAsLegacyAddress struct {
     // Postal code
     PostCode *string `json:"post_code,omitempty"`
     // Country region ID
-    RegionId *float64 `json:"region_id,omitempty"`
+    RegionID *float64 `json:"region_id,omitempty"`
     // Country region name
     RegionName *string `json:"region_name,omitempty"`
 }
@@ -2554,9 +2554,9 @@ type MerchantProfileLegacy struct {
     // Merchant settings &#40;like \"payout_type\", \"payout_period\"&#41;
     Settings *MerchantSettings `json:"settings,omitempty"`
     // Vat ID
-    VatId *string `json:"vat_id,omitempty"`
+    VATID *string `json:"vat_id,omitempty"`
     // Merchant VAT rates
-    VatRates *VatRates `json:"vat_rates,omitempty"`
+    VATRates *VATRates `json:"vat_rates,omitempty"`
     // Website
     Website *string `json:"website,omitempty"`
 }
@@ -2727,13 +2727,13 @@ type TimeoffsetDetails struct {
 }
 ```
 
-<a name="VatRates"></a>
-## type [VatRates](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L339-L350>)
+<a name="VATRates"></a>
+## type [VATRates](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L339-L350>)
 
-VatRates: Merchant VAT rates
+VATRates: Merchant VAT rates
 
 ```go
-type VatRates struct {
+type VATRates struct {
     // Country ISO code
     Country *string `json:"country,omitempty"`
     // Description
@@ -2792,7 +2792,7 @@ import "github.com/sumup/sumup-go/merchants"
 - [type MerchantsService](<#MerchantsService>)
   - [func NewMerchantsService\(c \*client.Client\) \*MerchantsService](<#NewMerchantsService>)
   - [func \(s \*MerchantsService\) Get\(ctx context.Context, merchantCode string, params GetMerchantParams\) \(\*Merchant, error\)](<#MerchantsService.Get>)
-  - [func \(s \*MerchantsService\) GetPerson\(ctx context.Context, merchantCode string, personId string, params GetPersonParams\) \(\*Person, error\)](<#MerchantsService.GetPerson>)
+  - [func \(s \*MerchantsService\) GetPerson\(ctx context.Context, merchantCode string, personID string, params GetPersonParams\) \(\*Person, error\)](<#MerchantsService.GetPerson>)
   - [func \(s \*MerchantsService\) ListPersons\(ctx context.Context, merchantCode string, params ListPersonsParams\) \(\*ListPersonsResponseBody, error\)](<#MerchantsService.ListPersons>)
 - [type Meta](<#Meta>)
 - [type Ownership](<#Ownership>)
@@ -2956,7 +2956,7 @@ type BasePerson struct {
     // Max items: 1
     Relationships []string `json:"relationships,omitempty"`
     // A corresponding identity user ID for the person, if they have a user account.
-    UserId *string `json:"user_id,omitempty"`
+    UserID *string `json:"user_id,omitempty"`
     // The version of the resource. The version reflects a specific change submitted to the API via one of the `PATCH`
     // endpoints.
     Version *Version `json:"version,omitempty"`
@@ -3503,7 +3503,7 @@ type Merchant struct {
     // object.
     Meta Meta `json:"meta,omitempty"`
     // ID of the organization the merchant belongs to (if any).
-    OrganizationId *string `json:"organization_id,omitempty"`
+    OrganizationID *string `json:"organization_id,omitempty"`
     // True if the merchant is a sandbox for testing.
     Sandbox *bool `json:"sandbox,omitempty"`
     // The date and time when the resource was last updated. This is a string as defined in [RFC 3339, section 5.6](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6).
@@ -3549,7 +3549,7 @@ Get: Retrieve a Merchant Retrieve a merchant. Merchant documentation: https://de
 ### func \(\*MerchantsService\) [GetPerson](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L765>)
 
 ```go
-func (s *MerchantsService) GetPerson(ctx context.Context, merchantCode string, personId string, params GetPersonParams) (*Person, error)
+func (s *MerchantsService) GetPerson(ctx context.Context, merchantCode string, personID string, params GetPersonParams) (*Person, error)
 ```
 
 GetPerson: Retrieve a Person Returns a single person related to the merchant. Persons documentation: https://developer.sumup.com/tools/models/merchant#persons
@@ -3655,7 +3655,7 @@ type Person struct {
     // Max items: 1
     Relationships []string `json:"relationships,omitempty"`
     // A corresponding identity user ID for the person, if they have a user account.
-    UserId *string `json:"user_id,omitempty"`
+    UserID *string `json:"user_id,omitempty"`
     // The version of the resource. The version reflects a specific change submitted to the API via one of the `PATCH`
     // endpoints.
     Version *Version `json:"version,omitempty"`
@@ -3950,20 +3950,20 @@ import "github.com/sumup/sumup-go/readers"
 - [type Reader](<#Reader>)
 - [type ReaderDevice](<#ReaderDevice>)
 - [type ReaderDeviceModel](<#ReaderDeviceModel>)
-- [type ReaderId](<#ReaderId>)
+- [type ReaderID](<#ReaderID>)
 - [type ReaderName](<#ReaderName>)
 - [type ReaderPairingCode](<#ReaderPairingCode>)
 - [type ReaderStatus](<#ReaderStatus>)
 - [type ReadersService](<#ReadersService>)
   - [func NewReadersService\(c \*client.Client\) \*ReadersService](<#NewReadersService>)
   - [func \(s \*ReadersService\) Create\(ctx context.Context, merchantCode string, body CreateReaderBody\) \(\*Reader, error\)](<#ReadersService.Create>)
-  - [func \(s \*ReadersService\) CreateCheckout\(ctx context.Context, merchantCode string, readerId string, body CreateReaderCheckoutBody\) \(\*CreateReaderCheckoutResponse, error\)](<#ReadersService.CreateCheckout>)
-  - [func \(s \*ReadersService\) Delete\(ctx context.Context, merchantCode string, iD ReaderId\) error](<#ReadersService.Delete>)
-  - [func \(s \*ReadersService\) Get\(ctx context.Context, merchantCode string, iD ReaderId, params GetReaderParams\) \(\*Reader, error\)](<#ReadersService.Get>)
-  - [func \(s \*ReadersService\) GetStatus\(ctx context.Context, merchantCode string, readerId string, params GetReaderStatusParams\) \(\*StatusResponse, error\)](<#ReadersService.GetStatus>)
+  - [func \(s \*ReadersService\) CreateCheckout\(ctx context.Context, merchantCode string, readerID string, body CreateReaderCheckoutBody\) \(\*CreateReaderCheckoutResponse, error\)](<#ReadersService.CreateCheckout>)
+  - [func \(s \*ReadersService\) Delete\(ctx context.Context, merchantCode string, id ReaderID\) error](<#ReadersService.Delete>)
+  - [func \(s \*ReadersService\) Get\(ctx context.Context, merchantCode string, id ReaderID, params GetReaderParams\) \(\*Reader, error\)](<#ReadersService.Get>)
+  - [func \(s \*ReadersService\) GetStatus\(ctx context.Context, merchantCode string, readerID string, params GetReaderStatusParams\) \(\*StatusResponse, error\)](<#ReadersService.GetStatus>)
   - [func \(s \*ReadersService\) List\(ctx context.Context, merchantCode string\) \(\*ListReaders200Response, error\)](<#ReadersService.List>)
-  - [func \(s \*ReadersService\) TerminateCheckout\(ctx context.Context, merchantCode string, readerId string\) error](<#ReadersService.TerminateCheckout>)
-  - [func \(s \*ReadersService\) Update\(ctx context.Context, merchantCode string, iD ReaderId, body UpdateReaderBody\) \(\*Reader, error\)](<#ReadersService.Update>)
+  - [func \(s \*ReadersService\) TerminateCheckout\(ctx context.Context, merchantCode string, readerID string\) error](<#ReadersService.TerminateCheckout>)
+  - [func \(s \*ReadersService\) Update\(ctx context.Context, merchantCode string, id ReaderID, body UpdateReaderBody\) \(\*Reader, error\)](<#ReadersService.Update>)
 - [type StatusResponse](<#StatusResponse>)
 - [type StatusResponseData](<#StatusResponseData>)
 - [type StatusResponseDataConnectionType](<#StatusResponseDataConnectionType>)
@@ -4110,7 +4110,7 @@ type CreateReaderCheckoutBody struct {
     // Webhook URL to which the payment result will be sent.
     // It must be a HTTPS url.
     // Format: uri
-    ReturnUrl *string `json:"return_url,omitempty"`
+    ReturnURL *string `json:"return_url,omitempty"`
     // List of tipping rates to be displayed to the cardholder.
     // The rates are in percentage and should be between 0.01 and 0.99.
     // The list should be sorted in ascending order.
@@ -4143,11 +4143,11 @@ CreateReaderCheckoutBodyAffiliate: Affiliate metadata for the transaction. It is
 type CreateReaderCheckoutBodyAffiliate struct {
     // Application ID of the affiliate.
     // It is a unique identifier for the application and should be set by the integrator in the [Affiliate Keys](https://developer.sumup.com/affiliate-keys) page.
-    AppId string `json:"app_id"`
+    AppID string `json:"app_id"`
     // Foreign transaction ID of the affiliate.
     // It is a unique identifier for the transaction.
     // It can be used later to fetch the transaction details via the [Transactions API](https://developer.sumup.com/api/transactions/get).
-    ForeignTransactionId string `json:"foreign_transaction_id"`
+    ForeignTransactionID string `json:"foreign_transaction_id"`
     // Key of the affiliate.
     // It is a unique identifier for the key  and should be generated by the integrator in the [Affiliate Keys](https://developer.sumup.com/affiliate-keys) page.
     Key string `json:"key"`
@@ -4266,7 +4266,7 @@ type CreateReaderCheckoutRequest struct {
     // Webhook URL to which the payment result will be sent.
     // It must be a HTTPS url.
     // Format: uri
-    ReturnUrl *string `json:"return_url,omitempty"`
+    ReturnURL *string `json:"return_url,omitempty"`
     // List of tipping rates to be displayed to the cardholder.
     // The rates are in percentage and should be between 0.01 and 0.99.
     // The list should be sorted in ascending order.
@@ -4299,11 +4299,11 @@ CreateReaderCheckoutRequestAffiliate: Affiliate metadata for the transaction. It
 type CreateReaderCheckoutRequestAffiliate struct {
     // Application ID of the affiliate.
     // It is a unique identifier for the application and should be set by the integrator in the [Affiliate Keys](https://developer.sumup.com/affiliate-keys) page.
-    AppId string `json:"app_id"`
+    AppID string `json:"app_id"`
     // Foreign transaction ID of the affiliate.
     // It is a unique identifier for the transaction.
     // It can be used later to fetch the transaction details via the [Transactions API](https://developer.sumup.com/api/transactions/get).
-    ForeignTransactionId string `json:"foreign_transaction_id"`
+    ForeignTransactionID string `json:"foreign_transaction_id"`
     // Key of the affiliate.
     // It is a unique identifier for the key  and should be generated by the integrator in the [Affiliate Keys](https://developer.sumup.com/affiliate-keys) page.
     Key string `json:"key"`
@@ -4385,7 +4385,7 @@ type CreateReaderCheckoutResponseData struct {
     // The client transaction ID is a unique identifier for the transaction that is generated for the client.
     //
     // It can be used later to fetch the transaction details via the [Transactions API](https://developer.sumup.com/api/transactions/get).
-    ClientTransactionId string `json:"client_transaction_id"`
+    ClientTransactionID string `json:"client_transaction_id"`
 }
 ```
 
@@ -4653,7 +4653,7 @@ type Reader struct {
     //
     // Min length: 30
     // Max length: 30
-    ID  ReaderId `json:"id"`
+    ID  ReaderID `json:"id"`
     // Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
     // submit whole metadata. Maximum of 64 parameters are allowed in the object.
     // Max properties: 64
@@ -4707,17 +4707,17 @@ const (
 )
 ```
 
-<a name="ReaderId"></a>
-## type [ReaderId](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L339>)
+<a name="ReaderID"></a>
+## type [ReaderID](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L339>)
 
-ReaderId: Unique identifier of the object.
+ReaderID: Unique identifier of the object.
 
 Note that this identifies the instance of the physical devices pairing with your SumUp account. If you \[delete\]\(https://developer.sumup.com/api/readers/delete-reader\) a reader, and pair the device again, the ID will be different. Do not use this ID to refer to a physical device.
 
 Min length: 30 Max length: 30
 
 ```go
-type ReaderId string
+type ReaderID string
 ```
 
 <a name="ReaderName"></a>
@@ -4795,7 +4795,7 @@ Create: Create a Reader Create a new Reader for the merchant account.
 ### func \(\*ReadersService\) [CreateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L868>)
 
 ```go
-func (s *ReadersService) CreateCheckout(ctx context.Context, merchantCode string, readerId string, body CreateReaderCheckoutBody) (*CreateReaderCheckoutResponse, error)
+func (s *ReadersService) CreateCheckout(ctx context.Context, merchantCode string, readerID string, body CreateReaderCheckoutBody) (*CreateReaderCheckoutResponse, error)
 ```
 
 CreateCheckout: Create a Reader Checkout Creates a Checkout for a Reader.
@@ -4810,7 +4810,7 @@ There are some caveats when using this endpoint: \* The target device must be on
 ### func \(\*ReadersService\) [Delete](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L934>)
 
 ```go
-func (s *ReadersService) Delete(ctx context.Context, merchantCode string, iD ReaderId) error
+func (s *ReadersService) Delete(ctx context.Context, merchantCode string, id ReaderID) error
 ```
 
 Delete: Delete a reader Delete a reader.
@@ -4819,7 +4819,7 @@ Delete: Delete a reader Delete a reader.
 ### func \(\*ReadersService\) [Get](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L960>)
 
 ```go
-func (s *ReadersService) Get(ctx context.Context, merchantCode string, iD ReaderId, params GetReaderParams) (*Reader, error)
+func (s *ReadersService) Get(ctx context.Context, merchantCode string, id ReaderID, params GetReaderParams) (*Reader, error)
 ```
 
 Get: Retrieve a Reader Retrieve a Reader.
@@ -4828,7 +4828,7 @@ Get: Retrieve a Reader Retrieve a Reader.
 ### func \(\*ReadersService\) [GetStatus](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L793>)
 
 ```go
-func (s *ReadersService) GetStatus(ctx context.Context, merchantCode string, readerId string, params GetReaderStatusParams) (*StatusResponse, error)
+func (s *ReadersService) GetStatus(ctx context.Context, merchantCode string, readerID string, params GetReaderStatusParams) (*StatusResponse, error)
 ```
 
 GetStatus: Get a Reader Status Provides the last known status for a Reader.
@@ -4858,7 +4858,7 @@ List: List Readers List all readers of the merchant.
 ### func \(\*ReadersService\) [TerminateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L713>)
 
 ```go
-func (s *ReadersService) TerminateCheckout(ctx context.Context, merchantCode string, readerId string) error
+func (s *ReadersService) TerminateCheckout(ctx context.Context, merchantCode string, readerID string) error
 ```
 
 TerminateCheckout: Terminate a Reader Checkout Terminate a Reader Checkout stops the current transaction on the target device.
@@ -4875,7 +4875,7 @@ If a transaction is successfully terminated and \`return\_url\` was provided on 
 ### func \(\*ReadersService\) [Update](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L991>)
 
 ```go
-func (s *ReadersService) Update(ctx context.Context, merchantCode string, iD ReaderId, body UpdateReaderBody) (*Reader, error)
+func (s *ReadersService) Update(ctx context.Context, merchantCode string, id ReaderID, body UpdateReaderBody) (*Reader, error)
 ```
 
 Update: Update a Reader Update a Reader.
@@ -4957,7 +4957,7 @@ const (
     StatusResponseDataStateSelectingTip        StatusResponseDataState = "SELECTING_TIP"
     StatusResponseDataStateUpdatingFirmware    StatusResponseDataState = "UPDATING_FIRMWARE"
     StatusResponseDataStateWaitingForCard      StatusResponseDataState = "WAITING_FOR_CARD"
-    StatusResponseDataStateWaitingForPin       StatusResponseDataState = "WAITING_FOR_PIN"
+    StatusResponseDataStateWaitingForPIN       StatusResponseDataState = "WAITING_FOR_PIN"
     StatusResponseDataStateWaitingForSignature StatusResponseDataState = "WAITING_FOR_SIGNATURE"
 )
 ```
@@ -5069,10 +5069,10 @@ import "github.com/sumup/sumup-go/receipts"
 - [type ReceiptMerchantDataMerchantProfileAddress](<#ReceiptMerchantDataMerchantProfileAddress>)
 - [type ReceiptTransaction](<#ReceiptTransaction>)
 - [type ReceiptTransactionProduct](<#ReceiptTransactionProduct>)
-- [type ReceiptTransactionVatRate](<#ReceiptTransactionVatRate>)
+- [type ReceiptTransactionVATRate](<#ReceiptTransactionVATRate>)
 - [type ReceiptsService](<#ReceiptsService>)
   - [func NewReceiptsService\(c \*client.Client\) \*ReceiptsService](<#NewReceiptsService>)
-  - [func \(s \*ReceiptsService\) Get\(ctx context.Context, iD string, params GetReceiptParams\) \(\*Receipt, error\)](<#ReceiptsService.Get>)
+  - [func \(s \*ReceiptsService\) Get\(ctx context.Context, id string, params GetReceiptParams\) \(\*Receipt, error\)](<#ReceiptsService.Get>)
 
 
 <a name="GetReceiptParams"></a>
@@ -5085,7 +5085,7 @@ type GetReceiptParams struct {
     // Merchant code.
     Mid string
     // The ID of the transaction event (refund).
-    TxEventId *int
+    TxEventID *int
 }
 ```
 
@@ -5163,14 +5163,14 @@ type ReceiptEvent struct {
     Amount *shared.AmountEvent `json:"amount,omitempty"`
     // Unique ID of the transaction event.
     // Format: int64
-    ID        *shared.EventId `json:"id,omitempty"`
+    ID        *shared.EventID `json:"id,omitempty"`
     ReceiptNo *string         `json:"receipt_no,omitempty"`
     // Status of the transaction event.
     Status *shared.EventStatus `json:"status,omitempty"`
     // Date and time of the transaction event.
     Timestamp *shared.TimestampEvent `json:"timestamp,omitempty"`
     // Unique ID of the transaction.
-    TransactionId *shared.TransactionId `json:"transaction_id,omitempty"`
+    TransactionID *shared.TransactionID `json:"transaction_id,omitempty"`
     // Type of the transaction event.
     Type *shared.EventType `json:"type,omitempty"`
 }
@@ -5252,9 +5252,9 @@ type ReceiptTransaction struct {
     // Transaction code.
     TransactionCode *string `json:"transaction_code,omitempty"`
     // Transaction VAT amount.
-    VatAmount *string `json:"vat_amount,omitempty"`
+    VATAmount *string `json:"vat_amount,omitempty"`
     // Vat rates.
-    VatRates []ReceiptTransactionVatRate `json:"vat_rates,omitempty"`
+    VATRates []ReceiptTransactionVATRate `json:"vat_rates,omitempty"`
     // Cardholder verification method.
     VerificationMethod *string `json:"verification_method,omitempty"`
 }
@@ -5280,13 +5280,13 @@ type ReceiptTransactionProduct struct {
 }
 ```
 
-<a name="ReceiptTransactionVatRate"></a>
-## type [ReceiptTransactionVatRate](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L141-L150>)
+<a name="ReceiptTransactionVATRate"></a>
+## type [ReceiptTransactionVATRate](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L141-L150>)
 
-ReceiptTransactionVatRate is a schema definition.
+ReceiptTransactionVATRate is a schema definition.
 
 ```go
-type ReceiptTransactionVatRate struct {
+type ReceiptTransactionVATRate struct {
     // Gross
     Gross *float32 `json:"gross,omitempty"`
     // Net
@@ -5294,7 +5294,7 @@ type ReceiptTransactionVatRate struct {
     // Rate
     Rate *float32 `json:"rate,omitempty"`
     // Vat
-    Vat *float32 `json:"vat,omitempty"`
+    VAT *float32 `json:"vat,omitempty"`
 }
 ```
 
@@ -5322,7 +5322,7 @@ func NewReceiptsService(c *client.Client) *ReceiptsService
 ### func \(\*ReceiptsService\) [Get](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L183>)
 
 ```go
-func (s *ReceiptsService) Get(ctx context.Context, iD string, params GetReceiptParams) (*Receipt, error)
+func (s *ReceiptsService) Get(ctx context.Context, id string, params GetReceiptParams) (*Receipt, error)
 ```
 
 Get: Retrieve receipt details Retrieves receipt specific data for a transaction.
@@ -5341,10 +5341,10 @@ import "github.com/sumup/sumup-go/roles"
 - [type RolesService](<#RolesService>)
   - [func NewRolesService\(c \*client.Client\) \*RolesService](<#NewRolesService>)
   - [func \(s \*RolesService\) Create\(ctx context.Context, merchantCode string, body CreateMerchantRoleBody\) \(\*Role, error\)](<#RolesService.Create>)
-  - [func \(s \*RolesService\) Delete\(ctx context.Context, merchantCode string, roleId string\) error](<#RolesService.Delete>)
-  - [func \(s \*RolesService\) Get\(ctx context.Context, merchantCode string, roleId string\) \(\*Role, error\)](<#RolesService.Get>)
+  - [func \(s \*RolesService\) Delete\(ctx context.Context, merchantCode string, roleID string\) error](<#RolesService.Delete>)
+  - [func \(s \*RolesService\) Get\(ctx context.Context, merchantCode string, roleID string\) \(\*Role, error\)](<#RolesService.Get>)
   - [func \(s \*RolesService\) List\(ctx context.Context, merchantCode string\) \(\*ListMerchantRoles200Response, error\)](<#RolesService.List>)
-  - [func \(s \*RolesService\) Update\(ctx context.Context, merchantCode string, roleId string, body UpdateMerchantRoleBody\) \(\*Role, error\)](<#RolesService.Update>)
+  - [func \(s \*RolesService\) Update\(ctx context.Context, merchantCode string, roleID string, body UpdateMerchantRoleBody\) \(\*Role, error\)](<#RolesService.Update>)
 - [type UpdateMerchantRoleBody](<#UpdateMerchantRoleBody>)
 
 
@@ -5442,7 +5442,7 @@ Create: Create a role Create a custom role for the merchant. Roles are defined b
 ### func \(\*RolesService\) [Delete](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L150>)
 
 ```go
-func (s *RolesService) Delete(ctx context.Context, merchantCode string, roleId string) error
+func (s *RolesService) Delete(ctx context.Context, merchantCode string, roleID string) error
 ```
 
 Delete: Delete a role Delete a custom role.
@@ -5451,7 +5451,7 @@ Delete: Delete a role Delete a custom role.
 ### func \(\*RolesService\) [Get](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L183>)
 
 ```go
-func (s *RolesService) Get(ctx context.Context, merchantCode string, roleId string) (*Role, error)
+func (s *RolesService) Get(ctx context.Context, merchantCode string, roleID string) (*Role, error)
 ```
 
 Get: Retrieve a role Retrieve a custom role by ID.
@@ -5469,7 +5469,7 @@ List: List roles List merchant's custom roles.
 ### func \(\*RolesService\) [Update](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L214>)
 
 ```go
-func (s *RolesService) Update(ctx context.Context, merchantCode string, roleId string, body UpdateMerchantRoleBody) (*Role, error)
+func (s *RolesService) Update(ctx context.Context, merchantCode string, roleID string, body UpdateMerchantRoleBody) (*Role, error)
 ```
 
 Update: Update a role Update a custom role.
@@ -5591,7 +5591,7 @@ import "github.com/sumup/sumup-go/shared"
   - [func \(e \*Error\) Error\(\) string](<#Error.Error>)
 - [type ErrorForbidden](<#ErrorForbidden>)
   - [func \(e \*ErrorForbidden\) Error\(\) string](<#ErrorForbidden.Error>)
-- [type EventId](<#EventId>)
+- [type EventID](<#EventID>)
 - [type EventStatus](<#EventStatus>)
 - [type EventType](<#EventType>)
 - [type Invite](<#Invite>)
@@ -5606,7 +5606,7 @@ import "github.com/sumup/sumup-go/shared"
 - [type TransactionBase](<#TransactionBase>)
 - [type TransactionBaseStatus](<#TransactionBaseStatus>)
 - [type TransactionCheckoutInfo](<#TransactionCheckoutInfo>)
-- [type TransactionId](<#TransactionId>)
+- [type TransactionID](<#TransactionID>)
 
 
 <a name="AddressLegacy"></a>
@@ -5700,8 +5700,8 @@ const (
     CurrencyDKK Currency = "DKK"
     CurrencyEUR Currency = "EUR"
     CurrencyGBP Currency = "GBP"
-    CurrencyHRK Currency = "HRK"
-    CurrencyHUF Currency = "HUF"
+    CurrencyHrk Currency = "HRK"
+    CurrencyHuf Currency = "HUF"
     CurrencyNOK Currency = "NOK"
     CurrencyPLN Currency = "PLN"
     CurrencyRON Currency = "RON"
@@ -5800,13 +5800,13 @@ func (e *ErrorForbidden) Error() string
 
 
 
-<a name="EventId"></a>
-## type [EventId](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L140>)
+<a name="EventID"></a>
+## type [EventID](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L140>)
 
-EventId: Unique ID of the transaction event. Format: int64
+EventID: Unique ID of the transaction event. Format: int64
 
 ```go
-type EventId int64
+type EventID int64
 ```
 
 <a name="EventStatus"></a>
@@ -5932,7 +5932,7 @@ const (
     PaymentTypeDirectDebit PaymentType = "DIRECT_DEBIT"
     PaymentTypeEcom        PaymentType = "ECOM"
     PaymentTypeMoto        PaymentType = "MOTO"
-    PaymentTypePos         PaymentType = "POS"
+    PaymentTypePOS         PaymentType = "POS"
     PaymentTypeRecurring   PaymentType = "RECURRING"
     PaymentTypeUnknown     PaymentType = "UNKNOWN"
 )
@@ -5960,7 +5960,7 @@ type PersonalDetails struct {
     Phone *string `json:"phone,omitempty"`
     // An identification number user for tax purposes (e.g. CPF)
     // Max length: 255
-    TaxId *string `json:"tax_id,omitempty"`
+    TaxID *string `json:"tax_id,omitempty"`
 }
 ```
 
@@ -6069,23 +6069,23 @@ type TransactionCheckoutInfo struct {
     EntryMode *EntryMode `json:"entry_mode,omitempty"`
     // Internal unique ID of the transaction on the SumUp platform.
     // Format: int64
-    InternalId *int64 `json:"internal_id,omitempty"`
+    InternalID *int64 `json:"internal_id,omitempty"`
     // Unique code of the registered merchant to whom the payment is made.
     MerchantCode *string `json:"merchant_code,omitempty"`
     // Amount of the tip (out of the total transaction amount).
     TipAmount *float32 `json:"tip_amount,omitempty"`
     // Amount of the applicable VAT (out of the total transaction amount).
-    VatAmount *float32 `json:"vat_amount,omitempty"`
+    VATAmount *float32 `json:"vat_amount,omitempty"`
 }
 ```
 
-<a name="TransactionId"></a>
-## type [TransactionId](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L314>)
+<a name="TransactionID"></a>
+## type [TransactionID](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L314>)
 
-TransactionId: Unique ID of the transaction.
+TransactionID: Unique ID of the transaction.
 
 ```go
-type TransactionId string
+type TransactionID string
 ```
 
 # subaccounts
@@ -6106,11 +6106,11 @@ import "github.com/sumup/sumup-go/subaccounts"
 - [type Permissions](<#Permissions>)
 - [type SubaccountsService](<#SubaccountsService>)
   - [func NewSubaccountsService\(c \*client.Client\) \*SubaccountsService](<#NewSubaccountsService>)
-  - [func \(s \*SubaccountsService\) CompatGetOperator\(ctx context.Context, operatorId int32\) \(\*Operator, error\)](<#SubaccountsService.CompatGetOperator>)
+  - [func \(s \*SubaccountsService\) CompatGetOperator\(ctx context.Context, operatorID int32\) \(\*Operator, error\)](<#SubaccountsService.CompatGetOperator>)
   - [func \(s \*SubaccountsService\) CreateSubAccount\(ctx context.Context, body CreateSubAccountBody\) \(\*Operator, error\)](<#SubaccountsService.CreateSubAccount>)
-  - [func \(s \*SubaccountsService\) DeactivateSubAccount\(ctx context.Context, operatorId int32\) \(\*Operator, error\)](<#SubaccountsService.DeactivateSubAccount>)
+  - [func \(s \*SubaccountsService\) DeactivateSubAccount\(ctx context.Context, operatorID int32\) \(\*Operator, error\)](<#SubaccountsService.DeactivateSubAccount>)
   - [func \(s \*SubaccountsService\) ListSubAccounts\(ctx context.Context, params ListSubAccountsParams\) \(\*ListSubAccounts200Response, error\)](<#SubaccountsService.ListSubAccounts>)
-  - [func \(s \*SubaccountsService\) UpdateSubAccount\(ctx context.Context, operatorId int32, body UpdateSubAccountBody\) \(\*Operator, error\)](<#SubaccountsService.UpdateSubAccount>)
+  - [func \(s \*SubaccountsService\) UpdateSubAccount\(ctx context.Context, operatorID int32, body UpdateSubAccountBody\) \(\*Operator, error\)](<#SubaccountsService.UpdateSubAccount>)
 - [type UpdateSubAccountBody](<#UpdateSubAccountBody>)
 - [type UpdateSubAccountBodyPermissions](<#UpdateSubAccountBodyPermissions>)
 
@@ -6259,7 +6259,7 @@ func NewSubaccountsService(c *client.Client) *SubaccountsService
 ### func \(\*SubaccountsService\) [CompatGetOperator](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L214>)
 
 ```go
-func (s *SubaccountsService) CompatGetOperator(ctx context.Context, operatorId int32) (*Operator, error)
+func (s *SubaccountsService) CompatGetOperator(ctx context.Context, operatorID int32) (*Operator, error)
 ```
 
 CompatGetOperator: Retrieve an operator Returns specific operator. Deprecated: Subaccounts API is deprecated, to get a user that's a member of your merchant account please use \[Get member\]\(https://developer.sumup.com/api/members/get\) instead.
@@ -6277,7 +6277,7 @@ CreateSubAccount: Create an operator Creates new operator for currently authoriz
 ### func \(\*SubaccountsService\) [DeactivateSubAccount](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L188>)
 
 ```go
-func (s *SubaccountsService) DeactivateSubAccount(ctx context.Context, operatorId int32) (*Operator, error)
+func (s *SubaccountsService) DeactivateSubAccount(ctx context.Context, operatorID int32) (*Operator, error)
 ```
 
 DeactivateSubAccount: Disable an operator. Disable the specified operator for the merchant account. Deprecated: Subaccounts API is deprecated, to remove a user that's a member of your merchant account please use \[Delete member\]\(https://developer.sumup.com/api/members/delete\) instead.
@@ -6295,7 +6295,7 @@ ListSubAccounts: List operators Returns list of operators for currently authoriz
 ### func \(\*SubaccountsService\) [UpdateSubAccount](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L240>)
 
 ```go
-func (s *SubaccountsService) UpdateSubAccount(ctx context.Context, operatorId int32, body UpdateSubAccountBody) (*Operator, error)
+func (s *SubaccountsService) UpdateSubAccount(ctx context.Context, operatorID int32, body UpdateSubAccountBody) (*Operator, error)
 ```
 
 UpdateSubAccount: Update an operator Updates operator. If the operator was disabled and their password is updated they will be unblocked. Deprecated: Subaccounts API is deprecated, to update a user that's a member of your merchant account please use \[Update member\]\(https://developer.sumup.com/api/members/update\) instead.
@@ -6380,7 +6380,7 @@ import "github.com/sumup/sumup-go/transactions"
   - [func \(s \*TransactionsService\) GetDeprecated\(ctx context.Context, params GetTransactionParams\) \(\*TransactionFull, error\)](<#TransactionsService.GetDeprecated>)
   - [func \(s \*TransactionsService\) List\(ctx context.Context, merchantCode string, params ListTransactionsV21Params\) \(\*ListTransactionsV21200Response, error\)](<#TransactionsService.List>)
   - [func \(s \*TransactionsService\) ListDeprecated\(ctx context.Context, params ListTransactionsParams\) \(\*ListTransactions200Response, error\)](<#TransactionsService.ListDeprecated>)
-  - [func \(s \*TransactionsService\) Refund\(ctx context.Context, txnId string, body RefundTransactionBody\) error](<#TransactionsService.Refund>)
+  - [func \(s \*TransactionsService\) Refund\(ctx context.Context, txnID string, body RefundTransactionBody\) error](<#TransactionsService.Refund>)
 
 
 <a name="CardResponse"></a>
@@ -6417,7 +6417,7 @@ type Event struct {
     FeeAmount *float32 `json:"fee_amount,omitempty"`
     // Unique ID of the transaction event.
     // Format: int64
-    ID  *shared.EventId `json:"id,omitempty"`
+    ID  *shared.EventID `json:"id,omitempty"`
     // Consecutive number of the installment.
     InstallmentNumber *int `json:"installment_number,omitempty"`
     // Status of the transaction event.
@@ -6425,7 +6425,7 @@ type Event struct {
     // Date and time of the transaction event.
     Timestamp *shared.TimestampEvent `json:"timestamp,omitempty"`
     // Unique ID of the transaction.
-    TransactionId *shared.TransactionId `json:"transaction_id,omitempty"`
+    TransactionID *shared.TransactionID `json:"transaction_id,omitempty"`
     // Type of the transaction event.
     Type *shared.EventType `json:"type,omitempty"`
 }
@@ -6442,7 +6442,7 @@ type GetTransactionParams struct {
     ID  *string
     // Retrieves the transaction resource with the specified internal transaction ID (the `internal_id` parameter in
     // the transaction resource).
-    InternalId *string
+    InternalID *string
     // Retrieves the transaction resource with the specified transaction code.
     TransactionCode *string
 }
@@ -6465,14 +6465,14 @@ GetTransactionV21Params: query parameters for GetTransactionV2.1
 ```go
 type GetTransactionV21Params struct {
     // Client transaction id.
-    ClientTransactionId *string
+    ClientTransactionID *string
     // External/foreign transaction id (passed by clients).
-    ForeignTransactionId *string
+    ForeignTransactionID *string
     // Retrieves the transaction resource with the specified transaction ID (the `id` parameter in the transaction resource).
     ID  *string
     // Retrieves the transaction resource with the specified internal transaction ID (the `internal_id` parameter in
     // the transaction resource).
-    InternalId *string
+    InternalID *string
     // Retrieves the transaction resource with the specified transaction code.
     TransactionCode *string
 }
@@ -6694,23 +6694,23 @@ type Product struct {
     // Price of the product without VAT.
     Price *float32 `json:"price,omitempty"`
     // Price of a single product item with VAT.
-    PriceWithVat *float32 `json:"price_with_vat,omitempty"`
+    PriceWithVAT *float32 `json:"price_with_vat,omitempty"`
     // Number of product items for the purchase.
     Quantity *float64 `json:"quantity,omitempty"`
     // Amount of the VAT for a single product item (calculated as the product of `price` and `vat_rate`, i.e. `single_vat_amount
     // = price * vat_rate`).
-    SingleVatAmount *float32 `json:"single_vat_amount,omitempty"`
+    SingleVATAmount *float32 `json:"single_vat_amount,omitempty"`
     // Total price of the product items without VAT (calculated as the product of `price` and `quantity`, i.e. `total_price
     // = price * quantity`).
     TotalPrice *float32 `json:"total_price,omitempty"`
     // Total price of the product items including VAT (calculated as the product of `price_with_vat` and `quantity`, i.e.
     // `total_with_vat = price_with_vat * quantity`).
-    TotalWithVat *float32 `json:"total_with_vat,omitempty"`
+    TotalWithVAT *float32 `json:"total_with_vat,omitempty"`
     // Total VAT amount for the purchase (calculated as the product of `single_vat_amount` and `quantity`, i.e. `vat_amount
     // = single_vat_amount * quantity`).
-    VatAmount *float32 `json:"vat_amount,omitempty"`
+    VATAmount *float32 `json:"vat_amount,omitempty"`
     // VAT rate applicable to the product.
-    VatRate *float32 `json:"vat_rate,omitempty"`
+    VATRate *float32 `json:"vat_rate,omitempty"`
 }
 ```
 
@@ -6746,7 +6746,7 @@ type TransactionEvent struct {
     EventType *shared.EventType `json:"event_type,omitempty"`
     // Unique ID of the transaction event.
     // Format: int64
-    ID  *shared.EventId `json:"id,omitempty"`
+    ID  *shared.EventID `json:"id,omitempty"`
     // Consecutive number of the installment that is paid. Applicable only payout events, i.e. `event_type = PAYOUT`.
     InstallmentNumber *int `json:"installment_number,omitempty"`
     // Status of the transaction event.
@@ -6786,7 +6786,7 @@ type TransactionFull struct {
     InstallmentsCount *int `json:"installments_count,omitempty"`
     // Internal unique ID of the transaction on the SumUp platform.
     // Format: int64
-    InternalId *int64 `json:"internal_id,omitempty"`
+    InternalID *int64 `json:"internal_id,omitempty"`
     // Latitude value from the coordinates of the payment location (as received from the payment terminal reader).
     // Min: 0
     // Max: 90
@@ -6838,9 +6838,9 @@ type TransactionFull struct {
     // Format: email
     Username *string `json:"username,omitempty"`
     // Amount of the applicable VAT (out of the total transaction amount).
-    VatAmount *float32 `json:"vat_amount,omitempty"`
+    VATAmount *float32 `json:"vat_amount,omitempty"`
     // List of VAT rates applicable to the transaction.
-    VatRates []interface{} `json:"vat_rates,omitempty"`
+    VATRates []interface{} `json:"vat_rates,omitempty"`
     // Verification method used for the transaction.
     VerificationMethod *TransactionFullVerificationMethod `json:"verification_method,omitempty"`
 }
@@ -6988,9 +6988,9 @@ const (
     TransactionFullVerificationMethodConfirmationCodeVerified TransactionFullVerificationMethod = "confirmation code verified"
     TransactionFullVerificationMethodNa                       TransactionFullVerificationMethod = "na"
     TransactionFullVerificationMethodNone                     TransactionFullVerificationMethod = "none"
-    TransactionFullVerificationMethodOfflinePin               TransactionFullVerificationMethod = "offline PIN"
-    TransactionFullVerificationMethodOfflinePinSignature      TransactionFullVerificationMethod = "offline PIN + signature"
-    TransactionFullVerificationMethodOnlinePin                TransactionFullVerificationMethod = "online PIN"
+    TransactionFullVerificationMethodOfflinePIN               TransactionFullVerificationMethod = "offline PIN"
+    TransactionFullVerificationMethodOfflinePINSignature      TransactionFullVerificationMethod = "offline PIN + signature"
+    TransactionFullVerificationMethodOnlinePIN                TransactionFullVerificationMethod = "online PIN"
     TransactionFullVerificationMethodSignature                TransactionFullVerificationMethod = "signature"
 )
 ```
@@ -7007,7 +7007,7 @@ type TransactionHistory struct {
     // Issuing card network of the payment card used for the transaction.
     CardType *shared.CardType `json:"card_type,omitempty"`
     // Client-specific ID of the transaction.
-    ClientTransactionId *string `json:"client_transaction_id,omitempty"`
+    ClientTransactionID *string `json:"client_transaction_id,omitempty"`
     // Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
     // currency values are enumerated above.
     Currency *shared.Currency `json:"currency,omitempty"`
@@ -7033,7 +7033,7 @@ type TransactionHistory struct {
     // Transaction code returned by the acquirer/processing entity after processing the transaction.
     TransactionCode *string `json:"transaction_code,omitempty"`
     // Unique ID of the transaction.
-    TransactionId *shared.TransactionId `json:"transaction_id,omitempty"`
+    TransactionID *shared.TransactionID `json:"transaction_id,omitempty"`
     // Type of the transaction for the registered user specified in the `user` property.
     Type *TransactionHistoryType `json:"type,omitempty"`
     // Email address of the registered user (merchant) to whom the payment is made.
@@ -7211,7 +7211,7 @@ ListDeprecated: List transactions Lists detailed history of all transactions ass
 ### func \(\*TransactionsService\) [Refund](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L841>)
 
 ```go
-func (s *TransactionsService) Refund(ctx context.Context, txnId string, body RefundTransactionBody) error
+func (s *TransactionsService) Refund(ctx context.Context, txnID string, body RefundTransactionBody) error
 ```
 
 Refund: Refund a transaction Refunds an identified transaction either in full or partially.
@@ -7314,21 +7314,24 @@ import "github.com/sumup/sumup-go/example/simple"
 
 
 
-# stringx
+# strcase
 
 ```go
-import "github.com/sumup/go-sdk-gen/internal/stringx"
+import "github.com/sumup/go-sdk-gen/internal/strcase"
 ```
 
 ## Index
 
 - [func MakePlural\(s string\) string](<#MakePlural>)
 - [func MakeSingular\(s string\) string](<#MakeSingular>)
+- [func ToCamel\(s string\) string](<#ToCamel>)
+- [func ToLowerCamel\(s string\) string](<#ToLowerCamel>)
 - [func ToLowerFirstLetter\(str string\) string](<#ToLowerFirstLetter>)
+- [func ToSnake\(s string\) string](<#ToSnake>)
 
 
 <a name="MakePlural"></a>
-## func [MakePlural](<https://github.com/sumup/sumup-go/blob/main/codegen/internal/stringx/strings.go#L25>)
+## func [MakePlural](<https://github.com/sumup/sumup-go/blob/main/codegen/internal/strcase/strings.go#L25>)
 
 ```go
 func MakePlural(s string) string
@@ -7337,7 +7340,7 @@ func MakePlural(s string) string
 MakePlural returns the given string but plural.
 
 <a name="MakeSingular"></a>
-## func [MakeSingular](<https://github.com/sumup/sumup-go/blob/main/codegen/internal/stringx/strings.go#L17>)
+## func [MakeSingular](<https://github.com/sumup/sumup-go/blob/main/codegen/internal/strcase/strings.go#L17>)
 
 ```go
 func MakeSingular(s string) string
@@ -7345,14 +7348,41 @@ func MakeSingular(s string) string
 
 MakeSingular returns the given string but singular.
 
+<a name="ToCamel"></a>
+## func [ToCamel](<https://github.com/sumup/sumup-go/blob/main/codegen/internal/strcase/strings.go#L36>)
+
+```go
+func ToCamel(s string) string
+```
+
+ToCamel converts the provided string into CamelCase and ensures well\-known initialisms stay capitalized \(e.g. app\_id \-\> AppID\).
+
+<a name="ToLowerCamel"></a>
+## func [ToLowerCamel](<https://github.com/sumup/sumup-go/blob/main/codegen/internal/strcase/strings.go#L52>)
+
+```go
+func ToLowerCamel(s string) string
+```
+
+ToLowerCamel converts the provided string into lowerCamelCase with the same initialism handling as [ToCamel](<#ToCamel>).
+
 <a name="ToLowerFirstLetter"></a>
-## func [ToLowerFirstLetter](<https://github.com/sumup/sumup-go/blob/main/codegen/internal/stringx/strings.go#L9>)
+## func [ToLowerFirstLetter](<https://github.com/sumup/sumup-go/blob/main/codegen/internal/strcase/strings.go#L9>)
 
 ```go
 func ToLowerFirstLetter(str string) string
 ```
 
 ToLowerFirstLetter returns the given string with the first letter converted to lower case.
+
+<a name="ToSnake"></a>
+## func [ToSnake](<https://github.com/sumup/sumup-go/blob/main/codegen/internal/strcase/strings.go#L68>)
+
+```go
+func ToSnake(s string) string
+```
+
+ToSnake converts any supported string into snake\_case.
 
 # builder
 
@@ -7396,7 +7426,7 @@ func ResolveRef(spec *openapi3.T, ref string) (*openapi3.SchemaRef, error)
 ResolveRef resolves a schema reference.
 
 <a name="Builder"></a>
-## type [Builder](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/builder.go#L53-L74>)
+## type [Builder](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/builder.go#L22-L43>)
 
 Builder is an SDK builder. Builder works in two steps: First, it loads the OpenAPI specs and pre\-processes them for code generation by transforming the specs into intermediary representation. Secondly, it generates and writes the SDK to desired destination.
 
@@ -7407,7 +7437,7 @@ type Builder struct {
 ```
 
 <a name="New"></a>
-### func [New](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/builder.go#L88>)
+### func [New](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/builder.go#L57>)
 
 ```go
 func New(cfg Config, opts ...Option) *Builder
@@ -7416,7 +7446,7 @@ func New(cfg Config, opts ...Option) *Builder
 New creates a new [Builder](<#Builder>). Call \[Build.Load\] to load in OpenAPI specs and \[Build.Build\] to generate SDK based on provided config.
 
 <a name="Builder.Build"></a>
-### func \(\*Builder\) [Build](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/builder.go#L135>)
+### func \(\*Builder\) [Build](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/builder.go#L104>)
 
 ```go
 func (b *Builder) Build() error
@@ -7425,7 +7455,7 @@ func (b *Builder) Build() error
 Build the SDK and write it to designated output directory. The OpenAPI specs first need to be loaded using [Builder.Load](<#Builder.Load>).
 
 <a name="Builder.Load"></a>
-### func \(\*Builder\) [Load](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/builder.go#L116>)
+### func \(\*Builder\) [Load](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/builder.go#L85>)
 
 ```go
 func (b *Builder) Load(spec *openapi3.T) error
@@ -7434,7 +7464,7 @@ func (b *Builder) Load(spec *openapi3.T) error
 Load loads OpenAPI specs into the builder. To generated the SDK, call [Builder.Build](<#Builder.Build>).
 
 <a name="Config"></a>
-## type [Config](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/builder.go#L77-L82>)
+## type [Config](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/builder.go#L46-L51>)
 
 Config is builder configuration which configures output options.
 
@@ -7460,7 +7490,7 @@ type EnumDeclaration[E cmp.Ordered] struct {
 ```
 
 <a name="EnumDeclaration[E].String"></a>
-### func \(\*EnumDeclaration\[E\]\) [String](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/types.go#L94>)
+### func \(\*EnumDeclaration\[E\]\) [String](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/types.go#L95>)
 
 ```go
 func (et *EnumDeclaration[E]) String() string
@@ -7481,7 +7511,7 @@ type EnumOption[E cmp.Ordered] struct {
 ```
 
 <a name="Method"></a>
-## type [Method](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/methods.go#L30-L40>)
+## type [Method](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/methods.go#L29-L39>)
 
 Method describes a client method. Methods map one\-to\-one to OpenAPI operations.
 
@@ -7500,7 +7530,7 @@ type Method struct {
 ```
 
 <a name="Method.ParamsString"></a>
-### func \(Method\) [ParamsString](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/methods.go#L42>)
+### func \(Method\) [ParamsString](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/methods.go#L41>)
 
 ```go
 func (mt Method) ParamsString() string
@@ -7521,7 +7551,7 @@ type OneOfDeclaration struct {
 ```
 
 <a name="OneOfDeclaration.String"></a>
-### func \(\*OneOfDeclaration\) [String](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/types.go#L38>)
+### func \(\*OneOfDeclaration\) [String](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/types.go#L39>)
 
 ```go
 func (o *OneOfDeclaration) String() string
@@ -7530,7 +7560,7 @@ func (o *OneOfDeclaration) String() string
 
 
 <a name="Option"></a>
-## type [Option](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/builder.go#L84>)
+## type [Option](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/builder.go#L53>)
 
 
 
@@ -7539,7 +7569,7 @@ type Option func(b *Builder)
 ```
 
 <a name="Parameter"></a>
-## type [Parameter](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/methods.go#L24-L27>)
+## type [Parameter](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/methods.go#L23-L26>)
 
 Parameter is a method parameter.
 
@@ -7567,7 +7597,7 @@ type Response struct {
 ```
 
 <a name="ResponseType"></a>
-## type [ResponseType](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/methods.go#L227-L230>)
+## type [ResponseType](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/methods.go#L226-L229>)
 
 
 
@@ -7605,7 +7635,7 @@ type StructField struct {
 ```
 
 <a name="StructField.String"></a>
-### func \(\*StructField\) [String](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/types.go#L56>)
+### func \(\*StructField\) [String](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/types.go#L57>)
 
 ```go
 func (f *StructField) String() string
@@ -7636,7 +7666,7 @@ type TypeDeclaration struct {
 ```
 
 <a name="TypeDeclaration.String"></a>
-### func \(\*TypeDeclaration\) [String](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/types.go#L17>)
+### func \(\*TypeDeclaration\) [String](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/types.go#L18>)
 
 ```go
 func (tt *TypeDeclaration) String() string
@@ -7645,7 +7675,7 @@ func (tt *TypeDeclaration) String() string
 
 
 <a name="Writable"></a>
-## type [Writable](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/types.go#L13-L15>)
+## type [Writable](<https://github.com/sumup/sumup-go/blob/main/codegen/pkg/builder/types.go#L14-L16>)
 
 
 

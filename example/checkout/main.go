@@ -45,6 +45,6 @@ func main() {
 	}
 
 	if accepted, ok := checkoutSuccess.AsCheckoutAccepted(); ok {
-		log.Printf("[INFO] checkout accepted: redirect_to=%q", *accepted.NextStep.RedirectUrl)
+		log.Printf("[INFO] checkout accepted: redirect_to=%q", *accepted.NextStep.RedirectURL)
 	}
 }

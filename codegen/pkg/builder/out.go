@@ -11,7 +11,8 @@ import (
 	"strings"
 
 	"github.com/getkin/kin-openapi/openapi3"
-	"github.com/iancoleman/strcase"
+
+	"github.com/sumup/go-sdk-gen/internal/strcase"
 )
 
 type templateData struct {

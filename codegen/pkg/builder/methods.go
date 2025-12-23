@@ -11,9 +11,8 @@ import (
 	"strings"
 
 	"github.com/getkin/kin-openapi/openapi3"
-	"github.com/iancoleman/strcase"
 
-	"github.com/sumup/go-sdk-gen/internal/stringx"
+	"github.com/sumup/go-sdk-gen/internal/strcase"
 )
 
 var (
@@ -414,7 +413,7 @@ func (b *Builder) getReferenceSchema(v *openapi3.SchemaRef) string {
 		isShared := slices.Contains(b.schemasByTag["shared"], v.Ref)
 
 		if len(v.Value.Enum) > 0 {
-			singularName := strcase.ToCamel(stringx.MakeSingular(ref))
+			singularName := strcase.ToCamel(strcase.MakeSingular(ref))
 			if isShared {
 				return "shared." + singularName
 			}

@@ -8,9 +8,8 @@ import (
 	"strings"
 
 	"github.com/getkin/kin-openapi/openapi3"
-	"github.com/iancoleman/strcase"
 
-	"github.com/sumup/go-sdk-gen/internal/stringx"
+	"github.com/sumup/go-sdk-gen/internal/strcase"
 )
 
 // schemasToTypes converts openapi3 schemas to golang struct and enum types.
@@ -303,7 +302,7 @@ func (b *Builder) generateSchemaComponents(name string, schema *openapi3.SchemaR
 			Schema:  spec,
 		})
 	case spec.Type.Is("array"):
-		typeName, itemTypes := b.genSchema(spec.Items, stringx.MakeSingular(name))
+		typeName, itemTypes := b.genSchema(spec.Items, strcase.MakeSingular(name))
 		types = append(types, itemTypes...)
 		types = append(types, &TypeDeclaration{
 			Comment: schemaGodoc(name, spec),
@@ -372,7 +371,7 @@ func (b *Builder) genSchema(schema *openapi3.SchemaRef, name string) (string, []
 	if schema.Ref != "" {
 		ref := strings.TrimPrefix(schema.Ref, "#/components/schemas/")
 		if len(schema.Value.Enum) > 0 {
-			return strcase.ToCamel(stringx.MakeSingular(ref)), nil
+			return strcase.ToCamel(strcase.MakeSingular(ref)), nil
 		}
 
 		return strcase.ToCamel(ref), nil
@@ -387,7 +386,7 @@ func (b *Builder) genSchema(schema *openapi3.SchemaRef, name string) (string, []
 		if enum != nil {
 			types = append(types, enum)
 		}
-		return stringx.MakeSingular(name), types
+		return strcase.MakeSingular(name), types
 	case spec.Type.Is("string"):
 		return formatStringType(schema.Value), nil
 	case spec.Type.Is("integer"):
@@ -397,7 +396,7 @@ func (b *Builder) genSchema(schema *openapi3.SchemaRef, name string) (string, []
 	case spec.Type.Is("boolean"):
 		return "bool", nil
 	case spec.Type.Is("array"):
-		typeName, schemas := b.genSchema(spec.Items, stringx.MakeSingular(name))
+		typeName, schemas := b.genSchema(spec.Items, strcase.MakeSingular(name))
 		types = append(types, schemas...)
 		return "[]" + typeName, types
 	case spec.Type.Is("object"):
@@ -526,7 +525,7 @@ func (b *Builder) createFields(properties map[string]*openapi3.SchemaRef, name s
 }
 
 func createEnum(schema *openapi3.Schema, name string) Writable {
-	enumName := stringx.MakeSingular(name)
+	enumName := strcase.MakeSingular(name)
 	switch {
 	case schema.Type.Is("string"):
 		values := make([]EnumOption[string], 0)
@@ -579,7 +578,7 @@ func createEnum(schema *openapi3.Schema, name string) Writable {
 			return &EnumDeclaration[int64]{
 				Type: TypeDeclaration{
 					Comment: schemaGodoc(name, schema),
-					Name:    stringx.MakeSingular(name),
+					Name:    strcase.MakeSingular(name),
 					Type:    "int64",
 					Schema:  schema,
 				},
@@ -609,7 +608,7 @@ func createEnum(schema *openapi3.Schema, name string) Writable {
 			return &EnumDeclaration[int32]{
 				Type: TypeDeclaration{
 					Comment: schemaGodoc(name, schema),
-					Name:    stringx.MakeSingular(name),
+					Name:    strcase.MakeSingular(name),
 					Type:    "int32",
 					Schema:  schema,
 				},
@@ -638,7 +637,7 @@ func createEnum(schema *openapi3.Schema, name string) Writable {
 		return &EnumDeclaration[int]{
 			Type: TypeDeclaration{
 				Comment: schemaGodoc(name, schema),
-				Name:    stringx.MakeSingular(name),
+				Name:    strcase.MakeSingular(name),
 				Type:    "int",
 				Schema:  schema,
 			},
@@ -667,7 +666,7 @@ func createEnum(schema *openapi3.Schema, name string) Writable {
 			return &EnumDeclaration[float32]{
 				Type: TypeDeclaration{
 					Comment: schemaGodoc(name, schema),
-					Name:    stringx.MakeSingular(name),
+					Name:    strcase.MakeSingular(name),
 					Type:    "float32",
 					Schema:  schema,
 				},
@@ -696,7 +695,7 @@ func createEnum(schema *openapi3.Schema, name string) Writable {
 		return &EnumDeclaration[float64]{
 			Type: TypeDeclaration{
 				Comment: schemaGodoc(name, schema),
-				Name:    stringx.MakeSingular(name),
+				Name:    strcase.MakeSingular(name),
 				Type:    "float64",
 				Schema:  schema,
 			},

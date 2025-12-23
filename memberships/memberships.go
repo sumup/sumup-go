@@ -37,7 +37,7 @@ type Membership struct {
 	// Information about the resource the membership is in.
 	Resource MembershipResource `json:"resource"`
 	// ID of the resource the membership is in.
-	ResourceId string `json:"resource_id"`
+	ResourceID string `json:"resource_id"`
 	// User's roles.
 	Roles []string `json:"roles"`
 	// The status of the membership.
@@ -95,7 +95,7 @@ type ListMembershipsParams struct {
 	// Filter memberships by the parent of the resource the membership is in.
 	// When filtering by parent both `resource.parent.id` and `resource.parent.type` must be present. Pass explicit null
 	// to filter for resources without a parent.
-	ResourceParentId *string
+	ResourceParentID *string
 	// Filter memberships by the parent of the resource the membership is in.
 	// When filtering by parent both `resource.parent.id` and `resource.parent.type` must be present. Pass explicit null
 	// to filter for resources without a parent.
@@ -132,8 +132,8 @@ func (p *ListMembershipsParams) QueryValues() url.Values {
 		q.Set("resource.name", *p.ResourceName)
 	}
 
-	if p.ResourceParentId != nil {
-		q.Set("resource.parent.id", *p.ResourceParentId)
+	if p.ResourceParentID != nil {
+		q.Set("resource.parent.id", *p.ResourceParentID)
 	}
 
 	if p.ResourceParentType != nil {

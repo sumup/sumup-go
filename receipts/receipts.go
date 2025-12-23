@@ -51,14 +51,14 @@ type ReceiptEvent struct {
 	Amount *shared.AmountEvent `json:"amount,omitempty"`
 	// Unique ID of the transaction event.
 	// Format: int64
-	ID        *shared.EventId `json:"id,omitempty"`
+	ID        *shared.EventID `json:"id,omitempty"`
 	ReceiptNo *string         `json:"receipt_no,omitempty"`
 	// Status of the transaction event.
 	Status *shared.EventStatus `json:"status,omitempty"`
 	// Date and time of the transaction event.
 	Timestamp *shared.TimestampEvent `json:"timestamp,omitempty"`
 	// Unique ID of the transaction.
-	TransactionId *shared.TransactionId `json:"transaction_id,omitempty"`
+	TransactionID *shared.TransactionID `json:"transaction_id,omitempty"`
 	// Type of the transaction event.
 	Type *shared.EventType `json:"type,omitempty"`
 }
@@ -116,9 +116,9 @@ type ReceiptTransaction struct {
 	// Transaction code.
 	TransactionCode *string `json:"transaction_code,omitempty"`
 	// Transaction VAT amount.
-	VatAmount *string `json:"vat_amount,omitempty"`
+	VATAmount *string `json:"vat_amount,omitempty"`
 	// Vat rates.
-	VatRates []ReceiptTransactionVatRate `json:"vat_rates,omitempty"`
+	VATRates []ReceiptTransactionVATRate `json:"vat_rates,omitempty"`
 	// Cardholder verification method.
 	VerificationMethod *string `json:"verification_method,omitempty"`
 }
@@ -137,8 +137,8 @@ type ReceiptTransactionProduct struct {
 	TotalPrice *float32 `json:"total_price,omitempty"`
 }
 
-// ReceiptTransactionVatRate is a schema definition.
-type ReceiptTransactionVatRate struct {
+// ReceiptTransactionVATRate is a schema definition.
+type ReceiptTransactionVATRate struct {
 	// Gross
 	Gross *float32 `json:"gross,omitempty"`
 	// Net
@@ -146,7 +146,7 @@ type ReceiptTransactionVatRate struct {
 	// Rate
 	Rate *float32 `json:"rate,omitempty"`
 	// Vat
-	Vat *float32 `json:"vat,omitempty"`
+	VAT *float32 `json:"vat,omitempty"`
 }
 
 // GetReceiptParams: query parameters for GetReceipt
@@ -154,7 +154,7 @@ type GetReceiptParams struct {
 	// Merchant code.
 	Mid string
 	// The ID of the transaction event (refund).
-	TxEventId *int
+	TxEventID *int
 }
 
 // QueryValues converts [GetReceiptParams] into [url.Values].
@@ -163,8 +163,8 @@ func (p *GetReceiptParams) QueryValues() url.Values {
 
 	q.Set("mid", p.Mid)
 
-	if p.TxEventId != nil {
-		q.Set("tx_event_id", strconv.Itoa(*p.TxEventId))
+	if p.TxEventID != nil {
+		q.Set("tx_event_id", strconv.Itoa(*p.TxEventID))
 	}
 
 	return q
@@ -180,8 +180,8 @@ func NewReceiptsService(c *client.Client) *ReceiptsService {
 
 // Get: Retrieve receipt details
 // Retrieves receipt specific data for a transaction.
-func (s *ReceiptsService) Get(ctx context.Context, iD string, params GetReceiptParams) (*Receipt, error) {
-	path := fmt.Sprintf("/v1.1/receipts/%v", iD)
+func (s *ReceiptsService) Get(ctx context.Context, id string, params GetReceiptParams) (*Receipt, error) {
+	path := fmt.Sprintf("/v1.1/receipts/%v", id)
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {

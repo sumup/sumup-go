@@ -74,7 +74,7 @@ type MembershipUser struct {
 // Deprecated: this operation is deprecated
 type MembershipUserClassic struct {
 	// Format: int32
-	UserId int32 `json:"user_id"`
+	UserID int32 `json:"user_id"`
 }
 
 // CreateMerchantMemberBody is a schema definition.
@@ -140,7 +140,7 @@ type ListMerchantMembersParams struct {
 	// Filter the returned members by the membership status.
 	Status *shared.MembershipStatus
 	// Search for a member by user id.
-	UserId *string
+	UserID *string
 }
 
 // QueryValues converts [ListMerchantMembersParams] into [url.Values].
@@ -171,8 +171,8 @@ func (p *ListMerchantMembersParams) QueryValues() url.Values {
 		q.Set("status", string(*p.Status))
 	}
 
-	if p.UserId != nil {
-		q.Set("user.id", *p.UserId)
+	if p.UserID != nil {
+		q.Set("user.id", *p.UserID)
 	}
 
 	return q
@@ -270,8 +270,8 @@ func (s *MembersService) Create(ctx context.Context, merchantCode string, body C
 
 // Delete: Delete a member
 // Deletes a merchant member.
-func (s *MembersService) Delete(ctx context.Context, merchantCode string, memberId string) error {
-	path := fmt.Sprintf("/v0.1/merchants/%v/members/%v", merchantCode, memberId)
+func (s *MembersService) Delete(ctx context.Context, merchantCode string, memberID string) error {
+	path := fmt.Sprintf("/v0.1/merchants/%v/members/%v", merchantCode, memberID)
 
 	resp, err := s.c.Call(ctx, http.MethodDelete, path)
 	if err != nil {
@@ -296,8 +296,8 @@ func (s *MembersService) Delete(ctx context.Context, merchantCode string, member
 
 // Get: Retrieve a member
 // Retrieve a merchant member.
-func (s *MembersService) Get(ctx context.Context, merchantCode string, memberId string) (*Member, error) {
-	path := fmt.Sprintf("/v0.1/merchants/%v/members/%v", merchantCode, memberId)
+func (s *MembersService) Get(ctx context.Context, merchantCode string, memberID string) (*Member, error) {
+	path := fmt.Sprintf("/v0.1/merchants/%v/members/%v", merchantCode, memberID)
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
@@ -327,8 +327,8 @@ func (s *MembersService) Get(ctx context.Context, merchantCode string, memberId 
 
 // Update: Update a member
 // Update the merchant member.
-func (s *MembersService) Update(ctx context.Context, merchantCode string, memberId string, body UpdateMerchantMemberBody) (*Member, error) {
-	path := fmt.Sprintf("/v0.1/merchants/%v/members/%v", merchantCode, memberId)
+func (s *MembersService) Update(ctx context.Context, merchantCode string, memberID string, body UpdateMerchantMemberBody) (*Member, error) {
+	path := fmt.Sprintf("/v0.1/merchants/%v/members/%v", merchantCode, memberID)
 
 	resp, err := s.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))
 	if err != nil {
