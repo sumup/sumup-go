@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.11.0](https://github.com/sumup/sumup-go/compare/v0.10.0...v0.11.0) (2025-12-23)
+
+
+### Features
+
+* **sdk:** use initialisms for pascal case strings ([#166](https://github.com/sumup/sumup-go/issues/166)) ([a532bfc](https://github.com/sumup/sumup-go/commit/a532bfc2a10151a1f07950f6e3ef23a203373930))
+* **tooling:** move codegen here ([#143](https://github.com/sumup/sumup-go/issues/143)) ([52095be](https://github.com/sumup/sumup-go/commit/52095be265ce0350695e1f3a5808acc4c05cdb95))
+
+
+### Bug Fixes
+
+* reader status battery_level type ([21389ed](https://github.com/sumup/sumup-go/commit/21389ed000eb0b3c450b4a6a7bf16b99bfd2c780))
+
 ## [0.10.0](https://github.com/sumup/sumup-go/compare/v0.9.0...v0.10.0) (2025-12-19)
 
 
