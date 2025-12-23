@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.1](https://github.com/sumup/sumup-go/compare/v0.11.0...v0.11.1) (2025-12-23)
+
+
+### Bug Fixes
+
+* **sdk:** HUF and HRK currency initialisms ([#168](https://github.com/sumup/sumup-go/issues/168)) ([40a43e0](https://github.com/sumup/sumup-go/commit/40a43e0b53ac8596a94e227b4dee97980cf291ca))
+
 ## [0.11.0](https://github.com/sumup/sumup-go/compare/v0.10.0...v0.11.0) (2025-12-23)
 
 
