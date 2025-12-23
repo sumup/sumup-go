@@ -194,9 +194,9 @@ const (
 // CheckoutAcceptedNextStepPayload: Contains parameters essential for form redirection. Number of object keys
 // and their content can vary.
 type CheckoutAcceptedNextStepPayload struct {
-	Md      *interface{} `json:"md,omitempty"`
-	PaReq   *interface{} `json:"pa_req,omitempty"`
-	TermURL *interface{} `json:"term_url,omitempty"`
+	Md      *any `json:"md,omitempty"`
+	PaReq   *any `json:"pa_req,omitempty"`
+	TermURL *any `json:"term_url,omitempty"`
 }
 
 // CheckoutCreateRequest: Details of the payment checkout.
