@@ -394,16 +394,16 @@ func (b *Builder) convertToValidGoType(property string, r *openapi3.SchemaRef) s
 		if len(r.Value.Properties) == 0 {
 			// TODO: generate type alias?
 			slog.Warn("object with empty properties", slog.String("property", property))
-			return "interface{}"
+			return "any"
 		}
 		// Most likely this is a local object, we will handle it.
 		return strcase.ToCamel(property)
 	default:
-		slog.Warn("unknown type, falling back to 'interface{}'",
+		slog.Warn("unknown type, falling back to 'any'",
 			slog.Any("property", property),
 			slog.Any("type", r.Value.Type),
 		)
-		return "interface{}"
+		return "any"
 	}
 }
 

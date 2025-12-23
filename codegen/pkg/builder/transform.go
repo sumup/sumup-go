@@ -329,12 +329,12 @@ func (b *Builder) generateSchemaComponents(name string, schema *openapi3.SchemaR
 			})
 		}
 	case spec.AnyOf != nil:
-		slog.Warn("AnyOf not supported, falling back to 'inteface{}'",
+		slog.Warn("AnyOf not supported, falling back to 'any'",
 			slog.Any("name", name),
 		)
 		types = append(types, &TypeDeclaration{
 			Comment: schemaGodoc(name, spec),
-			Type:    "interface{}",
+			Type:    "any",
 			Name:    name,
 			Schema:  spec,
 		})
@@ -412,7 +412,7 @@ func (b *Builder) genSchema(schema *openapi3.SchemaRef, name string) (string, []
 		slog.Warn("AnyOf not supported, falling back to 'any'",
 			slog.Any("name", name),
 		)
-		return "interface{}", nil
+		return "any", nil
 	case spec.AllOf != nil:
 		object, additionalTypes := b.createAllOf(spec, name)
 		types = append(types, object)
@@ -425,7 +425,7 @@ func (b *Builder) genSchema(schema *openapi3.SchemaRef, name string) (string, []
 				slog.Any("type", spec.Type),
 			)
 		}
-		return "interface{}", nil
+		return "any", nil
 	}
 }
 

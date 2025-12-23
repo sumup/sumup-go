@@ -313,9 +313,9 @@ CheckoutAcceptedNextStepPayload: Contains parameters essential for form redirect
 
 ```go
 type CheckoutAcceptedNextStepPayload struct {
-    Md      *interface{} `json:"md,omitempty"`
-    PaReq   *interface{} `json:"pa_req,omitempty"`
-    TermURL *interface{} `json:"term_url,omitempty"`
+    Md      *any `json:"md,omitempty"`
+    PaReq   *any `json:"pa_req,omitempty"`
+    TermURL *any `json:"term_url,omitempty"`
 }
 ```
 
@@ -6793,7 +6793,7 @@ type TransactionFull struct {
     Lat *Lat `json:"lat,omitempty"`
     // List of hyperlinks for accessing related resources.
     // Unique items only
-    Links []interface{} `json:"links,omitempty"`
+    Links []any `json:"links,omitempty"`
     // Local date and time of the creation of the transaction.
     LocalTime *time.Time `json:"local_time,omitempty"`
     // Details of the payment location as received from the payment terminal.
@@ -6840,7 +6840,7 @@ type TransactionFull struct {
     // Amount of the applicable VAT (out of the total transaction amount).
     VATAmount *float32 `json:"vat_amount,omitempty"`
     // List of VAT rates applicable to the transaction.
-    VATRates []interface{} `json:"vat_rates,omitempty"`
+    VATRates []any `json:"vat_rates,omitempty"`
     // Verification method used for the transaction.
     VerificationMethod *TransactionFullVerificationMethod `json:"verification_method,omitempty"`
 }
