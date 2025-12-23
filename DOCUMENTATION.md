@@ -1420,36 +1420,6 @@ func WithQueryValues(q url.Values) RequestOption
 
 WithQueryValues returns a [RequestOption](<#RequestOption>) that sets the request query params.
 
-# codegen
-
-```go
-import "github.com/sumup/go-sdk-gen"
-```
-
-## Index
-
-- [func App\(\) \*cli.App](<#App>)
-- [func Generate\(\) \*cli.Command](<#Generate>)
-
-
-<a name="App"></a>
-## func [App](<https://github.com/sumup/sumup-go/blob/main/codegen/main.go#L19>)
-
-```go
-func App() *cli.App
-```
-
-
-
-<a name="Generate"></a>
-## func [Generate](<https://github.com/sumup/sumup-go/blob/main/codegen/generate.go#L15>)
-
-```go
-func Generate() *cli.Command
-```
-
-
-
 # customers
 
 ```go
