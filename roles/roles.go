@@ -147,8 +147,8 @@ func (s *RolesService) Create(ctx context.Context, merchantCode string, body Cre
 
 // Delete: Delete a role
 // Delete a custom role.
-func (s *RolesService) Delete(ctx context.Context, merchantCode string, roleId string) error {
-	path := fmt.Sprintf("/v0.1/merchants/%v/roles/%v", merchantCode, roleId)
+func (s *RolesService) Delete(ctx context.Context, merchantCode string, roleID string) error {
+	path := fmt.Sprintf("/v0.1/merchants/%v/roles/%v", merchantCode, roleID)
 
 	resp, err := s.c.Call(ctx, http.MethodDelete, path)
 	if err != nil {
@@ -180,8 +180,8 @@ func (s *RolesService) Delete(ctx context.Context, merchantCode string, roleId s
 
 // Get: Retrieve a role
 // Retrieve a custom role by ID.
-func (s *RolesService) Get(ctx context.Context, merchantCode string, roleId string) (*Role, error) {
-	path := fmt.Sprintf("/v0.1/merchants/%v/roles/%v", merchantCode, roleId)
+func (s *RolesService) Get(ctx context.Context, merchantCode string, roleID string) (*Role, error) {
+	path := fmt.Sprintf("/v0.1/merchants/%v/roles/%v", merchantCode, roleID)
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
@@ -211,8 +211,8 @@ func (s *RolesService) Get(ctx context.Context, merchantCode string, roleId stri
 
 // Update: Update a role
 // Update a custom role.
-func (s *RolesService) Update(ctx context.Context, merchantCode string, roleId string, body UpdateMerchantRoleBody) (*Role, error) {
-	path := fmt.Sprintf("/v0.1/merchants/%v/roles/%v", merchantCode, roleId)
+func (s *RolesService) Update(ctx context.Context, merchantCode string, roleID string, body UpdateMerchantRoleBody) (*Role, error) {
+	path := fmt.Sprintf("/v0.1/merchants/%v/roles/%v", merchantCode, roleID)
 
 	resp, err := s.c.Call(ctx, http.MethodPatch, path, client.WithJSONBody(body))
 	if err != nil {

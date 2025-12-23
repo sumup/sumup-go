@@ -54,11 +54,11 @@ type AddressWithDetails struct {
 	// Region code
 	RegionCode *string `json:"region_code,omitempty"`
 	// Country region id
-	RegionId *float64 `json:"region_id,omitempty"`
+	RegionID *float64 `json:"region_id,omitempty"`
 	// Region name
 	RegionName *string `json:"region_name,omitempty"`
 	// undefined
-	StateId *string `json:"state_id,omitempty"`
+	StateID *string `json:"state_id,omitempty"`
 	// TimeOffset Details
 	TimeoffsetDetails *TimeoffsetDetails `json:"timeoffset_details,omitempty"`
 }
@@ -76,7 +76,7 @@ type AppSettings struct {
 	// Expected max transaction amount.
 	ExpectedMaxTransactionAmount *float64 `json:"expected_max_transaction_amount,omitempty"`
 	// Include vat.
-	IncludeVat *bool `json:"include_vat,omitempty"`
+	IncludeVAT *bool `json:"include_vat,omitempty"`
 	// Manual entry.
 	ManualEntry *string `json:"manual_entry,omitempty"`
 	// Manual entry tutorial.
@@ -117,7 +117,7 @@ type BankAccount struct {
 	// Creation date of the bank account
 	CreatedAt *string `json:"created_at,omitempty"`
 	// IBAN
-	Iban *string `json:"iban,omitempty"`
+	IBAN *string `json:"iban,omitempty"`
 	// The primary bank account is the one used for payouts
 	Primary *bool `json:"primary,omitempty"`
 	// Status in the verification process
@@ -167,7 +167,7 @@ type DoingBusinessAsLegacy struct {
 	// Doing business as email
 	Email *string `json:"email,omitempty"`
 	// Doing business as VAT ID
-	VatId *string `json:"vat_id,omitempty"`
+	VATID *string `json:"vat_id,omitempty"`
 	// Doing business as website
 	Website *string `json:"website,omitempty"`
 }
@@ -185,7 +185,7 @@ type DoingBusinessAsLegacyAddress struct {
 	// Postal code
 	PostCode *string `json:"post_code,omitempty"`
 	// Country region ID
-	RegionId *float64 `json:"region_id,omitempty"`
+	RegionID *float64 `json:"region_id,omitempty"`
 	// Country region name
 	RegionName *string `json:"region_name,omitempty"`
 }
@@ -253,9 +253,9 @@ type MerchantProfileLegacy struct {
 	// Merchant settings &#40;like \"payout_type\", \"payout_period\"&#41;
 	Settings *MerchantSettings `json:"settings,omitempty"`
 	// Vat ID
-	VatId *string `json:"vat_id,omitempty"`
+	VATID *string `json:"vat_id,omitempty"`
 	// Merchant VAT rates
-	VatRates *VatRates `json:"vat_rates,omitempty"`
+	VATRates *VATRates `json:"vat_rates,omitempty"`
 	// Website
 	Website *string `json:"website,omitempty"`
 }
@@ -335,8 +335,8 @@ type TimeoffsetDetails struct {
 	PostCode *string `json:"post_code,omitempty"`
 }
 
-// VatRates: Merchant VAT rates
-type VatRates struct {
+// VATRates: Merchant VAT rates
+type VATRates struct {
 	// Country ISO code
 	Country *string `json:"country,omitempty"`
 	// Description

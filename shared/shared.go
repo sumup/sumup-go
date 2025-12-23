@@ -64,8 +64,8 @@ const (
 	CurrencyDKK Currency = "DKK"
 	CurrencyEUR Currency = "EUR"
 	CurrencyGBP Currency = "GBP"
-	CurrencyHRK Currency = "HRK"
-	CurrencyHUF Currency = "HUF"
+	CurrencyHrk Currency = "HRK"
+	CurrencyHuf Currency = "HUF"
 	CurrencyNOK Currency = "NOK"
 	CurrencyPLN Currency = "PLN"
 	CurrencyRON Currency = "RON"
@@ -135,9 +135,9 @@ func (e *ErrorForbidden) Error() string {
 
 var _ error = (*ErrorForbidden)(nil)
 
-// EventId: Unique ID of the transaction event.
+// EventID: Unique ID of the transaction event.
 // Format: int64
-type EventId int64
+type EventID int64
 
 // EventStatus: Status of the transaction event.
 type EventStatus string
@@ -207,7 +207,7 @@ const (
 	PaymentTypeDirectDebit PaymentType = "DIRECT_DEBIT"
 	PaymentTypeEcom        PaymentType = "ECOM"
 	PaymentTypeMoto        PaymentType = "MOTO"
-	PaymentTypePos         PaymentType = "POS"
+	PaymentTypePOS         PaymentType = "POS"
 	PaymentTypeRecurring   PaymentType = "RECURRING"
 	PaymentTypeUnknown     PaymentType = "UNKNOWN"
 )
@@ -229,7 +229,7 @@ type PersonalDetails struct {
 	Phone *string `json:"phone,omitempty"`
 	// An identification number user for tax purposes (e.g. CPF)
 	// Max length: 255
-	TaxId *string `json:"tax_id,omitempty"`
+	TaxID *string `json:"tax_id,omitempty"`
 }
 
 // Problem: A RFC 9457 problem details object.
@@ -301,14 +301,14 @@ type TransactionCheckoutInfo struct {
 	EntryMode *EntryMode `json:"entry_mode,omitempty"`
 	// Internal unique ID of the transaction on the SumUp platform.
 	// Format: int64
-	InternalId *int64 `json:"internal_id,omitempty"`
+	InternalID *int64 `json:"internal_id,omitempty"`
 	// Unique code of the registered merchant to whom the payment is made.
 	MerchantCode *string `json:"merchant_code,omitempty"`
 	// Amount of the tip (out of the total transaction amount).
 	TipAmount *float32 `json:"tip_amount,omitempty"`
 	// Amount of the applicable VAT (out of the total transaction amount).
-	VatAmount *float32 `json:"vat_amount,omitempty"`
+	VATAmount *float32 `json:"vat_amount,omitempty"`
 }
 
-// TransactionId: Unique ID of the transaction.
-type TransactionId string
+// TransactionID: Unique ID of the transaction.
+type TransactionID string

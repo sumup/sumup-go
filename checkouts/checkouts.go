@@ -81,7 +81,7 @@ type Checkout struct {
 	Currency *shared.Currency `json:"currency,omitempty"`
 	// Unique identification of a customer. If specified, the checkout session and payment instrument are associated with
 	// the referenced customer.
-	CustomerId *string `json:"customer_id,omitempty"`
+	CustomerID *string `json:"customer_id,omitempty"`
 	// Date and time of the creation of the payment checkout. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
 	Date *time.Time `json:"date,omitempty"`
 	// Short description of the checkout visible in the SumUp dashboard. The description can contribute to reporting, allowing
@@ -96,7 +96,7 @@ type Checkout struct {
 	MerchantCode *string `json:"merchant_code,omitempty"`
 	// URL to which the SumUp platform sends the processing status of the payment checkout.
 	// Format: uri
-	ReturnUrl *string `json:"return_url,omitempty"`
+	ReturnURL *string `json:"return_url,omitempty"`
 	// Current status of the checkout.
 	Status *CheckoutStatus `json:"status,omitempty"`
 	// List of transactions related to the payment.
@@ -135,7 +135,7 @@ type CheckoutTransaction struct {
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Internal unique ID of the transaction on the SumUp platform.
 	// Format: int64
-	InternalId *int64 `json:"internal_id,omitempty"`
+	InternalID *int64 `json:"internal_id,omitempty"`
 	// Unique code of the registered merchant to whom the payment is made.
 	MerchantCode *string `json:"merchant_code,omitempty"`
 	// Payment type used for the transaction.
@@ -149,7 +149,7 @@ type CheckoutTransaction struct {
 	// Transaction code returned by the acquirer/processing entity after processing the transaction.
 	TransactionCode *string `json:"transaction_code,omitempty"`
 	// Amount of the applicable VAT (out of the total transaction amount).
-	VatAmount *float32 `json:"vat_amount,omitempty"`
+	VATAmount *float32 `json:"vat_amount,omitempty"`
 }
 
 // CheckoutTransactionStatus: Current status of the transaction.
@@ -178,7 +178,7 @@ type CheckoutAcceptedNextStep struct {
 	// Contains parameters essential for form redirection. Number of object keys and their content can vary.
 	Payload *CheckoutAcceptedNextStepPayload `json:"payload,omitempty"`
 	// Refers to a url where the end user is redirected once the payment processing completes.
-	RedirectUrl *string `json:"redirect_url,omitempty"`
+	RedirectURL *string `json:"redirect_url,omitempty"`
 	// Where the end user is redirected.
 	URL *string `json:"url,omitempty"`
 }
@@ -196,7 +196,7 @@ const (
 type CheckoutAcceptedNextStepPayload struct {
 	Md      *interface{} `json:"md,omitempty"`
 	PaReq   *interface{} `json:"pa_req,omitempty"`
-	TermUrl *interface{} `json:"term_url,omitempty"`
+	TermURL *interface{} `json:"term_url,omitempty"`
 }
 
 // CheckoutCreateRequest: Details of the payment checkout.
@@ -211,7 +211,7 @@ type CheckoutCreateRequest struct {
 	Currency shared.Currency `json:"currency"`
 	// Unique identification of a customer. If specified, the checkout session and payment instrument are associated with
 	// the referenced customer.
-	CustomerId *string `json:"customer_id,omitempty"`
+	CustomerID *string `json:"customer_id,omitempty"`
 	// Date and time of the creation of the payment checkout. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
 	//
 	// Read only
@@ -232,10 +232,10 @@ type CheckoutCreateRequest struct {
 	// not specified, the [Payment Widget](https://developer.sumup.com/online-payments/tools/card-widget) renders [3DS
 	// challenge](https://developer.sumup.com/online-payments/features/3ds) within an iframe instead of performing a
 	// full-page redirect.
-	RedirectUrl *string `json:"redirect_url,omitempty"`
+	RedirectURL *string `json:"redirect_url,omitempty"`
 	// URL to which the SumUp platform sends the processing status of the payment checkout.
 	// Format: uri
-	ReturnUrl *string `json:"return_url,omitempty"`
+	ReturnURL *string `json:"return_url,omitempty"`
 	// Current status of the checkout.
 	// Read only
 	Status *CheckoutCreateRequestStatus `json:"status,omitempty"`
@@ -285,7 +285,7 @@ type CheckoutCreateRequestTransaction struct {
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Internal unique ID of the transaction on the SumUp platform.
 	// Format: int64
-	InternalId *int64 `json:"internal_id,omitempty"`
+	InternalID *int64 `json:"internal_id,omitempty"`
 	// Unique code of the registered merchant to whom the payment is made.
 	MerchantCode *string `json:"merchant_code,omitempty"`
 	// Payment type used for the transaction.
@@ -299,7 +299,7 @@ type CheckoutCreateRequestTransaction struct {
 	// Transaction code returned by the acquirer/processing entity after processing the transaction.
 	TransactionCode *string `json:"transaction_code,omitempty"`
 	// Amount of the applicable VAT (out of the total transaction amount).
-	VatAmount *float32 `json:"vat_amount,omitempty"`
+	VATAmount *float32 `json:"vat_amount,omitempty"`
 }
 
 // CheckoutCreateRequestTransactionStatus: Current status of the transaction.
@@ -324,7 +324,7 @@ type CheckoutSuccess struct {
 	Currency *shared.Currency `json:"currency,omitempty"`
 	// Unique identification of a customer. If specified, the checkout session and payment instrument are associated with
 	// the referenced customer.
-	CustomerId *string `json:"customer_id,omitempty"`
+	CustomerID *string `json:"customer_id,omitempty"`
 	// Date and time of the creation of the payment checkout. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
 	Date *time.Time `json:"date,omitempty"`
 	// Short description of the checkout visible in the SumUp dashboard. The description can contribute to reporting, allowing
@@ -342,10 +342,10 @@ type CheckoutSuccess struct {
 	// Object containing token information for the specified payment instrument
 	PaymentInstrument *CheckoutSuccessPaymentInstrument `json:"payment_instrument,omitempty"`
 	// Refers to a url where the end user is redirected once the payment processing completes.
-	RedirectUrl *string `json:"redirect_url,omitempty"`
+	RedirectURL *string `json:"redirect_url,omitempty"`
 	// URL to which the SumUp platform sends the processing status of the payment checkout.
 	// Format: uri
-	ReturnUrl *string `json:"return_url,omitempty"`
+	ReturnURL *string `json:"return_url,omitempty"`
 	// Current status of the checkout.
 	Status *CheckoutSuccessStatus `json:"status,omitempty"`
 	// Transaction code of the successful transaction with which the payment for the checkout is completed.
@@ -353,7 +353,7 @@ type CheckoutSuccess struct {
 	TransactionCode *string `json:"transaction_code,omitempty"`
 	// Transaction ID of the successful transaction with which the payment for the checkout is completed.
 	// Read only
-	TransactionId *string `json:"transaction_id,omitempty"`
+	TransactionID *string `json:"transaction_id,omitempty"`
 	// List of transactions related to the payment.
 	// Unique items only
 	Transactions []CheckoutSuccessTransaction `json:"transactions,omitempty"`
@@ -390,7 +390,7 @@ type CheckoutSuccessTransaction struct {
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Internal unique ID of the transaction on the SumUp platform.
 	// Format: int64
-	InternalId *int64 `json:"internal_id,omitempty"`
+	InternalID *int64 `json:"internal_id,omitempty"`
 	// Unique code of the registered merchant to whom the payment is made.
 	MerchantCode *string `json:"merchant_code,omitempty"`
 	// Payment type used for the transaction.
@@ -404,7 +404,7 @@ type CheckoutSuccessTransaction struct {
 	// Transaction code returned by the acquirer/processing entity after processing the transaction.
 	TransactionCode *string `json:"transaction_code,omitempty"`
 	// Amount of the applicable VAT (out of the total transaction amount).
-	VatAmount *float32 `json:"vat_amount,omitempty"`
+	VATAmount *float32 `json:"vat_amount,omitempty"`
 }
 
 // CheckoutSuccessTransactionStatus: Current status of the transaction.
@@ -471,7 +471,7 @@ type MandatePayload struct {
 	// Operating system and web client used by the end-user
 	UserAgent string `json:"user_agent"`
 	// IP address of the end user. Supports IPv4 and IPv6
-	UserIp *string `json:"user_ip,omitempty"`
+	UserIP *string `json:"user_ip,omitempty"`
 }
 
 // MandatePayloadType: Indicates the mandate type
@@ -486,7 +486,7 @@ type ProcessCheckout struct {
 	// __Required when payment type is `card`.__ Details of the payment card.
 	Card *Card `json:"card,omitempty"`
 	// __Required when `token` is provided.__ Unique ID of the customer.
-	CustomerId *string `json:"customer_id,omitempty"`
+	CustomerID *string `json:"customer_id,omitempty"`
 	// Number of installments for deferred payments. Available only to merchant users in Brazil.
 	// Min: 1
 	// Max: 12
@@ -525,7 +525,7 @@ type CreateCheckoutBody struct {
 	Currency shared.Currency `json:"currency"`
 	// Unique identification of a customer. If specified, the checkout session and payment instrument are associated with
 	// the referenced customer.
-	CustomerId *string `json:"customer_id,omitempty"`
+	CustomerID *string `json:"customer_id,omitempty"`
 	// Date and time of the creation of the payment checkout. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
 	//
 	// Read only
@@ -546,10 +546,10 @@ type CreateCheckoutBody struct {
 	// not specified, the [Payment Widget](https://developer.sumup.com/online-payments/tools/card-widget) renders [3DS
 	// challenge](https://developer.sumup.com/online-payments/features/3ds) within an iframe instead of performing a
 	// full-page redirect.
-	RedirectUrl *string `json:"redirect_url,omitempty"`
+	RedirectURL *string `json:"redirect_url,omitempty"`
 	// URL to which the SumUp platform sends the processing status of the payment checkout.
 	// Format: uri
-	ReturnUrl *string `json:"return_url,omitempty"`
+	ReturnURL *string `json:"return_url,omitempty"`
 	// Current status of the checkout.
 	// Read only
 	Status *CreateCheckoutBodyStatus `json:"status,omitempty"`
@@ -599,7 +599,7 @@ type CreateCheckoutBodyTransaction struct {
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Internal unique ID of the transaction on the SumUp platform.
 	// Format: int64
-	InternalId *int64 `json:"internal_id,omitempty"`
+	InternalID *int64 `json:"internal_id,omitempty"`
 	// Unique code of the registered merchant to whom the payment is made.
 	MerchantCode *string `json:"merchant_code,omitempty"`
 	// Payment type used for the transaction.
@@ -613,7 +613,7 @@ type CreateCheckoutBodyTransaction struct {
 	// Transaction code returned by the acquirer/processing entity after processing the transaction.
 	TransactionCode *string `json:"transaction_code,omitempty"`
 	// Amount of the applicable VAT (out of the total transaction amount).
-	VatAmount *float32 `json:"vat_amount,omitempty"`
+	VATAmount *float32 `json:"vat_amount,omitempty"`
 }
 
 // CreateCheckoutBodyTransactionStatus: Current status of the transaction.
@@ -631,7 +631,7 @@ type ProcessCheckoutBody struct {
 	// __Required when payment type is `card`.__ Details of the payment card.
 	Card *Card `json:"card,omitempty"`
 	// __Required when `token` is provided.__ Unique ID of the customer.
-	CustomerId *string `json:"customer_id,omitempty"`
+	CustomerID *string `json:"customer_id,omitempty"`
 	// Number of installments for deferred payments. Available only to merchant users in Brazil.
 	// Min: 1
 	// Max: 12
@@ -879,8 +879,8 @@ func (s *CheckoutsService) ListAvailablePaymentMethods(ctx context.Context, merc
 
 // Deactivate: Deactivate a checkout
 // Deactivates an identified checkout resource. If the checkout has already been processed it can not be deactivated.
-func (s *CheckoutsService) Deactivate(ctx context.Context, iD string) (*Checkout, error) {
-	path := fmt.Sprintf("/v0.1/checkouts/%v", iD)
+func (s *CheckoutsService) Deactivate(ctx context.Context, id string) (*Checkout, error) {
+	path := fmt.Sprintf("/v0.1/checkouts/%v", id)
 
 	resp, err := s.c.Call(ctx, http.MethodDelete, path)
 	if err != nil {
@@ -925,8 +925,8 @@ func (s *CheckoutsService) Deactivate(ctx context.Context, iD string) (*Checkout
 // Get: Retrieve a checkout
 // Retrieves an identified checkout resource. Use this request after processing a checkout to confirm its status
 // and inform the end user respectively.
-func (s *CheckoutsService) Get(ctx context.Context, iD string) (*CheckoutSuccess, error) {
-	path := fmt.Sprintf("/v0.1/checkouts/%v", iD)
+func (s *CheckoutsService) Get(ctx context.Context, id string) (*CheckoutSuccess, error) {
+	path := fmt.Sprintf("/v0.1/checkouts/%v", id)
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
@@ -966,8 +966,8 @@ func (s *CheckoutsService) Get(ctx context.Context, iD string) (*CheckoutSuccess
 // resource initiated in the `Create a checkout` endpoint.
 //
 // Follow this request with `Retrieve a checkout` to confirm its status.
-func (s *CheckoutsService) Process(ctx context.Context, iD string, body ProcessCheckoutBody) (*ProcessCheckoutResponse, error) {
-	path := fmt.Sprintf("/v0.1/checkouts/%v", iD)
+func (s *CheckoutsService) Process(ctx context.Context, id string, body ProcessCheckoutBody) (*ProcessCheckoutResponse, error) {
+	path := fmt.Sprintf("/v0.1/checkouts/%v", id)
 
 	resp, err := s.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))
 	if err != nil {

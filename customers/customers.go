@@ -16,7 +16,7 @@ import (
 // Customer is a schema definition.
 type Customer struct {
 	// Unique ID of the customer.
-	CustomerId string `json:"customer_id"`
+	CustomerID string `json:"customer_id"`
 	// Personal details for the customer.
 	PersonalDetails *shared.PersonalDetails `json:"personal_details,omitempty"`
 }
@@ -62,7 +62,7 @@ const (
 // CreateCustomerBody is a schema definition.
 type CreateCustomerBody struct {
 	// Unique ID of the customer.
-	CustomerId string `json:"customer_id"`
+	CustomerID string `json:"customer_id"`
 	// Personal details for the customer.
 	PersonalDetails *shared.PersonalDetails `json:"personal_details,omitempty"`
 }
@@ -131,8 +131,8 @@ func (s *CustomersService) Create(ctx context.Context, body CreateCustomerBody) 
 
 // ListPaymentInstruments: List payment instruments
 // Lists all payment instrument resources that are saved for an identified customer.
-func (s *CustomersService) ListPaymentInstruments(ctx context.Context, customerId string) (*ListPaymentInstruments200Response, error) {
-	path := fmt.Sprintf("/v0.1/customers/%v/payment-instruments", customerId)
+func (s *CustomersService) ListPaymentInstruments(ctx context.Context, customerID string) (*ListPaymentInstruments200Response, error) {
+	path := fmt.Sprintf("/v0.1/customers/%v/payment-instruments", customerID)
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
@@ -177,8 +177,8 @@ func (s *CustomersService) ListPaymentInstruments(ctx context.Context, customerI
 // Get: Retrieve a customer
 // Retrieves an identified saved customer resource through the unique `customer_id` parameter, generated upon
 // customer creation.
-func (s *CustomersService) Get(ctx context.Context, customerId string) (*Customer, error) {
-	path := fmt.Sprintf("/v0.1/customers/%v", customerId)
+func (s *CustomersService) Get(ctx context.Context, customerID string) (*Customer, error) {
+	path := fmt.Sprintf("/v0.1/customers/%v", customerID)
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
@@ -225,8 +225,8 @@ func (s *CustomersService) Get(ctx context.Context, customerId string) (*Custome
 //
 // The request only overwrites the parameters included in the request, all other parameters will remain with
 // their initially assigned values.
-func (s *CustomersService) Update(ctx context.Context, customerId string, body UpdateCustomerBody) (*Customer, error) {
-	path := fmt.Sprintf("/v0.1/customers/%v", customerId)
+func (s *CustomersService) Update(ctx context.Context, customerID string, body UpdateCustomerBody) (*Customer, error) {
+	path := fmt.Sprintf("/v0.1/customers/%v", customerID)
 
 	resp, err := s.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))
 	if err != nil {
@@ -270,8 +270,8 @@ func (s *CustomersService) Update(ctx context.Context, customerId string, body U
 
 // DeactivatePaymentInstrument: Deactivate a payment instrument
 // Deactivates an identified card payment instrument resource for a customer.
-func (s *CustomersService) DeactivatePaymentInstrument(ctx context.Context, customerId string, token string) error {
-	path := fmt.Sprintf("/v0.1/customers/%v/payment-instruments/%v", customerId, token)
+func (s *CustomersService) DeactivatePaymentInstrument(ctx context.Context, customerID string, token string) error {
+	path := fmt.Sprintf("/v0.1/customers/%v/payment-instruments/%v", customerID, token)
 
 	resp, err := s.c.Call(ctx, http.MethodDelete, path)
 	if err != nil {

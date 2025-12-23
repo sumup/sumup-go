@@ -39,7 +39,7 @@ type Event struct {
 	FeeAmount *float32 `json:"fee_amount,omitempty"`
 	// Unique ID of the transaction event.
 	// Format: int64
-	ID *shared.EventId `json:"id,omitempty"`
+	ID *shared.EventID `json:"id,omitempty"`
 	// Consecutive number of the installment.
 	InstallmentNumber *int `json:"installment_number,omitempty"`
 	// Status of the transaction event.
@@ -47,7 +47,7 @@ type Event struct {
 	// Date and time of the transaction event.
 	Timestamp *shared.TimestampEvent `json:"timestamp,omitempty"`
 	// Unique ID of the transaction.
-	TransactionId *shared.TransactionId `json:"transaction_id,omitempty"`
+	TransactionID *shared.TransactionID `json:"transaction_id,omitempty"`
 	// Type of the transaction event.
 	Type *shared.EventType `json:"type,omitempty"`
 }
@@ -100,23 +100,23 @@ type Product struct {
 	// Price of the product without VAT.
 	Price *float32 `json:"price,omitempty"`
 	// Price of a single product item with VAT.
-	PriceWithVat *float32 `json:"price_with_vat,omitempty"`
+	PriceWithVAT *float32 `json:"price_with_vat,omitempty"`
 	// Number of product items for the purchase.
 	Quantity *float64 `json:"quantity,omitempty"`
 	// Amount of the VAT for a single product item (calculated as the product of `price` and `vat_rate`, i.e. `single_vat_amount
 	// = price * vat_rate`).
-	SingleVatAmount *float32 `json:"single_vat_amount,omitempty"`
+	SingleVATAmount *float32 `json:"single_vat_amount,omitempty"`
 	// Total price of the product items without VAT (calculated as the product of `price` and `quantity`, i.e. `total_price
 	// = price * quantity`).
 	TotalPrice *float32 `json:"total_price,omitempty"`
 	// Total price of the product items including VAT (calculated as the product of `price_with_vat` and `quantity`, i.e.
 	// `total_with_vat = price_with_vat * quantity`).
-	TotalWithVat *float32 `json:"total_with_vat,omitempty"`
+	TotalWithVAT *float32 `json:"total_with_vat,omitempty"`
 	// Total VAT amount for the purchase (calculated as the product of `single_vat_amount` and `quantity`, i.e. `vat_amount
 	// = single_vat_amount * quantity`).
-	VatAmount *float32 `json:"vat_amount,omitempty"`
+	VATAmount *float32 `json:"vat_amount,omitempty"`
 	// VAT rate applicable to the product.
-	VatRate *float32 `json:"vat_rate,omitempty"`
+	VATRate *float32 `json:"vat_rate,omitempty"`
 }
 
 // TransactionEvent: Details of a transaction event.
@@ -133,7 +133,7 @@ type TransactionEvent struct {
 	EventType *shared.EventType `json:"event_type,omitempty"`
 	// Unique ID of the transaction event.
 	// Format: int64
-	ID *shared.EventId `json:"id,omitempty"`
+	ID *shared.EventID `json:"id,omitempty"`
 	// Consecutive number of the installment that is paid. Applicable only payout events, i.e. `event_type = PAYOUT`.
 	InstallmentNumber *int `json:"installment_number,omitempty"`
 	// Status of the transaction event.
@@ -167,7 +167,7 @@ type TransactionFull struct {
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Internal unique ID of the transaction on the SumUp platform.
 	// Format: int64
-	InternalId *int64 `json:"internal_id,omitempty"`
+	InternalID *int64 `json:"internal_id,omitempty"`
 	// Latitude value from the coordinates of the payment location (as received from the payment terminal reader).
 	// Min: 0
 	// Max: 90
@@ -219,9 +219,9 @@ type TransactionFull struct {
 	// Format: email
 	Username *string `json:"username,omitempty"`
 	// Amount of the applicable VAT (out of the total transaction amount).
-	VatAmount *float32 `json:"vat_amount,omitempty"`
+	VATAmount *float32 `json:"vat_amount,omitempty"`
 	// List of VAT rates applicable to the transaction.
-	VatRates []interface{} `json:"vat_rates,omitempty"`
+	VATRates []interface{} `json:"vat_rates,omitempty"`
 	// Verification method used for the transaction.
 	VerificationMethod *TransactionFullVerificationMethod `json:"verification_method,omitempty"`
 }
@@ -303,9 +303,9 @@ const (
 	TransactionFullVerificationMethodConfirmationCodeVerified TransactionFullVerificationMethod = "confirmation code verified"
 	TransactionFullVerificationMethodNa                       TransactionFullVerificationMethod = "na"
 	TransactionFullVerificationMethodNone                     TransactionFullVerificationMethod = "none"
-	TransactionFullVerificationMethodOfflinePin               TransactionFullVerificationMethod = "offline PIN"
-	TransactionFullVerificationMethodOfflinePinSignature      TransactionFullVerificationMethod = "offline PIN + signature"
-	TransactionFullVerificationMethodOnlinePin                TransactionFullVerificationMethod = "online PIN"
+	TransactionFullVerificationMethodOfflinePIN               TransactionFullVerificationMethod = "offline PIN"
+	TransactionFullVerificationMethodOfflinePINSignature      TransactionFullVerificationMethod = "offline PIN + signature"
+	TransactionFullVerificationMethodOnlinePIN                TransactionFullVerificationMethod = "online PIN"
 	TransactionFullVerificationMethodSignature                TransactionFullVerificationMethod = "signature"
 )
 
@@ -316,7 +316,7 @@ type TransactionHistory struct {
 	// Issuing card network of the payment card used for the transaction.
 	CardType *shared.CardType `json:"card_type,omitempty"`
 	// Client-specific ID of the transaction.
-	ClientTransactionId *string `json:"client_transaction_id,omitempty"`
+	ClientTransactionID *string `json:"client_transaction_id,omitempty"`
 	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
 	// currency values are enumerated above.
 	Currency *shared.Currency `json:"currency,omitempty"`
@@ -342,7 +342,7 @@ type TransactionHistory struct {
 	// Transaction code returned by the acquirer/processing entity after processing the transaction.
 	TransactionCode *string `json:"transaction_code,omitempty"`
 	// Unique ID of the transaction.
-	TransactionId *shared.TransactionId `json:"transaction_id,omitempty"`
+	TransactionID *shared.TransactionID `json:"transaction_id,omitempty"`
 	// Type of the transaction for the registered user specified in the `user` property.
 	Type *TransactionHistoryType `json:"type,omitempty"`
 	// Email address of the registered user (merchant) to whom the payment is made.
@@ -504,7 +504,7 @@ type GetTransactionParams struct {
 	ID *string
 	// Retrieves the transaction resource with the specified internal transaction ID (the `internal_id` parameter in
 	// the transaction resource).
-	InternalId *string
+	InternalID *string
 	// Retrieves the transaction resource with the specified transaction code.
 	TransactionCode *string
 }
@@ -517,8 +517,8 @@ func (p *GetTransactionParams) QueryValues() url.Values {
 		q.Set("id", *p.ID)
 	}
 
-	if p.InternalId != nil {
-		q.Set("internal_id", *p.InternalId)
+	if p.InternalID != nil {
+		q.Set("internal_id", *p.InternalID)
 	}
 
 	if p.TransactionCode != nil {
@@ -622,14 +622,14 @@ func (p *ListTransactionsV21Params) QueryValues() url.Values {
 // GetTransactionV21Params: query parameters for GetTransactionV2.1
 type GetTransactionV21Params struct {
 	// Client transaction id.
-	ClientTransactionId *string
+	ClientTransactionID *string
 	// External/foreign transaction id (passed by clients).
-	ForeignTransactionId *string
+	ForeignTransactionID *string
 	// Retrieves the transaction resource with the specified transaction ID (the `id` parameter in the transaction resource).
 	ID *string
 	// Retrieves the transaction resource with the specified internal transaction ID (the `internal_id` parameter in
 	// the transaction resource).
-	InternalId *string
+	InternalID *string
 	// Retrieves the transaction resource with the specified transaction code.
 	TransactionCode *string
 }
@@ -638,20 +638,20 @@ type GetTransactionV21Params struct {
 func (p *GetTransactionV21Params) QueryValues() url.Values {
 	q := make(url.Values)
 
-	if p.ClientTransactionId != nil {
-		q.Set("client_transaction_id", *p.ClientTransactionId)
+	if p.ClientTransactionID != nil {
+		q.Set("client_transaction_id", *p.ClientTransactionID)
 	}
 
-	if p.ForeignTransactionId != nil {
-		q.Set("foreign_transaction_id", *p.ForeignTransactionId)
+	if p.ForeignTransactionID != nil {
+		q.Set("foreign_transaction_id", *p.ForeignTransactionID)
 	}
 
 	if p.ID != nil {
 		q.Set("id", *p.ID)
 	}
 
-	if p.InternalId != nil {
-		q.Set("internal_id", *p.InternalId)
+	if p.InternalID != nil {
+		q.Set("internal_id", *p.InternalID)
 	}
 
 	if p.TransactionCode != nil {
@@ -838,8 +838,8 @@ func (s *TransactionsService) Get(ctx context.Context, merchantCode string, para
 
 // Refund: Refund a transaction
 // Refunds an identified transaction either in full or partially.
-func (s *TransactionsService) Refund(ctx context.Context, txnId string, body RefundTransactionBody) error {
-	path := fmt.Sprintf("/v0.1/me/refund/%v", txnId)
+func (s *TransactionsService) Refund(ctx context.Context, txnID string, body RefundTransactionBody) error {
+	path := fmt.Sprintf("/v0.1/me/refund/%v", txnID)
 
 	resp, err := s.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
 	if err != nil {
