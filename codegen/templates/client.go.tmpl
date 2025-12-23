@@ -20,13 +20,13 @@ const (
 )
 
 type client interface {
-	NewRequest(ctx context.Context, method, path string, body io.Reader) (*http.Request, error)
+	NewRequest(ctx context.Context,method, path string,body io.Reader) (*http.Request, error)
 	Do(req *http.Request) (*http.Response, error)
 }
 
 type Client struct {
 	// client is the HTTP client used to communicate with the API.
-	client *http.Client
+	client  *http.Client
 	// base is the base url of the API the requests will be sent to.
 	base *url.URL
 	// userAgent is the user-agent header that will be sent with
@@ -90,7 +90,7 @@ func WithBaseURL(base string) ClientOption {
 
 type request struct {
 	httpClient *http.Client
-	req        *http.Request
+	req *http.Request
 }
 
 // Call executes an API call. Use [RequestOption]s to configure the request.
@@ -103,7 +103,7 @@ func (c *Client) Call(
 	}
 
 	r := &request{
-		req:        req,
+		req: req,
 		httpClient: c.client,
 	}
 
