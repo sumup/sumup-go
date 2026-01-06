@@ -356,14 +356,17 @@ func (b *Builder) tagByTagName(name string) *openapi3.Tag {
 
 // Collect the schemas that are referenced in the request parameters of the given operation.
 func collectSchemasInParams(op *openapi3.Operation) []*openapi3.SchemaRef {
-	if op.RequestBody == nil {
+	if len(op.Parameters) == 0 {
 		return nil
 	}
 
-	schemas := make([]*openapi3.SchemaRef, 0, len(op.RequestBody.Value.Content))
+	schemas := make([]*openapi3.SchemaRef, 0, len(op.Parameters))
 
-	// Iterate over the responses of the operation
+	// Iterate over the parameters of the operation
 	for _, param := range op.Parameters {
+		if param == nil || param.Value == nil {
+			continue
+		}
 		schemas = append(schemas, param.Value.Schema)
 	}
 
