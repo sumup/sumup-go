@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.12.0](https://github.com/sumup/sumup-go/compare/v0.11.1...v0.12.0) (2026-01-08)
+
+
+### Features
+
+* **codegen:** move under internal/cmd ([#172](https://github.com/sumup/sumup-go/issues/172)) ([297519d](https://github.com/sumup/sumup-go/commit/297519df8547c9d1d03285225c732e7bcd32012f))
+* **sdk:** better name for tag-scopes struct ([#174](https://github.com/sumup/sumup-go/issues/174)) ([78eabe0](https://github.com/sumup/sumup-go/commit/78eabe060b5548aeeb1b251f23874f87f5f7f8af))
+
 ## [0.11.1](https://github.com/sumup/sumup-go/compare/v0.11.0...v0.11.1) (2025-12-23)
 
 
