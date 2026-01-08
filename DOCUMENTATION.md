@@ -31,18 +31,18 @@ var OAuth2Endpoint = oauth2.Endpoint{
 
 ```go
 type Client struct {
-    Checkouts    *checkouts.CheckoutsService
-    Customers    *customers.CustomersService
-    Members      *members.MembersService
-    Memberships  *memberships.MembershipsService
-    Merchant     *merchant.MerchantService
-    Merchants    *merchants.MerchantsService
-    Payouts      *payouts.PayoutsService
-    Readers      *readers.ReadersService
-    Receipts     *receipts.ReceiptsService
-    Roles        *roles.RolesService
-    Subaccounts  *subaccounts.SubaccountsService
-    Transactions *transactions.TransactionsService
+    Checkouts    *checkouts.Client
+    Customers    *customers.Client
+    Members      *members.Client
+    Memberships  *memberships.Client
+    Merchant     *merchant.Client
+    Merchants    *merchants.Client
+    Payouts      *payouts.Client
+    Readers      *readers.Client
+    Receipts     *receipts.Client
+    Roles        *roles.Client
+    Subaccounts  *subaccounts.Client
+    Transactions *transactions.Client
     // contains filtered or unexported fields
 }
 ```
@@ -104,14 +104,14 @@ import "github.com/sumup/sumup-go/checkouts"
 - [type CheckoutSuccessTransactionStatus](<#CheckoutSuccessTransactionStatus>)
 - [type CheckoutTransaction](<#CheckoutTransaction>)
 - [type CheckoutTransactionStatus](<#CheckoutTransactionStatus>)
-- [type CheckoutsService](<#CheckoutsService>)
-  - [func NewCheckoutsService\(c \*client.Client\) \*CheckoutsService](<#NewCheckoutsService>)
-  - [func \(s \*CheckoutsService\) Create\(ctx context.Context, body Create\) \(\*Checkout, error\)](<#CheckoutsService.Create>)
-  - [func \(s \*CheckoutsService\) Deactivate\(ctx context.Context, id string\) \(\*Checkout, error\)](<#CheckoutsService.Deactivate>)
-  - [func \(s \*CheckoutsService\) Get\(ctx context.Context, id string\) \(\*CheckoutSuccess, error\)](<#CheckoutsService.Get>)
-  - [func \(s \*CheckoutsService\) List\(ctx context.Context, params ListParams\) \(\*ListCheckouts200Response, error\)](<#CheckoutsService.List>)
-  - [func \(s \*CheckoutsService\) ListAvailablePaymentMethods\(ctx context.Context, merchantCode string, params ListAvailablePaymentMethodsParams\) \(\*GetPaymentMethods200Response, error\)](<#CheckoutsService.ListAvailablePaymentMethods>)
-  - [func \(s \*CheckoutsService\) Process\(ctx context.Context, id string, body Process\) \(\*ProcessCheckoutResponse, error\)](<#CheckoutsService.Process>)
+- [type Client](<#Client>)
+  - [func NewClient\(c \*client.Client\) \*Client](<#NewClient>)
+  - [func \(c \*Client\) Create\(ctx context.Context, body Create\) \(\*Checkout, error\)](<#Client.Create>)
+  - [func \(c \*Client\) Deactivate\(ctx context.Context, id string\) \(\*Checkout, error\)](<#Client.Deactivate>)
+  - [func \(c \*Client\) Get\(ctx context.Context, id string\) \(\*CheckoutSuccess, error\)](<#Client.Get>)
+  - [func \(c \*Client\) List\(ctx context.Context, params ListParams\) \(\*ListCheckouts200Response, error\)](<#Client.List>)
+  - [func \(c \*Client\) ListAvailablePaymentMethods\(ctx context.Context, merchantCode string, params ListAvailablePaymentMethodsParams\) \(\*GetPaymentMethods200Response, error\)](<#Client.ListAvailablePaymentMethods>)
+  - [func \(c \*Client\) Process\(ctx context.Context, id string, body Process\) \(\*ProcessCheckoutResponse, error\)](<#Client.Process>)
 - [type Create](<#Create>)
 - [type CreatePurpose](<#CreatePurpose>)
 - [type CreateStatus](<#CreateStatus>)
@@ -702,31 +702,31 @@ const (
 )
 ```
 
-<a name="CheckoutsService"></a>
-## type [CheckoutsService](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L745-L747>)
+<a name="Client"></a>
+## type [Client](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L745-L747>)
 
 
 
 ```go
-type CheckoutsService struct {
+type Client struct {
     // contains filtered or unexported fields
 }
 ```
 
-<a name="NewCheckoutsService"></a>
-### func [NewCheckoutsService](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L749>)
+<a name="NewClient"></a>
+### func [NewClient](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L749>)
 
 ```go
-func NewCheckoutsService(c *client.Client) *CheckoutsService
+func NewClient(c *client.Client) *Client
 ```
 
 
 
-<a name="CheckoutsService.Create"></a>
-### func \(\*CheckoutsService\) [Create](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L789>)
+<a name="Client.Create"></a>
+### func \(\*Client\) [Create](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L789>)
 
 ```go
-func (s *CheckoutsService) Create(ctx context.Context, body Create) (*Checkout, error)
+func (c *Client) Create(ctx context.Context, body Create) (*Checkout, error)
 ```
 
 Creates a new payment checkout resource. The unique \`checkout\_reference\` created by this request, is used for further manipulation of the checkout.
@@ -735,47 +735,47 @@ For 3DS checkouts, add the \`redirect\_url\` parameter to your request body sche
 
 Follow by processing a checkout to charge the provided payment instrument.
 
-<a name="CheckoutsService.Deactivate"></a>
-### func \(\*CheckoutsService\) [Deactivate](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L877>)
+<a name="Client.Deactivate"></a>
+### func \(\*Client\) [Deactivate](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L877>)
 
 ```go
-func (s *CheckoutsService) Deactivate(ctx context.Context, id string) (*Checkout, error)
+func (c *Client) Deactivate(ctx context.Context, id string) (*Checkout, error)
 ```
 
 Deactivates an identified checkout resource. If the checkout has already been processed it can not be deactivated.
 
-<a name="CheckoutsService.Get"></a>
-### func \(\*CheckoutsService\) [Get](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L922>)
+<a name="Client.Get"></a>
+### func \(\*Client\) [Get](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L922>)
 
 ```go
-func (s *CheckoutsService) Get(ctx context.Context, id string) (*CheckoutSuccess, error)
+func (c *Client) Get(ctx context.Context, id string) (*CheckoutSuccess, error)
 ```
 
 Retrieves an identified checkout resource. Use this request after processing a checkout to confirm its status and inform the end user respectively.
 
-<a name="CheckoutsService.List"></a>
-### func \(\*CheckoutsService\) [List](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L754>)
+<a name="Client.List"></a>
+### func \(\*Client\) [List](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L754>)
 
 ```go
-func (s *CheckoutsService) List(ctx context.Context, params ListParams) (*ListCheckouts200Response, error)
+func (c *Client) List(ctx context.Context, params ListParams) (*ListCheckouts200Response, error)
 ```
 
 Lists created checkout resources according to the applied \`checkout\_reference\`.
 
-<a name="CheckoutsService.ListAvailablePaymentMethods"></a>
-### func \(\*CheckoutsService\) [ListAvailablePaymentMethods](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L840>)
+<a name="Client.ListAvailablePaymentMethods"></a>
+### func \(\*Client\) [ListAvailablePaymentMethods](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L840>)
 
 ```go
-func (s *CheckoutsService) ListAvailablePaymentMethods(ctx context.Context, merchantCode string, params ListAvailablePaymentMethodsParams) (*GetPaymentMethods200Response, error)
+func (c *Client) ListAvailablePaymentMethods(ctx context.Context, merchantCode string, params ListAvailablePaymentMethodsParams) (*GetPaymentMethods200Response, error)
 ```
 
 Get payment methods available for the given merchant to use with a checkout.
 
-<a name="CheckoutsService.Process"></a>
-### func \(\*CheckoutsService\) [Process](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L962>)
+<a name="Client.Process"></a>
+### func \(\*Client\) [Process](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L962>)
 
 ```go
-func (s *CheckoutsService) Process(ctx context.Context, id string, body Process) (*ProcessCheckoutResponse, error)
+func (c *Client) Process(ctx context.Context, id string, body Process) (*ProcessCheckoutResponse, error)
 ```
 
 Processing a checkout will attempt to charge the provided payment instrument for the amount of the specified checkout resource initiated in the \`Create a checkout\` endpoint.
@@ -1428,21 +1428,88 @@ import "github.com/sumup/sumup-go/customers"
 
 ## Index
 
+- [type Client](<#Client>)
+  - [func NewClient\(c \*client.Client\) \*Client](<#NewClient>)
+  - [func \(c \*Client\) Create\(ctx context.Context, body Create\) \(\*Customer, error\)](<#Client.Create>)
+  - [func \(c \*Client\) DeactivatePaymentInstrument\(ctx context.Context, customerID string, token string\) error](<#Client.DeactivatePaymentInstrument>)
+  - [func \(c \*Client\) Get\(ctx context.Context, customerID string\) \(\*Customer, error\)](<#Client.Get>)
+  - [func \(c \*Client\) ListPaymentInstruments\(ctx context.Context, customerID string\) \(\*ListPaymentInstruments200Response, error\)](<#Client.ListPaymentInstruments>)
+  - [func \(c \*Client\) Update\(ctx context.Context, customerID string, body Update\) \(\*Customer, error\)](<#Client.Update>)
 - [type Create](<#Create>)
 - [type Customer](<#Customer>)
-- [type CustomersService](<#CustomersService>)
-  - [func NewCustomersService\(c \*client.Client\) \*CustomersService](<#NewCustomersService>)
-  - [func \(s \*CustomersService\) Create\(ctx context.Context, body Create\) \(\*Customer, error\)](<#CustomersService.Create>)
-  - [func \(s \*CustomersService\) DeactivatePaymentInstrument\(ctx context.Context, customerID string, token string\) error](<#CustomersService.DeactivatePaymentInstrument>)
-  - [func \(s \*CustomersService\) Get\(ctx context.Context, customerID string\) \(\*Customer, error\)](<#CustomersService.Get>)
-  - [func \(s \*CustomersService\) ListPaymentInstruments\(ctx context.Context, customerID string\) \(\*ListPaymentInstruments200Response, error\)](<#CustomersService.ListPaymentInstruments>)
-  - [func \(s \*CustomersService\) Update\(ctx context.Context, customerID string, body Update\) \(\*Customer, error\)](<#CustomersService.Update>)
 - [type ListPaymentInstruments200Response](<#ListPaymentInstruments200Response>)
 - [type PaymentInstrumentResponse](<#PaymentInstrumentResponse>)
 - [type PaymentInstrumentResponseCard](<#PaymentInstrumentResponseCard>)
 - [type PaymentInstrumentResponseType](<#PaymentInstrumentResponseType>)
 - [type Update](<#Update>)
 
+
+<a name="Client"></a>
+## type [Client](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L79-L81>)
+
+
+
+```go
+type Client struct {
+    // contains filtered or unexported fields
+}
+```
+
+<a name="NewClient"></a>
+### func [NewClient](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L83>)
+
+```go
+func NewClient(c *client.Client) *Client
+```
+
+
+
+<a name="Client.Create"></a>
+### func \(\*Client\) [Create](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L88>)
+
+```go
+func (c *Client) Create(ctx context.Context, body Create) (*Customer, error)
+```
+
+Creates a new saved customer resource which you can later manipulate and save payment instruments to.
+
+<a name="Client.DeactivatePaymentInstrument"></a>
+### func \(\*Client\) [DeactivatePaymentInstrument](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L268>)
+
+```go
+func (c *Client) DeactivatePaymentInstrument(ctx context.Context, customerID string, token string) error
+```
+
+Deactivates an identified card payment instrument resource for a customer.
+
+<a name="Client.Get"></a>
+### func \(\*Client\) [Get](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L177>)
+
+```go
+func (c *Client) Get(ctx context.Context, customerID string) (*Customer, error)
+```
+
+Retrieves an identified saved customer resource through the unique \`customer\_id\` parameter, generated upon customer creation.
+
+<a name="Client.ListPaymentInstruments"></a>
+### func \(\*Client\) [ListPaymentInstruments](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L132>)
+
+```go
+func (c *Client) ListPaymentInstruments(ctx context.Context, customerID string) (*ListPaymentInstruments200Response, error)
+```
+
+Lists all payment instrument resources that are saved for an identified customer.
+
+<a name="Client.Update"></a>
+### func \(\*Client\) [Update](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L224>)
+
+```go
+func (c *Client) Update(ctx context.Context, customerID string, body Update) (*Customer, error)
+```
+
+Updates an identified saved customer resource's personal details.
+
+The request only overwrites the parameters included in the request, all other parameters will remain with their initially assigned values.
 
 <a name="Create"></a>
 ## type [Create](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L63-L68>)
@@ -1471,73 +1538,6 @@ type Customer struct {
     PersonalDetails *shared.PersonalDetails `json:"personal_details,omitempty"`
 }
 ```
-
-<a name="CustomersService"></a>
-## type [CustomersService](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L79-L81>)
-
-
-
-```go
-type CustomersService struct {
-    // contains filtered or unexported fields
-}
-```
-
-<a name="NewCustomersService"></a>
-### func [NewCustomersService](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L83>)
-
-```go
-func NewCustomersService(c *client.Client) *CustomersService
-```
-
-
-
-<a name="CustomersService.Create"></a>
-### func \(\*CustomersService\) [Create](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L88>)
-
-```go
-func (s *CustomersService) Create(ctx context.Context, body Create) (*Customer, error)
-```
-
-Creates a new saved customer resource which you can later manipulate and save payment instruments to.
-
-<a name="CustomersService.DeactivatePaymentInstrument"></a>
-### func \(\*CustomersService\) [DeactivatePaymentInstrument](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L268>)
-
-```go
-func (s *CustomersService) DeactivatePaymentInstrument(ctx context.Context, customerID string, token string) error
-```
-
-Deactivates an identified card payment instrument resource for a customer.
-
-<a name="CustomersService.Get"></a>
-### func \(\*CustomersService\) [Get](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L177>)
-
-```go
-func (s *CustomersService) Get(ctx context.Context, customerID string) (*Customer, error)
-```
-
-Retrieves an identified saved customer resource through the unique \`customer\_id\` parameter, generated upon customer creation.
-
-<a name="CustomersService.ListPaymentInstruments"></a>
-### func \(\*CustomersService\) [ListPaymentInstruments](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L132>)
-
-```go
-func (s *CustomersService) ListPaymentInstruments(ctx context.Context, customerID string) (*ListPaymentInstruments200Response, error)
-```
-
-Lists all payment instrument resources that are saved for an identified customer.
-
-<a name="CustomersService.Update"></a>
-### func \(\*CustomersService\) [Update](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L224>)
-
-```go
-func (s *CustomersService) Update(ctx context.Context, customerID string, body Update) (*Customer, error)
-```
-
-Updates an identified saved customer resource's personal details.
-
-The request only overwrites the parameters included in the request, all other parameters will remain with their initially assigned values.
 
 <a name="ListPaymentInstruments200Response"></a>
 ## type [ListPaymentInstruments200Response](<https://github.com/sumup/sumup-go/blob/main/customers/customers.go#L77>)
@@ -1720,23 +1720,88 @@ import "github.com/sumup/sumup-go/members"
 
 ## Index
 
+- [type Client](<#Client>)
+  - [func NewClient\(c \*client.Client\) \*Client](<#NewClient>)
+  - [func \(c \*Client\) Create\(ctx context.Context, merchantCode string, body Create\) \(\*Member, error\)](<#Client.Create>)
+  - [func \(c \*Client\) Delete\(ctx context.Context, merchantCode string, memberID string\) error](<#Client.Delete>)
+  - [func \(c \*Client\) Get\(ctx context.Context, merchantCode string, memberID string\) \(\*Member, error\)](<#Client.Get>)
+  - [func \(c \*Client\) List\(ctx context.Context, merchantCode string, params ListParams\) \(\*ListMerchantMembers200Response, error\)](<#Client.List>)
+  - [func \(c \*Client\) Update\(ctx context.Context, merchantCode string, memberID string, body Update\) \(\*Member, error\)](<#Client.Update>)
 - [type Create](<#Create>)
 - [type ListMerchantMembers200Response](<#ListMerchantMembers200Response>)
 - [type ListParams](<#ListParams>)
   - [func \(p \*ListParams\) QueryValues\(\) url.Values](<#ListParams.QueryValues>)
 - [type Member](<#Member>)
-- [type MembersService](<#MembersService>)
-  - [func NewMembersService\(c \*client.Client\) \*MembersService](<#NewMembersService>)
-  - [func \(s \*MembersService\) Create\(ctx context.Context, merchantCode string, body Create\) \(\*Member, error\)](<#MembersService.Create>)
-  - [func \(s \*MembersService\) Delete\(ctx context.Context, merchantCode string, memberID string\) error](<#MembersService.Delete>)
-  - [func \(s \*MembersService\) Get\(ctx context.Context, merchantCode string, memberID string\) \(\*Member, error\)](<#MembersService.Get>)
-  - [func \(s \*MembersService\) List\(ctx context.Context, merchantCode string, params ListParams\) \(\*ListMerchantMembers200Response, error\)](<#MembersService.List>)
-  - [func \(s \*MembersService\) Update\(ctx context.Context, merchantCode string, memberID string, body Update\) \(\*Member, error\)](<#MembersService.Update>)
 - [type MembershipUser](<#MembershipUser>)
 - [type MembershipUserClassic](<#MembershipUserClassic>)
 - [type Update](<#Update>)
 - [type UpdateUser](<#UpdateUser>)
 
+
+<a name="Client"></a>
+## type [Client](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L187-L189>)
+
+
+
+```go
+type Client struct {
+    // contains filtered or unexported fields
+}
+```
+
+<a name="NewClient"></a>
+### func [NewClient](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L191>)
+
+```go
+func NewClient(c *client.Client) *Client
+```
+
+
+
+<a name="Client.Create"></a>
+### func \(\*Client\) [Create](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L226>)
+
+```go
+func (c *Client) Create(ctx context.Context, merchantCode string, body Create) (*Member, error)
+```
+
+Create a merchant member.
+
+<a name="Client.Delete"></a>
+### func \(\*Client\) [Delete](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L270>)
+
+```go
+func (c *Client) Delete(ctx context.Context, merchantCode string, memberID string) error
+```
+
+Deletes a merchant member.
+
+<a name="Client.Get"></a>
+### func \(\*Client\) [Get](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L295>)
+
+```go
+func (c *Client) Get(ctx context.Context, merchantCode string, memberID string) (*Member, error)
+```
+
+Retrieve a merchant member.
+
+<a name="Client.List"></a>
+### func \(\*Client\) [List](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L196>)
+
+```go
+func (c *Client) List(ctx context.Context, merchantCode string, params ListParams) (*ListMerchantMembers200Response, error)
+```
+
+Lists merchant members.
+
+<a name="Client.Update"></a>
+### func \(\*Client\) [Update](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L325>)
+
+```go
+func (c *Client) Update(ctx context.Context, merchantCode string, memberID string, body Update) (*Member, error)
+```
+
+Update the merchant member.
 
 <a name="Create"></a>
 ## type [Create](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L81-L103>)
@@ -1848,71 +1913,6 @@ type Member struct {
 }
 ```
 
-<a name="MembersService"></a>
-## type [MembersService](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L187-L189>)
-
-
-
-```go
-type MembersService struct {
-    // contains filtered or unexported fields
-}
-```
-
-<a name="NewMembersService"></a>
-### func [NewMembersService](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L191>)
-
-```go
-func NewMembersService(c *client.Client) *MembersService
-```
-
-
-
-<a name="MembersService.Create"></a>
-### func \(\*MembersService\) [Create](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L226>)
-
-```go
-func (s *MembersService) Create(ctx context.Context, merchantCode string, body Create) (*Member, error)
-```
-
-Create a merchant member.
-
-<a name="MembersService.Delete"></a>
-### func \(\*MembersService\) [Delete](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L270>)
-
-```go
-func (s *MembersService) Delete(ctx context.Context, merchantCode string, memberID string) error
-```
-
-Deletes a merchant member.
-
-<a name="MembersService.Get"></a>
-### func \(\*MembersService\) [Get](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L295>)
-
-```go
-func (s *MembersService) Get(ctx context.Context, merchantCode string, memberID string) (*Member, error)
-```
-
-Retrieve a merchant member.
-
-<a name="MembersService.List"></a>
-### func \(\*MembersService\) [List](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L196>)
-
-```go
-func (s *MembersService) List(ctx context.Context, merchantCode string, params ListParams) (*ListMerchantMembers200Response, error)
-```
-
-Lists merchant members.
-
-<a name="MembersService.Update"></a>
-### func \(\*MembersService\) [Update](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L325>)
-
-```go
-func (s *MembersService) Update(ctx context.Context, merchantCode string, memberID string, body Update) (*Member, error)
-```
-
-Update the merchant member.
-
 <a name="MembershipUser"></a>
 ## type [MembershipUser](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L48-L71>)
 
@@ -2000,16 +2000,45 @@ import "github.com/sumup/sumup-go/memberships"
 
 ## Index
 
+- [type Client](<#Client>)
+  - [func NewClient\(c \*client.Client\) \*Client](<#NewClient>)
+  - [func \(c \*Client\) List\(ctx context.Context, params ListParams\) \(\*ListMemberships200Response, error\)](<#Client.List>)
 - [type ListMemberships200Response](<#ListMemberships200Response>)
 - [type ListParams](<#ListParams>)
   - [func \(p \*ListParams\) QueryValues\(\) url.Values](<#ListParams.QueryValues>)
 - [type Membership](<#Membership>)
 - [type MembershipResource](<#MembershipResource>)
-- [type MembershipsService](<#MembershipsService>)
-  - [func NewMembershipsService\(c \*client.Client\) \*MembershipsService](<#NewMembershipsService>)
-  - [func \(s \*MembershipsService\) List\(ctx context.Context, params ListParams\) \(\*ListMemberships200Response, error\)](<#MembershipsService.List>)
 - [type ResourceType](<#ResourceType>)
 
+
+<a name="Client"></a>
+## type [Client](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L164-L166>)
+
+
+
+```go
+type Client struct {
+    // contains filtered or unexported fields
+}
+```
+
+<a name="NewClient"></a>
+### func [NewClient](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L168>)
+
+```go
+func NewClient(c *client.Client) *Client
+```
+
+
+
+<a name="Client.List"></a>
+### func \(\*Client\) [List](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L173>)
+
+```go
+func (c *Client) List(ctx context.Context, params ListParams) (*ListMemberships200Response, error)
+```
+
+List memberships of the current user.
 
 <a name="ListMemberships200Response"></a>
 ## type [ListMemberships200Response](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L159-L162>)
@@ -2136,35 +2165,6 @@ type MembershipResource struct {
 }
 ```
 
-<a name="MembershipsService"></a>
-## type [MembershipsService](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L164-L166>)
-
-
-
-```go
-type MembershipsService struct {
-    // contains filtered or unexported fields
-}
-```
-
-<a name="NewMembershipsService"></a>
-### func [NewMembershipsService](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L168>)
-
-```go
-func NewMembershipsService(c *client.Client) *MembershipsService
-```
-
-
-
-<a name="MembershipsService.List"></a>
-### func \(\*MembershipsService\) [List](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L173>)
-
-```go
-func (s *MembershipsService) List(ctx context.Context, params ListParams) (*ListMemberships200Response, error)
-```
-
-List memberships of the current user.
-
 <a name="ResourceType"></a>
 ## type [ResourceType](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L81>)
 
@@ -2189,6 +2189,12 @@ import "github.com/sumup/sumup-go/merchant"
 - [type BankAccount](<#BankAccount>)
 - [type BusinessOwner](<#BusinessOwner>)
 - [type BusinessOwners](<#BusinessOwners>)
+- [type Client](<#Client>)
+  - [func NewClient\(c \*client.Client\) \*Client](<#NewClient>)
+  - [func \(c \*Client\) Get\(ctx context.Context, params GetParams\) \(\*MerchantAccount, error\)](<#Client.Get>)
+  - [func \(c \*Client\) GetDoingBusinessAs\(ctx context.Context\) \(\*DoingBusinessAsLegacy, error\)](<#Client.GetDoingBusinessAs>)
+  - [func \(c \*Client\) GetMerchantProfile\(ctx context.Context\) \(\*MerchantProfileLegacy, error\)](<#Client.GetMerchantProfile>)
+  - [func \(c \*Client\) GetPersonalProfile\(ctx context.Context\) \(\*PersonalProfileLegacy, error\)](<#Client.GetPersonalProfile>)
 - [type CountryDetails](<#CountryDetails>)
 - [type DoingBusinessAsLegacy](<#DoingBusinessAsLegacy>)
 - [type DoingBusinessAsLegacyAddress](<#DoingBusinessAsLegacyAddress>)
@@ -2197,12 +2203,6 @@ import "github.com/sumup/sumup-go/merchant"
 - [type LegalTypeLegacy](<#LegalTypeLegacy>)
 - [type MerchantAccount](<#MerchantAccount>)
 - [type MerchantProfileLegacy](<#MerchantProfileLegacy>)
-- [type MerchantService](<#MerchantService>)
-  - [func NewMerchantService\(c \*client.Client\) \*MerchantService](<#NewMerchantService>)
-  - [func \(s \*MerchantService\) Get\(ctx context.Context, params GetParams\) \(\*MerchantAccount, error\)](<#MerchantService.Get>)
-  - [func \(s \*MerchantService\) GetDoingBusinessAs\(ctx context.Context\) \(\*DoingBusinessAsLegacy, error\)](<#MerchantService.GetDoingBusinessAs>)
-  - [func \(s \*MerchantService\) GetMerchantProfile\(ctx context.Context\) \(\*MerchantProfileLegacy, error\)](<#MerchantService.GetMerchantProfile>)
-  - [func \(s \*MerchantService\) GetPersonalProfile\(ctx context.Context\) \(\*PersonalProfileLegacy, error\)](<#MerchantService.GetPersonalProfile>)
 - [type MerchantSettings](<#MerchantSettings>)
 - [type MerchantSettingsMotoPayment](<#MerchantSettingsMotoPayment>)
 - [type PermissionsLegacy](<#PermissionsLegacy>)
@@ -2389,6 +2389,62 @@ Business owners information.
 type BusinessOwners []BusinessOwner
 ```
 
+<a name="Client"></a>
+## type [Client](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L370-L372>)
+
+
+
+```go
+type Client struct {
+    // contains filtered or unexported fields
+}
+```
+
+<a name="NewClient"></a>
+### func [NewClient](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L374>)
+
+```go
+func NewClient(c *client.Client) *Client
+```
+
+
+
+<a name="Client.Get"></a>
+### func \(\*Client\) [Get](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L484>)
+
+```go
+func (c *Client) Get(ctx context.Context, params GetParams) (*MerchantAccount, error)
+```
+
+Returns user profile information. Deprecated: The \_Retrieve a profile\_ endpoint is deprecated, please use the \`Merchant\` object instead \(see \[Merchants\]\(https://developer.sumup.com/api/merchants\)\).
+
+<a name="Client.GetDoingBusinessAs"></a>
+### func \(\*Client\) [GetDoingBusinessAs](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L413>)
+
+```go
+func (c *Client) GetDoingBusinessAs(ctx context.Context) (*DoingBusinessAsLegacy, error)
+```
+
+Retrieves Doing Business As profile. Deprecated: The \_Retrieve DBA\_ endpoint is deprecated, please use the \`business\_profile\` field of the \`Merchant\` object instead \(see \[Merchants\]\(https://developer.sumup.com/api/merchants\)\).
+
+<a name="Client.GetMerchantProfile"></a>
+### func \(\*Client\) [GetMerchantProfile](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L445>)
+
+```go
+func (c *Client) GetMerchantProfile(ctx context.Context) (*MerchantProfileLegacy, error)
+```
+
+Retrieves merchant profile data. Deprecated: The \_Retrieve a merchant profile\_ endpoint is deprecated, please use the \`Merchant\` object instead \(see \[Merchants\]\(https://developer.sumup.com/api/merchants\)\).
+
+<a name="Client.GetPersonalProfile"></a>
+### func \(\*Client\) [GetPersonalProfile](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L381>)
+
+```go
+func (c *Client) GetPersonalProfile(ctx context.Context) (*PersonalProfileLegacy, error)
+```
+
+Retrieves personal profile data. Deprecated: The \_Retrieve a personal profile\_ endpoint is deprecated, please use the \`persons\` field of the \`Merchant\` object instead. \(see \[Merchants\]\(https://developer.sumup.com/api/merchants\)\).
+
 <a name="CountryDetails"></a>
 ## type [CountryDetails](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L149-L158>)
 
@@ -2562,62 +2618,6 @@ type MerchantProfileLegacy struct {
 }
 ```
 
-<a name="MerchantService"></a>
-## type [MerchantService](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L370-L372>)
-
-
-
-```go
-type MerchantService struct {
-    // contains filtered or unexported fields
-}
-```
-
-<a name="NewMerchantService"></a>
-### func [NewMerchantService](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L374>)
-
-```go
-func NewMerchantService(c *client.Client) *MerchantService
-```
-
-
-
-<a name="MerchantService.Get"></a>
-### func \(\*MerchantService\) [Get](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L484>)
-
-```go
-func (s *MerchantService) Get(ctx context.Context, params GetParams) (*MerchantAccount, error)
-```
-
-Returns user profile information. Deprecated: The \_Retrieve a profile\_ endpoint is deprecated, please use the \`Merchant\` object instead \(see \[Merchants\]\(https://developer.sumup.com/api/merchants\)\).
-
-<a name="MerchantService.GetDoingBusinessAs"></a>
-### func \(\*MerchantService\) [GetDoingBusinessAs](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L413>)
-
-```go
-func (s *MerchantService) GetDoingBusinessAs(ctx context.Context) (*DoingBusinessAsLegacy, error)
-```
-
-Retrieves Doing Business As profile. Deprecated: The \_Retrieve DBA\_ endpoint is deprecated, please use the \`business\_profile\` field of the \`Merchant\` object instead \(see \[Merchants\]\(https://developer.sumup.com/api/merchants\)\).
-
-<a name="MerchantService.GetMerchantProfile"></a>
-### func \(\*MerchantService\) [GetMerchantProfile](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L445>)
-
-```go
-func (s *MerchantService) GetMerchantProfile(ctx context.Context) (*MerchantProfileLegacy, error)
-```
-
-Retrieves merchant profile data. Deprecated: The \_Retrieve a merchant profile\_ endpoint is deprecated, please use the \`Merchant\` object instead \(see \[Merchants\]\(https://developer.sumup.com/api/merchants\)\).
-
-<a name="MerchantService.GetPersonalProfile"></a>
-### func \(\*MerchantService\) [GetPersonalProfile](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L381>)
-
-```go
-func (s *MerchantService) GetPersonalProfile(ctx context.Context) (*PersonalProfileLegacy, error)
-```
-
-Retrieves personal profile data. Deprecated: The \_Retrieve a personal profile\_ endpoint is deprecated, please use the \`persons\` field of the \`Merchant\` object instead. \(see \[Merchants\]\(https://developer.sumup.com/api/merchants\)\).
-
 <a name="MerchantSettings"></a>
 ## type [MerchantSettings](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L264-L289>)
 
@@ -2762,6 +2762,11 @@ import "github.com/sumup/sumup-go/merchants"
 - [type BusinessProfile](<#BusinessProfile>)
 - [type ChangeStatus](<#ChangeStatus>)
 - [type ClassicMerchantIdentifiers](<#ClassicMerchantIdentifiers>)
+- [type Client](<#Client>)
+  - [func NewClient\(c \*client.Client\) \*Client](<#NewClient>)
+  - [func \(c \*Client\) Get\(ctx context.Context, merchantCode string, params GetParams\) \(\*Merchant, error\)](<#Client.Get>)
+  - [func \(c \*Client\) GetPerson\(ctx context.Context, merchantCode string, personID string, params GetPersonParams\) \(\*Person, error\)](<#Client.GetPerson>)
+  - [func \(c \*Client\) ListPersons\(ctx context.Context, merchantCode string, params ListPersonsParams\) \(\*ListPersonsResponseBody, error\)](<#Client.ListPersons>)
 - [type Company](<#Company>)
 - [type CompanyIdentifier](<#CompanyIdentifier>)
 - [type CompanyIdentifiers](<#CompanyIdentifiers>)
@@ -2789,11 +2794,6 @@ import "github.com/sumup/sumup-go/merchants"
   - [func \(p \*ListPersonsParams\) QueryValues\(\) url.Values](<#ListPersonsParams.QueryValues>)
 - [type ListPersonsResponseBody](<#ListPersonsResponseBody>)
 - [type Merchant](<#Merchant>)
-- [type MerchantsService](<#MerchantsService>)
-  - [func NewMerchantsService\(c \*client.Client\) \*MerchantsService](<#NewMerchantsService>)
-  - [func \(s \*MerchantsService\) Get\(ctx context.Context, merchantCode string, params GetParams\) \(\*Merchant, error\)](<#MerchantsService.Get>)
-  - [func \(s \*MerchantsService\) GetPerson\(ctx context.Context, merchantCode string, personID string, params GetPersonParams\) \(\*Person, error\)](<#MerchantsService.GetPerson>)
-  - [func \(s \*MerchantsService\) ListPersons\(ctx context.Context, merchantCode string, params ListPersonsParams\) \(\*ListPersonsResponseBody, error\)](<#MerchantsService.ListPersons>)
 - [type Meta](<#Meta>)
 - [type Ownership](<#Ownership>)
 - [type Person](<#Person>)
@@ -3053,6 +3053,53 @@ type ClassicMerchantIdentifiers struct {
     ID int64 `json:"id"`
 }
 ```
+
+<a name="Client"></a>
+## type [Client](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L682-L684>)
+
+
+
+```go
+type Client struct {
+    // contains filtered or unexported fields
+}
+```
+
+<a name="NewClient"></a>
+### func [NewClient](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L686>)
+
+```go
+func NewClient(c *client.Client) *Client
+```
+
+
+
+<a name="Client.Get"></a>
+### func \(\*Client\) [Get](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L730>)
+
+```go
+func (c *Client) Get(ctx context.Context, merchantCode string, params GetParams) (*Merchant, error)
+```
+
+Retrieve a merchant. Merchant documentation: https://developer.sumup.com/tools/models/merchant
+
+<a name="Client.GetPerson"></a>
+### func \(\*Client\) [GetPerson](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L761>)
+
+```go
+func (c *Client) GetPerson(ctx context.Context, merchantCode string, personID string, params GetPersonParams) (*Person, error)
+```
+
+Returns a single person related to the merchant. Persons documentation: https://developer.sumup.com/tools/models/merchant#persons
+
+<a name="Client.ListPersons"></a>
+### func \(\*Client\) [ListPersons](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L692>)
+
+```go
+func (c *Client) ListPersons(ctx context.Context, merchantCode string, params ListPersonsParams) (*ListPersonsResponseBody, error)
+```
+
+Returns a list of persons related to the merchant. Persons documentation: https://developer.sumup.com/tools/models/merchant#persons
 
 <a name="Company"></a>
 ## type [Company](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L241-L280>)
@@ -3516,53 +3563,6 @@ type Merchant struct {
 }
 ```
 
-<a name="MerchantsService"></a>
-## type [MerchantsService](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L682-L684>)
-
-
-
-```go
-type MerchantsService struct {
-    // contains filtered or unexported fields
-}
-```
-
-<a name="NewMerchantsService"></a>
-### func [NewMerchantsService](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L686>)
-
-```go
-func NewMerchantsService(c *client.Client) *MerchantsService
-```
-
-
-
-<a name="MerchantsService.Get"></a>
-### func \(\*MerchantsService\) [Get](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L730>)
-
-```go
-func (s *MerchantsService) Get(ctx context.Context, merchantCode string, params GetParams) (*Merchant, error)
-```
-
-Retrieve a merchant. Merchant documentation: https://developer.sumup.com/tools/models/merchant
-
-<a name="MerchantsService.GetPerson"></a>
-### func \(\*MerchantsService\) [GetPerson](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L761>)
-
-```go
-func (s *MerchantsService) GetPerson(ctx context.Context, merchantCode string, personID string, params GetPersonParams) (*Person, error)
-```
-
-Returns a single person related to the merchant. Persons documentation: https://developer.sumup.com/tools/models/merchant#persons
-
-<a name="MerchantsService.ListPersons"></a>
-### func \(\*MerchantsService\) [ListPersons](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L692>)
-
-```go
-func (s *MerchantsService) ListPersons(ctx context.Context, merchantCode string, params ListPersonsParams) (*ListPersonsResponseBody, error)
-```
-
-Returns a list of persons related to the merchant. Persons documentation: https://developer.sumup.com/tools/models/merchant#persons
-
 <a name="Meta"></a>
 ## type [Meta](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L426>)
 
@@ -3721,6 +3721,10 @@ import "github.com/sumup/sumup-go/payouts"
 
 ## Index
 
+- [type Client](<#Client>)
+  - [func NewClient\(c \*client.Client\) \*Client](<#NewClient>)
+  - [func \(c \*Client\) List\(ctx context.Context, merchantCode string, params ListParams\) \(\*FinancialPayouts, error\)](<#Client.List>)
+  - [func \(c \*Client\) ListDeprecated\(ctx context.Context, params ListDeprecatedParams\) \(\*FinancialPayouts, error\)](<#Client.ListDeprecated>)
 - [type FinancialPayout](<#FinancialPayout>)
 - [type FinancialPayoutStatus](<#FinancialPayoutStatus>)
 - [type FinancialPayoutType](<#FinancialPayoutType>)
@@ -3729,11 +3733,45 @@ import "github.com/sumup/sumup-go/payouts"
   - [func \(p \*ListDeprecatedParams\) QueryValues\(\) url.Values](<#ListDeprecatedParams.QueryValues>)
 - [type ListParams](<#ListParams>)
   - [func \(p \*ListParams\) QueryValues\(\) url.Values](<#ListParams.QueryValues>)
-- [type PayoutsService](<#PayoutsService>)
-  - [func NewPayoutsService\(c \*client.Client\) \*PayoutsService](<#NewPayoutsService>)
-  - [func \(s \*PayoutsService\) List\(ctx context.Context, merchantCode string, params ListParams\) \(\*FinancialPayouts, error\)](<#PayoutsService.List>)
-  - [func \(s \*PayoutsService\) ListDeprecated\(ctx context.Context, params ListDeprecatedParams\) \(\*FinancialPayouts, error\)](<#PayoutsService.ListDeprecated>)
 
+
+<a name="Client"></a>
+## type [Client](<https://github.com/sumup/sumup-go/blob/main/payouts/payouts.go#L122-L124>)
+
+
+
+```go
+type Client struct {
+    // contains filtered or unexported fields
+}
+```
+
+<a name="NewClient"></a>
+### func [NewClient](<https://github.com/sumup/sumup-go/blob/main/payouts/payouts.go#L126>)
+
+```go
+func NewClient(c *client.Client) *Client
+```
+
+
+
+<a name="Client.List"></a>
+### func \(\*Client\) [List](<https://github.com/sumup/sumup-go/blob/main/payouts/payouts.go#L162>)
+
+```go
+func (c *Client) List(ctx context.Context, merchantCode string, params ListParams) (*FinancialPayouts, error)
+```
+
+Lists ordered payouts for the merchant profile.
+
+<a name="Client.ListDeprecated"></a>
+### func \(\*Client\) [ListDeprecated](<https://github.com/sumup/sumup-go/blob/main/payouts/payouts.go#L132>)
+
+```go
+func (c *Client) ListDeprecated(ctx context.Context, params ListDeprecatedParams) (*FinancialPayouts, error)
+```
+
+Lists ordered payouts for the merchant profile. Deprecated: this operation is deprecated
 
 <a name="FinancialPayout"></a>
 ## type [FinancialPayout](<https://github.com/sumup/sumup-go/blob/main/payouts/payouts.go#L19-L30>)
@@ -3855,44 +3893,6 @@ func (p *ListParams) QueryValues() url.Values
 
 QueryValues converts [ListParams](<#ListParams>) into \[url.Values\].
 
-<a name="PayoutsService"></a>
-## type [PayoutsService](<https://github.com/sumup/sumup-go/blob/main/payouts/payouts.go#L122-L124>)
-
-
-
-```go
-type PayoutsService struct {
-    // contains filtered or unexported fields
-}
-```
-
-<a name="NewPayoutsService"></a>
-### func [NewPayoutsService](<https://github.com/sumup/sumup-go/blob/main/payouts/payouts.go#L126>)
-
-```go
-func NewPayoutsService(c *client.Client) *PayoutsService
-```
-
-
-
-<a name="PayoutsService.List"></a>
-### func \(\*PayoutsService\) [List](<https://github.com/sumup/sumup-go/blob/main/payouts/payouts.go#L162>)
-
-```go
-func (s *PayoutsService) List(ctx context.Context, merchantCode string, params ListParams) (*FinancialPayouts, error)
-```
-
-Lists ordered payouts for the merchant profile.
-
-<a name="PayoutsService.ListDeprecated"></a>
-### func \(\*PayoutsService\) [ListDeprecated](<https://github.com/sumup/sumup-go/blob/main/payouts/payouts.go#L132>)
-
-```go
-func (s *PayoutsService) ListDeprecated(ctx context.Context, params ListDeprecatedParams) (*FinancialPayouts, error)
-```
-
-Lists ordered payouts for the merchant profile. Deprecated: this operation is deprecated
-
 # readers
 
 ```go
@@ -3908,6 +3908,16 @@ import "github.com/sumup/sumup-go/readers"
   - [func \(e \*BadRequest\) Error\(\) string](<#BadRequest.Error>)
 - [type BadRequestErrors](<#BadRequestErrors>)
 - [type BadRequestErrorsType](<#BadRequestErrorsType>)
+- [type Client](<#Client>)
+  - [func NewClient\(c \*client.Client\) \*Client](<#NewClient>)
+  - [func \(c \*Client\) Create\(ctx context.Context, merchantCode string, body Create\) \(\*Reader, error\)](<#Client.Create>)
+  - [func \(c \*Client\) CreateCheckout\(ctx context.Context, merchantCode string, readerID string, body CreateCheckout\) \(\*CreateReaderCheckoutResponse, error\)](<#Client.CreateCheckout>)
+  - [func \(c \*Client\) Delete\(ctx context.Context, merchantCode string, id ReaderID\) error](<#Client.Delete>)
+  - [func \(c \*Client\) Get\(ctx context.Context, merchantCode string, id ReaderID, params GetParams\) \(\*Reader, error\)](<#Client.Get>)
+  - [func \(c \*Client\) GetStatus\(ctx context.Context, merchantCode string, readerID string, params GetStatusParams\) \(\*StatusResponse, error\)](<#Client.GetStatus>)
+  - [func \(c \*Client\) List\(ctx context.Context, merchantCode string\) \(\*ListReaders200Response, error\)](<#Client.List>)
+  - [func \(c \*Client\) TerminateCheckout\(ctx context.Context, merchantCode string, readerID string\) error](<#Client.TerminateCheckout>)
+  - [func \(c \*Client\) Update\(ctx context.Context, merchantCode string, id ReaderID, body Update\) \(\*Reader, error\)](<#Client.Update>)
 - [type Create](<#Create>)
 - [type CreateCheckout](<#CreateCheckout>)
 - [type CreateCheckoutAffiliate](<#CreateCheckoutAffiliate>)
@@ -3954,16 +3964,6 @@ import "github.com/sumup/sumup-go/readers"
 - [type ReaderName](<#ReaderName>)
 - [type ReaderPairingCode](<#ReaderPairingCode>)
 - [type ReaderStatus](<#ReaderStatus>)
-- [type ReadersService](<#ReadersService>)
-  - [func NewReadersService\(c \*client.Client\) \*ReadersService](<#NewReadersService>)
-  - [func \(s \*ReadersService\) Create\(ctx context.Context, merchantCode string, body Create\) \(\*Reader, error\)](<#ReadersService.Create>)
-  - [func \(s \*ReadersService\) CreateCheckout\(ctx context.Context, merchantCode string, readerID string, body CreateCheckout\) \(\*CreateReaderCheckoutResponse, error\)](<#ReadersService.CreateCheckout>)
-  - [func \(s \*ReadersService\) Delete\(ctx context.Context, merchantCode string, id ReaderID\) error](<#ReadersService.Delete>)
-  - [func \(s \*ReadersService\) Get\(ctx context.Context, merchantCode string, id ReaderID, params GetParams\) \(\*Reader, error\)](<#ReadersService.Get>)
-  - [func \(s \*ReadersService\) GetStatus\(ctx context.Context, merchantCode string, readerID string, params GetStatusParams\) \(\*StatusResponse, error\)](<#ReadersService.GetStatus>)
-  - [func \(s \*ReadersService\) List\(ctx context.Context, merchantCode string\) \(\*ListReaders200Response, error\)](<#ReadersService.List>)
-  - [func \(s \*ReadersService\) TerminateCheckout\(ctx context.Context, merchantCode string, readerID string\) error](<#ReadersService.TerminateCheckout>)
-  - [func \(s \*ReadersService\) Update\(ctx context.Context, merchantCode string, id ReaderID, body Update\) \(\*Reader, error\)](<#ReadersService.Update>)
 - [type StatusResponse](<#StatusResponse>)
 - [type StatusResponseData](<#StatusResponseData>)
 - [type StatusResponseDataConnectionType](<#StatusResponseDataConnectionType>)
@@ -4061,6 +4061,124 @@ const (
     BadRequestErrorsTypeNotEnoughUnpaidPayouts BadRequestErrorsType = "NOT_ENOUGH_UNPAID_PAYOUTS"
 )
 ```
+
+<a name="Client"></a>
+## type [Client](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L621-L623>)
+
+
+
+```go
+type Client struct {
+    // contains filtered or unexported fields
+}
+```
+
+<a name="NewClient"></a>
+### func [NewClient](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L625>)
+
+```go
+func NewClient(c *client.Client) *Client
+```
+
+
+
+<a name="Client.Create"></a>
+### func \(\*Client\) [Create](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L653>)
+
+```go
+func (c *Client) Create(ctx context.Context, merchantCode string, body Create) (*Reader, error)
+```
+
+Create a new Reader for the merchant account.
+
+<a name="Client.CreateCheckout"></a>
+### func \(\*Client\) [CreateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L863>)
+
+```go
+func (c *Client) CreateCheckout(ctx context.Context, merchantCode string, readerID string, body CreateCheckout) (*CreateReaderCheckoutResponse, error)
+```
+
+Creates a Checkout for a Reader.
+
+This process is asynchronous and the actual transaction may take some time to be stared on the device.
+
+There are some caveats when using this endpoint: \* The target device must be online, otherwise checkout won't be accepted \* After the checkout is accepted, the system has 60 seconds to start the payment on the target device. During this time, any other checkout for the same device will be rejected.
+
+\*\*Note\*\*: If the target device is a Solo, it must be in version 3.3.24.3 or higher.
+
+<a name="Client.Delete"></a>
+### func \(\*Client\) [Delete](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L928>)
+
+```go
+func (c *Client) Delete(ctx context.Context, merchantCode string, id ReaderID) error
+```
+
+Delete a reader.
+
+<a name="Client.Get"></a>
+### func \(\*Client\) [Get](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L953>)
+
+```go
+func (c *Client) Get(ctx context.Context, merchantCode string, id ReaderID, params GetParams) (*Reader, error)
+```
+
+Retrieve a Reader.
+
+<a name="Client.GetStatus"></a>
+### func \(\*Client\) [GetStatus](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L789>)
+
+```go
+func (c *Client) GetStatus(ctx context.Context, merchantCode string, readerID string, params GetStatusParams) (*StatusResponse, error)
+```
+
+Provides the last known status for a Reader.
+
+This endpoint allows you to retrieve updates from the connected card reader, including the current screen being displayed during the payment process and the device status \(battery level, connectivity, and update state\).
+
+#### Supported States
+
+\* \`IDLE\` – Reader ready for next transaction \* \`SELECTING\_TIP\` – Waiting for tip input \* \`WAITING\_FOR\_CARD\` – Awaiting card insert/tap \* \`WAITING\_FOR\_PIN\` – Waiting for PIN entry \* \`WAITING\_FOR\_SIGNATURE\` – Waiting for customer signature \* \`UPDATING\_FIRMWARE\` – Firmware update in progress
+
+#### Device Status
+
+\* \`ONLINE\` – Device connected and operational \* \`OFFLINE\` – Device disconnected \(last state persisted\)
+
+\*\*Note\*\*: If the target device is a Solo, it must be in version 3.3.39.0 or higher.
+
+<a name="Client.List"></a>
+### func \(\*Client\) [List](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L630>)
+
+```go
+func (c *Client) List(ctx context.Context, merchantCode string) (*ListReaders200Response, error)
+```
+
+List all readers of the merchant.
+
+<a name="Client.TerminateCheckout"></a>
+### func \(\*Client\) [TerminateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L710>)
+
+```go
+func (c *Client) TerminateCheckout(ctx context.Context, merchantCode string, readerID string) error
+```
+
+Terminate a Reader Checkout stops the current transaction on the target device.
+
+This process is asynchronous and the actual termination may take some time to be performed on the device.
+
+There are some caveats when using this endpoint: \* The target device must be online, otherwise terminate won't be accepted \* The action will succeed only if the device is waiting for cardholder action: e.g: waiting for card, waiting for PIN, etc. \* There is no confirmation of the termination.
+
+If a transaction is successfully terminated and \`return\_url\` was provided on Checkout, the transaction status will be sent as \`failed\` to the provided URL.
+
+\*\*Note\*\*: If the target device is a Solo, it must be in version 3.3.28.0 or higher.
+
+<a name="Client.Update"></a>
+### func \(\*Client\) [Update](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L983>)
+
+```go
+func (c *Client) Update(ctx context.Context, merchantCode string, id ReaderID, body Update) (*Reader, error)
+```
+
+Update a Reader.
 
 <a name="Create"></a>
 ## type [Create](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L454-L467>)
@@ -4762,124 +4880,6 @@ const (
 )
 ```
 
-<a name="ReadersService"></a>
-## type [ReadersService](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L621-L623>)
-
-
-
-```go
-type ReadersService struct {
-    // contains filtered or unexported fields
-}
-```
-
-<a name="NewReadersService"></a>
-### func [NewReadersService](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L625>)
-
-```go
-func NewReadersService(c *client.Client) *ReadersService
-```
-
-
-
-<a name="ReadersService.Create"></a>
-### func \(\*ReadersService\) [Create](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L653>)
-
-```go
-func (s *ReadersService) Create(ctx context.Context, merchantCode string, body Create) (*Reader, error)
-```
-
-Create a new Reader for the merchant account.
-
-<a name="ReadersService.CreateCheckout"></a>
-### func \(\*ReadersService\) [CreateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L863>)
-
-```go
-func (s *ReadersService) CreateCheckout(ctx context.Context, merchantCode string, readerID string, body CreateCheckout) (*CreateReaderCheckoutResponse, error)
-```
-
-Creates a Checkout for a Reader.
-
-This process is asynchronous and the actual transaction may take some time to be stared on the device.
-
-There are some caveats when using this endpoint: \* The target device must be online, otherwise checkout won't be accepted \* After the checkout is accepted, the system has 60 seconds to start the payment on the target device. During this time, any other checkout for the same device will be rejected.
-
-\*\*Note\*\*: If the target device is a Solo, it must be in version 3.3.24.3 or higher.
-
-<a name="ReadersService.Delete"></a>
-### func \(\*ReadersService\) [Delete](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L928>)
-
-```go
-func (s *ReadersService) Delete(ctx context.Context, merchantCode string, id ReaderID) error
-```
-
-Delete a reader.
-
-<a name="ReadersService.Get"></a>
-### func \(\*ReadersService\) [Get](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L953>)
-
-```go
-func (s *ReadersService) Get(ctx context.Context, merchantCode string, id ReaderID, params GetParams) (*Reader, error)
-```
-
-Retrieve a Reader.
-
-<a name="ReadersService.GetStatus"></a>
-### func \(\*ReadersService\) [GetStatus](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L789>)
-
-```go
-func (s *ReadersService) GetStatus(ctx context.Context, merchantCode string, readerID string, params GetStatusParams) (*StatusResponse, error)
-```
-
-Provides the last known status for a Reader.
-
-This endpoint allows you to retrieve updates from the connected card reader, including the current screen being displayed during the payment process and the device status \(battery level, connectivity, and update state\).
-
-#### Supported States
-
-\* \`IDLE\` – Reader ready for next transaction \* \`SELECTING\_TIP\` – Waiting for tip input \* \`WAITING\_FOR\_CARD\` – Awaiting card insert/tap \* \`WAITING\_FOR\_PIN\` – Waiting for PIN entry \* \`WAITING\_FOR\_SIGNATURE\` – Waiting for customer signature \* \`UPDATING\_FIRMWARE\` – Firmware update in progress
-
-#### Device Status
-
-\* \`ONLINE\` – Device connected and operational \* \`OFFLINE\` – Device disconnected \(last state persisted\)
-
-\*\*Note\*\*: If the target device is a Solo, it must be in version 3.3.39.0 or higher.
-
-<a name="ReadersService.List"></a>
-### func \(\*ReadersService\) [List](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L630>)
-
-```go
-func (s *ReadersService) List(ctx context.Context, merchantCode string) (*ListReaders200Response, error)
-```
-
-List all readers of the merchant.
-
-<a name="ReadersService.TerminateCheckout"></a>
-### func \(\*ReadersService\) [TerminateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L710>)
-
-```go
-func (s *ReadersService) TerminateCheckout(ctx context.Context, merchantCode string, readerID string) error
-```
-
-Terminate a Reader Checkout stops the current transaction on the target device.
-
-This process is asynchronous and the actual termination may take some time to be performed on the device.
-
-There are some caveats when using this endpoint: \* The target device must be online, otherwise terminate won't be accepted \* The action will succeed only if the device is waiting for cardholder action: e.g: waiting for card, waiting for PIN, etc. \* There is no confirmation of the termination.
-
-If a transaction is successfully terminated and \`return\_url\` was provided on Checkout, the transaction status will be sent as \`failed\` to the provided URL.
-
-\*\*Note\*\*: If the target device is a Solo, it must be in version 3.3.28.0 or higher.
-
-<a name="ReadersService.Update"></a>
-### func \(\*ReadersService\) [Update](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L983>)
-
-```go
-func (s *ReadersService) Update(ctx context.Context, merchantCode string, id ReaderID, body Update) (*Reader, error)
-```
-
-Update a Reader.
-
 <a name="StatusResponse"></a>
 ## type [StatusResponse](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L369-L371>)
 
@@ -5057,6 +5057,9 @@ import "github.com/sumup/sumup-go/receipts"
 
 ## Index
 
+- [type Client](<#Client>)
+  - [func NewClient\(c \*client.Client\) \*Client](<#NewClient>)
+  - [func \(c \*Client\) Get\(ctx context.Context, id string, params GetParams\) \(\*Receipt, error\)](<#Client.Get>)
 - [type GetParams](<#GetParams>)
   - [func \(p \*GetParams\) QueryValues\(\) url.Values](<#GetParams.QueryValues>)
 - [type Receipt](<#Receipt>)
@@ -5070,10 +5073,36 @@ import "github.com/sumup/sumup-go/receipts"
 - [type ReceiptTransaction](<#ReceiptTransaction>)
 - [type ReceiptTransactionProduct](<#ReceiptTransactionProduct>)
 - [type ReceiptTransactionVATRate](<#ReceiptTransactionVATRate>)
-- [type ReceiptsService](<#ReceiptsService>)
-  - [func NewReceiptsService\(c \*client.Client\) \*ReceiptsService](<#NewReceiptsService>)
-  - [func \(s \*ReceiptsService\) Get\(ctx context.Context, id string, params GetParams\) \(\*Receipt, error\)](<#ReceiptsService.Get>)
 
+
+<a name="Client"></a>
+## type [Client](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L173-L175>)
+
+
+
+```go
+type Client struct {
+    // contains filtered or unexported fields
+}
+```
+
+<a name="NewClient"></a>
+### func [NewClient](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L177>)
+
+```go
+func NewClient(c *client.Client) *Client
+```
+
+
+
+<a name="Client.Get"></a>
+### func \(\*Client\) [Get](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L182>)
+
+```go
+func (c *Client) Get(ctx context.Context, id string, params GetParams) (*Receipt, error)
+```
+
+Retrieves receipt specific data for a transaction.
 
 <a name="GetParams"></a>
 ## type [GetParams](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L153-L158>)
@@ -5298,35 +5327,6 @@ type ReceiptTransactionVATRate struct {
 }
 ```
 
-<a name="ReceiptsService"></a>
-## type [ReceiptsService](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L173-L175>)
-
-
-
-```go
-type ReceiptsService struct {
-    // contains filtered or unexported fields
-}
-```
-
-<a name="NewReceiptsService"></a>
-### func [NewReceiptsService](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L177>)
-
-```go
-func NewReceiptsService(c *client.Client) *ReceiptsService
-```
-
-
-
-<a name="ReceiptsService.Get"></a>
-### func \(\*ReceiptsService\) [Get](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L182>)
-
-```go
-func (s *ReceiptsService) Get(ctx context.Context, id string, params GetParams) (*Receipt, error)
-```
-
-Retrieves receipt specific data for a transaction.
-
 # roles
 
 ```go
@@ -5335,18 +5335,83 @@ import "github.com/sumup/sumup-go/roles"
 
 ## Index
 
+- [type Client](<#Client>)
+  - [func NewClient\(c \*client.Client\) \*Client](<#NewClient>)
+  - [func \(c \*Client\) Create\(ctx context.Context, merchantCode string, body Create\) \(\*Role, error\)](<#Client.Create>)
+  - [func \(c \*Client\) Delete\(ctx context.Context, merchantCode string, roleID string\) error](<#Client.Delete>)
+  - [func \(c \*Client\) Get\(ctx context.Context, merchantCode string, roleID string\) \(\*Role, error\)](<#Client.Get>)
+  - [func \(c \*Client\) List\(ctx context.Context, merchantCode string\) \(\*ListMerchantRoles200Response, error\)](<#Client.List>)
+  - [func \(c \*Client\) Update\(ctx context.Context, merchantCode string, roleID string, body Update\) \(\*Role, error\)](<#Client.Update>)
 - [type Create](<#Create>)
 - [type ListMerchantRoles200Response](<#ListMerchantRoles200Response>)
 - [type Role](<#Role>)
-- [type RolesService](<#RolesService>)
-  - [func NewRolesService\(c \*client.Client\) \*RolesService](<#NewRolesService>)
-  - [func \(s \*RolesService\) Create\(ctx context.Context, merchantCode string, body Create\) \(\*Role, error\)](<#RolesService.Create>)
-  - [func \(s \*RolesService\) Delete\(ctx context.Context, merchantCode string, roleID string\) error](<#RolesService.Delete>)
-  - [func \(s \*RolesService\) Get\(ctx context.Context, merchantCode string, roleID string\) \(\*Role, error\)](<#RolesService.Get>)
-  - [func \(s \*RolesService\) List\(ctx context.Context, merchantCode string\) \(\*ListMerchantRoles200Response, error\)](<#RolesService.List>)
-  - [func \(s \*RolesService\) Update\(ctx context.Context, merchantCode string, roleID string, body Update\) \(\*Role, error\)](<#RolesService.Update>)
 - [type Update](<#Update>)
 
+
+<a name="Client"></a>
+## type [Client](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L70-L72>)
+
+
+
+```go
+type Client struct {
+    // contains filtered or unexported fields
+}
+```
+
+<a name="NewClient"></a>
+### func [NewClient](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L74>)
+
+```go
+func NewClient(c *client.Client) *Client
+```
+
+
+
+<a name="Client.Create"></a>
+### func \(\*Client\) [Create](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L110>)
+
+```go
+func (c *Client) Create(ctx context.Context, merchantCode string, body Create) (*Role, error)
+```
+
+Create a custom role for the merchant. Roles are defined by the set of permissions that they grant to the members that they are assigned to.
+
+<a name="Client.Delete"></a>
+### func \(\*Client\) [Delete](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L147>)
+
+```go
+func (c *Client) Delete(ctx context.Context, merchantCode string, roleID string) error
+```
+
+Delete a custom role.
+
+<a name="Client.Get"></a>
+### func \(\*Client\) [Get](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L179>)
+
+```go
+func (c *Client) Get(ctx context.Context, merchantCode string, roleID string) (*Role, error)
+```
+
+Retrieve a custom role by ID.
+
+<a name="Client.List"></a>
+### func \(\*Client\) [List](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L79>)
+
+```go
+func (c *Client) List(ctx context.Context, merchantCode string) (*ListMerchantRoles200Response, error)
+```
+
+List merchant's custom roles.
+
+<a name="Client.Update"></a>
+### func \(\*Client\) [Update](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L209>)
+
+```go
+func (c *Client) Update(ctx context.Context, merchantCode string, roleID string, body Update) (*Role, error)
+```
+
+Update a custom role.
 
 <a name="Create"></a>
 ## type [Create](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L40-L52>)
@@ -5408,71 +5473,6 @@ type Role struct {
     UpdatedAt time.Time `json:"updated_at"`
 }
 ```
-
-<a name="RolesService"></a>
-## type [RolesService](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L70-L72>)
-
-
-
-```go
-type RolesService struct {
-    // contains filtered or unexported fields
-}
-```
-
-<a name="NewRolesService"></a>
-### func [NewRolesService](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L74>)
-
-```go
-func NewRolesService(c *client.Client) *RolesService
-```
-
-
-
-<a name="RolesService.Create"></a>
-### func \(\*RolesService\) [Create](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L110>)
-
-```go
-func (s *RolesService) Create(ctx context.Context, merchantCode string, body Create) (*Role, error)
-```
-
-Create a custom role for the merchant. Roles are defined by the set of permissions that they grant to the members that they are assigned to.
-
-<a name="RolesService.Delete"></a>
-### func \(\*RolesService\) [Delete](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L147>)
-
-```go
-func (s *RolesService) Delete(ctx context.Context, merchantCode string, roleID string) error
-```
-
-Delete a custom role.
-
-<a name="RolesService.Get"></a>
-### func \(\*RolesService\) [Get](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L179>)
-
-```go
-func (s *RolesService) Get(ctx context.Context, merchantCode string, roleID string) (*Role, error)
-```
-
-Retrieve a custom role by ID.
-
-<a name="RolesService.List"></a>
-### func \(\*RolesService\) [List](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L79>)
-
-```go
-func (s *RolesService) List(ctx context.Context, merchantCode string) (*ListMerchantRoles200Response, error)
-```
-
-List merchant's custom roles.
-
-<a name="RolesService.Update"></a>
-### func \(\*RolesService\) [Update](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L209>)
-
-```go
-func (s *RolesService) Update(ctx context.Context, merchantCode string, roleID string, body Update) (*Role, error)
-```
-
-Update a custom role.
 
 <a name="Update"></a>
 ## type [Update](<https://github.com/sumup/sumup-go/blob/main/roles/roles.go#L55-L63>)
@@ -6096,6 +6096,13 @@ import "github.com/sumup/sumup-go/subaccounts"
 
 ## Index
 
+- [type Client](<#Client>)
+  - [func NewClient\(c \*client.Client\) \*Client](<#NewClient>)
+  - [func \(c \*Client\) CompatGetOperator\(ctx context.Context, operatorID int32\) \(\*Operator, error\)](<#Client.CompatGetOperator>)
+  - [func \(c \*Client\) CreateSubAccount\(ctx context.Context, body CreateSubAccount\) \(\*Operator, error\)](<#Client.CreateSubAccount>)
+  - [func \(c \*Client\) DeactivateSubAccount\(ctx context.Context, operatorID int32\) \(\*Operator, error\)](<#Client.DeactivateSubAccount>)
+  - [func \(c \*Client\) ListSubAccounts\(ctx context.Context, params ListSubAccountsParams\) \(\*ListSubAccounts200Response, error\)](<#Client.ListSubAccounts>)
+  - [func \(c \*Client\) UpdateSubAccount\(ctx context.Context, operatorID int32, body UpdateSubAccount\) \(\*Operator, error\)](<#Client.UpdateSubAccount>)
 - [type CreateSubAccount](<#CreateSubAccount>)
 - [type CreateSubAccountPermissions](<#CreateSubAccountPermissions>)
 - [type ListSubAccounts200Response](<#ListSubAccounts200Response>)
@@ -6104,16 +6111,74 @@ import "github.com/sumup/sumup-go/subaccounts"
 - [type Operator](<#Operator>)
 - [type OperatorAccountType](<#OperatorAccountType>)
 - [type Permissions](<#Permissions>)
-- [type SubaccountsService](<#SubaccountsService>)
-  - [func NewSubaccountsService\(c \*client.Client\) \*SubaccountsService](<#NewSubaccountsService>)
-  - [func \(s \*SubaccountsService\) CompatGetOperator\(ctx context.Context, operatorID int32\) \(\*Operator, error\)](<#SubaccountsService.CompatGetOperator>)
-  - [func \(s \*SubaccountsService\) CreateSubAccount\(ctx context.Context, body CreateSubAccount\) \(\*Operator, error\)](<#SubaccountsService.CreateSubAccount>)
-  - [func \(s \*SubaccountsService\) DeactivateSubAccount\(ctx context.Context, operatorID int32\) \(\*Operator, error\)](<#SubaccountsService.DeactivateSubAccount>)
-  - [func \(s \*SubaccountsService\) ListSubAccounts\(ctx context.Context, params ListSubAccountsParams\) \(\*ListSubAccounts200Response, error\)](<#SubaccountsService.ListSubAccounts>)
-  - [func \(s \*SubaccountsService\) UpdateSubAccount\(ctx context.Context, operatorID int32, body UpdateSubAccount\) \(\*Operator, error\)](<#SubaccountsService.UpdateSubAccount>)
 - [type UpdateSubAccount](<#UpdateSubAccount>)
 - [type UpdateSubAccountPermissions](<#UpdateSubAccountPermissions>)
 
+
+<a name="Client"></a>
+## type [Client](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L118-L120>)
+
+
+
+```go
+type Client struct {
+    // contains filtered or unexported fields
+}
+```
+
+<a name="NewClient"></a>
+### func [NewClient](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L122>)
+
+```go
+func NewClient(c *client.Client) *Client
+```
+
+
+
+<a name="Client.CompatGetOperator"></a>
+### func \(\*Client\) [CompatGetOperator](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L210>)
+
+```go
+func (c *Client) CompatGetOperator(ctx context.Context, operatorID int32) (*Operator, error)
+```
+
+Returns specific operator. Deprecated: Subaccounts API is deprecated, to get a user that's a member of your merchant account please use \[Get member\]\(https://developer.sumup.com/api/members/get\) instead.
+
+<a name="Client.CreateSubAccount"></a>
+### func \(\*Client\) [CreateSubAccount](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L153>)
+
+```go
+func (c *Client) CreateSubAccount(ctx context.Context, body CreateSubAccount) (*Operator, error)
+```
+
+Creates new operator for currently authorized users' merchant. Deprecated: Subaccounts API is deprecated, to create a user in your merchant account please use \[Create member\]\(https://developer.sumup.com/api/members/create\) instead.
+
+<a name="Client.DeactivateSubAccount"></a>
+### func \(\*Client\) [DeactivateSubAccount](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L185>)
+
+```go
+func (c *Client) DeactivateSubAccount(ctx context.Context, operatorID int32) (*Operator, error)
+```
+
+Disable the specified operator for the merchant account. Deprecated: Subaccounts API is deprecated, to remove a user that's a member of your merchant account please use \[Delete member\]\(https://developer.sumup.com/api/members/delete\) instead.
+
+<a name="Client.ListSubAccounts"></a>
+### func \(\*Client\) [ListSubAccounts](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L128>)
+
+```go
+func (c *Client) ListSubAccounts(ctx context.Context, params ListSubAccountsParams) (*ListSubAccounts200Response, error)
+```
+
+Returns list of operators for currently authorized user's merchant. Deprecated: Subaccounts API is deprecated, to list users in your merchant account please use \[List members\]\(https://developer.sumup.com/api/members/list\) instead.
+
+<a name="Client.UpdateSubAccount"></a>
+### func \(\*Client\) [UpdateSubAccount](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L235>)
+
+```go
+func (c *Client) UpdateSubAccount(ctx context.Context, operatorID int32, body UpdateSubAccount) (*Operator, error)
+```
+
+Updates operator. If the operator was disabled and their password is updated they will be unblocked. Deprecated: Subaccounts API is deprecated, to update a user that's a member of your merchant account please use \[Update member\]\(https://developer.sumup.com/api/members/update\) instead.
 
 <a name="CreateSubAccount"></a>
 ## type [CreateSubAccount](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L52-L59>)
@@ -6235,71 +6300,6 @@ type Permissions struct {
 }
 ```
 
-<a name="SubaccountsService"></a>
-## type [SubaccountsService](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L118-L120>)
-
-
-
-```go
-type SubaccountsService struct {
-    // contains filtered or unexported fields
-}
-```
-
-<a name="NewSubaccountsService"></a>
-### func [NewSubaccountsService](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L122>)
-
-```go
-func NewSubaccountsService(c *client.Client) *SubaccountsService
-```
-
-
-
-<a name="SubaccountsService.CompatGetOperator"></a>
-### func \(\*SubaccountsService\) [CompatGetOperator](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L210>)
-
-```go
-func (s *SubaccountsService) CompatGetOperator(ctx context.Context, operatorID int32) (*Operator, error)
-```
-
-Returns specific operator. Deprecated: Subaccounts API is deprecated, to get a user that's a member of your merchant account please use \[Get member\]\(https://developer.sumup.com/api/members/get\) instead.
-
-<a name="SubaccountsService.CreateSubAccount"></a>
-### func \(\*SubaccountsService\) [CreateSubAccount](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L153>)
-
-```go
-func (s *SubaccountsService) CreateSubAccount(ctx context.Context, body CreateSubAccount) (*Operator, error)
-```
-
-Creates new operator for currently authorized users' merchant. Deprecated: Subaccounts API is deprecated, to create a user in your merchant account please use \[Create member\]\(https://developer.sumup.com/api/members/create\) instead.
-
-<a name="SubaccountsService.DeactivateSubAccount"></a>
-### func \(\*SubaccountsService\) [DeactivateSubAccount](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L185>)
-
-```go
-func (s *SubaccountsService) DeactivateSubAccount(ctx context.Context, operatorID int32) (*Operator, error)
-```
-
-Disable the specified operator for the merchant account. Deprecated: Subaccounts API is deprecated, to remove a user that's a member of your merchant account please use \[Delete member\]\(https://developer.sumup.com/api/members/delete\) instead.
-
-<a name="SubaccountsService.ListSubAccounts"></a>
-### func \(\*SubaccountsService\) [ListSubAccounts](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L128>)
-
-```go
-func (s *SubaccountsService) ListSubAccounts(ctx context.Context, params ListSubAccountsParams) (*ListSubAccounts200Response, error)
-```
-
-Returns list of operators for currently authorized user's merchant. Deprecated: Subaccounts API is deprecated, to list users in your merchant account please use \[List members\]\(https://developer.sumup.com/api/members/list\) instead.
-
-<a name="SubaccountsService.UpdateSubAccount"></a>
-### func \(\*SubaccountsService\) [UpdateSubAccount](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L235>)
-
-```go
-func (s *SubaccountsService) UpdateSubAccount(ctx context.Context, operatorID int32, body UpdateSubAccount) (*Operator, error)
-```
-
-Updates operator. If the operator was disabled and their password is updated they will be unblocked. Deprecated: Subaccounts API is deprecated, to update a user that's a member of your merchant account please use \[Update member\]\(https://developer.sumup.com/api/members/update\) instead.
-
 <a name="UpdateSubAccount"></a>
 ## type [UpdateSubAccount](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L70-L79>)
 
@@ -6341,6 +6341,13 @@ import "github.com/sumup/sumup-go/transactions"
 ## Index
 
 - [type CardResponse](<#CardResponse>)
+- [type Client](<#Client>)
+  - [func NewClient\(c \*client.Client\) \*Client](<#NewClient>)
+  - [func \(c \*Client\) Get\(ctx context.Context, merchantCode string, params GetParams\) \(\*TransactionFull, error\)](<#Client.Get>)
+  - [func \(c \*Client\) GetDeprecated\(ctx context.Context, params GetDeprecatedParams\) \(\*TransactionFull, error\)](<#Client.GetDeprecated>)
+  - [func \(c \*Client\) List\(ctx context.Context, merchantCode string, params ListParams\) \(\*ListTransactionsV21200Response, error\)](<#Client.List>)
+  - [func \(c \*Client\) ListDeprecated\(ctx context.Context, params ListDeprecatedParams\) \(\*ListTransactions200Response, error\)](<#Client.ListDeprecated>)
+  - [func \(c \*Client\) Refund\(ctx context.Context, txnID string, body Refund\) error](<#Client.Refund>)
 - [type EntryModeFilter](<#EntryModeFilter>)
 - [type Event](<#Event>)
 - [type GetDeprecatedParams](<#GetDeprecatedParams>)
@@ -6375,13 +6382,6 @@ import "github.com/sumup/sumup-go/transactions"
 - [type TransactionHistoryType](<#TransactionHistoryType>)
 - [type TransactionMixinHistory](<#TransactionMixinHistory>)
 - [type TransactionMixinHistoryPayoutPlan](<#TransactionMixinHistoryPayoutPlan>)
-- [type TransactionsService](<#TransactionsService>)
-  - [func NewTransactionsService\(c \*client.Client\) \*TransactionsService](<#NewTransactionsService>)
-  - [func \(s \*TransactionsService\) Get\(ctx context.Context, merchantCode string, params GetParams\) \(\*TransactionFull, error\)](<#TransactionsService.Get>)
-  - [func \(s \*TransactionsService\) GetDeprecated\(ctx context.Context, params GetDeprecatedParams\) \(\*TransactionFull, error\)](<#TransactionsService.GetDeprecated>)
-  - [func \(s \*TransactionsService\) List\(ctx context.Context, merchantCode string, params ListParams\) \(\*ListTransactionsV21200Response, error\)](<#TransactionsService.List>)
-  - [func \(s \*TransactionsService\) ListDeprecated\(ctx context.Context, params ListDeprecatedParams\) \(\*ListTransactions200Response, error\)](<#TransactionsService.ListDeprecated>)
-  - [func \(s \*TransactionsService\) Refund\(ctx context.Context, txnID string, body Refund\) error](<#TransactionsService.Refund>)
 
 
 <a name="CardResponse"></a>
@@ -6400,6 +6400,85 @@ type CardResponse struct {
     Type *shared.CardType `json:"type,omitempty"`
 }
 ```
+
+<a name="Client"></a>
+## type [Client](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L711-L713>)
+
+
+
+```go
+type Client struct {
+    // contains filtered or unexported fields
+}
+```
+
+<a name="NewClient"></a>
+### func [NewClient](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L715>)
+
+```go
+func NewClient(c *client.Client) *Client
+```
+
+
+
+<a name="Client.Get"></a>
+### func \(\*Client\) [Get](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L834>)
+
+```go
+func (c *Client) Get(ctx context.Context, merchantCode string, params GetParams) (*TransactionFull, error)
+```
+
+Retrieves the full details of an identified transaction. The transaction resource is identified by a query parameter and \*one\* of following parameters is required:
+
+- \`id\`
+- \`internal\_id\`
+- \`transaction\_code\`
+- \`foreign\_transaction\_id\`
+- \`client\_transaction\_id\`
+
+<a name="Client.GetDeprecated"></a>
+### func \(\*Client\) [GetDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L760>)
+
+```go
+func (c *Client) GetDeprecated(ctx context.Context, params GetDeprecatedParams) (*TransactionFull, error)
+```
+
+Retrieves the full details of an identified transaction. The transaction resource is identified by a query parameter and \*one\* of following parameters is required:
+
+- \`id\`
+- \`internal\_id\`
+- \`transaction\_code\`
+- \`foreign\_transaction\_id\`
+- \`client\_transaction\_id\`
+
+Deprecated: this operation is deprecated
+
+<a name="Client.List"></a>
+### func \(\*Client\) [List](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L797>)
+
+```go
+func (c *Client) List(ctx context.Context, merchantCode string, params ListParams) (*ListTransactionsV21200Response, error)
+```
+
+Lists detailed history of all transactions associated with the merchant profile.
+
+<a name="Client.ListDeprecated"></a>
+### func \(\*Client\) [ListDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L721>)
+
+```go
+func (c *Client) ListDeprecated(ctx context.Context, params ListDeprecatedParams) (*ListTransactions200Response, error)
+```
+
+Lists detailed history of all transactions associated with the merchant profile. Deprecated: this operation is deprecated
+
+<a name="Client.Refund"></a>
+### func \(\*Client\) [Refund](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L871>)
+
+```go
+func (c *Client) Refund(ctx context.Context, txnID string, body Refund) error
+```
+
+Refunds an identified transaction either in full or partially.
 
 <a name="EntryModeFilter"></a>
 ## type [EntryModeFilter](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L31>)
@@ -7177,85 +7256,6 @@ const (
     TransactionMixinHistoryPayoutPlanTrueInstallment        TransactionMixinHistoryPayoutPlan = "TRUE_INSTALLMENT"
 )
 ```
-
-<a name="TransactionsService"></a>
-## type [TransactionsService](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L711-L713>)
-
-
-
-```go
-type TransactionsService struct {
-    // contains filtered or unexported fields
-}
-```
-
-<a name="NewTransactionsService"></a>
-### func [NewTransactionsService](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L715>)
-
-```go
-func NewTransactionsService(c *client.Client) *TransactionsService
-```
-
-
-
-<a name="TransactionsService.Get"></a>
-### func \(\*TransactionsService\) [Get](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L834>)
-
-```go
-func (s *TransactionsService) Get(ctx context.Context, merchantCode string, params GetParams) (*TransactionFull, error)
-```
-
-Retrieves the full details of an identified transaction. The transaction resource is identified by a query parameter and \*one\* of following parameters is required:
-
-- \`id\`
-- \`internal\_id\`
-- \`transaction\_code\`
-- \`foreign\_transaction\_id\`
-- \`client\_transaction\_id\`
-
-<a name="TransactionsService.GetDeprecated"></a>
-### func \(\*TransactionsService\) [GetDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L760>)
-
-```go
-func (s *TransactionsService) GetDeprecated(ctx context.Context, params GetDeprecatedParams) (*TransactionFull, error)
-```
-
-Retrieves the full details of an identified transaction. The transaction resource is identified by a query parameter and \*one\* of following parameters is required:
-
-- \`id\`
-- \`internal\_id\`
-- \`transaction\_code\`
-- \`foreign\_transaction\_id\`
-- \`client\_transaction\_id\`
-
-Deprecated: this operation is deprecated
-
-<a name="TransactionsService.List"></a>
-### func \(\*TransactionsService\) [List](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L797>)
-
-```go
-func (s *TransactionsService) List(ctx context.Context, merchantCode string, params ListParams) (*ListTransactionsV21200Response, error)
-```
-
-Lists detailed history of all transactions associated with the merchant profile.
-
-<a name="TransactionsService.ListDeprecated"></a>
-### func \(\*TransactionsService\) [ListDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L721>)
-
-```go
-func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListDeprecatedParams) (*ListTransactions200Response, error)
-```
-
-Lists detailed history of all transactions associated with the merchant profile. Deprecated: this operation is deprecated
-
-<a name="TransactionsService.Refund"></a>
-### func \(\*TransactionsService\) [Refund](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L871>)
-
-```go
-func (s *TransactionsService) Refund(ctx context.Context, txnID string, body Refund) error
-```
-
-Refunds an identified transaction either in full or partially.
 
 # checkout
 

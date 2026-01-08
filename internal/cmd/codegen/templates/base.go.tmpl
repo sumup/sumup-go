@@ -20,7 +20,7 @@ type Client struct {
 	c *client.Client
 
 	{{- range .Resources}}
-	{{.Name}} *{{.Package}}.{{.Name}}Service
+	{{.Name}} *{{.Package}}.Client
 	{{- end}}
 }
 
@@ -33,7 +33,7 @@ func NewClient(opts ...client.ClientOption) *Client {
 	c := &Client{ c: client }
 
 	{{- range .Resources }}
-	c.{{.Name}} = {{.Package}}.New{{.Name}}Service(client)
+	c.{{.Name}} = {{.Package}}.NewClient(client)
 	{{- end}}
 
 	return c

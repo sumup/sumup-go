@@ -67,19 +67,19 @@ type ListMerchantRoles200Response struct {
 	Items []Role `json:"items"`
 }
 
-type RolesService struct {
+type Client struct {
 	c *client.Client
 }
 
-func NewRolesService(c *client.Client) *RolesService {
-	return &RolesService{c: c}
+func NewClient(c *client.Client) *Client {
+	return &Client{c: c}
 }
 
 // List merchant's custom roles.
-func (s *RolesService) List(ctx context.Context, merchantCode string) (*ListMerchantRoles200Response, error) {
+func (c *Client) List(ctx context.Context, merchantCode string) (*ListMerchantRoles200Response, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/roles", merchantCode)
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path)
+	resp, err := c.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -107,10 +107,10 @@ func (s *RolesService) List(ctx context.Context, merchantCode string) (*ListMerc
 
 // Create a custom role for the merchant. Roles are defined by the set of permissions that they grant to the
 // members that they are assigned to.
-func (s *RolesService) Create(ctx context.Context, merchantCode string, body Create) (*Role, error) {
+func (c *Client) Create(ctx context.Context, merchantCode string, body Create) (*Role, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/roles", merchantCode)
 
-	resp, err := s.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
+	resp, err := c.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -144,10 +144,10 @@ func (s *RolesService) Create(ctx context.Context, merchantCode string, body Cre
 }
 
 // Delete a custom role.
-func (s *RolesService) Delete(ctx context.Context, merchantCode string, roleID string) error {
+func (c *Client) Delete(ctx context.Context, merchantCode string, roleID string) error {
 	path := fmt.Sprintf("/v0.1/merchants/%v/roles/%v", merchantCode, roleID)
 
-	resp, err := s.c.Call(ctx, http.MethodDelete, path)
+	resp, err := c.c.Call(ctx, http.MethodDelete, path)
 	if err != nil {
 		return fmt.Errorf("error building request: %v", err)
 	}
@@ -176,10 +176,10 @@ func (s *RolesService) Delete(ctx context.Context, merchantCode string, roleID s
 }
 
 // Retrieve a custom role by ID.
-func (s *RolesService) Get(ctx context.Context, merchantCode string, roleID string) (*Role, error) {
+func (c *Client) Get(ctx context.Context, merchantCode string, roleID string) (*Role, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/roles/%v", merchantCode, roleID)
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path)
+	resp, err := c.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -206,10 +206,10 @@ func (s *RolesService) Get(ctx context.Context, merchantCode string, roleID stri
 }
 
 // Update a custom role.
-func (s *RolesService) Update(ctx context.Context, merchantCode string, roleID string, body Update) (*Role, error) {
+func (c *Client) Update(ctx context.Context, merchantCode string, roleID string, body Update) (*Role, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/roles/%v", merchantCode, roleID)
 
-	resp, err := s.c.Call(ctx, http.MethodPatch, path, client.WithJSONBody(body))
+	resp, err := c.c.Call(ctx, http.MethodPatch, path, client.WithJSONBody(body))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}

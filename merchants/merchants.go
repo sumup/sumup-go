@@ -679,20 +679,20 @@ func (e *GetPerson500Response) Error() string {
 
 var _ error = (*GetPerson500Response)(nil)
 
-type MerchantsService struct {
+type Client struct {
 	c *client.Client
 }
 
-func NewMerchantsService(c *client.Client) *MerchantsService {
-	return &MerchantsService{c: c}
+func NewClient(c *client.Client) *Client {
+	return &Client{c: c}
 }
 
 // Returns a list of persons related to the merchant.
 // Persons documentation: https://developer.sumup.com/tools/models/merchant#persons
-func (s *MerchantsService) ListPersons(ctx context.Context, merchantCode string, params ListPersonsParams) (*ListPersonsResponseBody, error) {
+func (c *Client) ListPersons(ctx context.Context, merchantCode string, params ListPersonsParams) (*ListPersonsResponseBody, error) {
 	path := fmt.Sprintf("/v1/merchants/%v/persons", merchantCode)
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
+	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -727,10 +727,10 @@ func (s *MerchantsService) ListPersons(ctx context.Context, merchantCode string,
 
 // Retrieve a merchant.
 // Merchant documentation: https://developer.sumup.com/tools/models/merchant
-func (s *MerchantsService) Get(ctx context.Context, merchantCode string, params GetParams) (*Merchant, error) {
+func (c *Client) Get(ctx context.Context, merchantCode string, params GetParams) (*Merchant, error) {
 	path := fmt.Sprintf("/v1/merchants/%v", merchantCode)
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
+	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -758,10 +758,10 @@ func (s *MerchantsService) Get(ctx context.Context, merchantCode string, params 
 
 // Returns a single person related to the merchant.
 // Persons documentation: https://developer.sumup.com/tools/models/merchant#persons
-func (s *MerchantsService) GetPerson(ctx context.Context, merchantCode string, personID string, params GetPersonParams) (*Person, error) {
+func (c *Client) GetPerson(ctx context.Context, merchantCode string, personID string, params GetPersonParams) (*Person, error) {
 	path := fmt.Sprintf("/v1/merchants/%v/persons/%v", merchantCode, personID)
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
+	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}

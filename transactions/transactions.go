@@ -708,20 +708,20 @@ type ListTransactionsV21200Response struct {
 	Links []Link               `json:"links,omitempty"`
 }
 
-type TransactionsService struct {
+type Client struct {
 	c *client.Client
 }
 
-func NewTransactionsService(c *client.Client) *TransactionsService {
-	return &TransactionsService{c: c}
+func NewClient(c *client.Client) *Client {
+	return &Client{c: c}
 }
 
 // Lists detailed history of all transactions associated with the merchant profile.
 // Deprecated: this operation is deprecated
-func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListDeprecatedParams) (*ListTransactions200Response, error) {
+func (c *Client) ListDeprecated(ctx context.Context, params ListDeprecatedParams) (*ListTransactions200Response, error) {
 	path := fmt.Sprintf("/v0.1/me/transactions/history")
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
+	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -757,10 +757,10 @@ func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListDep
 //   - `client_transaction_id`
 //
 // Deprecated: this operation is deprecated
-func (s *TransactionsService) GetDeprecated(ctx context.Context, params GetDeprecatedParams) (*TransactionFull, error) {
+func (c *Client) GetDeprecated(ctx context.Context, params GetDeprecatedParams) (*TransactionFull, error) {
 	path := fmt.Sprintf("/v0.1/me/transactions")
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
+	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -794,10 +794,10 @@ func (s *TransactionsService) GetDeprecated(ctx context.Context, params GetDepre
 }
 
 // Lists detailed history of all transactions associated with the merchant profile.
-func (s *TransactionsService) List(ctx context.Context, merchantCode string, params ListParams) (*ListTransactionsV21200Response, error) {
+func (c *Client) List(ctx context.Context, merchantCode string, params ListParams) (*ListTransactionsV21200Response, error) {
 	path := fmt.Sprintf("/v2.1/merchants/%v/transactions/history", merchantCode)
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
+	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -831,10 +831,10 @@ func (s *TransactionsService) List(ctx context.Context, merchantCode string, par
 //   - `transaction_code`
 //   - `foreign_transaction_id`
 //   - `client_transaction_id`
-func (s *TransactionsService) Get(ctx context.Context, merchantCode string, params GetParams) (*TransactionFull, error) {
+func (c *Client) Get(ctx context.Context, merchantCode string, params GetParams) (*TransactionFull, error) {
 	path := fmt.Sprintf("/v2.1/merchants/%v/transactions", merchantCode)
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
+	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -868,10 +868,10 @@ func (s *TransactionsService) Get(ctx context.Context, merchantCode string, para
 }
 
 // Refunds an identified transaction either in full or partially.
-func (s *TransactionsService) Refund(ctx context.Context, txnID string, body Refund) error {
+func (c *Client) Refund(ctx context.Context, txnID string, body Refund) error {
 	path := fmt.Sprintf("/v0.1/me/refund/%v", txnID)
 
-	resp, err := s.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
+	resp, err := c.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
 	if err != nil {
 		return fmt.Errorf("error building request: %v", err)
 	}

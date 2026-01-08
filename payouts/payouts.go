@@ -119,20 +119,20 @@ func (p *ListParams) QueryValues() url.Values {
 	return q
 }
 
-type PayoutsService struct {
+type Client struct {
 	c *client.Client
 }
 
-func NewPayoutsService(c *client.Client) *PayoutsService {
-	return &PayoutsService{c: c}
+func NewClient(c *client.Client) *Client {
+	return &Client{c: c}
 }
 
 // Lists ordered payouts for the merchant profile.
 // Deprecated: this operation is deprecated
-func (s *PayoutsService) ListDeprecated(ctx context.Context, params ListDeprecatedParams) (*FinancialPayouts, error) {
+func (c *Client) ListDeprecated(ctx context.Context, params ListDeprecatedParams) (*FinancialPayouts, error) {
 	path := fmt.Sprintf("/v0.1/me/financials/payouts")
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
+	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -159,10 +159,10 @@ func (s *PayoutsService) ListDeprecated(ctx context.Context, params ListDeprecat
 }
 
 // Lists ordered payouts for the merchant profile.
-func (s *PayoutsService) List(ctx context.Context, merchantCode string, params ListParams) (*FinancialPayouts, error) {
+func (c *Client) List(ctx context.Context, merchantCode string, params ListParams) (*FinancialPayouts, error) {
 	path := fmt.Sprintf("/v1.0/merchants/%v/payouts", merchantCode)
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
+	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}

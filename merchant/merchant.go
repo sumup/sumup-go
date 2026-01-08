@@ -367,21 +367,21 @@ func (p *GetParams) QueryValues() url.Values {
 	return q
 }
 
-type MerchantService struct {
+type Client struct {
 	c *client.Client
 }
 
-func NewMerchantService(c *client.Client) *MerchantService {
-	return &MerchantService{c: c}
+func NewClient(c *client.Client) *Client {
+	return &Client{c: c}
 }
 
 // Retrieves personal profile data.
 // Deprecated: The _Retrieve a personal profile_ endpoint is deprecated, please use the `persons` field of
 // the `Merchant` object instead. (see [Merchants](https://developer.sumup.com/api/merchants)).
-func (s *MerchantService) GetPersonalProfile(ctx context.Context) (*PersonalProfileLegacy, error) {
+func (c *Client) GetPersonalProfile(ctx context.Context) (*PersonalProfileLegacy, error) {
 	path := fmt.Sprintf("/v0.1/me/personal-profile")
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path)
+	resp, err := c.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -410,10 +410,10 @@ func (s *MerchantService) GetPersonalProfile(ctx context.Context) (*PersonalProf
 // Retrieves Doing Business As profile.
 // Deprecated: The _Retrieve DBA_ endpoint is deprecated, please use the `business_profile` field of the `Merchant`
 // object instead (see [Merchants](https://developer.sumup.com/api/merchants)).
-func (s *MerchantService) GetDoingBusinessAs(ctx context.Context) (*DoingBusinessAsLegacy, error) {
+func (c *Client) GetDoingBusinessAs(ctx context.Context) (*DoingBusinessAsLegacy, error) {
 	path := fmt.Sprintf("/v0.1/me/merchant-profile/doing-business-as")
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path)
+	resp, err := c.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -442,10 +442,10 @@ func (s *MerchantService) GetDoingBusinessAs(ctx context.Context) (*DoingBusines
 // Retrieves merchant profile data.
 // Deprecated: The _Retrieve a merchant profile_ endpoint is deprecated, please use the `Merchant` object instead
 // (see [Merchants](https://developer.sumup.com/api/merchants)).
-func (s *MerchantService) GetMerchantProfile(ctx context.Context) (*MerchantProfileLegacy, error) {
+func (c *Client) GetMerchantProfile(ctx context.Context) (*MerchantProfileLegacy, error) {
 	path := fmt.Sprintf("/v0.1/me/merchant-profile")
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path)
+	resp, err := c.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -481,10 +481,10 @@ func (s *MerchantService) GetMerchantProfile(ctx context.Context) (*MerchantProf
 // Returns user profile information.
 // Deprecated: The _Retrieve a profile_ endpoint is deprecated, please use the `Merchant` object instead (see
 // [Merchants](https://developer.sumup.com/api/merchants)).
-func (s *MerchantService) Get(ctx context.Context, params GetParams) (*MerchantAccount, error) {
+func (c *Client) Get(ctx context.Context, params GetParams) (*MerchantAccount, error) {
 	path := fmt.Sprintf("/v0.1/me")
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
+	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}

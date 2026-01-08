@@ -67,7 +67,6 @@ func (b *Builder) generateResource(tagName string, paths *openapi3.Paths) error 
 	if err := b.templates.ExecuteTemplate(buf, "resource.go.tmpl", templateData{
 		PackageName: strcase.ToSnake(tag.Name),
 		Types:       types,
-		Service:     strcase.ToCamel(tag.Name) + "Service",
 		Methods:     methods,
 	}); err != nil {
 		return err
