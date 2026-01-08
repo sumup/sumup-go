@@ -35,11 +35,11 @@ vulncheck-sarif: ## Check for Vulnerabilities
 
 .PHONY: generate
 generate: ## Generate latest SDK
-	cd codegen && go run ./... generate --out ../ ../openapi.json
-	gomarkdoc --repository.url https://github.com/sumup/sumup-go --repository.default-branch main --exclude-dirs ./codegen --output DOCUMENTATION.md ./...
+	cd internal/cmd/codegen && go run ./... generate --out ../../.. ../../../openapi.json
+	gomarkdoc --repository.url https://github.com/sumup/sumup-go --repository.default-branch main --exclude-dirs ./internal/cmd/codegen/... --output DOCUMENTATION.md ./...
 
 .PHONY: install-tools
 install-tools: # Install development dependencies
-	cd codegen && go install ./cmd/go-sdk-gen
+	cd internal/cmd/codegen && go install ./cmd/go-sdk-gen
 	go install github.com/princjef/gomarkdoc/cmd/gomarkdoc@latest
 	go install golang.org/x/vuln/cmd/govulncheck@latest

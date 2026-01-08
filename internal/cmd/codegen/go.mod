@@ -1,4 +1,4 @@
-module github.com/sumup/go-sdk-gen
+module github.com/sumup/sumup-go/internal/cmd/codegen
 
 go 1.23.0
 

@@ -9,7 +9,7 @@ import (
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/urfave/cli/v2"
 
-	"github.com/sumup/go-sdk-gen/pkg/builder"
+	"github.com/sumup/sumup-go/internal/cmd/codegen/pkg/builder"
 )
 
 func Generate() *cli.Command {

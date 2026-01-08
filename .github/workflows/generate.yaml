@@ -40,11 +40,11 @@ jobs:
       - run: go install github.com/princjef/gomarkdoc/cmd/gomarkdoc@latest
 
       - name: Generate SDK
-        working-directory: codegen
-        run: go run ./... generate --out ../ ../openapi.json
+        working-directory: internal/cmd/codegen
+        run: go run ./... generate --out ../../.. ../../../openapi.json
 
       - name: Generate docs
-        run: gomarkdoc --repository.url https://github.com/sumup/sumup-go --repository.default-branch main --exclude-dirs ./codegen --output DOCUMENTATION.md ./...
+        run: gomarkdoc --repository.url https://github.com/sumup/sumup-go --repository.default-branch main --exclude-dirs ./internal/cmd/codegen --output DOCUMENTATION.md ./...
 
       - name: Create GitHub App token
         id: app-token

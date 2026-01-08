@@ -21,7 +21,7 @@ updates:
       prefix: chore
       include: scope
   - package-ecosystem: "gomod"
-    directory: "/codegen"
+    directory: "/internal/cmd/codegen"
     open-pull-requests-limit: 5
     schedule:
       interval: "weekly"

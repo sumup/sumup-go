@@ -14,12 +14,12 @@ formatters:
       sections:
         - standard
         - default
-        - prefix(github.com/sumup/go-sdk-gen)
+        - prefix(github.com/sumup/sumup-go/internal/cmd/codegen)
         - dot
     gofmt:
       simplify: true
     goimports:
       local-prefixes:
-        - github.com/sumup/go-sdk-gen
+        - github.com/sumup/sumup-go/internal/cmd/codegen
   exclusions:
     generated: lax
