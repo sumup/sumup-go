@@ -12,7 +12,7 @@ import (
 
 	"github.com/getkin/kin-openapi/openapi3"
 
-	"github.com/sumup/go-sdk-gen/templates"
+	"github.com/sumup/sumup-go/internal/cmd/codegen/templates"
 )
 
 // Builder is an SDK builder. Builder works in two steps:

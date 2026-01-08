@@ -12,7 +12,7 @@ import (
 
 	"github.com/getkin/kin-openapi/openapi3"
 
-	"github.com/sumup/go-sdk-gen/internal/strcase"
+	"github.com/sumup/sumup-go/internal/cmd/codegen/internal/strcase"
 )
 
 var (
