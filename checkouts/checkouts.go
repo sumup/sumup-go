@@ -742,19 +742,19 @@ func (r *ProcessCheckoutResponse) AsCheckoutAccepted() (*CheckoutAccepted, bool)
 	return nil, false
 }
 
-type CheckoutsService struct {
+type Client struct {
 	c *client.Client
 }
 
-func NewCheckoutsService(c *client.Client) *CheckoutsService {
-	return &CheckoutsService{c: c}
+func NewClient(c *client.Client) *Client {
+	return &Client{c: c}
 }
 
 // Lists created checkout resources according to the applied `checkout_reference`.
-func (s *CheckoutsService) List(ctx context.Context, params ListParams) (*ListCheckouts200Response, error) {
+func (c *Client) List(ctx context.Context, params ListParams) (*ListCheckouts200Response, error) {
 	path := fmt.Sprintf("/v0.1/checkouts")
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
+	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -786,10 +786,10 @@ func (s *CheckoutsService) List(ctx context.Context, params ListParams) (*ListCh
 // For 3DS checkouts, add the `redirect_url` parameter to your request body schema.
 //
 // Follow by processing a checkout to charge the provided payment instrument.
-func (s *CheckoutsService) Create(ctx context.Context, body Create) (*Checkout, error) {
+func (c *Client) Create(ctx context.Context, body Create) (*Checkout, error) {
 	path := fmt.Sprintf("/v0.1/checkouts")
 
-	resp, err := s.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
+	resp, err := c.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -837,10 +837,10 @@ func (s *CheckoutsService) Create(ctx context.Context, body Create) (*Checkout, 
 }
 
 // Get payment methods available for the given merchant to use with a checkout.
-func (s *CheckoutsService) ListAvailablePaymentMethods(ctx context.Context, merchantCode string, params ListAvailablePaymentMethodsParams) (*GetPaymentMethods200Response, error) {
+func (c *Client) ListAvailablePaymentMethods(ctx context.Context, merchantCode string, params ListAvailablePaymentMethodsParams) (*GetPaymentMethods200Response, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/payment-methods", merchantCode)
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
+	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -874,10 +874,10 @@ func (s *CheckoutsService) ListAvailablePaymentMethods(ctx context.Context, merc
 }
 
 // Deactivates an identified checkout resource. If the checkout has already been processed it can not be deactivated.
-func (s *CheckoutsService) Deactivate(ctx context.Context, id string) (*Checkout, error) {
+func (c *Client) Deactivate(ctx context.Context, id string) (*Checkout, error) {
 	path := fmt.Sprintf("/v0.1/checkouts/%v", id)
 
-	resp, err := s.c.Call(ctx, http.MethodDelete, path)
+	resp, err := c.c.Call(ctx, http.MethodDelete, path)
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -919,10 +919,10 @@ func (s *CheckoutsService) Deactivate(ctx context.Context, id string) (*Checkout
 
 // Retrieves an identified checkout resource. Use this request after processing a checkout to confirm its status
 // and inform the end user respectively.
-func (s *CheckoutsService) Get(ctx context.Context, id string) (*CheckoutSuccess, error) {
+func (c *Client) Get(ctx context.Context, id string) (*CheckoutSuccess, error) {
 	path := fmt.Sprintf("/v0.1/checkouts/%v", id)
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path)
+	resp, err := c.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -959,10 +959,10 @@ func (s *CheckoutsService) Get(ctx context.Context, id string) (*CheckoutSuccess
 // resource initiated in the `Create a checkout` endpoint.
 //
 // Follow this request with `Retrieve a checkout` to confirm its status.
-func (s *CheckoutsService) Process(ctx context.Context, id string, body Process) (*ProcessCheckoutResponse, error) {
+func (c *Client) Process(ctx context.Context, id string, body Process) (*ProcessCheckoutResponse, error) {
 	path := fmt.Sprintf("/v0.1/checkouts/%v", id)
 
-	resp, err := s.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))
+	resp, err := c.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}

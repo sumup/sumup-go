@@ -184,19 +184,19 @@ type ListMerchantMembers200Response struct {
 	TotalCount *int     `json:"total_count,omitempty"`
 }
 
-type MembersService struct {
+type Client struct {
 	c *client.Client
 }
 
-func NewMembersService(c *client.Client) *MembersService {
-	return &MembersService{c: c}
+func NewClient(c *client.Client) *Client {
+	return &Client{c: c}
 }
 
 // Lists merchant members.
-func (s *MembersService) List(ctx context.Context, merchantCode string, params ListParams) (*ListMerchantMembers200Response, error) {
+func (c *Client) List(ctx context.Context, merchantCode string, params ListParams) (*ListMerchantMembers200Response, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/members", merchantCode)
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
+	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -223,10 +223,10 @@ func (s *MembersService) List(ctx context.Context, merchantCode string, params L
 }
 
 // Create a merchant member.
-func (s *MembersService) Create(ctx context.Context, merchantCode string, body Create) (*Member, error) {
+func (c *Client) Create(ctx context.Context, merchantCode string, body Create) (*Member, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/members", merchantCode)
 
-	resp, err := s.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
+	resp, err := c.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -267,10 +267,10 @@ func (s *MembersService) Create(ctx context.Context, merchantCode string, body C
 }
 
 // Deletes a merchant member.
-func (s *MembersService) Delete(ctx context.Context, merchantCode string, memberID string) error {
+func (c *Client) Delete(ctx context.Context, merchantCode string, memberID string) error {
 	path := fmt.Sprintf("/v0.1/merchants/%v/members/%v", merchantCode, memberID)
 
-	resp, err := s.c.Call(ctx, http.MethodDelete, path)
+	resp, err := c.c.Call(ctx, http.MethodDelete, path)
 	if err != nil {
 		return fmt.Errorf("error building request: %v", err)
 	}
@@ -292,10 +292,10 @@ func (s *MembersService) Delete(ctx context.Context, merchantCode string, member
 }
 
 // Retrieve a merchant member.
-func (s *MembersService) Get(ctx context.Context, merchantCode string, memberID string) (*Member, error) {
+func (c *Client) Get(ctx context.Context, merchantCode string, memberID string) (*Member, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/members/%v", merchantCode, memberID)
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path)
+	resp, err := c.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -322,10 +322,10 @@ func (s *MembersService) Get(ctx context.Context, merchantCode string, memberID 
 }
 
 // Update the merchant member.
-func (s *MembersService) Update(ctx context.Context, merchantCode string, memberID string, body Update) (*Member, error) {
+func (c *Client) Update(ctx context.Context, merchantCode string, memberID string, body Update) (*Member, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/members/%v", merchantCode, memberID)
 
-	resp, err := s.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))
+	resp, err := c.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}

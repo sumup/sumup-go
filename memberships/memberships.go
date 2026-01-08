@@ -161,19 +161,19 @@ type ListMemberships200Response struct {
 	TotalCount int          `json:"total_count"`
 }
 
-type MembershipsService struct {
+type Client struct {
 	c *client.Client
 }
 
-func NewMembershipsService(c *client.Client) *MembershipsService {
-	return &MembershipsService{c: c}
+func NewClient(c *client.Client) *Client {
+	return &Client{c: c}
 }
 
 // List memberships of the current user.
-func (s *MembershipsService) List(ctx context.Context, params ListParams) (*ListMemberships200Response, error) {
+func (c *Client) List(ctx context.Context, params ListParams) (*ListMemberships200Response, error) {
 	path := fmt.Sprintf("/v0.1/memberships")
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
+	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}

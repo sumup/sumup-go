@@ -20,18 +20,18 @@ import (
 
 type Client struct {
 	c            *client.Client
-	Checkouts    *checkouts.CheckoutsService
-	Customers    *customers.CustomersService
-	Members      *members.MembersService
-	Memberships  *memberships.MembershipsService
-	Merchant     *merchant.MerchantService
-	Merchants    *merchants.MerchantsService
-	Payouts      *payouts.PayoutsService
-	Readers      *readers.ReadersService
-	Receipts     *receipts.ReceiptsService
-	Roles        *roles.RolesService
-	Subaccounts  *subaccounts.SubaccountsService
-	Transactions *transactions.TransactionsService
+	Checkouts    *checkouts.Client
+	Customers    *customers.Client
+	Members      *members.Client
+	Memberships  *memberships.Client
+	Merchant     *merchant.Client
+	Merchants    *merchants.Client
+	Payouts      *payouts.Client
+	Readers      *readers.Client
+	Receipts     *receipts.Client
+	Roles        *roles.Client
+	Subaccounts  *subaccounts.Client
+	Transactions *transactions.Client
 }
 
 // NewClient creates new SumUp API client.
@@ -41,18 +41,18 @@ func NewClient(opts ...client.ClientOption) *Client {
 	client := client.New(opts...)
 
 	c := &Client{c: client}
-	c.Checkouts = checkouts.NewCheckoutsService(client)
-	c.Customers = customers.NewCustomersService(client)
-	c.Members = members.NewMembersService(client)
-	c.Memberships = memberships.NewMembershipsService(client)
-	c.Merchant = merchant.NewMerchantService(client)
-	c.Merchants = merchants.NewMerchantsService(client)
-	c.Payouts = payouts.NewPayoutsService(client)
-	c.Readers = readers.NewReadersService(client)
-	c.Receipts = receipts.NewReceiptsService(client)
-	c.Roles = roles.NewRolesService(client)
-	c.Subaccounts = subaccounts.NewSubaccountsService(client)
-	c.Transactions = transactions.NewTransactionsService(client)
+	c.Checkouts = checkouts.NewClient(client)
+	c.Customers = customers.NewClient(client)
+	c.Members = members.NewClient(client)
+	c.Memberships = memberships.NewClient(client)
+	c.Merchant = merchant.NewClient(client)
+	c.Merchants = merchants.NewClient(client)
+	c.Payouts = payouts.NewClient(client)
+	c.Readers = readers.NewClient(client)
+	c.Receipts = receipts.NewClient(client)
+	c.Roles = roles.NewClient(client)
+	c.Subaccounts = subaccounts.NewClient(client)
+	c.Transactions = transactions.NewClient(client)
 
 	return c
 }

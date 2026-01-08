@@ -34,12 +34,12 @@ import (
 {{- end }}
 
 {{ if ne (len .Methods) 0 }}
-type {{.Service}} struct {
+type Client struct {
 	c *client.Client
 }
 
-func New{{.Service}}(c *client.Client) *{{.Service}} {
-	return &{{.Service}}{c: c}
+func NewClient(c *client.Client) *Client {
+	return &Client{c: c}
 }
 
 {{ range $method := .Methods }}
@@ -47,10 +47,10 @@ func New{{.Service}}(c *client.Client) *{{.Service}} {
 {{- with .Description}}
 // {{.}}
 {{- end }}
-func (s *{{$.Service}}) {{.FunctionName}}({{.ParamsString}}) {{with .ResponseType}}(*{{.Type}}, error){{else}}error{{end}} {
+func (c *Client) {{.FunctionName}}({{.ParamsString}}) {{with .ResponseType}}(*{{.Type}}, error){{else}}error{{end}} {
 	path := {{.Path}}
 
-    resp, err := s.c.Call(ctx, {{.HTTPMethod}}, path
+    resp, err := c.c.Call(ctx, {{.HTTPMethod}}, path
 	{{- if .HasBody }}, client.WithJSONBody(body){{ end -}}
 	{{- if .QueryParams }}, client.WithQueryValues(params.QueryValues()){{ end -}}
 	)

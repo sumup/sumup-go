@@ -115,20 +115,20 @@ func (p *ListSubAccountsParams) QueryValues() url.Values {
 // ListSubAccounts200Response is a schema definition.
 type ListSubAccounts200Response []Operator
 
-type SubaccountsService struct {
+type Client struct {
 	c *client.Client
 }
 
-func NewSubaccountsService(c *client.Client) *SubaccountsService {
-	return &SubaccountsService{c: c}
+func NewClient(c *client.Client) *Client {
+	return &Client{c: c}
 }
 
 // Returns list of operators for currently authorized user's merchant.
 // Deprecated: Subaccounts API is deprecated, to list users in your merchant account please use [List members](https://developer.sumup.com/api/members/list) instead.
-func (s *SubaccountsService) ListSubAccounts(ctx context.Context, params ListSubAccountsParams) (*ListSubAccounts200Response, error) {
+func (c *Client) ListSubAccounts(ctx context.Context, params ListSubAccountsParams) (*ListSubAccounts200Response, error) {
 	path := fmt.Sprintf("/v0.1/me/accounts")
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
+	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -150,10 +150,10 @@ func (s *SubaccountsService) ListSubAccounts(ctx context.Context, params ListSub
 // Creates new operator for currently authorized users' merchant.
 // Deprecated: Subaccounts API is deprecated, to create a user in your merchant account please use [Create member](https://developer.sumup.com/api/members/create)
 // instead.
-func (s *SubaccountsService) CreateSubAccount(ctx context.Context, body CreateSubAccount) (*Operator, error) {
+func (c *Client) CreateSubAccount(ctx context.Context, body CreateSubAccount) (*Operator, error) {
 	path := fmt.Sprintf("/v0.1/me/accounts")
 
-	resp, err := s.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
+	resp, err := c.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -182,10 +182,10 @@ func (s *SubaccountsService) CreateSubAccount(ctx context.Context, body CreateSu
 // Disable the specified operator for the merchant account.
 // Deprecated: Subaccounts API is deprecated, to remove a user that's a member of your merchant account please
 // use [Delete member](https://developer.sumup.com/api/members/delete) instead.
-func (s *SubaccountsService) DeactivateSubAccount(ctx context.Context, operatorID int32) (*Operator, error) {
+func (c *Client) DeactivateSubAccount(ctx context.Context, operatorID int32) (*Operator, error) {
 	path := fmt.Sprintf("/v0.1/me/accounts/%v", operatorID)
 
-	resp, err := s.c.Call(ctx, http.MethodDelete, path)
+	resp, err := c.c.Call(ctx, http.MethodDelete, path)
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -207,10 +207,10 @@ func (s *SubaccountsService) DeactivateSubAccount(ctx context.Context, operatorI
 // Returns specific operator.
 // Deprecated: Subaccounts API is deprecated, to get a user that's a member of your merchant account please use
 // [Get member](https://developer.sumup.com/api/members/get) instead.
-func (s *SubaccountsService) CompatGetOperator(ctx context.Context, operatorID int32) (*Operator, error) {
+func (c *Client) CompatGetOperator(ctx context.Context, operatorID int32) (*Operator, error) {
 	path := fmt.Sprintf("/v0.1/me/accounts/%v", operatorID)
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path)
+	resp, err := c.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -232,10 +232,10 @@ func (s *SubaccountsService) CompatGetOperator(ctx context.Context, operatorID i
 // Updates operator. If the operator was disabled and their password is updated they will be unblocked.
 // Deprecated: Subaccounts API is deprecated, to update a user that's a member of your merchant account please
 // use [Update member](https://developer.sumup.com/api/members/update) instead.
-func (s *SubaccountsService) UpdateSubAccount(ctx context.Context, operatorID int32, body UpdateSubAccount) (*Operator, error) {
+func (c *Client) UpdateSubAccount(ctx context.Context, operatorID int32, body UpdateSubAccount) (*Operator, error) {
 	path := fmt.Sprintf("/v0.1/me/accounts/%v", operatorID)
 
-	resp, err := s.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))
+	resp, err := c.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}

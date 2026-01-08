@@ -618,19 +618,19 @@ type ListReaders200Response struct {
 	Items []Reader `json:"items"`
 }
 
-type ReadersService struct {
+type Client struct {
 	c *client.Client
 }
 
-func NewReadersService(c *client.Client) *ReadersService {
-	return &ReadersService{c: c}
+func NewClient(c *client.Client) *Client {
+	return &Client{c: c}
 }
 
 // List all readers of the merchant.
-func (s *ReadersService) List(ctx context.Context, merchantCode string) (*ListReaders200Response, error) {
+func (c *Client) List(ctx context.Context, merchantCode string) (*ListReaders200Response, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers", merchantCode)
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path)
+	resp, err := c.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -650,10 +650,10 @@ func (s *ReadersService) List(ctx context.Context, merchantCode string) (*ListRe
 }
 
 // Create a new Reader for the merchant account.
-func (s *ReadersService) Create(ctx context.Context, merchantCode string, body Create) (*Reader, error) {
+func (c *Client) Create(ctx context.Context, merchantCode string, body Create) (*Reader, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers", merchantCode)
 
-	resp, err := s.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
+	resp, err := c.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -707,10 +707,10 @@ func (s *ReadersService) Create(ctx context.Context, merchantCode string, body C
 // will be sent as `failed` to the provided URL.
 //
 // **Note**: If the target device is a Solo, it must be in version 3.3.28.0 or higher.
-func (s *ReadersService) TerminateCheckout(ctx context.Context, merchantCode string, readerID string) error {
+func (c *Client) TerminateCheckout(ctx context.Context, merchantCode string, readerID string) error {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v/terminate", merchantCode, readerID)
 
-	resp, err := s.c.Call(ctx, http.MethodPost, path)
+	resp, err := c.c.Call(ctx, http.MethodPost, path)
 	if err != nil {
 		return fmt.Errorf("error building request: %v", err)
 	}
@@ -786,10 +786,10 @@ func (s *ReadersService) TerminateCheckout(ctx context.Context, merchantCode str
 // * `OFFLINE` – Device disconnected (last state persisted)
 //
 // **Note**: If the target device is a Solo, it must be in version 3.3.39.0 or higher.
-func (s *ReadersService) GetStatus(ctx context.Context, merchantCode string, readerID string, params GetStatusParams) (*StatusResponse, error) {
+func (c *Client) GetStatus(ctx context.Context, merchantCode string, readerID string, params GetStatusParams) (*StatusResponse, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v/status", merchantCode, readerID)
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
+	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -860,10 +860,10 @@ func (s *ReadersService) GetStatus(ctx context.Context, merchantCode string, rea
 // this time, any other checkout for the same device will be rejected.
 //
 // **Note**: If the target device is a Solo, it must be in version 3.3.24.3 or higher.
-func (s *ReadersService) CreateCheckout(ctx context.Context, merchantCode string, readerID string, body CreateCheckout) (*CreateReaderCheckoutResponse, error) {
+func (c *Client) CreateCheckout(ctx context.Context, merchantCode string, readerID string, body CreateCheckout) (*CreateReaderCheckoutResponse, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v/checkout", merchantCode, readerID)
 
-	resp, err := s.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
+	resp, err := c.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -925,10 +925,10 @@ func (s *ReadersService) CreateCheckout(ctx context.Context, merchantCode string
 }
 
 // Delete a reader.
-func (s *ReadersService) Delete(ctx context.Context, merchantCode string, id ReaderID) error {
+func (c *Client) Delete(ctx context.Context, merchantCode string, id ReaderID) error {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, id)
 
-	resp, err := s.c.Call(ctx, http.MethodDelete, path)
+	resp, err := c.c.Call(ctx, http.MethodDelete, path)
 	if err != nil {
 		return fmt.Errorf("error building request: %v", err)
 	}
@@ -950,10 +950,10 @@ func (s *ReadersService) Delete(ctx context.Context, merchantCode string, id Rea
 }
 
 // Retrieve a Reader.
-func (s *ReadersService) Get(ctx context.Context, merchantCode string, id ReaderID, params GetParams) (*Reader, error) {
+func (c *Client) Get(ctx context.Context, merchantCode string, id ReaderID, params GetParams) (*Reader, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, id)
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
+	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -980,10 +980,10 @@ func (s *ReadersService) Get(ctx context.Context, merchantCode string, id Reader
 }
 
 // Update a Reader.
-func (s *ReadersService) Update(ctx context.Context, merchantCode string, id ReaderID, body Update) (*Reader, error) {
+func (c *Client) Update(ctx context.Context, merchantCode string, id ReaderID, body Update) (*Reader, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, id)
 
-	resp, err := s.c.Call(ctx, http.MethodPatch, path, client.WithJSONBody(body))
+	resp, err := c.c.Call(ctx, http.MethodPatch, path, client.WithJSONBody(body))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}

@@ -76,19 +76,19 @@ type Update struct {
 // ListPaymentInstruments200Response is a schema definition.
 type ListPaymentInstruments200Response []PaymentInstrumentResponse
 
-type CustomersService struct {
+type Client struct {
 	c *client.Client
 }
 
-func NewCustomersService(c *client.Client) *CustomersService {
-	return &CustomersService{c: c}
+func NewClient(c *client.Client) *Client {
+	return &Client{c: c}
 }
 
 // Creates a new saved customer resource which you can later manipulate and save payment instruments to.
-func (s *CustomersService) Create(ctx context.Context, body Create) (*Customer, error) {
+func (c *Client) Create(ctx context.Context, body Create) (*Customer, error) {
 	path := fmt.Sprintf("/v0.1/customers")
 
-	resp, err := s.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
+	resp, err := c.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -129,10 +129,10 @@ func (s *CustomersService) Create(ctx context.Context, body Create) (*Customer, 
 }
 
 // Lists all payment instrument resources that are saved for an identified customer.
-func (s *CustomersService) ListPaymentInstruments(ctx context.Context, customerID string) (*ListPaymentInstruments200Response, error) {
+func (c *Client) ListPaymentInstruments(ctx context.Context, customerID string) (*ListPaymentInstruments200Response, error) {
 	path := fmt.Sprintf("/v0.1/customers/%v/payment-instruments", customerID)
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path)
+	resp, err := c.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -174,10 +174,10 @@ func (s *CustomersService) ListPaymentInstruments(ctx context.Context, customerI
 
 // Retrieves an identified saved customer resource through the unique `customer_id` parameter, generated upon
 // customer creation.
-func (s *CustomersService) Get(ctx context.Context, customerID string) (*Customer, error) {
+func (c *Client) Get(ctx context.Context, customerID string) (*Customer, error) {
 	path := fmt.Sprintf("/v0.1/customers/%v", customerID)
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path)
+	resp, err := c.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -221,10 +221,10 @@ func (s *CustomersService) Get(ctx context.Context, customerID string) (*Custome
 //
 // The request only overwrites the parameters included in the request, all other parameters will remain with
 // their initially assigned values.
-func (s *CustomersService) Update(ctx context.Context, customerID string, body Update) (*Customer, error) {
+func (c *Client) Update(ctx context.Context, customerID string, body Update) (*Customer, error) {
 	path := fmt.Sprintf("/v0.1/customers/%v", customerID)
 
-	resp, err := s.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))
+	resp, err := c.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
@@ -265,10 +265,10 @@ func (s *CustomersService) Update(ctx context.Context, customerID string, body U
 }
 
 // Deactivates an identified card payment instrument resource for a customer.
-func (s *CustomersService) DeactivatePaymentInstrument(ctx context.Context, customerID string, token string) error {
+func (c *Client) DeactivatePaymentInstrument(ctx context.Context, customerID string, token string) error {
 	path := fmt.Sprintf("/v0.1/customers/%v/payment-instruments/%v", customerID, token)
 
-	resp, err := s.c.Call(ctx, http.MethodDelete, path)
+	resp, err := c.c.Call(ctx, http.MethodDelete, path)
 	if err != nil {
 		return fmt.Errorf("error building request: %v", err)
 	}

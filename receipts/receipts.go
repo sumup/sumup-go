@@ -170,19 +170,19 @@ func (p *GetParams) QueryValues() url.Values {
 	return q
 }
 
-type ReceiptsService struct {
+type Client struct {
 	c *client.Client
 }
 
-func NewReceiptsService(c *client.Client) *ReceiptsService {
-	return &ReceiptsService{c: c}
+func NewClient(c *client.Client) *Client {
+	return &Client{c: c}
 }
 
 // Retrieves receipt specific data for a transaction.
-func (s *ReceiptsService) Get(ctx context.Context, id string, params GetParams) (*Receipt, error) {
+func (c *Client) Get(ctx context.Context, id string, params GetParams) (*Receipt, error) {
 	path := fmt.Sprintf("/v1.1/receipts/%v", id)
 
-	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
+	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
