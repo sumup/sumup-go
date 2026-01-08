@@ -75,7 +75,6 @@ func NewRolesService(c *client.Client) *RolesService {
 	return &RolesService{c: c}
 }
 
-// List: List roles
 // List merchant's custom roles.
 func (s *RolesService) List(ctx context.Context, merchantCode string) (*ListMerchantRoles200Response, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/roles", merchantCode)
@@ -106,7 +105,6 @@ func (s *RolesService) List(ctx context.Context, merchantCode string) (*ListMerc
 	}
 }
 
-// Create: Create a role
 // Create a custom role for the merchant. Roles are defined by the set of permissions that they grant to the
 // members that they are assigned to.
 func (s *RolesService) Create(ctx context.Context, merchantCode string, body Create) (*Role, error) {
@@ -145,7 +143,6 @@ func (s *RolesService) Create(ctx context.Context, merchantCode string, body Cre
 	}
 }
 
-// Delete: Delete a role
 // Delete a custom role.
 func (s *RolesService) Delete(ctx context.Context, merchantCode string, roleID string) error {
 	path := fmt.Sprintf("/v0.1/merchants/%v/roles/%v", merchantCode, roleID)
@@ -178,7 +175,6 @@ func (s *RolesService) Delete(ctx context.Context, merchantCode string, roleID s
 	}
 }
 
-// Get: Retrieve a role
 // Retrieve a custom role by ID.
 func (s *RolesService) Get(ctx context.Context, merchantCode string, roleID string) (*Role, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/roles/%v", merchantCode, roleID)
@@ -209,7 +205,6 @@ func (s *RolesService) Get(ctx context.Context, merchantCode string, roleID stri
 	}
 }
 
-// Update: Update a role
 // Update a custom role.
 func (s *RolesService) Update(ctx context.Context, merchantCode string, roleID string, body Update) (*Role, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/roles/%v", merchantCode, roleID)

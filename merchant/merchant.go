@@ -375,7 +375,6 @@ func NewMerchantService(c *client.Client) *MerchantService {
 	return &MerchantService{c: c}
 }
 
-// GetPersonalProfile: Retrieve a personal profile
 // Retrieves personal profile data.
 // Deprecated: The _Retrieve a personal profile_ endpoint is deprecated, please use the `persons` field of
 // the `Merchant` object instead. (see [Merchants](https://developer.sumup.com/api/merchants)).
@@ -408,7 +407,6 @@ func (s *MerchantService) GetPersonalProfile(ctx context.Context) (*PersonalProf
 	}
 }
 
-// GetDoingBusinessAs: Retrieve DBA
 // Retrieves Doing Business As profile.
 // Deprecated: The _Retrieve DBA_ endpoint is deprecated, please use the `business_profile` field of the `Merchant`
 // object instead (see [Merchants](https://developer.sumup.com/api/merchants)).
@@ -441,7 +439,6 @@ func (s *MerchantService) GetDoingBusinessAs(ctx context.Context) (*DoingBusines
 	}
 }
 
-// GetMerchantProfile: Retrieve a merchant profile
 // Retrieves merchant profile data.
 // Deprecated: The _Retrieve a merchant profile_ endpoint is deprecated, please use the `Merchant` object instead
 // (see [Merchants](https://developer.sumup.com/api/merchants)).
@@ -481,7 +478,6 @@ func (s *MerchantService) GetMerchantProfile(ctx context.Context) (*MerchantProf
 	}
 }
 
-// Get: Retrieve a profile
 // Returns user profile information.
 // Deprecated: The _Retrieve a profile_ endpoint is deprecated, please use the `Merchant` object instead (see
 // [Merchants](https://developer.sumup.com/api/merchants)).

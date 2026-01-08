@@ -626,7 +626,6 @@ func NewReadersService(c *client.Client) *ReadersService {
 	return &ReadersService{c: c}
 }
 
-// List: List Readers
 // List all readers of the merchant.
 func (s *ReadersService) List(ctx context.Context, merchantCode string) (*ListReaders200Response, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers", merchantCode)
@@ -650,7 +649,6 @@ func (s *ReadersService) List(ctx context.Context, merchantCode string) (*ListRe
 	}
 }
 
-// Create: Create a Reader
 // Create a new Reader for the merchant account.
 func (s *ReadersService) Create(ctx context.Context, merchantCode string, body Create) (*Reader, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers", merchantCode)
@@ -695,7 +693,6 @@ func (s *ReadersService) Create(ctx context.Context, merchantCode string, body C
 	}
 }
 
-// TerminateCheckout: Terminate a Reader Checkout
 // Terminate a Reader Checkout stops the current transaction on the target device.
 //
 // This process is asynchronous and the actual termination may take some time to be performed on the device.
@@ -769,7 +766,6 @@ func (s *ReadersService) TerminateCheckout(ctx context.Context, merchantCode str
 	}
 }
 
-// GetStatus: Get a Reader Status
 // Provides the last known status for a Reader.
 //
 // This endpoint allows you to retrieve updates from the connected card reader, including the current screen being
@@ -854,7 +850,6 @@ func (s *ReadersService) GetStatus(ctx context.Context, merchantCode string, rea
 	}
 }
 
-// CreateCheckout: Create a Reader Checkout
 // Creates a Checkout for a Reader.
 //
 // This process is asynchronous and the actual transaction may take some time to be stared on the device.
@@ -929,7 +924,6 @@ func (s *ReadersService) CreateCheckout(ctx context.Context, merchantCode string
 	}
 }
 
-// Delete: Delete a reader
 // Delete a reader.
 func (s *ReadersService) Delete(ctx context.Context, merchantCode string, id ReaderID) error {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, id)
@@ -955,7 +949,6 @@ func (s *ReadersService) Delete(ctx context.Context, merchantCode string, id Rea
 	}
 }
 
-// Get: Retrieve a Reader
 // Retrieve a Reader.
 func (s *ReadersService) Get(ctx context.Context, merchantCode string, id ReaderID, params GetParams) (*Reader, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, id)
@@ -986,7 +979,6 @@ func (s *ReadersService) Get(ctx context.Context, merchantCode string, id Reader
 	}
 }
 
-// Update: Update a Reader
 // Update a Reader.
 func (s *ReadersService) Update(ctx context.Context, merchantCode string, id ReaderID, body Update) (*Reader, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, id)

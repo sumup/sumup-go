@@ -688,7 +688,6 @@ func NewMerchantsService(c *client.Client) *MerchantsService {
 	return &MerchantsService{c: c}
 }
 
-// ListPersons: List Persons
 // Returns a list of persons related to the merchant.
 // Persons documentation: https://developer.sumup.com/tools/models/merchant#persons
 func (s *MerchantsService) ListPersons(ctx context.Context, merchantCode string, params ListPersonsParams) (*ListPersonsResponseBody, error) {
@@ -727,7 +726,6 @@ func (s *MerchantsService) ListPersons(ctx context.Context, merchantCode string,
 	}
 }
 
-// Get: Retrieve a Merchant
 // Retrieve a merchant.
 // Merchant documentation: https://developer.sumup.com/tools/models/merchant
 func (s *MerchantsService) Get(ctx context.Context, merchantCode string, params GetParams) (*Merchant, error) {
@@ -759,7 +757,6 @@ func (s *MerchantsService) Get(ctx context.Context, merchantCode string, params 
 	}
 }
 
-// GetPerson: Retrieve a Person
 // Returns a single person related to the merchant.
 // Persons documentation: https://developer.sumup.com/tools/models/merchant#persons
 func (s *MerchantsService) GetPerson(ctx context.Context, merchantCode string, personID string, params GetPersonParams) (*Person, error) {

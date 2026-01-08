@@ -719,7 +719,6 @@ func NewTransactionsService(c *client.Client) *TransactionsService {
 	return &TransactionsService{c: c}
 }
 
-// ListDeprecated: List transactions
 // Lists detailed history of all transactions associated with the merchant profile.
 // Deprecated: this operation is deprecated
 func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListDeprecatedParams) (*ListTransactions200Response, error) {
@@ -751,7 +750,6 @@ func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListDep
 	}
 }
 
-// GetDeprecated: Retrieve a transaction
 // Retrieves the full details of an identified transaction. The transaction resource is identified by a query
 // parameter and *one* of following parameters is required:
 //
@@ -798,7 +796,6 @@ func (s *TransactionsService) GetDeprecated(ctx context.Context, params GetDepre
 	}
 }
 
-// List: List transactions
 // Lists detailed history of all transactions associated with the merchant profile.
 func (s *TransactionsService) List(ctx context.Context, merchantCode string, params ListParams) (*ListTransactionsV21200Response, error) {
 	path := fmt.Sprintf("/v2.1/merchants/%v/transactions/history", merchantCode)
@@ -829,7 +826,6 @@ func (s *TransactionsService) List(ctx context.Context, merchantCode string, par
 	}
 }
 
-// Get: Retrieve a transaction
 // Retrieves the full details of an identified transaction. The transaction resource is identified by a query
 // parameter and *one* of following parameters is required:
 //
@@ -874,7 +870,6 @@ func (s *TransactionsService) Get(ctx context.Context, merchantCode string, para
 	}
 }
 
-// Refund: Refund a transaction
 // Refunds an identified transaction either in full or partially.
 func (s *TransactionsService) Refund(ctx context.Context, txnID string, body Refund) error {
 	path := fmt.Sprintf("/v0.1/me/refund/%v", txnID)

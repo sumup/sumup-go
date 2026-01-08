@@ -1,6 +1,7 @@
 package builder
 
 import (
+	"cmp"
 	"fmt"
 	"slices"
 	"strings"
@@ -12,13 +13,7 @@ import (
 func operationGodoc(name string, operation *openapi3.Operation) string {
 	out := new(strings.Builder)
 
-	if operation.Summary != "" {
-		fmt.Fprintf(out, "%s: %s", name, operation.Summary)
-	} else {
-		fmt.Fprint(out, name)
-	}
-
-	fmt.Fprintf(out, "\n%s", operation.Description)
+	fmt.Fprintf(out, cmp.Or(operation.Description, operation.Summary, name))
 
 	if operation.ExternalDocs != nil {
 		extDescription := operation.ExternalDocs.Description

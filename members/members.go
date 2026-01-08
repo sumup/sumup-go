@@ -192,7 +192,6 @@ func NewMembersService(c *client.Client) *MembersService {
 	return &MembersService{c: c}
 }
 
-// List: List members
 // Lists merchant members.
 func (s *MembersService) List(ctx context.Context, merchantCode string, params ListParams) (*ListMerchantMembers200Response, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/members", merchantCode)
@@ -223,7 +222,6 @@ func (s *MembersService) List(ctx context.Context, merchantCode string, params L
 	}
 }
 
-// Create: Create a member
 // Create a merchant member.
 func (s *MembersService) Create(ctx context.Context, merchantCode string, body Create) (*Member, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/members", merchantCode)
@@ -268,7 +266,6 @@ func (s *MembersService) Create(ctx context.Context, merchantCode string, body C
 	}
 }
 
-// Delete: Delete a member
 // Deletes a merchant member.
 func (s *MembersService) Delete(ctx context.Context, merchantCode string, memberID string) error {
 	path := fmt.Sprintf("/v0.1/merchants/%v/members/%v", merchantCode, memberID)
@@ -294,7 +291,6 @@ func (s *MembersService) Delete(ctx context.Context, merchantCode string, member
 	}
 }
 
-// Get: Retrieve a member
 // Retrieve a merchant member.
 func (s *MembersService) Get(ctx context.Context, merchantCode string, memberID string) (*Member, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/members/%v", merchantCode, memberID)
@@ -325,7 +321,6 @@ func (s *MembersService) Get(ctx context.Context, merchantCode string, memberID 
 	}
 }
 
-// Update: Update a member
 // Update the merchant member.
 func (s *MembersService) Update(ctx context.Context, merchantCode string, memberID string, body Update) (*Member, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/members/%v", merchantCode, memberID)

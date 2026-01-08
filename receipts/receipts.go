@@ -178,7 +178,6 @@ func NewReceiptsService(c *client.Client) *ReceiptsService {
 	return &ReceiptsService{c: c}
 }
 
-// Get: Retrieve receipt details
 // Retrieves receipt specific data for a transaction.
 func (s *ReceiptsService) Get(ctx context.Context, id string, params GetParams) (*Receipt, error) {
 	path := fmt.Sprintf("/v1.1/receipts/%v", id)

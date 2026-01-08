@@ -84,7 +84,6 @@ func NewCustomersService(c *client.Client) *CustomersService {
 	return &CustomersService{c: c}
 }
 
-// Create: Create a customer
 // Creates a new saved customer resource which you can later manipulate and save payment instruments to.
 func (s *CustomersService) Create(ctx context.Context, body Create) (*Customer, error) {
 	path := fmt.Sprintf("/v0.1/customers")
@@ -129,7 +128,6 @@ func (s *CustomersService) Create(ctx context.Context, body Create) (*Customer, 
 	}
 }
 
-// ListPaymentInstruments: List payment instruments
 // Lists all payment instrument resources that are saved for an identified customer.
 func (s *CustomersService) ListPaymentInstruments(ctx context.Context, customerID string) (*ListPaymentInstruments200Response, error) {
 	path := fmt.Sprintf("/v0.1/customers/%v/payment-instruments", customerID)
@@ -174,7 +172,6 @@ func (s *CustomersService) ListPaymentInstruments(ctx context.Context, customerI
 	}
 }
 
-// Get: Retrieve a customer
 // Retrieves an identified saved customer resource through the unique `customer_id` parameter, generated upon
 // customer creation.
 func (s *CustomersService) Get(ctx context.Context, customerID string) (*Customer, error) {
@@ -220,7 +217,6 @@ func (s *CustomersService) Get(ctx context.Context, customerID string) (*Custome
 	}
 }
 
-// Update: Update a customer
 // Updates an identified saved customer resource's personal details.
 //
 // The request only overwrites the parameters included in the request, all other parameters will remain with
@@ -268,7 +264,6 @@ func (s *CustomersService) Update(ctx context.Context, customerID string, body U
 	}
 }
 
-// DeactivatePaymentInstrument: Deactivate a payment instrument
 // Deactivates an identified card payment instrument resource for a customer.
 func (s *CustomersService) DeactivatePaymentInstrument(ctx context.Context, customerID string, token string) error {
 	path := fmt.Sprintf("/v0.1/customers/%v/payment-instruments/%v", customerID, token)

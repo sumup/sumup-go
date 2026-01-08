@@ -751,7 +751,6 @@ func NewCheckoutsService(c *client.Client) *CheckoutsService {
 	return &CheckoutsService{c: c}
 }
 
-// List: List checkouts
 // Lists created checkout resources according to the applied `checkout_reference`.
 func (s *CheckoutsService) List(ctx context.Context, params ListParams) (*ListCheckouts200Response, error) {
 	path := fmt.Sprintf("/v0.1/checkouts")
@@ -782,7 +781,6 @@ func (s *CheckoutsService) List(ctx context.Context, params ListParams) (*ListCh
 	}
 }
 
-// Create: Create a checkout
 // Creates a new payment checkout resource. The unique `checkout_reference` created by this request, is used
 // for further manipulation of the checkout.
 //
@@ -839,7 +837,6 @@ func (s *CheckoutsService) Create(ctx context.Context, body Create) (*Checkout, 
 	}
 }
 
-// ListAvailablePaymentMethods: Get available payment methods
 // Get payment methods available for the given merchant to use with a checkout.
 func (s *CheckoutsService) ListAvailablePaymentMethods(ctx context.Context, merchantCode string, params ListAvailablePaymentMethodsParams) (*GetPaymentMethods200Response, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/payment-methods", merchantCode)
@@ -877,7 +874,6 @@ func (s *CheckoutsService) ListAvailablePaymentMethods(ctx context.Context, merc
 	}
 }
 
-// Deactivate: Deactivate a checkout
 // Deactivates an identified checkout resource. If the checkout has already been processed it can not be deactivated.
 func (s *CheckoutsService) Deactivate(ctx context.Context, id string) (*Checkout, error) {
 	path := fmt.Sprintf("/v0.1/checkouts/%v", id)
@@ -922,7 +918,6 @@ func (s *CheckoutsService) Deactivate(ctx context.Context, id string) (*Checkout
 	}
 }
 
-// Get: Retrieve a checkout
 // Retrieves an identified checkout resource. Use this request after processing a checkout to confirm its status
 // and inform the end user respectively.
 func (s *CheckoutsService) Get(ctx context.Context, id string) (*CheckoutSuccess, error) {
@@ -961,7 +956,6 @@ func (s *CheckoutsService) Get(ctx context.Context, id string) (*CheckoutSuccess
 	}
 }
 
-// Process: Process a checkout
 // Processing a checkout will attempt to charge the provided payment instrument for the amount of the specified checkout
 // resource initiated in the `Create a checkout` endpoint.
 //
