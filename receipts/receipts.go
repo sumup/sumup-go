@@ -149,7 +149,7 @@ type ReceiptTransactionVATRate struct {
 	VAT *float32 `json:"vat,omitempty"`
 }
 
-// GetParams: query parameters for GetReceipt
+// GetParams are query parameters for GetReceipt.
 type GetParams struct {
 	// Merchant code.
 	Mid string

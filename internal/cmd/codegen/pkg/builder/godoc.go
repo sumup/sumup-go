@@ -43,7 +43,7 @@ func operationGodoc(name string, operation *openapi3.Operation) string {
 // operationParamsGodoc creates godoc comment for a struct representing
 // parameters of an operation.
 func operationParamsGodoc(name string, operation *openapi3.Operation) string {
-	return formatGodoc(name + ": query parameters for " + operation.OperationID)
+	return formatGodoc(fmt.Sprintf("%s are query parameters for %s.", name, operation.OperationID))
 }
 
 // schemaGodoc creates godoc for a schema.

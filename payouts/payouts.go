@@ -51,7 +51,7 @@ const (
 // FinancialPayouts is a schema definition.
 type FinancialPayouts []FinancialPayout
 
-// ListDeprecatedParams: query parameters for ListPayouts
+// ListDeprecatedParams are query parameters for ListPayouts.
 type ListDeprecatedParams struct {
 	// End date (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
 	EndDate datetime.Date
@@ -85,7 +85,7 @@ func (p *ListDeprecatedParams) QueryValues() url.Values {
 	return q
 }
 
-// ListParams: query parameters for ListPayoutsV1
+// ListParams are query parameters for ListPayoutsV1.
 type ListParams struct {
 	// End date (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
 	EndDate datetime.Date

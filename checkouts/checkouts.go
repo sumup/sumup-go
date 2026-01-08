@@ -658,7 +658,7 @@ const (
 	ProcessPaymentTypeIdeal      ProcessPaymentType = "ideal"
 )
 
-// ListParams: query parameters for ListCheckouts
+// ListParams are query parameters for ListCheckouts.
 type ListParams struct {
 	// Filters the list of checkout resources by the unique ID of the checkout.
 	CheckoutReference *string
@@ -675,7 +675,7 @@ func (p *ListParams) QueryValues() url.Values {
 	return q
 }
 
-// ListAvailablePaymentMethodsParams: query parameters for GetPaymentMethods
+// ListAvailablePaymentMethodsParams are query parameters for GetPaymentMethods.
 type ListAvailablePaymentMethodsParams struct {
 	// The amount for which the payment methods should be eligible, in major units. Note that currency must also
 	// be provided when filtering by amount.

@@ -349,7 +349,7 @@ type VATRates struct {
 	Rate *float64 `json:"rate,omitempty"`
 }
 
-// GetParams: query parameters for GetAccount
+// GetParams are query parameters for GetAccount.
 type GetParams struct {
 	// A list of additional information you want to receive for the user. By default only personal and merchant profile
 	// information will be returned.

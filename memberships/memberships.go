@@ -80,7 +80,7 @@ type MembershipResource struct {
 // * `organization` - organization(s)
 type ResourceType string
 
-// ListParams: query parameters for ListMemberships
+// ListParams are query parameters for ListMemberships.
 type ListParams struct {
 	// Filter memberships by resource kind.
 	Kind *ResourceType

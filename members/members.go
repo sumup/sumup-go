@@ -125,7 +125,7 @@ type UpdateUser struct {
 	Password *secret.Secret `json:"password,omitempty"`
 }
 
-// ListParams: query parameters for ListMerchantMembers
+// ListParams are query parameters for ListMerchantMembers.
 type ListParams struct {
 	// Filter the returned members by email address prefix.
 	Email *string

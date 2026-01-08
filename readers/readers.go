@@ -570,7 +570,7 @@ type Update struct {
 	Name *ReaderName `json:"name,omitempty"`
 }
 
-// GetStatusParams: query parameters for GetReaderStatus
+// GetStatusParams are query parameters for GetReaderStatus.
 type GetStatusParams struct {
 	Accept        string
 	Authorization string
@@ -590,7 +590,7 @@ func (p *GetStatusParams) QueryValues() url.Values {
 	return q
 }
 
-// GetParams: query parameters for GetReader
+// GetParams are query parameters for GetReader.
 type GetParams struct {
 	// Return the reader only if it has been modified after the specified timestamp given in the headers.
 	//

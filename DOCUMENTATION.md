@@ -1026,7 +1026,7 @@ type GetPaymentMethods200ResponseAvailablePaymentMethod struct {
 <a name="ListAvailablePaymentMethodsParams"></a>
 ## type [ListAvailablePaymentMethodsParams](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L679-L685>)
 
-ListAvailablePaymentMethodsParams: query parameters for GetPaymentMethods
+ListAvailablePaymentMethodsParams are query parameters for GetPaymentMethods.
 
 ```go
 type ListAvailablePaymentMethodsParams struct {
@@ -1059,7 +1059,7 @@ type ListCheckouts200Response []CheckoutSuccess
 <a name="ListParams"></a>
 ## type [ListParams](<https://github.com/sumup/sumup-go/blob/main/checkouts/checkouts.go#L662-L665>)
 
-ListParams: query parameters for ListCheckouts
+ListParams are query parameters for ListCheckouts.
 
 ```go
 type ListParams struct {
@@ -1784,7 +1784,7 @@ type ListMerchantMembers200Response struct {
 <a name="ListParams"></a>
 ## type [ListParams](<https://github.com/sumup/sumup-go/blob/main/members/members.go#L129-L144>)
 
-ListParams: query parameters for ListMerchantMembers
+ListParams are query parameters for ListMerchantMembers.
 
 ```go
 type ListParams struct {
@@ -2026,7 +2026,7 @@ type ListMemberships200Response struct {
 <a name="ListParams"></a>
 ## type [ListParams](<https://github.com/sumup/sumup-go/blob/main/memberships/memberships.go#L84-L109>)
 
-ListParams: query parameters for ListMemberships
+ListParams are query parameters for ListMemberships.
 
 ```go
 type ListParams struct {
@@ -2455,7 +2455,7 @@ type DoingBusinessAsLegacyAddress struct {
 <a name="GetParams"></a>
 ## type [GetParams](<https://github.com/sumup/sumup-go/blob/main/merchant/merchant.go#L353-L357>)
 
-GetParams: query parameters for GetAccount
+GetParams are query parameters for GetAccount.
 
 ```go
 type GetParams struct {
@@ -3235,7 +3235,7 @@ func (e *GetMerchant404Response) Error() string
 <a name="GetParams"></a>
 ## type [GetParams](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L554-L560>)
 
-GetParams: query parameters for GetMerchant
+GetParams are query parameters for GetMerchant.
 
 ```go
 type GetParams struct {
@@ -3313,7 +3313,7 @@ func (e *GetPerson500Response) Error() string
 <a name="GetPersonParams"></a>
 ## type [GetPersonParams](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L574-L580>)
 
-GetPersonParams: query parameters for GetPerson
+GetPersonParams are query parameters for GetPerson.
 
 ```go
 type GetPersonParams struct {
@@ -3402,7 +3402,7 @@ func (e *ListPersons500Response) Error() string
 <a name="ListPersonsParams"></a>
 ## type [ListPersonsParams](<https://github.com/sumup/sumup-go/blob/main/merchants/merchants.go#L534-L540>)
 
-ListPersonsParams: query parameters for ListPersons
+ListPersonsParams are query parameters for ListPersons.
 
 ```go
 type ListPersonsParams struct {
@@ -3806,7 +3806,7 @@ type FinancialPayouts []FinancialPayout
 <a name="ListDeprecatedParams"></a>
 ## type [ListDeprecatedParams](<https://github.com/sumup/sumup-go/blob/main/payouts/payouts.go#L55-L63>)
 
-ListDeprecatedParams: query parameters for ListPayouts
+ListDeprecatedParams are query parameters for ListPayouts.
 
 ```go
 type ListDeprecatedParams struct {
@@ -3832,7 +3832,7 @@ QueryValues converts [ListDeprecatedParams](<#ListDeprecatedParams>) into \[url.
 <a name="ListParams"></a>
 ## type [ListParams](<https://github.com/sumup/sumup-go/blob/main/payouts/payouts.go#L89-L97>)
 
-ListParams: query parameters for ListPayoutsV1
+ListParams are query parameters for ListPayoutsV1.
 
 ```go
 type ListParams struct {
@@ -4514,7 +4514,7 @@ type GatewayTimeoutErrors struct {
 <a name="GetParams"></a>
 ## type [GetParams](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L594-L603>)
 
-GetParams: query parameters for GetReader
+GetParams are query parameters for GetReader.
 
 ```go
 type GetParams struct {
@@ -4541,7 +4541,7 @@ QueryValues converts [GetParams](<#GetParams>) into \[url.Values\].
 <a name="GetStatusParams"></a>
 ## type [GetStatusParams](<https://github.com/sumup/sumup-go/blob/main/readers/readers.go#L574-L578>)
 
-GetStatusParams: query parameters for GetReaderStatus
+GetStatusParams are query parameters for GetReaderStatus.
 
 ```go
 type GetStatusParams struct {
@@ -5078,7 +5078,7 @@ import "github.com/sumup/sumup-go/receipts"
 <a name="GetParams"></a>
 ## type [GetParams](<https://github.com/sumup/sumup-go/blob/main/receipts/receipts.go#L153-L158>)
 
-GetParams: query parameters for GetReceipt
+GetParams are query parameters for GetReceipt.
 
 ```go
 type GetParams struct {
@@ -6157,7 +6157,7 @@ type ListSubAccounts200Response []Operator
 <a name="ListSubAccountsParams"></a>
 ## type [ListSubAccountsParams](<https://github.com/sumup/sumup-go/blob/main/subaccounts/subaccounts.go#L90-L98>)
 
-ListSubAccountsParams: query parameters for ListSubAccounts
+ListSubAccountsParams are query parameters for ListSubAccounts.
 
 ```go
 type ListSubAccountsParams struct {
@@ -6477,7 +6477,7 @@ type Event struct {
 <a name="GetDeprecatedParams"></a>
 ## type [GetDeprecatedParams](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L534-L542>)
 
-GetDeprecatedParams: query parameters for GetTransaction
+GetDeprecatedParams are query parameters for GetTransaction.
 
 ```go
 type GetDeprecatedParams struct {
@@ -6503,7 +6503,7 @@ QueryValues converts [GetDeprecatedParams](<#GetDeprecatedParams>) into \[url.Va
 <a name="GetParams"></a>
 ## type [GetParams](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L661-L673>)
 
-GetParams: query parameters for GetTransactionV2.1
+GetParams are query parameters for GetTransactionV2.1.
 
 ```go
 type GetParams struct {
@@ -6591,7 +6591,7 @@ type LinkRefund struct {
 <a name="ListDeprecatedParams"></a>
 ## type [ListDeprecatedParams](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L443-L476>)
 
-ListDeprecatedParams: query parameters for ListTransactions
+ListDeprecatedParams are query parameters for ListTransactions.
 
 ```go
 type ListDeprecatedParams struct {
@@ -6642,7 +6642,7 @@ QueryValues converts [ListDeprecatedParams](<#ListDeprecatedParams>) into \[url.
 <a name="ListParams"></a>
 ## type [ListParams](<https://github.com/sumup/sumup-go/blob/main/transactions/transactions.go#L564-L599>)
 
-ListParams: query parameters for ListTransactionsV2.1
+ListParams are query parameters for ListTransactionsV2.1.
 
 ```go
 type ListParams struct {

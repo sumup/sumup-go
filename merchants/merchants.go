@@ -530,7 +530,7 @@ type Timestamps struct {
 // of the `PATCH` endpoints.
 type Version string
 
-// ListPersonsParams: query parameters for ListPersons
+// ListPersonsParams are query parameters for ListPersons.
 type ListPersonsParams struct {
 	// The version of the resource. At the moment, the only supported value is `latest`. When provided and the requested
 	// resource's `change_status` is pending, the resource will be returned with all pending changes applied. When
@@ -550,7 +550,7 @@ func (p *ListPersonsParams) QueryValues() url.Values {
 	return q
 }
 
-// GetParams: query parameters for GetMerchant
+// GetParams are query parameters for GetMerchant.
 type GetParams struct {
 	// The version of the resource. At the moment, the only supported value is `latest`. When provided and the requested
 	// resource's `change_status` is pending, the resource will be returned with all pending changes applied. When
@@ -570,7 +570,7 @@ func (p *GetParams) QueryValues() url.Values {
 	return q
 }
 
-// GetPersonParams: query parameters for GetPerson
+// GetPersonParams are query parameters for GetPerson.
 type GetPersonParams struct {
 	// The version of the resource. At the moment, the only supported value is `latest`. When provided and the requested
 	// resource's `change_status` is pending, the resource will be returned with all pending changes applied. When

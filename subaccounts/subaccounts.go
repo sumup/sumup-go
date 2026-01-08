@@ -86,7 +86,7 @@ type UpdateSubAccountPermissions struct {
 	RefundTransactions         *bool `json:"refund_transactions,omitempty"`
 }
 
-// ListSubAccountsParams: query parameters for ListSubAccounts
+// ListSubAccountsParams are query parameters for ListSubAccounts.
 type ListSubAccountsParams struct {
 	// If true the list of operators will include also the primary user.
 	IncludePrimary *bool

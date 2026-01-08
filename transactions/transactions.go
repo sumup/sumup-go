@@ -439,7 +439,7 @@ type Refund struct {
 	Amount *float32 `json:"amount,omitempty"`
 }
 
-// ListDeprecatedParams: query parameters for ListTransactions
+// ListDeprecatedParams are query parameters for ListTransactions.
 type ListDeprecatedParams struct {
 	// Filters the results by the latest modification time of resources and returns only transactions that are modified
 	// *at or after* the specified timestamp (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
@@ -530,7 +530,7 @@ func (p *ListDeprecatedParams) QueryValues() url.Values {
 	return q
 }
 
-// GetDeprecatedParams: query parameters for GetTransaction
+// GetDeprecatedParams are query parameters for GetTransaction.
 type GetDeprecatedParams struct {
 	// Retrieves the transaction resource with the specified transaction ID (the `id` parameter in the transaction resource).
 	ID *string
@@ -560,7 +560,7 @@ func (p *GetDeprecatedParams) QueryValues() url.Values {
 	return q
 }
 
-// ListParams: query parameters for ListTransactionsV2.1
+// ListParams are query parameters for ListTransactionsV2.1.
 type ListParams struct {
 	// Filters the results by the latest modification time of resources and returns only transactions that are modified
 	// *at or after* the specified timestamp (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
@@ -657,7 +657,7 @@ func (p *ListParams) QueryValues() url.Values {
 	return q
 }
 
-// GetParams: query parameters for GetTransactionV2.1
+// GetParams are query parameters for GetTransactionV2.1.
 type GetParams struct {
 	// Client transaction id.
 	ClientTransactionID *string
