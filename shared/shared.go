@@ -9,7 +9,7 @@ import (
 	"github.com/sumup/sumup-go/datetime"
 )
 
-// AddressLegacy: Profile's personal address information.
+// Profile's personal address information.
 type AddressLegacy struct {
 	// City name from the address.
 	City *string `json:"city,omitempty"`
@@ -25,13 +25,13 @@ type AddressLegacy struct {
 	State *string `json:"state,omitempty"`
 }
 
-// AmountEvent: Amount of the event.
+// Amount of the event.
 type AmountEvent float32
 
-// Attributes: Object attributes that are modifiable only by SumUp applications.
+// Object attributes that are modifiable only by SumUp applications.
 type Attributes map[string]any
 
-// CardType: Issuing card network of the payment card used for the transaction.
+// Issuing card network of the payment card used for the transaction.
 type CardType string
 
 const (
@@ -51,8 +51,8 @@ const (
 	CardTypeVisaVpay     CardType = "VISA_VPAY"
 )
 
-// Currency: Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount.
-// Currently supported currency values are enumerated above.
+// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
+// currency values are enumerated above.
 type Currency string
 
 const (
@@ -73,7 +73,7 @@ const (
 	CurrencyUSD Currency = "USD"
 )
 
-// EntryMode: Entry mode of the payment details.
+// Entry mode of the payment details.
 type EntryMode string
 
 const (
@@ -105,7 +105,7 @@ const (
 	EntryModeSofort               EntryMode = "sofort"
 )
 
-// Error: Error message structure.
+// Error message structure.
 type Error struct {
 	// Platform code for the error.
 	ErrorCode *string `json:"error_code,omitempty"`
@@ -119,7 +119,7 @@ func (e *Error) Error() string {
 
 var _ error = (*Error)(nil)
 
-// ErrorForbidden: Error message for forbidden requests.
+// Error message for forbidden requests.
 type ErrorForbidden struct {
 	// Platform code for the error.
 	ErrorCode *string `json:"error_code,omitempty"`
@@ -135,11 +135,11 @@ func (e *ErrorForbidden) Error() string {
 
 var _ error = (*ErrorForbidden)(nil)
 
-// EventID: Unique ID of the transaction event.
+// Unique ID of the transaction event.
 // Format: int64
 type EventID int64
 
-// EventStatus: Status of the transaction event.
+// Status of the transaction event.
 type EventStatus string
 
 const (
@@ -151,7 +151,7 @@ const (
 	EventStatusSuccessful EventStatus = "SUCCESSFUL"
 )
 
-// EventType: Type of the transaction event.
+// Type of the transaction event.
 type EventType string
 
 const (
@@ -161,7 +161,7 @@ const (
 	EventTypeRefund          EventType = "REFUND"
 )
 
-// Invite: Pending invitation for membership.
+// Pending invitation for membership.
 type Invite struct {
 	// Email address of the invited user.
 	// Format: email
@@ -169,7 +169,7 @@ type Invite struct {
 	ExpiresAt time.Time `json:"expires_at"`
 }
 
-// MandateResponse: Created mandate
+// Created mandate
 type MandateResponse struct {
 	// Merchant code which has the mandate
 	MerchantCode *string `json:"merchant_code,omitempty"`
@@ -179,7 +179,7 @@ type MandateResponse struct {
 	Type *string `json:"type,omitempty"`
 }
 
-// MembershipStatus: The status of the membership.
+// The status of the membership.
 type MembershipStatus string
 
 const (
@@ -190,12 +190,12 @@ const (
 	MembershipStatusUnknown  MembershipStatus = "unknown"
 )
 
-// Metadata: Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When
-// updating, always submit whole metadata. Maximum of 64 parameters are allowed in the object.
+// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
+// submit whole metadata. Maximum of 64 parameters are allowed in the object.
 // Max properties: 64
 type Metadata map[string]any
 
-// PaymentType: Payment type used for the transaction.
+// Payment type used for the transaction.
 type PaymentType string
 
 const (
@@ -212,7 +212,7 @@ const (
 	PaymentTypeUnknown     PaymentType = "UNKNOWN"
 )
 
-// PersonalDetails: Personal details for the customer.
+// Personal details for the customer.
 type PersonalDetails struct {
 	// Profile's personal address information.
 	Address *AddressLegacy `json:"address,omitempty"`
@@ -232,7 +232,7 @@ type PersonalDetails struct {
 	TaxID *string `json:"tax_id,omitempty"`
 }
 
-// Problem: A RFC 9457 problem details object.
+// A RFC 9457 problem details object.
 //
 // Additional properties specific to the problem type may be present.
 type Problem struct {
@@ -258,10 +258,10 @@ func (e *Problem) Error() string {
 
 var _ error = (*Problem)(nil)
 
-// TimestampEvent: Date and time of the transaction event.
+// Date and time of the transaction event.
 type TimestampEvent string
 
-// TransactionBase: Details of the transaction.
+// Details of the transaction.
 type TransactionBase struct {
 	// Total amount of the transaction.
 	Amount *float32 `json:"amount,omitempty"`
@@ -283,7 +283,7 @@ type TransactionBase struct {
 	TransactionCode *string `json:"transaction_code,omitempty"`
 }
 
-// TransactionBaseStatus: Current status of the transaction.
+// Current status of the transaction.
 type TransactionBaseStatus string
 
 const (
@@ -310,5 +310,5 @@ type TransactionCheckoutInfo struct {
 	VATAmount *float32 `json:"vat_amount,omitempty"`
 }
 
-// TransactionID: Unique ID of the transaction.
+// Unique ID of the transaction.
 type TransactionID string

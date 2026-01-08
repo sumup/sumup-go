@@ -63,7 +63,7 @@ type ReceiptEvent struct {
 	Type *shared.EventType `json:"type,omitempty"`
 }
 
-// ReceiptMerchantData: Receipt merchant data
+// Receipt merchant data
 type ReceiptMerchantData struct {
 	Locale          *string                             `json:"locale,omitempty"`
 	MerchantProfile *ReceiptMerchantDataMerchantProfile `json:"merchant_profile,omitempty"`
@@ -88,7 +88,7 @@ type ReceiptMerchantDataMerchantProfileAddress struct {
 	PostCode          *string `json:"post_code,omitempty"`
 }
 
-// ReceiptTransaction: Transaction information.
+// Transaction information.
 type ReceiptTransaction struct {
 	// Transaction amount.
 	Amount *string      `json:"amount,omitempty"`

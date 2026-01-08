@@ -15,7 +15,7 @@ import (
 	"github.com/sumup/sumup-go/shared"
 )
 
-// Card: __Required when payment type is `card`.__ Details of the payment card.
+// __Required when payment type is `card`.__ Details of the payment card.
 type Card struct {
 	// Three or four-digit card verification value (security code) of the payment card.
 	// Write only
@@ -50,7 +50,7 @@ type Card struct {
 	ZipCode *string `json:"zip_code,omitempty"`
 }
 
-// CardExpiryMonth: Month from the expiration time of the payment card. Accepted format is `MM`.
+// Month from the expiration time of the payment card. Accepted format is `MM`.
 // Write only
 type CardExpiryMonth string
 
@@ -69,7 +69,7 @@ const (
 	CardExpiryMonth12 CardExpiryMonth = "12"
 )
 
-// Checkout: Details of the payment checkout.
+// Details of the payment checkout.
 type Checkout struct {
 	// Amount of the payment.
 	Amount *float32 `json:"amount,omitempty"`
@@ -107,7 +107,7 @@ type Checkout struct {
 	ValidUntil *time.Time `json:"valid_until,omitempty"`
 }
 
-// CheckoutStatus: Current status of the checkout.
+// Current status of the checkout.
 type CheckoutStatus string
 
 const (
@@ -152,7 +152,7 @@ type CheckoutTransaction struct {
 	VATAmount *float32 `json:"vat_amount,omitempty"`
 }
 
-// CheckoutTransactionStatus: Current status of the transaction.
+// Current status of the transaction.
 type CheckoutTransactionStatus string
 
 const (
@@ -162,13 +162,13 @@ const (
 	CheckoutTransactionStatusSuccessful CheckoutTransactionStatus = "SUCCESSFUL"
 )
 
-// CheckoutAccepted: 3DS Response
+// 3DS Response
 type CheckoutAccepted struct {
 	// Required action processing 3D Secure payments.
 	NextStep *CheckoutAcceptedNextStep `json:"next_step,omitempty"`
 }
 
-// CheckoutAcceptedNextStep: Required action processing 3D Secure payments.
+// Required action processing 3D Secure payments.
 type CheckoutAcceptedNextStep struct {
 	// Indicates allowed mechanisms for redirecting an end user. If both values are provided to ensure a redirect takes
 	// place in either.
@@ -191,15 +191,14 @@ const (
 	CheckoutAcceptedNextStepMechanismIframe  CheckoutAcceptedNextStepMechanism = "iframe"
 )
 
-// CheckoutAcceptedNextStepPayload: Contains parameters essential for form redirection. Number of object keys
-// and their content can vary.
+// Contains parameters essential for form redirection. Number of object keys and their content can vary.
 type CheckoutAcceptedNextStepPayload struct {
 	Md      *any `json:"md,omitempty"`
 	PaReq   *any `json:"pa_req,omitempty"`
 	TermURL *any `json:"term_url,omitempty"`
 }
 
-// CheckoutCreateRequest: Details of the payment checkout.
+// Details of the payment checkout.
 type CheckoutCreateRequest struct {
 	// Amount of the payment.
 	Amount float32 `json:"amount"`
@@ -248,7 +247,7 @@ type CheckoutCreateRequest struct {
 	ValidUntil *time.Time `json:"valid_until,omitempty"`
 }
 
-// CheckoutCreateRequestPurpose: Purpose of the checkout.
+// Purpose of the checkout.
 // Default: CHECKOUT
 type CheckoutCreateRequestPurpose string
 
@@ -257,7 +256,7 @@ const (
 	CheckoutCreateRequestPurposeSetupRecurringPayment CheckoutCreateRequestPurpose = "SETUP_RECURRING_PAYMENT"
 )
 
-// CheckoutCreateRequestStatus: Current status of the checkout.
+// Current status of the checkout.
 // Read only
 type CheckoutCreateRequestStatus string
 
@@ -302,7 +301,7 @@ type CheckoutCreateRequestTransaction struct {
 	VATAmount *float32 `json:"vat_amount,omitempty"`
 }
 
-// CheckoutCreateRequestTransactionStatus: Current status of the transaction.
+// Current status of the transaction.
 type CheckoutCreateRequestTransactionStatus string
 
 const (
@@ -362,7 +361,7 @@ type CheckoutSuccess struct {
 	ValidUntil *time.Time `json:"valid_until,omitempty"`
 }
 
-// CheckoutSuccessStatus: Current status of the checkout.
+// Current status of the checkout.
 type CheckoutSuccessStatus string
 
 const (
@@ -407,7 +406,7 @@ type CheckoutSuccessTransaction struct {
 	VATAmount *float32 `json:"vat_amount,omitempty"`
 }
 
-// CheckoutSuccessTransactionStatus: Current status of the transaction.
+// Current status of the transaction.
 type CheckoutSuccessTransactionStatus string
 
 const (
@@ -417,13 +416,13 @@ const (
 	CheckoutSuccessTransactionStatusSuccessful CheckoutSuccessTransactionStatus = "SUCCESSFUL"
 )
 
-// CheckoutSuccessPaymentInstrument: Object containing token information for the specified payment instrument
+// Object containing token information for the specified payment instrument
 type CheckoutSuccessPaymentInstrument struct {
 	// Token value
 	Token *string `json:"token,omitempty"`
 }
 
-// DetailsError: Error message structure.
+// Error message structure.
 type DetailsError struct {
 	// Details of the error.
 	Details           *string                        `json:"details,omitempty"`
@@ -464,7 +463,7 @@ func (e *ErrorExtended) Error() string {
 
 var _ error = (*ErrorExtended)(nil)
 
-// MandatePayload: Mandate is passed when a card is to be tokenized
+// Mandate is passed when a card is to be tokenized
 type MandatePayload struct {
 	// Indicates the mandate type
 	Type MandatePayloadType `json:"type"`
@@ -474,14 +473,14 @@ type MandatePayload struct {
 	UserIP *string `json:"user_ip,omitempty"`
 }
 
-// MandatePayloadType: Indicates the mandate type
+// Indicates the mandate type
 type MandatePayloadType string
 
 const (
 	MandatePayloadTypeRecurrent MandatePayloadType = "recurrent"
 )
 
-// ProcessCheckout: Details of the payment instrument for processing the checkout.
+// Details of the payment instrument for processing the checkout.
 type ProcessCheckout struct {
 	// __Required when payment type is `card`.__ Details of the payment card.
 	Card *Card `json:"card,omitempty"`
@@ -502,7 +501,7 @@ type ProcessCheckout struct {
 	Token *string `json:"token,omitempty"`
 }
 
-// ProcessCheckoutPaymentType: Describes the payment method used to attempt processing
+// Describes the payment method used to attempt processing
 type ProcessCheckoutPaymentType string
 
 const (
@@ -513,7 +512,7 @@ const (
 	ProcessCheckoutPaymentTypeIdeal      ProcessCheckoutPaymentType = "ideal"
 )
 
-// Create: Details of the payment checkout.
+// Details of the payment checkout.
 type Create struct {
 	// Amount of the payment.
 	Amount float32 `json:"amount"`
@@ -562,7 +561,7 @@ type Create struct {
 	ValidUntil *time.Time `json:"valid_until,omitempty"`
 }
 
-// CreatePurpose: Purpose of the checkout.
+// Purpose of the checkout.
 // Default: CHECKOUT
 type CreatePurpose string
 
@@ -571,7 +570,7 @@ const (
 	CreatePurposeSetupRecurringPayment CreatePurpose = "SETUP_RECURRING_PAYMENT"
 )
 
-// CreateStatus: Current status of the checkout.
+// Current status of the checkout.
 // Read only
 type CreateStatus string
 
@@ -616,7 +615,7 @@ type CreateTransaction struct {
 	VATAmount *float32 `json:"vat_amount,omitempty"`
 }
 
-// CreateTransactionStatus: Current status of the transaction.
+// Current status of the transaction.
 type CreateTransactionStatus string
 
 const (
@@ -626,7 +625,7 @@ const (
 	CreateTransactionStatusSuccessful CreateTransactionStatus = "SUCCESSFUL"
 )
 
-// Process: Details of the payment instrument for processing the checkout.
+// Details of the payment instrument for processing the checkout.
 type Process struct {
 	// __Required when payment type is `card`.__ Details of the payment card.
 	Card *Card `json:"card,omitempty"`
@@ -647,7 +646,7 @@ type Process struct {
 	Token *string `json:"token,omitempty"`
 }
 
-// ProcessPaymentType: Describes the payment method used to attempt processing
+// Describes the payment method used to attempt processing
 type ProcessPaymentType string
 
 const (

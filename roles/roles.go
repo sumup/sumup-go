@@ -13,7 +13,7 @@ import (
 	"github.com/sumup/sumup-go/shared"
 )
 
-// Role: A custom role that can be used to assign set of permissions to members.
+// A custom role that can be used to assign set of permissions to members.
 type Role struct {
 	// The timestamp of when the role was created.
 	CreatedAt time.Time `json:"created_at"`

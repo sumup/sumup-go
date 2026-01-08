@@ -16,7 +16,7 @@ import (
 	"github.com/sumup/sumup-go/shared"
 )
 
-// Member: A member is user within specific resource identified by resource id, resource type, and associated roles.
+// A member is user within specific resource identified by resource id, resource type, and associated roles.
 type Member struct {
 	// Object attributes that are modifiable only by SumUp applications.
 	Attributes shared.Attributes `json:"attributes,omitempty"`
@@ -44,7 +44,7 @@ type Member struct {
 	User *MembershipUser `json:"user,omitempty"`
 }
 
-// MembershipUser: Information about the user associated with the membership.
+// Information about the user associated with the membership.
 type MembershipUser struct {
 	// Classic identifiers of the user.
 	// Deprecated: this operation is deprecated
@@ -70,7 +70,7 @@ type MembershipUser struct {
 	VirtualUser bool `json:"virtual_user"`
 }
 
-// MembershipUserClassic: Classic identifiers of the user.
+// Classic identifiers of the user.
 // Deprecated: this operation is deprecated
 type MembershipUserClassic struct {
 	// Format: int32
@@ -115,7 +115,7 @@ type Update struct {
 	User *UpdateUser `json:"user,omitempty"`
 }
 
-// UpdateUser: Allows you to update user data of managed users.
+// Allows you to update user data of managed users.
 type UpdateUser struct {
 	// User's preferred name. Used for display purposes only.
 	Nickname *string `json:"nickname,omitempty"`

@@ -46,7 +46,7 @@ func schemaGodoc(name string, schema *openapi3.Schema) string {
 	out := new(strings.Builder)
 
 	if schema.Description != "" {
-		fmt.Fprintf(out, "%s: %s", name, schema.Description)
+		fmt.Fprintf(out, schema.Description)
 	} else {
 		fmt.Fprintf(out, "%s is a schema definition.", name)
 	}

@@ -15,7 +15,7 @@ import (
 	"github.com/sumup/sumup-go/shared"
 )
 
-// Operator: Operator account for a merchant.
+// Operator account for a merchant.
 type Operator struct {
 	AccountType OperatorAccountType `json:"account_type"`
 	// The timestamp of when the operator was created.
@@ -39,7 +39,7 @@ const (
 	OperatorAccountTypeOperator OperatorAccountType = "operator"
 )
 
-// Permissions: Permissions assigned to an operator or user.
+// Permissions assigned to an operator or user.
 type Permissions struct {
 	Admin                      bool `json:"admin"`
 	CreateMotoPayments         bool `json:"create_moto_payments"`

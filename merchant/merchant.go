@@ -13,7 +13,7 @@ import (
 	"github.com/sumup/sumup-go/shared"
 )
 
-// AccountLegacy: Profile information.
+// Profile information.
 type AccountLegacy struct {
 	// The role of the user.
 	Type *AccountLegacyType `json:"type,omitempty"`
@@ -21,7 +21,7 @@ type AccountLegacy struct {
 	Username *string `json:"username,omitempty"`
 }
 
-// AccountLegacyType: The role of the user.
+// The role of the user.
 type AccountLegacyType string
 
 const (
@@ -29,7 +29,7 @@ const (
 	AccountLegacyTypeOperator AccountLegacyType = "operator"
 )
 
-// AddressWithDetails: Details of the registered address.
+// Details of the registered address.
 type AddressWithDetails struct {
 	// Address line 1
 	AddressLine1 *string `json:"address_line_1,omitempty"`
@@ -63,7 +63,7 @@ type AddressWithDetails struct {
 	TimeoffsetDetails *TimeoffsetDetails `json:"timeoffset_details,omitempty"`
 }
 
-// AppSettings: Mobile app settings
+// Mobile app settings
 type AppSettings struct {
 	// Advanced mode.
 	AdvancedMode *string `json:"advanced_mode,omitempty"`
@@ -142,10 +142,10 @@ type BusinessOwner struct {
 	Ownership *float64 `json:"ownership,omitempty"`
 }
 
-// BusinessOwners: Business owners information.
+// Business owners information.
 type BusinessOwners []BusinessOwner
 
-// CountryDetails: Country Details
+// Country Details
 type CountryDetails struct {
 	// Currency ISO 4217 code
 	Currency *string `json:"currency,omitempty"`
@@ -157,7 +157,7 @@ type CountryDetails struct {
 	NativeName *string `json:"native_name,omitempty"`
 }
 
-// DoingBusinessAsLegacy: Doing Business As information
+// Doing Business As information
 type DoingBusinessAsLegacy struct {
 	Address *DoingBusinessAsLegacyAddress `json:"address,omitempty"`
 	// Doing business as name
@@ -190,7 +190,7 @@ type DoingBusinessAsLegacyAddress struct {
 	RegionName *string `json:"region_name,omitempty"`
 }
 
-// LegalTypeLegacy: Id of the legal type of the merchant profile
+// Id of the legal type of the merchant profile
 type LegalTypeLegacy struct {
 	// Legal type short description
 	Description *string `json:"description,omitempty"`
@@ -202,7 +202,7 @@ type LegalTypeLegacy struct {
 	SoleTrader *bool `json:"sole_trader,omitempty"`
 }
 
-// MerchantAccount: Details of the merchant account.
+// Details of the merchant account.
 type MerchantAccount struct {
 	// Profile information.
 	Account *AccountLegacy `json:"account,omitempty"`
@@ -216,7 +216,7 @@ type MerchantAccount struct {
 	PersonalProfile *PersonalProfileLegacy `json:"personal_profile,omitempty"`
 }
 
-// MerchantProfileLegacy: Account's merchant profile
+// Account's merchant profile
 type MerchantProfileLegacy struct {
 	// Details of the registered address.
 	Address      *AddressWithDetails `json:"address,omitempty"`
@@ -260,7 +260,7 @@ type MerchantProfileLegacy struct {
 	Website *string `json:"website,omitempty"`
 }
 
-// MerchantSettings: Merchant settings &#40;like \"payout_type\", \"payout_period\"&#41;
+// Merchant settings &#40;like \"payout_type\", \"payout_period\"&#41;
 type MerchantSettings struct {
 	// Whether merchant will receive daily payout emails
 	DailyPayoutEmail *bool `json:"daily_payout_email,omitempty"`
@@ -288,7 +288,7 @@ type MerchantSettings struct {
 	TaxEnabled *bool `json:"tax_enabled,omitempty"`
 }
 
-// MerchantSettingsMotoPayment: Whether merchant can make MOTO payments
+// Whether merchant can make MOTO payments
 type MerchantSettingsMotoPayment string
 
 const (
@@ -298,7 +298,7 @@ const (
 	MerchantSettingsMotoPaymentUnavailable MerchantSettingsMotoPayment = "UNAVAILABLE"
 )
 
-// PermissionsLegacy: User permissions
+// User permissions
 type PermissionsLegacy struct {
 	// Create MOTO payments
 	CreateMotoPayments *bool `json:"create_moto_payments,omitempty"`
@@ -310,7 +310,7 @@ type PermissionsLegacy struct {
 	RefundTransactions *bool `json:"refund_transactions,omitempty"`
 }
 
-// PersonalProfileLegacy: Account's personal profile.
+// Account's personal profile.
 type PersonalProfileLegacy struct {
 	// Details of the registered address.
 	Address  *AddressWithDetails `json:"address,omitempty"`
@@ -325,7 +325,7 @@ type PersonalProfileLegacy struct {
 	MobilePhone *string `json:"mobile_phone,omitempty"`
 }
 
-// TimeoffsetDetails: TimeOffset Details
+// TimeOffset Details
 type TimeoffsetDetails struct {
 	// Daylight Saving Time
 	Dst *bool `json:"dst,omitempty"`
@@ -335,7 +335,7 @@ type TimeoffsetDetails struct {
 	PostCode *string `json:"post_code,omitempty"`
 }
 
-// VATRates: Merchant VAT rates
+// Merchant VAT rates
 type VATRates struct {
 	// Country ISO code
 	Country *string `json:"country,omitempty"`

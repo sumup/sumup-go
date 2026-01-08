@@ -14,7 +14,7 @@ import (
 	"github.com/sumup/sumup-go/shared"
 )
 
-// BadGateway: 502 Bad Gateway
+// 502 Bad Gateway
 type BadGateway struct {
 	Errors BadGatewayErrors `json:"errors"`
 }
@@ -31,7 +31,7 @@ func (e *BadGateway) Error() string {
 
 var _ error = (*BadGateway)(nil)
 
-// BadRequest: 400 Bad Request
+// 400 Bad Request
 type BadRequest struct {
 	Errors BadRequestErrors `json:"errors"`
 }
@@ -44,7 +44,7 @@ type BadRequestErrors struct {
 	Type BadRequestErrorsType `json:"type"`
 }
 
-// BadRequestErrorsType: Key indicating type of error
+// Key indicating type of error
 type BadRequestErrorsType string
 
 const (
@@ -60,7 +60,7 @@ func (e *BadRequest) Error() string {
 
 var _ error = (*BadRequest)(nil)
 
-// CreateReaderCheckoutError: Error description
+// Error description
 type CreateReaderCheckoutError struct {
 	Errors CreateReaderCheckoutErrorErrors `json:"errors"`
 }
@@ -77,7 +77,7 @@ func (e *CreateReaderCheckoutError) Error() string {
 
 var _ error = (*CreateReaderCheckoutError)(nil)
 
-// CreateCheckoutRequest: Reader Checkout
+// Reader Checkout
 type CreateCheckoutRequest struct {
 	// Affiliate metadata for the transaction.
 	// It is a field that allow for integrators to track the source of the transaction.
@@ -121,7 +121,7 @@ type CreateCheckoutRequest struct {
 	TotalAmount CreateCheckoutRequestTotalAmount `json:"total_amount"`
 }
 
-// CreateCheckoutRequestAffiliate: Affiliate metadata for the transaction.
+// Affiliate metadata for the transaction.
 // It is a field that allow for integrators to track the source of the transaction.
 type CreateCheckoutRequestAffiliate struct {
 	// Application ID of the affiliate.
@@ -139,11 +139,11 @@ type CreateCheckoutRequestAffiliate struct {
 	Tags CreateCheckoutRequestAffiliateTags `json:"tags,omitempty"`
 }
 
-// CreateCheckoutRequestAffiliateTags: Additional metadata for the transaction.
+// Additional metadata for the transaction.
 // It is key-value object that can be associated with the transaction.
 type CreateCheckoutRequestAffiliateTags map[string]any
 
-// CreateCheckoutRequestCardType: The card type of the card used for the transaction.
+// The card type of the card used for the transaction.
 // Is is required only for some countries (e.g: Brazil).
 type CreateCheckoutRequestCardType string
 
@@ -152,7 +152,7 @@ const (
 	CreateCheckoutRequestCardTypeDebit  CreateCheckoutRequestCardType = "debit"
 )
 
-// CreateCheckoutRequestTotalAmount: Amount structure.
+// Amount structure.
 //
 // The amount is represented as an integer value altogether with the currency and the minor unit.
 //
@@ -183,7 +183,7 @@ type CreateReaderCheckoutResponseData struct {
 	ClientTransactionID string `json:"client_transaction_id"`
 }
 
-// CreateReaderCheckoutUnprocessableEntity: Unprocessable entity
+// Unprocessable entity
 type CreateReaderCheckoutUnprocessableEntity struct {
 	Errors CreateReaderCheckoutUnprocessableEntityErrors `json:"errors"`
 }
@@ -197,7 +197,7 @@ func (e *CreateReaderCheckoutUnprocessableEntity) Error() string {
 
 var _ error = (*CreateReaderCheckoutUnprocessableEntity)(nil)
 
-// CreateReaderTerminateError: Error description
+// Error description
 type CreateReaderTerminateError struct {
 	Errors CreateReaderTerminateErrorErrors `json:"errors"`
 }
@@ -214,7 +214,7 @@ func (e *CreateReaderTerminateError) Error() string {
 
 var _ error = (*CreateReaderTerminateError)(nil)
 
-// CreateReaderTerminateUnprocessableEntity: Unprocessable entity
+// Unprocessable entity
 type CreateReaderTerminateUnprocessableEntity struct {
 	Errors CreateReaderTerminateUnprocessableEntityErrors `json:"errors"`
 }
@@ -228,7 +228,7 @@ func (e *CreateReaderTerminateUnprocessableEntity) Error() string {
 
 var _ error = (*CreateReaderTerminateUnprocessableEntity)(nil)
 
-// GatewayTimeout: 504 Gateway Timeout
+// 504 Gateway Timeout
 type GatewayTimeout struct {
 	Errors GatewayTimeoutErrors `json:"errors"`
 }
@@ -245,7 +245,7 @@ func (e *GatewayTimeout) Error() string {
 
 var _ error = (*GatewayTimeout)(nil)
 
-// InternalServerError: 500 Internal Server Error
+// 500 Internal Server Error
 type InternalServerError struct {
 	Errors InternalServerErrorErrors `json:"errors"`
 }
@@ -262,7 +262,7 @@ func (e *InternalServerError) Error() string {
 
 var _ error = (*InternalServerError)(nil)
 
-// NotFound: 404 Not Found
+// 404 Not Found
 type NotFound struct {
 	Errors NotFoundErrors `json:"errors"`
 }
@@ -279,7 +279,7 @@ func (e *NotFound) Error() string {
 
 var _ error = (*NotFound)(nil)
 
-// Reader: A physical card reader device that can accept in-person payments.
+// A physical card reader device that can accept in-person payments.
 type Reader struct {
 	// The timestamp of when the reader was created.
 	CreatedAt time.Time `json:"created_at"`
@@ -313,7 +313,7 @@ type Reader struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// ReaderDevice: Information about the underlying physical device.
+// Information about the underlying physical device.
 type ReaderDevice struct {
 	// A unique identifier of the physical device (e.g. serial number).
 	Identifier string `json:"identifier"`
@@ -321,7 +321,7 @@ type ReaderDevice struct {
 	Model ReaderDeviceModel `json:"model"`
 }
 
-// ReaderDeviceModel: Identifier of the model of the device.
+// Identifier of the model of the device.
 type ReaderDeviceModel string
 
 const (
@@ -329,7 +329,7 @@ const (
 	ReaderDeviceModelVirtualSolo ReaderDeviceModel = "virtual-solo"
 )
 
-// ReaderID: Unique identifier of the object.
+// Unique identifier of the object.
 //
 // Note that this identifies the instance of the physical devices pairing with your SumUp account. If you [delete](https://developer.sumup.com/api/readers/delete-reader)
 // a reader, and pair the device again, the ID will be different. Do not use this ID to refer to a physical device.
@@ -338,17 +338,17 @@ const (
 // Max length: 30
 type ReaderID string
 
-// ReaderName: Custom human-readable, user-defined name for easier identification of the reader.
+// Custom human-readable, user-defined name for easier identification of the reader.
 // Max length: 500
 type ReaderName string
 
-// ReaderPairingCode: The pairing code is a 8 or 9 character alphanumeric string that is displayed on a SumUp
-// Device after initiating the pairing. It is used to link the physical device to the created pairing.
+// The pairing code is a 8 or 9 character alphanumeric string that is displayed on a SumUp Device after initiating
+// the pairing. It is used to link the physical device to the created pairing.
 // Min length: 8
 // Max length: 9
 type ReaderPairingCode string
 
-// ReaderStatus: The status of the reader object gives information about the current state of the reader.
+// The status of the reader object gives information about the current state of the reader.
 //
 // Possible values:
 //
@@ -365,7 +365,7 @@ const (
 	ReaderStatusUnknown    ReaderStatus = "unknown"
 )
 
-// StatusResponse: Status of a device
+// Status of a device
 type StatusResponse struct {
 	Data StatusResponseData `json:"data"`
 }
@@ -390,7 +390,7 @@ type StatusResponseData struct {
 	Status StatusResponseDataStatus `json:"status"`
 }
 
-// StatusResponseDataConnectionType: Type of connection used by the device
+// Type of connection used by the device
 type StatusResponseDataConnectionType string
 
 const (
@@ -403,7 +403,7 @@ const (
 	StatusResponseDataConnectionTypeWiFi StatusResponseDataConnectionType = "Wi-Fi"
 )
 
-// StatusResponseDataState: Latest state of the device
+// Latest state of the device
 type StatusResponseDataState string
 
 const (
@@ -415,7 +415,7 @@ const (
 	StatusResponseDataStateWaitingForSignature StatusResponseDataState = "WAITING_FOR_SIGNATURE"
 )
 
-// StatusResponseDataStatus: Status of a device
+// Status of a device
 type StatusResponseDataStatus string
 
 const (
@@ -423,7 +423,7 @@ const (
 	StatusResponseDataStatusOnline  StatusResponseDataStatus = "ONLINE"
 )
 
-// Unauthorized: 401 Unauthorized
+// 401 Unauthorized
 type Unauthorized struct {
 	Errors UnauthorizedErrors `json:"errors"`
 }
@@ -436,7 +436,7 @@ type UnauthorizedErrors struct {
 	Type UnauthorizedErrorsType `json:"type"`
 }
 
-// UnauthorizedErrorsType: Key indicating type of error
+// Key indicating type of error
 type UnauthorizedErrorsType string
 
 const (
@@ -466,7 +466,7 @@ type Create struct {
 	PairingCode ReaderPairingCode `json:"pairing_code"`
 }
 
-// CreateCheckout: Reader Checkout
+// Reader Checkout
 type CreateCheckout struct {
 	// Affiliate metadata for the transaction.
 	// It is a field that allow for integrators to track the source of the transaction.
@@ -510,7 +510,7 @@ type CreateCheckout struct {
 	TotalAmount CreateCheckoutTotalAmount `json:"total_amount"`
 }
 
-// CreateCheckoutAffiliate: Affiliate metadata for the transaction.
+// Affiliate metadata for the transaction.
 // It is a field that allow for integrators to track the source of the transaction.
 type CreateCheckoutAffiliate struct {
 	// Application ID of the affiliate.
@@ -528,11 +528,11 @@ type CreateCheckoutAffiliate struct {
 	Tags CreateCheckoutAffiliateTags `json:"tags,omitempty"`
 }
 
-// CreateCheckoutAffiliateTags: Additional metadata for the transaction.
+// Additional metadata for the transaction.
 // It is key-value object that can be associated with the transaction.
 type CreateCheckoutAffiliateTags map[string]any
 
-// CreateCheckoutCardType: The card type of the card used for the transaction.
+// The card type of the card used for the transaction.
 // Is is required only for some countries (e.g: Brazil).
 type CreateCheckoutCardType string
 
@@ -541,7 +541,7 @@ const (
 	CreateCheckoutCardTypeDebit  CreateCheckoutCardType = "debit"
 )
 
-// CreateCheckoutTotalAmount: Amount structure.
+// Amount structure.
 //
 // The amount is represented as an integer value altogether with the currency and the minor unit.
 //

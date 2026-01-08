@@ -15,8 +15,8 @@ import (
 	"github.com/sumup/sumup-go/shared"
 )
 
-// Membership: A membership associates a user with a resource, memberships is defined by user, resource, resource
-// type, and associated roles.
+// A membership associates a user with a resource, memberships is defined by user, resource, resource type, and
+// associated roles.
 type Membership struct {
 	// Object attributes that are modifiable only by SumUp applications.
 	Attributes shared.Attributes `json:"attributes,omitempty"`
@@ -51,7 +51,7 @@ type Membership struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// MembershipResource: Information about the resource the membership is in.
+// Information about the resource the membership is in.
 type MembershipResource struct {
 	// Object attributes that are modifiable only by SumUp applications.
 	Attributes shared.Attributes `json:"attributes,omitempty"`
@@ -74,7 +74,7 @@ type MembershipResource struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// ResourceType: The type of the membership resource.
+// The type of the membership resource.
 // Possible values are:
 // * `merchant` - merchant account(s)
 // * `organization` - organization(s)

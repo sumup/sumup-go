@@ -21,7 +21,7 @@ type Customer struct {
 	PersonalDetails *shared.PersonalDetails `json:"personal_details,omitempty"`
 }
 
-// PaymentInstrumentResponse: Payment Instrument Response
+// Payment Instrument Response
 type PaymentInstrumentResponse struct {
 	// Indicates whether the payment instrument is active and can be used for payments. To deactivate it, send a
 	// `DELETE` request to the resource endpoint.
@@ -41,7 +41,7 @@ type PaymentInstrumentResponse struct {
 	Type *PaymentInstrumentResponseType `json:"type,omitempty"`
 }
 
-// PaymentInstrumentResponseCard: Details of the payment card.
+// Details of the payment card.
 type PaymentInstrumentResponseCard struct {
 	// Last 4 digits of the payment card number.
 	// Read only
@@ -52,7 +52,7 @@ type PaymentInstrumentResponseCard struct {
 	Type *shared.CardType `json:"type,omitempty"`
 }
 
-// PaymentInstrumentResponseType: Type of the payment instrument.
+// Type of the payment instrument.
 type PaymentInstrumentResponseType string
 
 const (

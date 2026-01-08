@@ -15,9 +15,9 @@ import (
 	"github.com/sumup/sumup-go/shared"
 )
 
-// Address: An address somewhere in the world. The address fields used depend on the country conventions. For
-// example, in Great Britain, `city` is `post_town`. In the United States, the top-level administrative unit
-// used in addresses is `state`, whereas in Chile it's `region`.
+// An address somewhere in the world. The address fields used depend on the country conventions. For example, in
+// Great Britain, `city` is `post_town`. In the United States, the top-level administrative unit used in addresses
+// is `state`, whereas in Chile it's `region`.
 // Whether an address is valid or not depends on whether the locally required fields are present. Fields not
 // supported in a country will be ignored.
 // Address documentation: https://sumup.roadie.so/docs/default/Component/merchants/merchant/#addresses
@@ -94,9 +94,9 @@ type BaseError struct {
 	Message *string `json:"message,omitempty"`
 }
 
-// BasePerson: Base schema for a person associated with a merchant. This can be a legal representative, business
-// owner (ultimate beneficial owner), or an officer. A legal representative is the person who registered the
-// merchant with SumUp. They should always have a `user_id`.
+// Base schema for a person associated with a merchant. This can be a legal representative, business owner (ultimate
+// beneficial owner), or an officer. A legal representative is the person who registered the merchant with SumUp.
+// They should always have a `user_id`.
 //
 // Person documentation: https://developer.sumup.com/tools/models/merchant#persons
 type BasePerson struct {
@@ -164,8 +164,7 @@ type BasePerson struct {
 	Version *Version `json:"version,omitempty"`
 }
 
-// Branding: Settings used to apply the Merchant's branding to email receipts, invoices, checkouts, and other
-// products.
+// Settings used to apply the Merchant's branding to email receipts, invoices, checkouts, and other products.
 type Branding struct {
 	// A hex color value representing the preferred background color of this merchant.
 	BackgroundColor *string `json:"background_color,omitempty"`
@@ -189,7 +188,7 @@ type Branding struct {
 	SecondaryColorFg *string `json:"secondary_color_fg,omitempty"`
 }
 
-// BusinessProfile: Business information about the merchant. This information will be visible to the merchant's customers.
+// Business information about the merchant. This information will be visible to the merchant's customers.
 type BusinessProfile struct {
 	// An address somewhere in the world. The address fields used depend on the country conventions. For example, in
 	// Great Britain, `city` is `post_town`. In the United States, the top-level administrative unit used in addresses
@@ -219,9 +218,9 @@ type BusinessProfile struct {
 	Website *string `json:"website,omitempty"`
 }
 
-// ChangeStatus: Reflects the status of changes submitted through the `PATCH` endpoints for the merchant or
-// persons. If some changes have not been applied yet, the status will be `pending`. If all changes have been
-// applied, the status `done`.
+// Reflects the status of changes submitted through the `PATCH` endpoints for the merchant or persons. If some
+// changes have not been applied yet, the status will be `pending`. If all changes have been applied, the status
+// `done`.
 // The status is only returned after write operations or on read endpoints when the `version` query parameter is
 // provided.
 //
@@ -236,7 +235,7 @@ type ClassicMerchantIdentifiers struct {
 	ID int64 `json:"id"`
 }
 
-// Company: Information about the company or business. This is legal information that is used for verification.
+// Information about the company or business. This is legal information that is used for verification.
 //
 // Company documentation: https://developer.sumup.com/tools/models/merchant#company
 type Company struct {
@@ -290,47 +289,47 @@ type CompanyIdentifier struct {
 	Value string `json:"value"`
 }
 
-// CompanyIdentifiers: A list of country-specific company identifiers.
+// A list of country-specific company identifiers.
 type CompanyIdentifiers []CompanyIdentifier
 
-// CountryCode: An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
 // country code. This definition users `oneOf` with a two-character string
 // type to allow for support of future countries in client code.
 // Min length: 2
 // Max length: 2
 type CountryCode string
 
-// ErrorCategoryClient: The category of the error.
+// The category of the error.
 type ErrorCategoryClient string
 
 const (
 	ErrorCategoryClientClientError ErrorCategoryClient = "client_error"
 )
 
-// ErrorCategoryServer: The category of the error.
+// The category of the error.
 type ErrorCategoryServer string
 
 const (
 	ErrorCategoryServerServerError ErrorCategoryServer = "server_error"
 )
 
-// ErrorCodeInternalServerError: An error code specifying the exact error that occurred.
+// An error code specifying the exact error that occurred.
 type ErrorCodeInternalServerError string
 
 const (
 	ErrorCodeInternalServerErrorInternalError ErrorCodeInternalServerError = "internal_error"
 )
 
-// ErrorCodeNotFound: An error code specifying the exact error that occurred.
+// An error code specifying the exact error that occurred.
 type ErrorCodeNotFound string
 
 const (
 	ErrorCodeNotFoundNotFound ErrorCodeNotFound = "not_found"
 )
 
-// LegalType: The unique legal type reference as defined in the country SDK. We do not rely on IDs as used by
-// other services. Consumers of this API are expected to use the country SDK to map to any other IDs, translation keys,
-// or descriptions.
+// The unique legal type reference as defined in the country SDK. We do not rely on IDs as used by other services.
+// Consumers of this API are expected to use the country SDK to map to any other IDs, translation keys, or
+// descriptions.
 //
 // Min length: 4
 // Max length: 64
@@ -419,7 +418,7 @@ type Merchant struct {
 	Version *Version `json:"version,omitempty"`
 }
 
-// Meta: A set of key-value pairs that you can attach to an object. This can be useful for storing additional information
+// A set of key-value pairs that you can attach to an object. This can be useful for storing additional information
 // about the object in a structured format.
 //
 // **Warning**: Updating Meta will overwrite the existing data. Make sure to always include the complete JSON
@@ -510,7 +509,7 @@ type PersonalIdentifier struct {
 	Value string `json:"value"`
 }
 
-// PhoneNumber: A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
+// A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
 //
 // Max length: 64
 type PhoneNumber string
@@ -526,8 +525,8 @@ type Timestamps struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// Version: The version of the resource. The version reflects a specific change submitted to the API via one
-// of the `PATCH` endpoints.
+// The version of the resource. The version reflects a specific change submitted to the API via one of the `PATCH`
+// endpoints.
 type Version string
 
 // ListPersonsParams are query parameters for ListPersons.
