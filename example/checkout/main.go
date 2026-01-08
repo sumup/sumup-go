@@ -12,7 +12,7 @@ func main() {
 	ctx := context.Background()
 	client := sumup.NewClient()
 
-	checkout, err := client.Checkouts.Create(ctx, checkouts.CreateCheckoutBody{
+	checkout, err := client.Checkouts.Create(ctx, checkouts.Create{
 		Amount:            123,
 		CheckoutReference: "TX000001",
 		Currency:          "EUR",
@@ -25,7 +25,7 @@ func main() {
 
 	log.Printf("[INFO] checkout created: id=%q, amount=%v, currency=%q", *checkout.ID, *checkout.Amount, string(*checkout.Currency))
 
-	checkoutSuccess, err := client.Checkouts.Process(ctx, *checkout.ID, checkouts.ProcessCheckoutBody{
+	checkoutSuccess, err := client.Checkouts.Process(ctx, *checkout.ID, checkouts.Process{
 		Card: &checkouts.Card{
 			Cvv:         "123",
 			ExpiryMonth: "12",
@@ -33,7 +33,7 @@ func main() {
 			Name:        "Boaty McBoatface",
 			Number:      "4200000000000042",
 		},
-		PaymentType: checkouts.ProcessCheckoutBodyPaymentTypeCard,
+		PaymentType: checkouts.ProcessPaymentTypeCard,
 	})
 	if err != nil {
 		log.Printf("[ERROR] process checkout: %v", err)

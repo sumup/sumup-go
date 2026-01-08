@@ -12,6 +12,7 @@ import (
 
 	"github.com/getkin/kin-openapi/openapi3"
 
+	"github.com/sumup/sumup-go/internal/cmd/codegen/internal/strcase"
 	"github.com/sumup/sumup-go/internal/cmd/codegen/templates"
 )
 
@@ -35,7 +36,9 @@ type Builder struct {
 
 	// errorSchemas are refs of schemas that are used for error responses (status code >= 400).
 	errorSchemas map[string]struct{}
-	pathsByTag   map[string]*openapi3.Paths
+	// schemaNameOverrides maps schema refs to overridden type names.
+	schemaNameOverrides map[string]string
+	pathsByTag          map[string]*openapi3.Paths
 
 	templates *template.Template
 
@@ -64,13 +67,14 @@ func New(cfg Config, opts ...Option) *Builder {
 	}
 
 	b := &Builder{
-		cfg:               cfg,
-		schemasByTag:      make(map[string][]string),
-		resolvedSchemas:   make(map[string][]*openapi3.SchemaRef),
-		resolvedResponses: make(map[string][]*openapi3.ResponseRef),
-		pathsByTag:        make(map[string]*openapi3.Paths),
-		errorSchemas:      make(map[string]struct{}),
-		templates:         templates,
+		cfg:                 cfg,
+		schemasByTag:        make(map[string][]string),
+		resolvedSchemas:     make(map[string][]*openapi3.SchemaRef),
+		resolvedResponses:   make(map[string][]*openapi3.ResponseRef),
+		pathsByTag:          make(map[string]*openapi3.Paths),
+		errorSchemas:        make(map[string]struct{}),
+		schemaNameOverrides: make(map[string]string),
+		templates:           templates,
 	}
 
 	for _, o := range opts {
@@ -203,9 +207,32 @@ func (b *Builder) collectSchemas() {
 
 	for _, pathItem := range b.spec.Paths.Map() {
 		for _, op := range pathItem.Operations() {
+			operationName := strcase.ToCamel(op.OperationID)
+			methodName := operationMethodName(op)
+
+			requestSchemas := collectSchemasInRequest(op)
 			schemas := b.collectSchemasInResponse(op)
 			schemas = append(schemas, collectSchemasInParams(op)...)
-			schemas = append(schemas, collectSchemasInRequest(op)...)
+			schemas = append(schemas, requestSchemas...)
+			if methodName != operationName {
+				for _, schema := range requestSchemas {
+					if schema == nil || schema.Ref == "" {
+						continue
+					}
+
+					refName := strings.TrimPrefix(schema.Ref, "#/components/schemas/")
+					if !strings.HasPrefix(refName, operationName) {
+						continue
+					}
+
+					suffix := strings.TrimPrefix(refName, operationName)
+					if suffix == "" {
+						continue
+					}
+
+					b.schemaNameOverrides[schema.Ref] = methodName + suffix
+				}
+			}
 
 			for _, schema := range schemas {
 				if schema.Ref == "" {

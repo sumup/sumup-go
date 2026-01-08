@@ -149,16 +149,16 @@ type ReceiptTransactionVATRate struct {
 	VAT *float32 `json:"vat,omitempty"`
 }
 
-// GetReceiptParams: query parameters for GetReceipt
-type GetReceiptParams struct {
+// GetParams: query parameters for GetReceipt
+type GetParams struct {
 	// Merchant code.
 	Mid string
 	// The ID of the transaction event (refund).
 	TxEventID *int
 }
 
-// QueryValues converts [GetReceiptParams] into [url.Values].
-func (p *GetReceiptParams) QueryValues() url.Values {
+// QueryValues converts [GetParams] into [url.Values].
+func (p *GetParams) QueryValues() url.Values {
 	q := make(url.Values)
 
 	q.Set("mid", p.Mid)
@@ -180,7 +180,7 @@ func NewReceiptsService(c *client.Client) *ReceiptsService {
 
 // Get: Retrieve receipt details
 // Retrieves receipt specific data for a transaction.
-func (s *ReceiptsService) Get(ctx context.Context, id string, params GetReceiptParams) (*Receipt, error) {
+func (s *ReceiptsService) Get(ctx context.Context, id string, params GetParams) (*Receipt, error) {
 	path := fmt.Sprintf("/v1.1/receipts/%v", id)
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))

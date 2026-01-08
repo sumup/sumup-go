@@ -51,8 +51,8 @@ const (
 // FinancialPayouts is a schema definition.
 type FinancialPayouts []FinancialPayout
 
-// ListPayoutsParams: query parameters for ListPayouts
-type ListPayoutsParams struct {
+// ListDeprecatedParams: query parameters for ListPayouts
+type ListDeprecatedParams struct {
 	// End date (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
 	EndDate datetime.Date
 	Format  *string
@@ -62,8 +62,8 @@ type ListPayoutsParams struct {
 	StartDate datetime.Date
 }
 
-// QueryValues converts [ListPayoutsParams] into [url.Values].
-func (p *ListPayoutsParams) QueryValues() url.Values {
+// QueryValues converts [ListDeprecatedParams] into [url.Values].
+func (p *ListDeprecatedParams) QueryValues() url.Values {
 	q := make(url.Values)
 
 	q.Set("end_date", p.EndDate.String())
@@ -85,8 +85,8 @@ func (p *ListPayoutsParams) QueryValues() url.Values {
 	return q
 }
 
-// ListPayoutsV1Params: query parameters for ListPayoutsV1
-type ListPayoutsV1Params struct {
+// ListParams: query parameters for ListPayoutsV1
+type ListParams struct {
 	// End date (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
 	EndDate datetime.Date
 	Format  *string
@@ -96,8 +96,8 @@ type ListPayoutsV1Params struct {
 	StartDate datetime.Date
 }
 
-// QueryValues converts [ListPayoutsV1Params] into [url.Values].
-func (p *ListPayoutsV1Params) QueryValues() url.Values {
+// QueryValues converts [ListParams] into [url.Values].
+func (p *ListParams) QueryValues() url.Values {
 	q := make(url.Values)
 
 	q.Set("end_date", p.EndDate.String())
@@ -130,7 +130,7 @@ func NewPayoutsService(c *client.Client) *PayoutsService {
 // ListDeprecated: List payouts
 // Lists ordered payouts for the merchant profile.
 // Deprecated: this operation is deprecated
-func (s *PayoutsService) ListDeprecated(ctx context.Context, params ListPayoutsParams) (*FinancialPayouts, error) {
+func (s *PayoutsService) ListDeprecated(ctx context.Context, params ListDeprecatedParams) (*FinancialPayouts, error) {
 	path := fmt.Sprintf("/v0.1/me/financials/payouts")
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
@@ -161,7 +161,7 @@ func (s *PayoutsService) ListDeprecated(ctx context.Context, params ListPayoutsP
 
 // List: List payouts
 // Lists ordered payouts for the merchant profile.
-func (s *PayoutsService) List(ctx context.Context, merchantCode string, params ListPayoutsV1Params) (*FinancialPayouts, error) {
+func (s *PayoutsService) List(ctx context.Context, merchantCode string, params ListParams) (*FinancialPayouts, error) {
 	path := fmt.Sprintf("/v1.0/merchants/%v/payouts", merchantCode)
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))

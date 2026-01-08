@@ -14,7 +14,7 @@ import (
 func TestIntegrationWithGeneratedTypes(t *testing.T) {
 	// Create a member creation request with a password
 	pwd := secret.New("super-secret-password")
-	body := members.CreateMerchantMemberBody{
+	body := members.Create{
 		Email:    "test@example.com",
 		Password: &pwd,
 		Roles:    []string{"admin"},
@@ -27,7 +27,7 @@ func TestIntegrationWithGeneratedTypes(t *testing.T) {
 	}
 
 	// Verify the password is in the JSON
-	var decoded map[string]interface{}
+	var decoded map[string]any
 	if err := json.Unmarshal(data, &decoded); err != nil {
 		t.Fatalf("json.Unmarshal() error = %v", err)
 	}
@@ -52,7 +52,7 @@ func TestIntegrationWithGeneratedTypes(t *testing.T) {
 	}
 
 	// Unmarshal back
-	var decodedBody members.CreateMerchantMemberBody
+	var decodedBody members.Create
 	if err := json.Unmarshal(data, &decodedBody); err != nil {
 		t.Fatalf("json.Unmarshal() error = %v", err)
 	}
@@ -68,8 +68,8 @@ func TestIntegrationWithGeneratedTypes(t *testing.T) {
 // TestUpdateMemberPasswordMasking verifies password masking in update operations.
 func TestUpdateMemberPasswordMasking(t *testing.T) {
 	pwd := secret.New("new-password-123")
-	updateBody := members.UpdateMerchantMemberBody{
-		User: &members.UpdateMerchantMemberBodyUser{
+	updateBody := members.Update{
+		User: &members.UpdateUser{
 			Password: &pwd,
 		},
 	}
@@ -86,12 +86,12 @@ func TestUpdateMemberPasswordMasking(t *testing.T) {
 		t.Fatalf("json.Marshal() error = %v", err)
 	}
 
-	var decoded map[string]interface{}
+	var decoded map[string]any
 	if err := json.Unmarshal(data, &decoded); err != nil {
 		t.Fatalf("json.Unmarshal() error = %v", err)
 	}
 
-	user, ok := decoded["user"].(map[string]interface{})
+	user, ok := decoded["user"].(map[string]any)
 	if !ok {
 		t.Fatal("user field not found or not an object")
 	}

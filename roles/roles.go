@@ -36,8 +36,8 @@ type Role struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// CreateMerchantRoleBody is a schema definition.
-type CreateMerchantRoleBody struct {
+// Create is a schema definition.
+type Create struct {
 	// User-defined description of the role.
 	Description *string `json:"description,omitempty"`
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
@@ -51,8 +51,8 @@ type CreateMerchantRoleBody struct {
 	Permissions []string `json:"permissions"`
 }
 
-// UpdateMerchantRoleBody is a schema definition.
-type UpdateMerchantRoleBody struct {
+// Update is a schema definition.
+type Update struct {
 	// User-defined description of the role.
 	Description *string `json:"description,omitempty"`
 	// User-defined name of the role.
@@ -109,7 +109,7 @@ func (s *RolesService) List(ctx context.Context, merchantCode string) (*ListMerc
 // Create: Create a role
 // Create a custom role for the merchant. Roles are defined by the set of permissions that they grant to the
 // members that they are assigned to.
-func (s *RolesService) Create(ctx context.Context, merchantCode string, body CreateMerchantRoleBody) (*Role, error) {
+func (s *RolesService) Create(ctx context.Context, merchantCode string, body Create) (*Role, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/roles", merchantCode)
 
 	resp, err := s.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
@@ -211,7 +211,7 @@ func (s *RolesService) Get(ctx context.Context, merchantCode string, roleID stri
 
 // Update: Update a role
 // Update a custom role.
-func (s *RolesService) Update(ctx context.Context, merchantCode string, roleID string, body UpdateMerchantRoleBody) (*Role, error) {
+func (s *RolesService) Update(ctx context.Context, merchantCode string, roleID string, body Update) (*Role, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/roles/%v", merchantCode, roleID)
 
 	resp, err := s.c.Call(ctx, http.MethodPatch, path, client.WithJSONBody(body))

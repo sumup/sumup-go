@@ -77,8 +77,8 @@ type MembershipUserClassic struct {
 	UserID int32 `json:"user_id"`
 }
 
-// CreateMerchantMemberBody is a schema definition.
-type CreateMerchantMemberBody struct {
+// Create is a schema definition.
+type Create struct {
 	// Object attributes that are modifiable only by SumUp applications.
 	Attributes shared.Attributes `json:"attributes,omitempty"`
 	// Email address of the member to add.
@@ -102,8 +102,8 @@ type CreateMerchantMemberBody struct {
 	Roles []string `json:"roles"`
 }
 
-// UpdateMerchantMemberBody is a schema definition.
-type UpdateMerchantMemberBody struct {
+// Update is a schema definition.
+type Update struct {
 	// Object attributes that are modifiable only by SumUp applications.
 	Attributes shared.Attributes `json:"attributes,omitempty"`
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
@@ -112,11 +112,11 @@ type UpdateMerchantMemberBody struct {
 	Metadata shared.Metadata `json:"metadata,omitempty"`
 	Roles    []string        `json:"roles,omitempty"`
 	// Allows you to update user data of managed users.
-	User *UpdateMerchantMemberBodyUser `json:"user,omitempty"`
+	User *UpdateUser `json:"user,omitempty"`
 }
 
-// UpdateMerchantMemberBodyUser: Allows you to update user data of managed users.
-type UpdateMerchantMemberBodyUser struct {
+// UpdateUser: Allows you to update user data of managed users.
+type UpdateUser struct {
 	// User's preferred name. Used for display purposes only.
 	Nickname *string `json:"nickname,omitempty"`
 	// Password of the member to add. Only used if `is_managed_user` is true.
@@ -125,8 +125,8 @@ type UpdateMerchantMemberBodyUser struct {
 	Password *secret.Secret `json:"password,omitempty"`
 }
 
-// ListMerchantMembersParams: query parameters for ListMerchantMembers
-type ListMerchantMembersParams struct {
+// ListParams: query parameters for ListMerchantMembers
+type ListParams struct {
 	// Filter the returned members by email address prefix.
 	Email *string
 	// Maximum number of members to return.
@@ -143,8 +143,8 @@ type ListMerchantMembersParams struct {
 	UserID *string
 }
 
-// QueryValues converts [ListMerchantMembersParams] into [url.Values].
-func (p *ListMerchantMembersParams) QueryValues() url.Values {
+// QueryValues converts [ListParams] into [url.Values].
+func (p *ListParams) QueryValues() url.Values {
 	q := make(url.Values)
 
 	if p.Email != nil {
@@ -194,7 +194,7 @@ func NewMembersService(c *client.Client) *MembersService {
 
 // List: List members
 // Lists merchant members.
-func (s *MembersService) List(ctx context.Context, merchantCode string, params ListMerchantMembersParams) (*ListMerchantMembers200Response, error) {
+func (s *MembersService) List(ctx context.Context, merchantCode string, params ListParams) (*ListMerchantMembers200Response, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/members", merchantCode)
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
@@ -225,7 +225,7 @@ func (s *MembersService) List(ctx context.Context, merchantCode string, params L
 
 // Create: Create a member
 // Create a merchant member.
-func (s *MembersService) Create(ctx context.Context, merchantCode string, body CreateMerchantMemberBody) (*Member, error) {
+func (s *MembersService) Create(ctx context.Context, merchantCode string, body Create) (*Member, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/members", merchantCode)
 
 	resp, err := s.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
@@ -327,7 +327,7 @@ func (s *MembersService) Get(ctx context.Context, merchantCode string, memberID 
 
 // Update: Update a member
 // Update the merchant member.
-func (s *MembersService) Update(ctx context.Context, merchantCode string, memberID string, body UpdateMerchantMemberBody) (*Member, error) {
+func (s *MembersService) Update(ctx context.Context, merchantCode string, memberID string, body Update) (*Member, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/members/%v", merchantCode, memberID)
 
 	resp, err := s.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))

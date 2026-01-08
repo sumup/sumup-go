@@ -349,15 +349,15 @@ type VATRates struct {
 	Rate *float64 `json:"rate,omitempty"`
 }
 
-// GetAccountParams: query parameters for GetAccount
-type GetAccountParams struct {
+// GetParams: query parameters for GetAccount
+type GetParams struct {
 	// A list of additional information you want to receive for the user. By default only personal and merchant profile
 	// information will be returned.
 	Include []string
 }
 
-// QueryValues converts [GetAccountParams] into [url.Values].
-func (p *GetAccountParams) QueryValues() url.Values {
+// QueryValues converts [GetParams] into [url.Values].
+func (p *GetParams) QueryValues() url.Values {
 	q := make(url.Values)
 
 	for _, v := range p.Include {
@@ -485,7 +485,7 @@ func (s *MerchantService) GetMerchantProfile(ctx context.Context) (*MerchantProf
 // Returns user profile information.
 // Deprecated: The _Retrieve a profile_ endpoint is deprecated, please use the `Merchant` object instead (see
 // [Merchants](https://developer.sumup.com/api/merchants)).
-func (s *MerchantService) Get(ctx context.Context, params GetAccountParams) (*MerchantAccount, error) {
+func (s *MerchantService) Get(ctx context.Context, params GetParams) (*MerchantAccount, error) {
 	path := fmt.Sprintf("/v0.1/me")
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))

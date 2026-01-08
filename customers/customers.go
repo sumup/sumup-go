@@ -59,16 +59,16 @@ const (
 	PaymentInstrumentResponseTypeCard PaymentInstrumentResponseType = "card"
 )
 
-// CreateCustomerBody is a schema definition.
-type CreateCustomerBody struct {
+// Create is a schema definition.
+type Create struct {
 	// Unique ID of the customer.
 	CustomerID string `json:"customer_id"`
 	// Personal details for the customer.
 	PersonalDetails *shared.PersonalDetails `json:"personal_details,omitempty"`
 }
 
-// UpdateCustomerBody is a schema definition.
-type UpdateCustomerBody struct {
+// Update is a schema definition.
+type Update struct {
 	// Personal details for the customer.
 	PersonalDetails *shared.PersonalDetails `json:"personal_details,omitempty"`
 }
@@ -86,7 +86,7 @@ func NewCustomersService(c *client.Client) *CustomersService {
 
 // Create: Create a customer
 // Creates a new saved customer resource which you can later manipulate and save payment instruments to.
-func (s *CustomersService) Create(ctx context.Context, body CreateCustomerBody) (*Customer, error) {
+func (s *CustomersService) Create(ctx context.Context, body Create) (*Customer, error) {
 	path := fmt.Sprintf("/v0.1/customers")
 
 	resp, err := s.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
@@ -225,7 +225,7 @@ func (s *CustomersService) Get(ctx context.Context, customerID string) (*Custome
 //
 // The request only overwrites the parameters included in the request, all other parameters will remain with
 // their initially assigned values.
-func (s *CustomersService) Update(ctx context.Context, customerID string, body UpdateCustomerBody) (*Customer, error) {
+func (s *CustomersService) Update(ctx context.Context, customerID string, body Update) (*Customer, error) {
 	path := fmt.Sprintf("/v0.1/customers/%v", customerID)
 
 	resp, err := s.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))

@@ -48,38 +48,38 @@ type Permissions struct {
 	RefundTransactions         bool `json:"refund_transactions"`
 }
 
-// CreateSubAccountBody is a schema definition.
-type CreateSubAccountBody struct {
+// CreateSubAccount is a schema definition.
+type CreateSubAccount struct {
 	Nickname *string `json:"nickname,omitempty"`
 	// Min length: 8
-	Password    string                           `json:"password"`
-	Permissions *CreateSubAccountBodyPermissions `json:"permissions,omitempty"`
+	Password    string                       `json:"password"`
+	Permissions *CreateSubAccountPermissions `json:"permissions,omitempty"`
 	// Format: email
 	Username string `json:"username"`
 }
 
-// CreateSubAccountBodyPermissions is a schema definition.
-type CreateSubAccountBodyPermissions struct {
+// CreateSubAccountPermissions is a schema definition.
+type CreateSubAccountPermissions struct {
 	CreateMotoPayments         *bool `json:"create_moto_payments,omitempty"`
 	CreateReferral             *bool `json:"create_referral,omitempty"`
 	FullTransactionHistoryView *bool `json:"full_transaction_history_view,omitempty"`
 	RefundTransactions         *bool `json:"refund_transactions,omitempty"`
 }
 
-// UpdateSubAccountBody is a schema definition.
-type UpdateSubAccountBody struct {
+// UpdateSubAccount is a schema definition.
+type UpdateSubAccount struct {
 	Disabled *bool   `json:"disabled,omitempty"`
 	Nickname *string `json:"nickname,omitempty"`
 	// Min length: 8
-	Password    *string                          `json:"password,omitempty"`
-	Permissions *UpdateSubAccountBodyPermissions `json:"permissions,omitempty"`
+	Password    *string                      `json:"password,omitempty"`
+	Permissions *UpdateSubAccountPermissions `json:"permissions,omitempty"`
 	// Format: email
 	// Max length: 256
 	Username *string `json:"username,omitempty"`
 }
 
-// UpdateSubAccountBodyPermissions is a schema definition.
-type UpdateSubAccountBodyPermissions struct {
+// UpdateSubAccountPermissions is a schema definition.
+type UpdateSubAccountPermissions struct {
 	CreateMotoPayments         *bool `json:"create_moto_payments,omitempty"`
 	CreateReferral             *bool `json:"create_referral,omitempty"`
 	FullTransactionHistoryView *bool `json:"full_transaction_history_view,omitempty"`
@@ -152,7 +152,7 @@ func (s *SubaccountsService) ListSubAccounts(ctx context.Context, params ListSub
 // Creates new operator for currently authorized users' merchant.
 // Deprecated: Subaccounts API is deprecated, to create a user in your merchant account please use [Create member](https://developer.sumup.com/api/members/create)
 // instead.
-func (s *SubaccountsService) CreateSubAccount(ctx context.Context, body CreateSubAccountBody) (*Operator, error) {
+func (s *SubaccountsService) CreateSubAccount(ctx context.Context, body CreateSubAccount) (*Operator, error) {
 	path := fmt.Sprintf("/v0.1/me/accounts")
 
 	resp, err := s.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
@@ -237,7 +237,7 @@ func (s *SubaccountsService) CompatGetOperator(ctx context.Context, operatorID i
 // Updates operator. If the operator was disabled and their password is updated they will be unblocked.
 // Deprecated: Subaccounts API is deprecated, to update a user that's a member of your merchant account please
 // use [Update member](https://developer.sumup.com/api/members/update) instead.
-func (s *SubaccountsService) UpdateSubAccount(ctx context.Context, operatorID int32, body UpdateSubAccountBody) (*Operator, error) {
+func (s *SubaccountsService) UpdateSubAccount(ctx context.Context, operatorID int32, body UpdateSubAccount) (*Operator, error) {
 	path := fmt.Sprintf("/v0.1/me/accounts/%v", operatorID)
 
 	resp, err := s.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))

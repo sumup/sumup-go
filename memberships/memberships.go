@@ -80,8 +80,8 @@ type MembershipResource struct {
 // * `organization` - organization(s)
 type ResourceType string
 
-// ListMembershipsParams: query parameters for ListMemberships
-type ListMembershipsParams struct {
+// ListParams: query parameters for ListMemberships
+type ListParams struct {
 	// Filter memberships by resource kind.
 	Kind *ResourceType
 	// Maximum number of members to return.
@@ -108,8 +108,8 @@ type ListMembershipsParams struct {
 	Status *shared.MembershipStatus
 }
 
-// QueryValues converts [ListMembershipsParams] into [url.Values].
-func (p *ListMembershipsParams) QueryValues() url.Values {
+// QueryValues converts [ListParams] into [url.Values].
+func (p *ListParams) QueryValues() url.Values {
 	q := make(url.Values)
 
 	if p.Kind != nil {
@@ -171,7 +171,7 @@ func NewMembershipsService(c *client.Client) *MembershipsService {
 
 // List: List memberships
 // List memberships of the current user.
-func (s *MembershipsService) List(ctx context.Context, params ListMembershipsParams) (*ListMemberships200Response, error) {
+func (s *MembershipsService) List(ctx context.Context, params ListParams) (*ListMemberships200Response, error) {
 	path := fmt.Sprintf("/v0.1/memberships")
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))

@@ -550,8 +550,8 @@ func (p *ListPersonsParams) QueryValues() url.Values {
 	return q
 }
 
-// GetMerchantParams: query parameters for GetMerchant
-type GetMerchantParams struct {
+// GetParams: query parameters for GetMerchant
+type GetParams struct {
 	// The version of the resource. At the moment, the only supported value is `latest`. When provided and the requested
 	// resource's `change_status` is pending, the resource will be returned with all pending changes applied. When
 	// no changes are pending the resource is returned as is. The `change_status` in the response body will reflect
@@ -559,8 +559,8 @@ type GetMerchantParams struct {
 	Version *string
 }
 
-// QueryValues converts [GetMerchantParams] into [url.Values].
-func (p *GetMerchantParams) QueryValues() url.Values {
+// QueryValues converts [GetParams] into [url.Values].
+func (p *GetParams) QueryValues() url.Values {
 	q := make(url.Values)
 
 	if p.Version != nil {
@@ -730,7 +730,7 @@ func (s *MerchantsService) ListPersons(ctx context.Context, merchantCode string,
 // Get: Retrieve a Merchant
 // Retrieve a merchant.
 // Merchant documentation: https://developer.sumup.com/tools/models/merchant
-func (s *MerchantsService) Get(ctx context.Context, merchantCode string, params GetMerchantParams) (*Merchant, error) {
+func (s *MerchantsService) Get(ctx context.Context, merchantCode string, params GetParams) (*Merchant, error) {
 	path := fmt.Sprintf("/v1/merchants/%v", merchantCode)
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))

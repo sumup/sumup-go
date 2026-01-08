@@ -432,15 +432,15 @@ const (
 	TransactionMixinHistoryPayoutPlanTrueInstallment        TransactionMixinHistoryPayoutPlan = "TRUE_INSTALLMENT"
 )
 
-// RefundTransactionBody: Optional amount for partial refunds of transactions.
-type RefundTransactionBody struct {
+// Refund: Optional amount for partial refunds of transactions.
+type Refund struct {
 	// Amount to be refunded. Eligible amount can't exceed the amount of the transaction and varies based on country
 	// and currency. If you do not specify a value, the system performs a full refund of the transaction.
 	Amount *float32 `json:"amount,omitempty"`
 }
 
-// ListTransactionsParams: query parameters for ListTransactions
-type ListTransactionsParams struct {
+// ListDeprecatedParams: query parameters for ListTransactions
+type ListDeprecatedParams struct {
 	// Filters the results by the latest modification time of resources and returns only transactions that are modified
 	// *at or after* the specified timestamp (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
 	ChangesSince *time.Time
@@ -475,8 +475,8 @@ type ListTransactionsParams struct {
 	Users []string
 }
 
-// QueryValues converts [ListTransactionsParams] into [url.Values].
-func (p *ListTransactionsParams) QueryValues() url.Values {
+// QueryValues converts [ListDeprecatedParams] into [url.Values].
+func (p *ListDeprecatedParams) QueryValues() url.Values {
 	q := make(url.Values)
 
 	if p.ChangesSince != nil {
@@ -530,8 +530,8 @@ func (p *ListTransactionsParams) QueryValues() url.Values {
 	return q
 }
 
-// GetTransactionParams: query parameters for GetTransaction
-type GetTransactionParams struct {
+// GetDeprecatedParams: query parameters for GetTransaction
+type GetDeprecatedParams struct {
 	// Retrieves the transaction resource with the specified transaction ID (the `id` parameter in the transaction resource).
 	ID *string
 	// Retrieves the transaction resource with the specified internal transaction ID (the `internal_id` parameter in
@@ -541,8 +541,8 @@ type GetTransactionParams struct {
 	TransactionCode *string
 }
 
-// QueryValues converts [GetTransactionParams] into [url.Values].
-func (p *GetTransactionParams) QueryValues() url.Values {
+// QueryValues converts [GetDeprecatedParams] into [url.Values].
+func (p *GetDeprecatedParams) QueryValues() url.Values {
 	q := make(url.Values)
 
 	if p.ID != nil {
@@ -560,8 +560,8 @@ func (p *GetTransactionParams) QueryValues() url.Values {
 	return q
 }
 
-// ListTransactionsV21Params: query parameters for ListTransactionsV2.1
-type ListTransactionsV21Params struct {
+// ListParams: query parameters for ListTransactionsV2.1
+type ListParams struct {
 	// Filters the results by the latest modification time of resources and returns only transactions that are modified
 	// *at or after* the specified timestamp (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
 	ChangesSince *time.Time
@@ -598,8 +598,8 @@ type ListTransactionsV21Params struct {
 	Users []string
 }
 
-// QueryValues converts [ListTransactionsV21Params] into [url.Values].
-func (p *ListTransactionsV21Params) QueryValues() url.Values {
+// QueryValues converts [ListParams] into [url.Values].
+func (p *ListParams) QueryValues() url.Values {
 	q := make(url.Values)
 
 	if p.ChangesSince != nil {
@@ -657,8 +657,8 @@ func (p *ListTransactionsV21Params) QueryValues() url.Values {
 	return q
 }
 
-// GetTransactionV21Params: query parameters for GetTransactionV2.1
-type GetTransactionV21Params struct {
+// GetParams: query parameters for GetTransactionV2.1
+type GetParams struct {
 	// Client transaction id.
 	ClientTransactionID *string
 	// External/foreign transaction id (passed by clients).
@@ -672,8 +672,8 @@ type GetTransactionV21Params struct {
 	TransactionCode *string
 }
 
-// QueryValues converts [GetTransactionV21Params] into [url.Values].
-func (p *GetTransactionV21Params) QueryValues() url.Values {
+// QueryValues converts [GetParams] into [url.Values].
+func (p *GetParams) QueryValues() url.Values {
 	q := make(url.Values)
 
 	if p.ClientTransactionID != nil {
@@ -722,7 +722,7 @@ func NewTransactionsService(c *client.Client) *TransactionsService {
 // ListDeprecated: List transactions
 // Lists detailed history of all transactions associated with the merchant profile.
 // Deprecated: this operation is deprecated
-func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListTransactionsParams) (*ListTransactions200Response, error) {
+func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListDeprecatedParams) (*ListTransactions200Response, error) {
 	path := fmt.Sprintf("/v0.1/me/transactions/history")
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
@@ -762,7 +762,7 @@ func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListTra
 //   - `client_transaction_id`
 //
 // Deprecated: this operation is deprecated
-func (s *TransactionsService) GetDeprecated(ctx context.Context, params GetTransactionParams) (*TransactionFull, error) {
+func (s *TransactionsService) GetDeprecated(ctx context.Context, params GetDeprecatedParams) (*TransactionFull, error) {
 	path := fmt.Sprintf("/v0.1/me/transactions")
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
@@ -800,7 +800,7 @@ func (s *TransactionsService) GetDeprecated(ctx context.Context, params GetTrans
 
 // List: List transactions
 // Lists detailed history of all transactions associated with the merchant profile.
-func (s *TransactionsService) List(ctx context.Context, merchantCode string, params ListTransactionsV21Params) (*ListTransactionsV21200Response, error) {
+func (s *TransactionsService) List(ctx context.Context, merchantCode string, params ListParams) (*ListTransactionsV21200Response, error) {
 	path := fmt.Sprintf("/v2.1/merchants/%v/transactions/history", merchantCode)
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
@@ -838,7 +838,7 @@ func (s *TransactionsService) List(ctx context.Context, merchantCode string, par
 //   - `transaction_code`
 //   - `foreign_transaction_id`
 //   - `client_transaction_id`
-func (s *TransactionsService) Get(ctx context.Context, merchantCode string, params GetTransactionV21Params) (*TransactionFull, error) {
+func (s *TransactionsService) Get(ctx context.Context, merchantCode string, params GetParams) (*TransactionFull, error) {
 	path := fmt.Sprintf("/v2.1/merchants/%v/transactions", merchantCode)
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
@@ -876,7 +876,7 @@ func (s *TransactionsService) Get(ctx context.Context, merchantCode string, para
 
 // Refund: Refund a transaction
 // Refunds an identified transaction either in full or partially.
-func (s *TransactionsService) Refund(ctx context.Context, txnID string, body RefundTransactionBody) error {
+func (s *TransactionsService) Refund(ctx context.Context, txnID string, body Refund) error {
 	path := fmt.Sprintf("/v0.1/me/refund/%v", txnID)
 
 	resp, err := s.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))

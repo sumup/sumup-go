@@ -77,14 +77,14 @@ func (e *CreateReaderCheckoutError) Error() string {
 
 var _ error = (*CreateReaderCheckoutError)(nil)
 
-// CreateReaderCheckoutRequest: Reader Checkout
-type CreateReaderCheckoutRequest struct {
+// CreateCheckoutRequest: Reader Checkout
+type CreateCheckoutRequest struct {
 	// Affiliate metadata for the transaction.
 	// It is a field that allow for integrators to track the source of the transaction.
-	Affiliate *CreateReaderCheckoutRequestAffiliate `json:"affiliate,omitempty"`
+	Affiliate *CreateCheckoutRequestAffiliate `json:"affiliate,omitempty"`
 	// The card type of the card used for the transaction.
 	// Is is required only for some countries (e.g: Brazil).
-	CardType *CreateReaderCheckoutRequestCardType `json:"card_type,omitempty"`
+	CardType *CreateCheckoutRequestCardType `json:"card_type,omitempty"`
 	// Description of the checkout to be shown in the Merchant Sales
 	Description *string `json:"description,omitempty"`
 	// Number of installments for the transaction.
@@ -118,12 +118,12 @@ type CreateReaderCheckoutRequest struct {
 	// The amount is represented as an integer value altogether with the currency and the minor unit.
 	//
 	// For example, EUR 1.00 is represented as value 100 with minor unit of 2.
-	TotalAmount CreateReaderCheckoutRequestTotalAmount `json:"total_amount"`
+	TotalAmount CreateCheckoutRequestTotalAmount `json:"total_amount"`
 }
 
-// CreateReaderCheckoutRequestAffiliate: Affiliate metadata for the transaction.
+// CreateCheckoutRequestAffiliate: Affiliate metadata for the transaction.
 // It is a field that allow for integrators to track the source of the transaction.
-type CreateReaderCheckoutRequestAffiliate struct {
+type CreateCheckoutRequestAffiliate struct {
 	// Application ID of the affiliate.
 	// It is a unique identifier for the application and should be set by the integrator in the [Affiliate Keys](https://developer.sumup.com/affiliate-keys) page.
 	AppID string `json:"app_id"`
@@ -136,28 +136,28 @@ type CreateReaderCheckoutRequestAffiliate struct {
 	Key string `json:"key"`
 	// Additional metadata for the transaction.
 	// It is key-value object that can be associated with the transaction.
-	Tags CreateReaderCheckoutRequestAffiliateTags `json:"tags,omitempty"`
+	Tags CreateCheckoutRequestAffiliateTags `json:"tags,omitempty"`
 }
 
-// CreateReaderCheckoutRequestAffiliateTags: Additional metadata for the transaction.
+// CreateCheckoutRequestAffiliateTags: Additional metadata for the transaction.
 // It is key-value object that can be associated with the transaction.
-type CreateReaderCheckoutRequestAffiliateTags map[string]any
+type CreateCheckoutRequestAffiliateTags map[string]any
 
-// CreateReaderCheckoutRequestCardType: The card type of the card used for the transaction.
+// CreateCheckoutRequestCardType: The card type of the card used for the transaction.
 // Is is required only for some countries (e.g: Brazil).
-type CreateReaderCheckoutRequestCardType string
+type CreateCheckoutRequestCardType string
 
 const (
-	CreateReaderCheckoutRequestCardTypeCredit CreateReaderCheckoutRequestCardType = "credit"
-	CreateReaderCheckoutRequestCardTypeDebit  CreateReaderCheckoutRequestCardType = "debit"
+	CreateCheckoutRequestCardTypeCredit CreateCheckoutRequestCardType = "credit"
+	CreateCheckoutRequestCardTypeDebit  CreateCheckoutRequestCardType = "debit"
 )
 
-// CreateReaderCheckoutRequestTotalAmount: Amount structure.
+// CreateCheckoutRequestTotalAmount: Amount structure.
 //
 // The amount is represented as an integer value altogether with the currency and the minor unit.
 //
 // For example, EUR 1.00 is represented as value 100 with minor unit of 2.
-type CreateReaderCheckoutRequestTotalAmount struct {
+type CreateCheckoutRequestTotalAmount struct {
 	// Currency ISO 4217 code
 	Currency string `json:"currency"`
 	// The minor units of the currency.
@@ -450,8 +450,8 @@ func (e *Unauthorized) Error() string {
 
 var _ error = (*Unauthorized)(nil)
 
-// CreateReaderBody is a schema definition.
-type CreateReaderBody struct {
+// Create is a schema definition.
+type Create struct {
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
 	// submit whole metadata. Maximum of 64 parameters are allowed in the object.
 	// Max properties: 64
@@ -466,14 +466,14 @@ type CreateReaderBody struct {
 	PairingCode ReaderPairingCode `json:"pairing_code"`
 }
 
-// CreateReaderCheckoutBody: Reader Checkout
-type CreateReaderCheckoutBody struct {
+// CreateCheckout: Reader Checkout
+type CreateCheckout struct {
 	// Affiliate metadata for the transaction.
 	// It is a field that allow for integrators to track the source of the transaction.
-	Affiliate *CreateReaderCheckoutBodyAffiliate `json:"affiliate,omitempty"`
+	Affiliate *CreateCheckoutAffiliate `json:"affiliate,omitempty"`
 	// The card type of the card used for the transaction.
 	// Is is required only for some countries (e.g: Brazil).
-	CardType *CreateReaderCheckoutBodyCardType `json:"card_type,omitempty"`
+	CardType *CreateCheckoutCardType `json:"card_type,omitempty"`
 	// Description of the checkout to be shown in the Merchant Sales
 	Description *string `json:"description,omitempty"`
 	// Number of installments for the transaction.
@@ -507,12 +507,12 @@ type CreateReaderCheckoutBody struct {
 	// The amount is represented as an integer value altogether with the currency and the minor unit.
 	//
 	// For example, EUR 1.00 is represented as value 100 with minor unit of 2.
-	TotalAmount CreateReaderCheckoutBodyTotalAmount `json:"total_amount"`
+	TotalAmount CreateCheckoutTotalAmount `json:"total_amount"`
 }
 
-// CreateReaderCheckoutBodyAffiliate: Affiliate metadata for the transaction.
+// CreateCheckoutAffiliate: Affiliate metadata for the transaction.
 // It is a field that allow for integrators to track the source of the transaction.
-type CreateReaderCheckoutBodyAffiliate struct {
+type CreateCheckoutAffiliate struct {
 	// Application ID of the affiliate.
 	// It is a unique identifier for the application and should be set by the integrator in the [Affiliate Keys](https://developer.sumup.com/affiliate-keys) page.
 	AppID string `json:"app_id"`
@@ -525,28 +525,28 @@ type CreateReaderCheckoutBodyAffiliate struct {
 	Key string `json:"key"`
 	// Additional metadata for the transaction.
 	// It is key-value object that can be associated with the transaction.
-	Tags CreateReaderCheckoutBodyAffiliateTags `json:"tags,omitempty"`
+	Tags CreateCheckoutAffiliateTags `json:"tags,omitempty"`
 }
 
-// CreateReaderCheckoutBodyAffiliateTags: Additional metadata for the transaction.
+// CreateCheckoutAffiliateTags: Additional metadata for the transaction.
 // It is key-value object that can be associated with the transaction.
-type CreateReaderCheckoutBodyAffiliateTags map[string]any
+type CreateCheckoutAffiliateTags map[string]any
 
-// CreateReaderCheckoutBodyCardType: The card type of the card used for the transaction.
+// CreateCheckoutCardType: The card type of the card used for the transaction.
 // Is is required only for some countries (e.g: Brazil).
-type CreateReaderCheckoutBodyCardType string
+type CreateCheckoutCardType string
 
 const (
-	CreateReaderCheckoutBodyCardTypeCredit CreateReaderCheckoutBodyCardType = "credit"
-	CreateReaderCheckoutBodyCardTypeDebit  CreateReaderCheckoutBodyCardType = "debit"
+	CreateCheckoutCardTypeCredit CreateCheckoutCardType = "credit"
+	CreateCheckoutCardTypeDebit  CreateCheckoutCardType = "debit"
 )
 
-// CreateReaderCheckoutBodyTotalAmount: Amount structure.
+// CreateCheckoutTotalAmount: Amount structure.
 //
 // The amount is represented as an integer value altogether with the currency and the minor unit.
 //
 // For example, EUR 1.00 is represented as value 100 with minor unit of 2.
-type CreateReaderCheckoutBodyTotalAmount struct {
+type CreateCheckoutTotalAmount struct {
 	// Currency ISO 4217 code
 	Currency string `json:"currency"`
 	// The minor units of the currency.
@@ -559,8 +559,8 @@ type CreateReaderCheckoutBodyTotalAmount struct {
 	Value int `json:"value"`
 }
 
-// UpdateReaderBody is a schema definition.
-type UpdateReaderBody struct {
+// Update is a schema definition.
+type Update struct {
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
 	// submit whole metadata. Maximum of 64 parameters are allowed in the object.
 	// Max properties: 64
@@ -570,15 +570,15 @@ type UpdateReaderBody struct {
 	Name *ReaderName `json:"name,omitempty"`
 }
 
-// GetReaderStatusParams: query parameters for GetReaderStatus
-type GetReaderStatusParams struct {
+// GetStatusParams: query parameters for GetReaderStatus
+type GetStatusParams struct {
 	Accept        string
 	Authorization string
 	ContentType   string
 }
 
-// QueryValues converts [GetReaderStatusParams] into [url.Values].
-func (p *GetReaderStatusParams) QueryValues() url.Values {
+// QueryValues converts [GetStatusParams] into [url.Values].
+func (p *GetStatusParams) QueryValues() url.Values {
 	q := make(url.Values)
 
 	q.Set("Accept", p.Accept)
@@ -590,8 +590,8 @@ func (p *GetReaderStatusParams) QueryValues() url.Values {
 	return q
 }
 
-// GetReaderParams: query parameters for GetReader
-type GetReaderParams struct {
+// GetParams: query parameters for GetReader
+type GetParams struct {
 	// Return the reader only if it has been modified after the specified timestamp given in the headers.
 	//
 	// Timestamps are accepted in the following formats:
@@ -602,8 +602,8 @@ type GetReaderParams struct {
 	IfModifiedSince *string
 }
 
-// QueryValues converts [GetReaderParams] into [url.Values].
-func (p *GetReaderParams) QueryValues() url.Values {
+// QueryValues converts [GetParams] into [url.Values].
+func (p *GetParams) QueryValues() url.Values {
 	q := make(url.Values)
 
 	if p.IfModifiedSince != nil {
@@ -652,7 +652,7 @@ func (s *ReadersService) List(ctx context.Context, merchantCode string) (*ListRe
 
 // Create: Create a Reader
 // Create a new Reader for the merchant account.
-func (s *ReadersService) Create(ctx context.Context, merchantCode string, body CreateReaderBody) (*Reader, error) {
+func (s *ReadersService) Create(ctx context.Context, merchantCode string, body Create) (*Reader, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers", merchantCode)
 
 	resp, err := s.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
@@ -790,7 +790,7 @@ func (s *ReadersService) TerminateCheckout(ctx context.Context, merchantCode str
 // * `OFFLINE` – Device disconnected (last state persisted)
 //
 // **Note**: If the target device is a Solo, it must be in version 3.3.39.0 or higher.
-func (s *ReadersService) GetStatus(ctx context.Context, merchantCode string, readerID string, params GetReaderStatusParams) (*StatusResponse, error) {
+func (s *ReadersService) GetStatus(ctx context.Context, merchantCode string, readerID string, params GetStatusParams) (*StatusResponse, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v/status", merchantCode, readerID)
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
@@ -865,7 +865,7 @@ func (s *ReadersService) GetStatus(ctx context.Context, merchantCode string, rea
 // this time, any other checkout for the same device will be rejected.
 //
 // **Note**: If the target device is a Solo, it must be in version 3.3.24.3 or higher.
-func (s *ReadersService) CreateCheckout(ctx context.Context, merchantCode string, readerID string, body CreateReaderCheckoutBody) (*CreateReaderCheckoutResponse, error) {
+func (s *ReadersService) CreateCheckout(ctx context.Context, merchantCode string, readerID string, body CreateCheckout) (*CreateReaderCheckoutResponse, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v/checkout", merchantCode, readerID)
 
 	resp, err := s.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
@@ -957,7 +957,7 @@ func (s *ReadersService) Delete(ctx context.Context, merchantCode string, id Rea
 
 // Get: Retrieve a Reader
 // Retrieve a Reader.
-func (s *ReadersService) Get(ctx context.Context, merchantCode string, id ReaderID, params GetReaderParams) (*Reader, error) {
+func (s *ReadersService) Get(ctx context.Context, merchantCode string, id ReaderID, params GetParams) (*Reader, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, id)
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
@@ -988,7 +988,7 @@ func (s *ReadersService) Get(ctx context.Context, merchantCode string, id Reader
 
 // Update: Update a Reader
 // Update a Reader.
-func (s *ReadersService) Update(ctx context.Context, merchantCode string, id ReaderID, body UpdateReaderBody) (*Reader, error) {
+func (s *ReadersService) Update(ctx context.Context, merchantCode string, id ReaderID, body Update) (*Reader, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, id)
 
 	resp, err := s.c.Call(ctx, http.MethodPatch, path, client.WithJSONBody(body))

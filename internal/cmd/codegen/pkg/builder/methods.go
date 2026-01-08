@@ -125,14 +125,7 @@ func (b *Builder) operationToMethod(method, path string, o *openapi3.Operation) 
 		return nil, fmt.Errorf("get successful response type: %w", err)
 	}
 
-	methodName := strcase.ToCamel(o.OperationID)
-	if ext, ok := o.Extensions["x-codegen"]; ok {
-		//nolint:errcheck // FIXME: type assertion
-		if name, ok := ext.(map[string]any)["method_name"]; ok {
-			//nolint:errcheck // FIXME: type assertion
-			methodName = strcase.ToCamel(name.(string))
-		}
-	}
+	methodName := operationMethodName(o)
 
 	params, err := b.buildPathParams("path", o.Parameters)
 	if err != nil {
@@ -145,7 +138,7 @@ func (b *Builder) operationToMethod(method, path string, o *openapi3.Operation) 
 		if ok && mt.Schema != nil {
 			params = append(params, Parameter{
 				Name: "body",
-				Type: strcase.ToCamel(o.OperationID) + "Body",
+				Type: methodName,
 			})
 			hasBody = true
 		}
@@ -157,7 +150,7 @@ func (b *Builder) operationToMethod(method, path string, o *openapi3.Operation) 
 	}) {
 		queryParams = &Parameter{
 			Name: "params",
-			Type: strcase.ToCamel(o.OperationID) + "Params",
+			Type: methodName + "Params",
 		}
 	}
 
