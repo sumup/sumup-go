@@ -14,7 +14,7 @@ import (
 	"github.com/sumup/sumup-go/shared"
 )
 
-// BadGateway: 502 Bad Gateway
+// 502 Bad Gateway
 type BadGateway struct {
 	Errors BadGatewayErrors `json:"errors"`
 }
@@ -31,7 +31,7 @@ func (e *BadGateway) Error() string {
 
 var _ error = (*BadGateway)(nil)
 
-// BadRequest: 400 Bad Request
+// 400 Bad Request
 type BadRequest struct {
 	Errors BadRequestErrors `json:"errors"`
 }
@@ -44,7 +44,7 @@ type BadRequestErrors struct {
 	Type BadRequestErrorsType `json:"type"`
 }
 
-// BadRequestErrorsType: Key indicating type of error
+// Key indicating type of error
 type BadRequestErrorsType string
 
 const (
@@ -60,7 +60,7 @@ func (e *BadRequest) Error() string {
 
 var _ error = (*BadRequest)(nil)
 
-// CreateReaderCheckoutError: Error description
+// Error description
 type CreateReaderCheckoutError struct {
 	Errors CreateReaderCheckoutErrorErrors `json:"errors"`
 }
@@ -77,14 +77,14 @@ func (e *CreateReaderCheckoutError) Error() string {
 
 var _ error = (*CreateReaderCheckoutError)(nil)
 
-// CreateReaderCheckoutRequest: Reader Checkout
-type CreateReaderCheckoutRequest struct {
+// Reader Checkout
+type CreateCheckoutRequest struct {
 	// Affiliate metadata for the transaction.
 	// It is a field that allow for integrators to track the source of the transaction.
-	Affiliate *CreateReaderCheckoutRequestAffiliate `json:"affiliate,omitempty"`
+	Affiliate *CreateCheckoutRequestAffiliate `json:"affiliate,omitempty"`
 	// The card type of the card used for the transaction.
 	// Is is required only for some countries (e.g: Brazil).
-	CardType *CreateReaderCheckoutRequestCardType `json:"card_type,omitempty"`
+	CardType *CreateCheckoutRequestCardType `json:"card_type,omitempty"`
 	// Description of the checkout to be shown in the Merchant Sales
 	Description *string `json:"description,omitempty"`
 	// Number of installments for the transaction.
@@ -118,12 +118,12 @@ type CreateReaderCheckoutRequest struct {
 	// The amount is represented as an integer value altogether with the currency and the minor unit.
 	//
 	// For example, EUR 1.00 is represented as value 100 with minor unit of 2.
-	TotalAmount CreateReaderCheckoutRequestTotalAmount `json:"total_amount"`
+	TotalAmount CreateCheckoutRequestTotalAmount `json:"total_amount"`
 }
 
-// CreateReaderCheckoutRequestAffiliate: Affiliate metadata for the transaction.
+// Affiliate metadata for the transaction.
 // It is a field that allow for integrators to track the source of the transaction.
-type CreateReaderCheckoutRequestAffiliate struct {
+type CreateCheckoutRequestAffiliate struct {
 	// Application ID of the affiliate.
 	// It is a unique identifier for the application and should be set by the integrator in the [Affiliate Keys](https://developer.sumup.com/affiliate-keys) page.
 	AppID string `json:"app_id"`
@@ -136,28 +136,28 @@ type CreateReaderCheckoutRequestAffiliate struct {
 	Key string `json:"key"`
 	// Additional metadata for the transaction.
 	// It is key-value object that can be associated with the transaction.
-	Tags CreateReaderCheckoutRequestAffiliateTags `json:"tags,omitempty"`
+	Tags CreateCheckoutRequestAffiliateTags `json:"tags,omitempty"`
 }
 
-// CreateReaderCheckoutRequestAffiliateTags: Additional metadata for the transaction.
+// Additional metadata for the transaction.
 // It is key-value object that can be associated with the transaction.
-type CreateReaderCheckoutRequestAffiliateTags map[string]any
+type CreateCheckoutRequestAffiliateTags map[string]any
 
-// CreateReaderCheckoutRequestCardType: The card type of the card used for the transaction.
+// The card type of the card used for the transaction.
 // Is is required only for some countries (e.g: Brazil).
-type CreateReaderCheckoutRequestCardType string
+type CreateCheckoutRequestCardType string
 
 const (
-	CreateReaderCheckoutRequestCardTypeCredit CreateReaderCheckoutRequestCardType = "credit"
-	CreateReaderCheckoutRequestCardTypeDebit  CreateReaderCheckoutRequestCardType = "debit"
+	CreateCheckoutRequestCardTypeCredit CreateCheckoutRequestCardType = "credit"
+	CreateCheckoutRequestCardTypeDebit  CreateCheckoutRequestCardType = "debit"
 )
 
-// CreateReaderCheckoutRequestTotalAmount: Amount structure.
+// Amount structure.
 //
 // The amount is represented as an integer value altogether with the currency and the minor unit.
 //
 // For example, EUR 1.00 is represented as value 100 with minor unit of 2.
-type CreateReaderCheckoutRequestTotalAmount struct {
+type CreateCheckoutRequestTotalAmount struct {
 	// Currency ISO 4217 code
 	Currency string `json:"currency"`
 	// The minor units of the currency.
@@ -183,7 +183,7 @@ type CreateReaderCheckoutResponseData struct {
 	ClientTransactionID string `json:"client_transaction_id"`
 }
 
-// CreateReaderCheckoutUnprocessableEntity: Unprocessable entity
+// Unprocessable entity
 type CreateReaderCheckoutUnprocessableEntity struct {
 	Errors CreateReaderCheckoutUnprocessableEntityErrors `json:"errors"`
 }
@@ -197,7 +197,7 @@ func (e *CreateReaderCheckoutUnprocessableEntity) Error() string {
 
 var _ error = (*CreateReaderCheckoutUnprocessableEntity)(nil)
 
-// CreateReaderTerminateError: Error description
+// Error description
 type CreateReaderTerminateError struct {
 	Errors CreateReaderTerminateErrorErrors `json:"errors"`
 }
@@ -214,7 +214,7 @@ func (e *CreateReaderTerminateError) Error() string {
 
 var _ error = (*CreateReaderTerminateError)(nil)
 
-// CreateReaderTerminateUnprocessableEntity: Unprocessable entity
+// Unprocessable entity
 type CreateReaderTerminateUnprocessableEntity struct {
 	Errors CreateReaderTerminateUnprocessableEntityErrors `json:"errors"`
 }
@@ -228,7 +228,7 @@ func (e *CreateReaderTerminateUnprocessableEntity) Error() string {
 
 var _ error = (*CreateReaderTerminateUnprocessableEntity)(nil)
 
-// GatewayTimeout: 504 Gateway Timeout
+// 504 Gateway Timeout
 type GatewayTimeout struct {
 	Errors GatewayTimeoutErrors `json:"errors"`
 }
@@ -245,7 +245,7 @@ func (e *GatewayTimeout) Error() string {
 
 var _ error = (*GatewayTimeout)(nil)
 
-// InternalServerError: 500 Internal Server Error
+// 500 Internal Server Error
 type InternalServerError struct {
 	Errors InternalServerErrorErrors `json:"errors"`
 }
@@ -262,7 +262,7 @@ func (e *InternalServerError) Error() string {
 
 var _ error = (*InternalServerError)(nil)
 
-// NotFound: 404 Not Found
+// 404 Not Found
 type NotFound struct {
 	Errors NotFoundErrors `json:"errors"`
 }
@@ -279,7 +279,7 @@ func (e *NotFound) Error() string {
 
 var _ error = (*NotFound)(nil)
 
-// Reader: A physical card reader device that can accept in-person payments.
+// A physical card reader device that can accept in-person payments.
 type Reader struct {
 	// The timestamp of when the reader was created.
 	CreatedAt time.Time `json:"created_at"`
@@ -313,7 +313,7 @@ type Reader struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// ReaderDevice: Information about the underlying physical device.
+// Information about the underlying physical device.
 type ReaderDevice struct {
 	// A unique identifier of the physical device (e.g. serial number).
 	Identifier string `json:"identifier"`
@@ -321,7 +321,7 @@ type ReaderDevice struct {
 	Model ReaderDeviceModel `json:"model"`
 }
 
-// ReaderDeviceModel: Identifier of the model of the device.
+// Identifier of the model of the device.
 type ReaderDeviceModel string
 
 const (
@@ -329,7 +329,7 @@ const (
 	ReaderDeviceModelVirtualSolo ReaderDeviceModel = "virtual-solo"
 )
 
-// ReaderID: Unique identifier of the object.
+// Unique identifier of the object.
 //
 // Note that this identifies the instance of the physical devices pairing with your SumUp account. If you [delete](https://developer.sumup.com/api/readers/delete-reader)
 // a reader, and pair the device again, the ID will be different. Do not use this ID to refer to a physical device.
@@ -338,17 +338,17 @@ const (
 // Max length: 30
 type ReaderID string
 
-// ReaderName: Custom human-readable, user-defined name for easier identification of the reader.
+// Custom human-readable, user-defined name for easier identification of the reader.
 // Max length: 500
 type ReaderName string
 
-// ReaderPairingCode: The pairing code is a 8 or 9 character alphanumeric string that is displayed on a SumUp
-// Device after initiating the pairing. It is used to link the physical device to the created pairing.
+// The pairing code is a 8 or 9 character alphanumeric string that is displayed on a SumUp Device after initiating
+// the pairing. It is used to link the physical device to the created pairing.
 // Min length: 8
 // Max length: 9
 type ReaderPairingCode string
 
-// ReaderStatus: The status of the reader object gives information about the current state of the reader.
+// The status of the reader object gives information about the current state of the reader.
 //
 // Possible values:
 //
@@ -365,7 +365,7 @@ const (
 	ReaderStatusUnknown    ReaderStatus = "unknown"
 )
 
-// StatusResponse: Status of a device
+// Status of a device
 type StatusResponse struct {
 	Data StatusResponseData `json:"data"`
 }
@@ -390,7 +390,7 @@ type StatusResponseData struct {
 	Status StatusResponseDataStatus `json:"status"`
 }
 
-// StatusResponseDataConnectionType: Type of connection used by the device
+// Type of connection used by the device
 type StatusResponseDataConnectionType string
 
 const (
@@ -403,7 +403,7 @@ const (
 	StatusResponseDataConnectionTypeWiFi StatusResponseDataConnectionType = "Wi-Fi"
 )
 
-// StatusResponseDataState: Latest state of the device
+// Latest state of the device
 type StatusResponseDataState string
 
 const (
@@ -415,7 +415,7 @@ const (
 	StatusResponseDataStateWaitingForSignature StatusResponseDataState = "WAITING_FOR_SIGNATURE"
 )
 
-// StatusResponseDataStatus: Status of a device
+// Status of a device
 type StatusResponseDataStatus string
 
 const (
@@ -423,7 +423,7 @@ const (
 	StatusResponseDataStatusOnline  StatusResponseDataStatus = "ONLINE"
 )
 
-// Unauthorized: 401 Unauthorized
+// 401 Unauthorized
 type Unauthorized struct {
 	Errors UnauthorizedErrors `json:"errors"`
 }
@@ -436,7 +436,7 @@ type UnauthorizedErrors struct {
 	Type UnauthorizedErrorsType `json:"type"`
 }
 
-// UnauthorizedErrorsType: Key indicating type of error
+// Key indicating type of error
 type UnauthorizedErrorsType string
 
 const (
@@ -450,8 +450,8 @@ func (e *Unauthorized) Error() string {
 
 var _ error = (*Unauthorized)(nil)
 
-// CreateReaderBody is a schema definition.
-type CreateReaderBody struct {
+// Create is a schema definition.
+type Create struct {
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
 	// submit whole metadata. Maximum of 64 parameters are allowed in the object.
 	// Max properties: 64
@@ -466,14 +466,14 @@ type CreateReaderBody struct {
 	PairingCode ReaderPairingCode `json:"pairing_code"`
 }
 
-// CreateReaderCheckoutBody: Reader Checkout
-type CreateReaderCheckoutBody struct {
+// Reader Checkout
+type CreateCheckout struct {
 	// Affiliate metadata for the transaction.
 	// It is a field that allow for integrators to track the source of the transaction.
-	Affiliate *CreateReaderCheckoutBodyAffiliate `json:"affiliate,omitempty"`
+	Affiliate *CreateCheckoutAffiliate `json:"affiliate,omitempty"`
 	// The card type of the card used for the transaction.
 	// Is is required only for some countries (e.g: Brazil).
-	CardType *CreateReaderCheckoutBodyCardType `json:"card_type,omitempty"`
+	CardType *CreateCheckoutCardType `json:"card_type,omitempty"`
 	// Description of the checkout to be shown in the Merchant Sales
 	Description *string `json:"description,omitempty"`
 	// Number of installments for the transaction.
@@ -507,12 +507,12 @@ type CreateReaderCheckoutBody struct {
 	// The amount is represented as an integer value altogether with the currency and the minor unit.
 	//
 	// For example, EUR 1.00 is represented as value 100 with minor unit of 2.
-	TotalAmount CreateReaderCheckoutBodyTotalAmount `json:"total_amount"`
+	TotalAmount CreateCheckoutTotalAmount `json:"total_amount"`
 }
 
-// CreateReaderCheckoutBodyAffiliate: Affiliate metadata for the transaction.
+// Affiliate metadata for the transaction.
 // It is a field that allow for integrators to track the source of the transaction.
-type CreateReaderCheckoutBodyAffiliate struct {
+type CreateCheckoutAffiliate struct {
 	// Application ID of the affiliate.
 	// It is a unique identifier for the application and should be set by the integrator in the [Affiliate Keys](https://developer.sumup.com/affiliate-keys) page.
 	AppID string `json:"app_id"`
@@ -525,28 +525,28 @@ type CreateReaderCheckoutBodyAffiliate struct {
 	Key string `json:"key"`
 	// Additional metadata for the transaction.
 	// It is key-value object that can be associated with the transaction.
-	Tags CreateReaderCheckoutBodyAffiliateTags `json:"tags,omitempty"`
+	Tags CreateCheckoutAffiliateTags `json:"tags,omitempty"`
 }
 
-// CreateReaderCheckoutBodyAffiliateTags: Additional metadata for the transaction.
+// Additional metadata for the transaction.
 // It is key-value object that can be associated with the transaction.
-type CreateReaderCheckoutBodyAffiliateTags map[string]any
+type CreateCheckoutAffiliateTags map[string]any
 
-// CreateReaderCheckoutBodyCardType: The card type of the card used for the transaction.
+// The card type of the card used for the transaction.
 // Is is required only for some countries (e.g: Brazil).
-type CreateReaderCheckoutBodyCardType string
+type CreateCheckoutCardType string
 
 const (
-	CreateReaderCheckoutBodyCardTypeCredit CreateReaderCheckoutBodyCardType = "credit"
-	CreateReaderCheckoutBodyCardTypeDebit  CreateReaderCheckoutBodyCardType = "debit"
+	CreateCheckoutCardTypeCredit CreateCheckoutCardType = "credit"
+	CreateCheckoutCardTypeDebit  CreateCheckoutCardType = "debit"
 )
 
-// CreateReaderCheckoutBodyTotalAmount: Amount structure.
+// Amount structure.
 //
 // The amount is represented as an integer value altogether with the currency and the minor unit.
 //
 // For example, EUR 1.00 is represented as value 100 with minor unit of 2.
-type CreateReaderCheckoutBodyTotalAmount struct {
+type CreateCheckoutTotalAmount struct {
 	// Currency ISO 4217 code
 	Currency string `json:"currency"`
 	// The minor units of the currency.
@@ -559,8 +559,8 @@ type CreateReaderCheckoutBodyTotalAmount struct {
 	Value int `json:"value"`
 }
 
-// UpdateReaderBody is a schema definition.
-type UpdateReaderBody struct {
+// Update is a schema definition.
+type Update struct {
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
 	// submit whole metadata. Maximum of 64 parameters are allowed in the object.
 	// Max properties: 64
@@ -570,15 +570,15 @@ type UpdateReaderBody struct {
 	Name *ReaderName `json:"name,omitempty"`
 }
 
-// GetReaderStatusParams: query parameters for GetReaderStatus
-type GetReaderStatusParams struct {
+// GetStatusParams are query parameters for GetReaderStatus.
+type GetStatusParams struct {
 	Accept        string
 	Authorization string
 	ContentType   string
 }
 
-// QueryValues converts [GetReaderStatusParams] into [url.Values].
-func (p *GetReaderStatusParams) QueryValues() url.Values {
+// QueryValues converts [GetStatusParams] into [url.Values].
+func (p *GetStatusParams) QueryValues() url.Values {
 	q := make(url.Values)
 
 	q.Set("Accept", p.Accept)
@@ -590,8 +590,8 @@ func (p *GetReaderStatusParams) QueryValues() url.Values {
 	return q
 }
 
-// GetReaderParams: query parameters for GetReader
-type GetReaderParams struct {
+// GetParams are query parameters for GetReader.
+type GetParams struct {
 	// Return the reader only if it has been modified after the specified timestamp given in the headers.
 	//
 	// Timestamps are accepted in the following formats:
@@ -602,8 +602,8 @@ type GetReaderParams struct {
 	IfModifiedSince *string
 }
 
-// QueryValues converts [GetReaderParams] into [url.Values].
-func (p *GetReaderParams) QueryValues() url.Values {
+// QueryValues converts [GetParams] into [url.Values].
+func (p *GetParams) QueryValues() url.Values {
 	q := make(url.Values)
 
 	if p.IfModifiedSince != nil {
@@ -626,7 +626,6 @@ func NewReadersService(c *client.Client) *ReadersService {
 	return &ReadersService{c: c}
 }
 
-// List: List Readers
 // List all readers of the merchant.
 func (s *ReadersService) List(ctx context.Context, merchantCode string) (*ListReaders200Response, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers", merchantCode)
@@ -650,9 +649,8 @@ func (s *ReadersService) List(ctx context.Context, merchantCode string) (*ListRe
 	}
 }
 
-// Create: Create a Reader
 // Create a new Reader for the merchant account.
-func (s *ReadersService) Create(ctx context.Context, merchantCode string, body CreateReaderBody) (*Reader, error) {
+func (s *ReadersService) Create(ctx context.Context, merchantCode string, body Create) (*Reader, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers", merchantCode)
 
 	resp, err := s.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
@@ -695,7 +693,6 @@ func (s *ReadersService) Create(ctx context.Context, merchantCode string, body C
 	}
 }
 
-// TerminateCheckout: Terminate a Reader Checkout
 // Terminate a Reader Checkout stops the current transaction on the target device.
 //
 // This process is asynchronous and the actual termination may take some time to be performed on the device.
@@ -769,7 +766,6 @@ func (s *ReadersService) TerminateCheckout(ctx context.Context, merchantCode str
 	}
 }
 
-// GetStatus: Get a Reader Status
 // Provides the last known status for a Reader.
 //
 // This endpoint allows you to retrieve updates from the connected card reader, including the current screen being
@@ -790,7 +786,7 @@ func (s *ReadersService) TerminateCheckout(ctx context.Context, merchantCode str
 // * `OFFLINE` – Device disconnected (last state persisted)
 //
 // **Note**: If the target device is a Solo, it must be in version 3.3.39.0 or higher.
-func (s *ReadersService) GetStatus(ctx context.Context, merchantCode string, readerID string, params GetReaderStatusParams) (*StatusResponse, error) {
+func (s *ReadersService) GetStatus(ctx context.Context, merchantCode string, readerID string, params GetStatusParams) (*StatusResponse, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v/status", merchantCode, readerID)
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
@@ -854,7 +850,6 @@ func (s *ReadersService) GetStatus(ctx context.Context, merchantCode string, rea
 	}
 }
 
-// CreateCheckout: Create a Reader Checkout
 // Creates a Checkout for a Reader.
 //
 // This process is asynchronous and the actual transaction may take some time to be stared on the device.
@@ -865,7 +860,7 @@ func (s *ReadersService) GetStatus(ctx context.Context, merchantCode string, rea
 // this time, any other checkout for the same device will be rejected.
 //
 // **Note**: If the target device is a Solo, it must be in version 3.3.24.3 or higher.
-func (s *ReadersService) CreateCheckout(ctx context.Context, merchantCode string, readerID string, body CreateReaderCheckoutBody) (*CreateReaderCheckoutResponse, error) {
+func (s *ReadersService) CreateCheckout(ctx context.Context, merchantCode string, readerID string, body CreateCheckout) (*CreateReaderCheckoutResponse, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v/checkout", merchantCode, readerID)
 
 	resp, err := s.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
@@ -929,7 +924,6 @@ func (s *ReadersService) CreateCheckout(ctx context.Context, merchantCode string
 	}
 }
 
-// Delete: Delete a reader
 // Delete a reader.
 func (s *ReadersService) Delete(ctx context.Context, merchantCode string, id ReaderID) error {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, id)
@@ -955,9 +949,8 @@ func (s *ReadersService) Delete(ctx context.Context, merchantCode string, id Rea
 	}
 }
 
-// Get: Retrieve a Reader
 // Retrieve a Reader.
-func (s *ReadersService) Get(ctx context.Context, merchantCode string, id ReaderID, params GetReaderParams) (*Reader, error) {
+func (s *ReadersService) Get(ctx context.Context, merchantCode string, id ReaderID, params GetParams) (*Reader, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, id)
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
@@ -986,9 +979,8 @@ func (s *ReadersService) Get(ctx context.Context, merchantCode string, id Reader
 	}
 }
 
-// Update: Update a Reader
 // Update a Reader.
-func (s *ReadersService) Update(ctx context.Context, merchantCode string, id ReaderID, body UpdateReaderBody) (*Reader, error) {
+func (s *ReadersService) Update(ctx context.Context, merchantCode string, id ReaderID, body Update) (*Reader, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, id)
 
 	resp, err := s.c.Call(ctx, http.MethodPatch, path, client.WithJSONBody(body))

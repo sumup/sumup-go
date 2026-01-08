@@ -117,7 +117,7 @@ func main() {
 
 		client := sumup.NewClient(client.WithAPIKey(token.AccessToken))
 
-		merchant, err := client.Merchants.Get(r.Context(), defaultMerchantCode, merchants.GetMerchantParams{})
+		merchant, err := client.Merchants.Get(r.Context(), defaultMerchantCode, merchants.GetParams{})
 		if err != nil {
 			log.Printf("get merchant information: %v\n", err)
 			w.WriteHeader(http.StatusInternalServerError)

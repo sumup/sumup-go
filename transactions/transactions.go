@@ -16,7 +16,7 @@ import (
 	"github.com/sumup/sumup-go/shared"
 )
 
-// CardResponse: Details of the payment card.
+// Details of the payment card.
 type CardResponse struct {
 	// Last 4 digits of the payment card number.
 	// Read only
@@ -27,7 +27,7 @@ type CardResponse struct {
 	Type *shared.CardType `json:"type,omitempty"`
 }
 
-// EntryModeFilter: Entry mode value accepted by the `entry_modes[]` filter.
+// Entry mode value accepted by the `entry_modes[]` filter.
 type EntryModeFilter string
 
 const (
@@ -84,16 +84,15 @@ type Event struct {
 	Type *shared.EventType `json:"type,omitempty"`
 }
 
-// HorizontalAccuracy: Indication of the precision of the geographical position received from the payment terminal.
+// Indication of the precision of the geographical position received from the payment terminal.
 type HorizontalAccuracy float32
 
-// Lat: Latitude value from the coordinates of the payment location (as received from the payment terminal reader).
-//
+// Latitude value from the coordinates of the payment location (as received from the payment terminal reader).
 // Min: 0
 // Max: 90
 type Lat float32
 
-// Link: Details of a link to a related resource.
+// Details of a link to a related resource.
 type Link struct {
 	// URL for accessing the related resource.
 	// Format: uri
@@ -119,13 +118,12 @@ type LinkRefund struct {
 	Type *string `json:"type,omitempty"`
 }
 
-// Lon: Longitude value from the coordinates of the payment location (as received from the payment terminal reader).
-//
+// Longitude value from the coordinates of the payment location (as received from the payment terminal reader).
 // Min: 0
 // Max: 180
 type Lon float32
 
-// Product: Details of the product for which the payment is made.
+// Details of the product for which the payment is made.
 type Product struct {
 	// Name of the product from the merchant's catalog.
 	Name *string `json:"name,omitempty"`
@@ -151,7 +149,7 @@ type Product struct {
 	VATRate *float32 `json:"vat_rate,omitempty"`
 }
 
-// TransactionEvent: Details of a transaction event.
+// Details of a transaction event.
 type TransactionEvent struct {
 	// Amount of the event.
 	Amount *shared.AmountEvent `json:"amount,omitempty"`
@@ -258,7 +256,7 @@ type TransactionFull struct {
 	VerificationMethod *TransactionFullVerificationMethod `json:"verification_method,omitempty"`
 }
 
-// TransactionFullStatus: Current status of the transaction.
+// Current status of the transaction.
 type TransactionFullStatus string
 
 const (
@@ -268,7 +266,7 @@ const (
 	TransactionFullStatusSuccessful TransactionFullStatus = "SUCCESSFUL"
 )
 
-// TransactionFullPayoutPlan: Payout plan of the registered user at the time when the transaction was made.
+// Payout plan of the registered user at the time when the transaction was made.
 type TransactionFullPayoutPlan string
 
 const (
@@ -277,7 +275,7 @@ const (
 	TransactionFullPayoutPlanTrueInstallment        TransactionFullPayoutPlan = "TRUE_INSTALLMENT"
 )
 
-// TransactionFullLocation: Details of the payment location as received from the payment terminal.
+// Details of the payment location as received from the payment terminal.
 type TransactionFullLocation struct {
 	// Indication of the precision of the geographical position received from the payment terminal.
 	HorizontalAccuracy *HorizontalAccuracy `json:"horizontal_accuracy,omitempty"`
@@ -291,7 +289,7 @@ type TransactionFullLocation struct {
 	Lon *Lon `json:"lon,omitempty"`
 }
 
-// TransactionFullPayoutType: Payout type for the transaction.
+// Payout type for the transaction.
 type TransactionFullPayoutType string
 
 const (
@@ -300,7 +298,7 @@ const (
 	TransactionFullPayoutTypePrepaidCard TransactionFullPayoutType = "PREPAID_CARD"
 )
 
-// TransactionFullSimplePaymentType: Simple name of the payment type.
+// Simple name of the payment type.
 type TransactionFullSimplePaymentType string
 
 const (
@@ -313,7 +311,7 @@ const (
 	TransactionFullSimplePaymentTypeMoto              TransactionFullSimplePaymentType = "MOTO"
 )
 
-// TransactionFullSimpleStatus: Status generated from the processing status and the latest transaction state.
+// Status generated from the processing status and the latest transaction state.
 type TransactionFullSimpleStatus string
 
 const (
@@ -328,7 +326,7 @@ const (
 	TransactionFullSimpleStatusSuccessful    TransactionFullSimpleStatus = "SUCCESSFUL"
 )
 
-// TransactionFullVerificationMethod: Verification method used for the transaction.
+// Verification method used for the transaction.
 type TransactionFullVerificationMethod string
 
 const (
@@ -382,7 +380,7 @@ type TransactionHistory struct {
 	User *string `json:"user,omitempty"`
 }
 
-// TransactionHistoryStatus: Current status of the transaction.
+// Current status of the transaction.
 type TransactionHistoryStatus string
 
 const (
@@ -392,7 +390,7 @@ const (
 	TransactionHistoryStatusSuccessful TransactionHistoryStatus = "SUCCESSFUL"
 )
 
-// TransactionHistoryPayoutPlan: Payout plan of the registered user at the time when the transaction was made.
+// Payout plan of the registered user at the time when the transaction was made.
 type TransactionHistoryPayoutPlan string
 
 const (
@@ -401,7 +399,7 @@ const (
 	TransactionHistoryPayoutPlanTrueInstallment        TransactionHistoryPayoutPlan = "TRUE_INSTALLMENT"
 )
 
-// TransactionHistoryType: Type of the transaction for the registered user specified in the `user` property.
+// Type of the transaction for the registered user specified in the `user` property.
 type TransactionHistoryType string
 
 const (
@@ -422,8 +420,7 @@ type TransactionMixinHistory struct {
 	ProductSummary *string `json:"product_summary,omitempty"`
 }
 
-// TransactionMixinHistoryPayoutPlan: Payout plan of the registered user at the time when the transaction was
-// made.
+// Payout plan of the registered user at the time when the transaction was made.
 type TransactionMixinHistoryPayoutPlan string
 
 const (
@@ -432,15 +429,15 @@ const (
 	TransactionMixinHistoryPayoutPlanTrueInstallment        TransactionMixinHistoryPayoutPlan = "TRUE_INSTALLMENT"
 )
 
-// RefundTransactionBody: Optional amount for partial refunds of transactions.
-type RefundTransactionBody struct {
+// Optional amount for partial refunds of transactions.
+type Refund struct {
 	// Amount to be refunded. Eligible amount can't exceed the amount of the transaction and varies based on country
 	// and currency. If you do not specify a value, the system performs a full refund of the transaction.
 	Amount *float32 `json:"amount,omitempty"`
 }
 
-// ListTransactionsParams: query parameters for ListTransactions
-type ListTransactionsParams struct {
+// ListDeprecatedParams are query parameters for ListTransactions.
+type ListDeprecatedParams struct {
 	// Filters the results by the latest modification time of resources and returns only transactions that are modified
 	// *at or after* the specified timestamp (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
 	ChangesSince *time.Time
@@ -475,8 +472,8 @@ type ListTransactionsParams struct {
 	Users []string
 }
 
-// QueryValues converts [ListTransactionsParams] into [url.Values].
-func (p *ListTransactionsParams) QueryValues() url.Values {
+// QueryValues converts [ListDeprecatedParams] into [url.Values].
+func (p *ListDeprecatedParams) QueryValues() url.Values {
 	q := make(url.Values)
 
 	if p.ChangesSince != nil {
@@ -530,8 +527,8 @@ func (p *ListTransactionsParams) QueryValues() url.Values {
 	return q
 }
 
-// GetTransactionParams: query parameters for GetTransaction
-type GetTransactionParams struct {
+// GetDeprecatedParams are query parameters for GetTransaction.
+type GetDeprecatedParams struct {
 	// Retrieves the transaction resource with the specified transaction ID (the `id` parameter in the transaction resource).
 	ID *string
 	// Retrieves the transaction resource with the specified internal transaction ID (the `internal_id` parameter in
@@ -541,8 +538,8 @@ type GetTransactionParams struct {
 	TransactionCode *string
 }
 
-// QueryValues converts [GetTransactionParams] into [url.Values].
-func (p *GetTransactionParams) QueryValues() url.Values {
+// QueryValues converts [GetDeprecatedParams] into [url.Values].
+func (p *GetDeprecatedParams) QueryValues() url.Values {
 	q := make(url.Values)
 
 	if p.ID != nil {
@@ -560,8 +557,8 @@ func (p *GetTransactionParams) QueryValues() url.Values {
 	return q
 }
 
-// ListTransactionsV21Params: query parameters for ListTransactionsV2.1
-type ListTransactionsV21Params struct {
+// ListParams are query parameters for ListTransactionsV2.1.
+type ListParams struct {
 	// Filters the results by the latest modification time of resources and returns only transactions that are modified
 	// *at or after* the specified timestamp (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
 	ChangesSince *time.Time
@@ -598,8 +595,8 @@ type ListTransactionsV21Params struct {
 	Users []string
 }
 
-// QueryValues converts [ListTransactionsV21Params] into [url.Values].
-func (p *ListTransactionsV21Params) QueryValues() url.Values {
+// QueryValues converts [ListParams] into [url.Values].
+func (p *ListParams) QueryValues() url.Values {
 	q := make(url.Values)
 
 	if p.ChangesSince != nil {
@@ -657,8 +654,8 @@ func (p *ListTransactionsV21Params) QueryValues() url.Values {
 	return q
 }
 
-// GetTransactionV21Params: query parameters for GetTransactionV2.1
-type GetTransactionV21Params struct {
+// GetParams are query parameters for GetTransactionV2.1.
+type GetParams struct {
 	// Client transaction id.
 	ClientTransactionID *string
 	// External/foreign transaction id (passed by clients).
@@ -672,8 +669,8 @@ type GetTransactionV21Params struct {
 	TransactionCode *string
 }
 
-// QueryValues converts [GetTransactionV21Params] into [url.Values].
-func (p *GetTransactionV21Params) QueryValues() url.Values {
+// QueryValues converts [GetParams] into [url.Values].
+func (p *GetParams) QueryValues() url.Values {
 	q := make(url.Values)
 
 	if p.ClientTransactionID != nil {
@@ -719,10 +716,9 @@ func NewTransactionsService(c *client.Client) *TransactionsService {
 	return &TransactionsService{c: c}
 }
 
-// ListDeprecated: List transactions
 // Lists detailed history of all transactions associated with the merchant profile.
 // Deprecated: this operation is deprecated
-func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListTransactionsParams) (*ListTransactions200Response, error) {
+func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListDeprecatedParams) (*ListTransactions200Response, error) {
 	path := fmt.Sprintf("/v0.1/me/transactions/history")
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
@@ -751,7 +747,6 @@ func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListTra
 	}
 }
 
-// GetDeprecated: Retrieve a transaction
 // Retrieves the full details of an identified transaction. The transaction resource is identified by a query
 // parameter and *one* of following parameters is required:
 //
@@ -762,7 +757,7 @@ func (s *TransactionsService) ListDeprecated(ctx context.Context, params ListTra
 //   - `client_transaction_id`
 //
 // Deprecated: this operation is deprecated
-func (s *TransactionsService) GetDeprecated(ctx context.Context, params GetTransactionParams) (*TransactionFull, error) {
+func (s *TransactionsService) GetDeprecated(ctx context.Context, params GetDeprecatedParams) (*TransactionFull, error) {
 	path := fmt.Sprintf("/v0.1/me/transactions")
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
@@ -798,9 +793,8 @@ func (s *TransactionsService) GetDeprecated(ctx context.Context, params GetTrans
 	}
 }
 
-// List: List transactions
 // Lists detailed history of all transactions associated with the merchant profile.
-func (s *TransactionsService) List(ctx context.Context, merchantCode string, params ListTransactionsV21Params) (*ListTransactionsV21200Response, error) {
+func (s *TransactionsService) List(ctx context.Context, merchantCode string, params ListParams) (*ListTransactionsV21200Response, error) {
 	path := fmt.Sprintf("/v2.1/merchants/%v/transactions/history", merchantCode)
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
@@ -829,7 +823,6 @@ func (s *TransactionsService) List(ctx context.Context, merchantCode string, par
 	}
 }
 
-// Get: Retrieve a transaction
 // Retrieves the full details of an identified transaction. The transaction resource is identified by a query
 // parameter and *one* of following parameters is required:
 //
@@ -838,7 +831,7 @@ func (s *TransactionsService) List(ctx context.Context, merchantCode string, par
 //   - `transaction_code`
 //   - `foreign_transaction_id`
 //   - `client_transaction_id`
-func (s *TransactionsService) Get(ctx context.Context, merchantCode string, params GetTransactionV21Params) (*TransactionFull, error) {
+func (s *TransactionsService) Get(ctx context.Context, merchantCode string, params GetParams) (*TransactionFull, error) {
 	path := fmt.Sprintf("/v2.1/merchants/%v/transactions", merchantCode)
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
@@ -874,9 +867,8 @@ func (s *TransactionsService) Get(ctx context.Context, merchantCode string, para
 	}
 }
 
-// Refund: Refund a transaction
 // Refunds an identified transaction either in full or partially.
-func (s *TransactionsService) Refund(ctx context.Context, txnID string, body RefundTransactionBody) error {
+func (s *TransactionsService) Refund(ctx context.Context, txnID string, body Refund) error {
 	path := fmt.Sprintf("/v0.1/me/refund/%v", txnID)
 
 	resp, err := s.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))

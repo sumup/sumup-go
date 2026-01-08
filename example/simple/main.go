@@ -11,7 +11,7 @@ import (
 func main() {
 	client := sumup.NewClient()
 
-	account, err := client.Merchant.Get(context.Background(), merchant.GetAccountParams{})
+	account, err := client.Merchant.Get(context.Background(), merchant.GetParams{})
 	if err != nil {
 		log.Printf("[ERROR] get merchant account: %v", err)
 		return

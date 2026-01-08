@@ -21,7 +21,7 @@ type Customer struct {
 	PersonalDetails *shared.PersonalDetails `json:"personal_details,omitempty"`
 }
 
-// PaymentInstrumentResponse: Payment Instrument Response
+// Payment Instrument Response
 type PaymentInstrumentResponse struct {
 	// Indicates whether the payment instrument is active and can be used for payments. To deactivate it, send a
 	// `DELETE` request to the resource endpoint.
@@ -41,7 +41,7 @@ type PaymentInstrumentResponse struct {
 	Type *PaymentInstrumentResponseType `json:"type,omitempty"`
 }
 
-// PaymentInstrumentResponseCard: Details of the payment card.
+// Details of the payment card.
 type PaymentInstrumentResponseCard struct {
 	// Last 4 digits of the payment card number.
 	// Read only
@@ -52,23 +52,23 @@ type PaymentInstrumentResponseCard struct {
 	Type *shared.CardType `json:"type,omitempty"`
 }
 
-// PaymentInstrumentResponseType: Type of the payment instrument.
+// Type of the payment instrument.
 type PaymentInstrumentResponseType string
 
 const (
 	PaymentInstrumentResponseTypeCard PaymentInstrumentResponseType = "card"
 )
 
-// CreateCustomerBody is a schema definition.
-type CreateCustomerBody struct {
+// Create is a schema definition.
+type Create struct {
 	// Unique ID of the customer.
 	CustomerID string `json:"customer_id"`
 	// Personal details for the customer.
 	PersonalDetails *shared.PersonalDetails `json:"personal_details,omitempty"`
 }
 
-// UpdateCustomerBody is a schema definition.
-type UpdateCustomerBody struct {
+// Update is a schema definition.
+type Update struct {
 	// Personal details for the customer.
 	PersonalDetails *shared.PersonalDetails `json:"personal_details,omitempty"`
 }
@@ -84,9 +84,8 @@ func NewCustomersService(c *client.Client) *CustomersService {
 	return &CustomersService{c: c}
 }
 
-// Create: Create a customer
 // Creates a new saved customer resource which you can later manipulate and save payment instruments to.
-func (s *CustomersService) Create(ctx context.Context, body CreateCustomerBody) (*Customer, error) {
+func (s *CustomersService) Create(ctx context.Context, body Create) (*Customer, error) {
 	path := fmt.Sprintf("/v0.1/customers")
 
 	resp, err := s.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
@@ -129,7 +128,6 @@ func (s *CustomersService) Create(ctx context.Context, body CreateCustomerBody) 
 	}
 }
 
-// ListPaymentInstruments: List payment instruments
 // Lists all payment instrument resources that are saved for an identified customer.
 func (s *CustomersService) ListPaymentInstruments(ctx context.Context, customerID string) (*ListPaymentInstruments200Response, error) {
 	path := fmt.Sprintf("/v0.1/customers/%v/payment-instruments", customerID)
@@ -174,7 +172,6 @@ func (s *CustomersService) ListPaymentInstruments(ctx context.Context, customerI
 	}
 }
 
-// Get: Retrieve a customer
 // Retrieves an identified saved customer resource through the unique `customer_id` parameter, generated upon
 // customer creation.
 func (s *CustomersService) Get(ctx context.Context, customerID string) (*Customer, error) {
@@ -220,12 +217,11 @@ func (s *CustomersService) Get(ctx context.Context, customerID string) (*Custome
 	}
 }
 
-// Update: Update a customer
 // Updates an identified saved customer resource's personal details.
 //
 // The request only overwrites the parameters included in the request, all other parameters will remain with
 // their initially assigned values.
-func (s *CustomersService) Update(ctx context.Context, customerID string, body UpdateCustomerBody) (*Customer, error) {
+func (s *CustomersService) Update(ctx context.Context, customerID string, body Update) (*Customer, error) {
 	path := fmt.Sprintf("/v0.1/customers/%v", customerID)
 
 	resp, err := s.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))
@@ -268,7 +264,6 @@ func (s *CustomersService) Update(ctx context.Context, customerID string, body U
 	}
 }
 
-// DeactivatePaymentInstrument: Deactivate a payment instrument
 // Deactivates an identified card payment instrument resource for a customer.
 func (s *CustomersService) DeactivatePaymentInstrument(ctx context.Context, customerID string, token string) error {
 	path := fmt.Sprintf("/v0.1/customers/%v/payment-instruments/%v", customerID, token)

@@ -13,7 +13,7 @@ import (
 	"github.com/sumup/sumup-go/shared"
 )
 
-// Role: A custom role that can be used to assign set of permissions to members.
+// A custom role that can be used to assign set of permissions to members.
 type Role struct {
 	// The timestamp of when the role was created.
 	CreatedAt time.Time `json:"created_at"`
@@ -36,8 +36,8 @@ type Role struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// CreateMerchantRoleBody is a schema definition.
-type CreateMerchantRoleBody struct {
+// Create is a schema definition.
+type Create struct {
 	// User-defined description of the role.
 	Description *string `json:"description,omitempty"`
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
@@ -51,8 +51,8 @@ type CreateMerchantRoleBody struct {
 	Permissions []string `json:"permissions"`
 }
 
-// UpdateMerchantRoleBody is a schema definition.
-type UpdateMerchantRoleBody struct {
+// Update is a schema definition.
+type Update struct {
 	// User-defined description of the role.
 	Description *string `json:"description,omitempty"`
 	// User-defined name of the role.
@@ -75,7 +75,6 @@ func NewRolesService(c *client.Client) *RolesService {
 	return &RolesService{c: c}
 }
 
-// List: List roles
 // List merchant's custom roles.
 func (s *RolesService) List(ctx context.Context, merchantCode string) (*ListMerchantRoles200Response, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/roles", merchantCode)
@@ -106,10 +105,9 @@ func (s *RolesService) List(ctx context.Context, merchantCode string) (*ListMerc
 	}
 }
 
-// Create: Create a role
 // Create a custom role for the merchant. Roles are defined by the set of permissions that they grant to the
 // members that they are assigned to.
-func (s *RolesService) Create(ctx context.Context, merchantCode string, body CreateMerchantRoleBody) (*Role, error) {
+func (s *RolesService) Create(ctx context.Context, merchantCode string, body Create) (*Role, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/roles", merchantCode)
 
 	resp, err := s.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
@@ -145,7 +143,6 @@ func (s *RolesService) Create(ctx context.Context, merchantCode string, body Cre
 	}
 }
 
-// Delete: Delete a role
 // Delete a custom role.
 func (s *RolesService) Delete(ctx context.Context, merchantCode string, roleID string) error {
 	path := fmt.Sprintf("/v0.1/merchants/%v/roles/%v", merchantCode, roleID)
@@ -178,7 +175,6 @@ func (s *RolesService) Delete(ctx context.Context, merchantCode string, roleID s
 	}
 }
 
-// Get: Retrieve a role
 // Retrieve a custom role by ID.
 func (s *RolesService) Get(ctx context.Context, merchantCode string, roleID string) (*Role, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/roles/%v", merchantCode, roleID)
@@ -209,9 +205,8 @@ func (s *RolesService) Get(ctx context.Context, merchantCode string, roleID stri
 	}
 }
 
-// Update: Update a role
 // Update a custom role.
-func (s *RolesService) Update(ctx context.Context, merchantCode string, roleID string, body UpdateMerchantRoleBody) (*Role, error) {
+func (s *RolesService) Update(ctx context.Context, merchantCode string, roleID string, body Update) (*Role, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/roles/%v", merchantCode, roleID)
 
 	resp, err := s.c.Call(ctx, http.MethodPatch, path, client.WithJSONBody(body))

@@ -1,6 +1,7 @@
 package builder
 
 import (
+	"cmp"
 	"fmt"
 	"slices"
 	"strings"
@@ -12,13 +13,7 @@ import (
 func operationGodoc(name string, operation *openapi3.Operation) string {
 	out := new(strings.Builder)
 
-	if operation.Summary != "" {
-		fmt.Fprintf(out, "%s: %s", name, operation.Summary)
-	} else {
-		fmt.Fprint(out, name)
-	}
-
-	fmt.Fprintf(out, "\n%s", operation.Description)
+	fmt.Fprintf(out, cmp.Or(operation.Description, operation.Summary, name))
 
 	if operation.ExternalDocs != nil {
 		extDescription := operation.ExternalDocs.Description
@@ -43,7 +38,7 @@ func operationGodoc(name string, operation *openapi3.Operation) string {
 // operationParamsGodoc creates godoc comment for a struct representing
 // parameters of an operation.
 func operationParamsGodoc(name string, operation *openapi3.Operation) string {
-	return formatGodoc(name + ": query parameters for " + operation.OperationID)
+	return formatGodoc(fmt.Sprintf("%s are query parameters for %s.", name, operation.OperationID))
 }
 
 // schemaGodoc creates godoc for a schema.
@@ -51,7 +46,7 @@ func schemaGodoc(name string, schema *openapi3.Schema) string {
 	out := new(strings.Builder)
 
 	if schema.Description != "" {
-		fmt.Fprintf(out, "%s: %s", name, schema.Description)
+		fmt.Fprintf(out, schema.Description)
 	} else {
 		fmt.Fprintf(out, "%s is a schema definition.", name)
 	}

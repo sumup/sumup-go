@@ -18,7 +18,7 @@ func (b *Builder) schemasToTypes(schemas []*openapi3.SchemaRef, errorSchemas map
 
 	for _, s := range schemas {
 		_, isErr := errorSchemas[s.Ref]
-		name := strcase.ToCamel(strings.TrimPrefix(s.Ref, "#/components/schemas/"))
+		name := b.schemaTypeName(s.Ref)
 		typeTpl := b.generateSchemaComponents(name, s, isErr)
 		allTypes = append(allTypes, typeTpl...)
 	}
@@ -85,13 +85,12 @@ func (b *Builder) pathsToBodyTypes(paths *openapi3.Paths) []Writable {
 		slices.Sort(operationKeys)
 		for _, method := range operationKeys {
 			opSpec := operations[method]
-			operationName := strcase.ToCamel(opSpec.OperationID)
+			operationName := operationMethodName(opSpec)
 
 			if opSpec.RequestBody != nil {
 				mt, ok := opSpec.RequestBody.Value.Content["application/json"]
 				if ok && mt.Schema != nil {
-					name := operationName + "Body"
-					bodyObject, additionalTypes := b.createObject(mt.Schema.Value, name)
+					bodyObject, additionalTypes := b.createObject(mt.Schema.Value, operationName)
 					paramTypes = append(paramTypes, bodyObject)
 					paramTypes = append(paramTypes, additionalTypes...)
 				}
@@ -122,7 +121,7 @@ func (b *Builder) pathsToParamTypes(paths *openapi3.Paths) []Writable {
 		slices.Sort(operationKeys)
 		for _, method := range operationKeys {
 			opSpec := operations[method]
-			operationName := strcase.ToCamel(opSpec.OperationID)
+			operationName := operationMethodName(opSpec)
 
 			if len(opSpec.Parameters) > 0 {
 				fields := make([]StructField, 0)

@@ -15,8 +15,8 @@ import (
 	"github.com/sumup/sumup-go/shared"
 )
 
-// Membership: A membership associates a user with a resource, memberships is defined by user, resource, resource
-// type, and associated roles.
+// A membership associates a user with a resource, memberships is defined by user, resource, resource type, and
+// associated roles.
 type Membership struct {
 	// Object attributes that are modifiable only by SumUp applications.
 	Attributes shared.Attributes `json:"attributes,omitempty"`
@@ -51,7 +51,7 @@ type Membership struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// MembershipResource: Information about the resource the membership is in.
+// Information about the resource the membership is in.
 type MembershipResource struct {
 	// Object attributes that are modifiable only by SumUp applications.
 	Attributes shared.Attributes `json:"attributes,omitempty"`
@@ -74,14 +74,14 @@ type MembershipResource struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// ResourceType: The type of the membership resource.
+// The type of the membership resource.
 // Possible values are:
 // * `merchant` - merchant account(s)
 // * `organization` - organization(s)
 type ResourceType string
 
-// ListMembershipsParams: query parameters for ListMemberships
-type ListMembershipsParams struct {
+// ListParams are query parameters for ListMemberships.
+type ListParams struct {
 	// Filter memberships by resource kind.
 	Kind *ResourceType
 	// Maximum number of members to return.
@@ -108,8 +108,8 @@ type ListMembershipsParams struct {
 	Status *shared.MembershipStatus
 }
 
-// QueryValues converts [ListMembershipsParams] into [url.Values].
-func (p *ListMembershipsParams) QueryValues() url.Values {
+// QueryValues converts [ListParams] into [url.Values].
+func (p *ListParams) QueryValues() url.Values {
 	q := make(url.Values)
 
 	if p.Kind != nil {
@@ -169,9 +169,8 @@ func NewMembershipsService(c *client.Client) *MembershipsService {
 	return &MembershipsService{c: c}
 }
 
-// List: List memberships
 // List memberships of the current user.
-func (s *MembershipsService) List(ctx context.Context, params ListMembershipsParams) (*ListMemberships200Response, error) {
+func (s *MembershipsService) List(ctx context.Context, params ListParams) (*ListMemberships200Response, error) {
 	path := fmt.Sprintf("/v0.1/memberships")
 
 	resp, err := s.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))

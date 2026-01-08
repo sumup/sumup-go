@@ -15,7 +15,7 @@ import (
 	"github.com/sumup/sumup-go/shared"
 )
 
-// Operator: Operator account for a merchant.
+// Operator account for a merchant.
 type Operator struct {
 	AccountType OperatorAccountType `json:"account_type"`
 	// The timestamp of when the operator was created.
@@ -39,7 +39,7 @@ const (
 	OperatorAccountTypeOperator OperatorAccountType = "operator"
 )
 
-// Permissions: Permissions assigned to an operator or user.
+// Permissions assigned to an operator or user.
 type Permissions struct {
 	Admin                      bool `json:"admin"`
 	CreateMotoPayments         bool `json:"create_moto_payments"`
@@ -48,45 +48,45 @@ type Permissions struct {
 	RefundTransactions         bool `json:"refund_transactions"`
 }
 
-// CreateSubAccountBody is a schema definition.
-type CreateSubAccountBody struct {
+// CreateSubAccount is a schema definition.
+type CreateSubAccount struct {
 	Nickname *string `json:"nickname,omitempty"`
 	// Min length: 8
-	Password    string                           `json:"password"`
-	Permissions *CreateSubAccountBodyPermissions `json:"permissions,omitempty"`
+	Password    string                       `json:"password"`
+	Permissions *CreateSubAccountPermissions `json:"permissions,omitempty"`
 	// Format: email
 	Username string `json:"username"`
 }
 
-// CreateSubAccountBodyPermissions is a schema definition.
-type CreateSubAccountBodyPermissions struct {
+// CreateSubAccountPermissions is a schema definition.
+type CreateSubAccountPermissions struct {
 	CreateMotoPayments         *bool `json:"create_moto_payments,omitempty"`
 	CreateReferral             *bool `json:"create_referral,omitempty"`
 	FullTransactionHistoryView *bool `json:"full_transaction_history_view,omitempty"`
 	RefundTransactions         *bool `json:"refund_transactions,omitempty"`
 }
 
-// UpdateSubAccountBody is a schema definition.
-type UpdateSubAccountBody struct {
+// UpdateSubAccount is a schema definition.
+type UpdateSubAccount struct {
 	Disabled *bool   `json:"disabled,omitempty"`
 	Nickname *string `json:"nickname,omitempty"`
 	// Min length: 8
-	Password    *string                          `json:"password,omitempty"`
-	Permissions *UpdateSubAccountBodyPermissions `json:"permissions,omitempty"`
+	Password    *string                      `json:"password,omitempty"`
+	Permissions *UpdateSubAccountPermissions `json:"permissions,omitempty"`
 	// Format: email
 	// Max length: 256
 	Username *string `json:"username,omitempty"`
 }
 
-// UpdateSubAccountBodyPermissions is a schema definition.
-type UpdateSubAccountBodyPermissions struct {
+// UpdateSubAccountPermissions is a schema definition.
+type UpdateSubAccountPermissions struct {
 	CreateMotoPayments         *bool `json:"create_moto_payments,omitempty"`
 	CreateReferral             *bool `json:"create_referral,omitempty"`
 	FullTransactionHistoryView *bool `json:"full_transaction_history_view,omitempty"`
 	RefundTransactions         *bool `json:"refund_transactions,omitempty"`
 }
 
-// ListSubAccountsParams: query parameters for ListSubAccounts
+// ListSubAccountsParams are query parameters for ListSubAccounts.
 type ListSubAccountsParams struct {
 	// If true the list of operators will include also the primary user.
 	IncludePrimary *bool
@@ -123,7 +123,6 @@ func NewSubaccountsService(c *client.Client) *SubaccountsService {
 	return &SubaccountsService{c: c}
 }
 
-// ListSubAccounts: List operators
 // Returns list of operators for currently authorized user's merchant.
 // Deprecated: Subaccounts API is deprecated, to list users in your merchant account please use [List members](https://developer.sumup.com/api/members/list) instead.
 func (s *SubaccountsService) ListSubAccounts(ctx context.Context, params ListSubAccountsParams) (*ListSubAccounts200Response, error) {
@@ -148,11 +147,10 @@ func (s *SubaccountsService) ListSubAccounts(ctx context.Context, params ListSub
 	}
 }
 
-// CreateSubAccount: Create an operator
 // Creates new operator for currently authorized users' merchant.
 // Deprecated: Subaccounts API is deprecated, to create a user in your merchant account please use [Create member](https://developer.sumup.com/api/members/create)
 // instead.
-func (s *SubaccountsService) CreateSubAccount(ctx context.Context, body CreateSubAccountBody) (*Operator, error) {
+func (s *SubaccountsService) CreateSubAccount(ctx context.Context, body CreateSubAccount) (*Operator, error) {
 	path := fmt.Sprintf("/v0.1/me/accounts")
 
 	resp, err := s.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
@@ -181,7 +179,6 @@ func (s *SubaccountsService) CreateSubAccount(ctx context.Context, body CreateSu
 	}
 }
 
-// DeactivateSubAccount: Disable an operator.
 // Disable the specified operator for the merchant account.
 // Deprecated: Subaccounts API is deprecated, to remove a user that's a member of your merchant account please
 // use [Delete member](https://developer.sumup.com/api/members/delete) instead.
@@ -207,7 +204,6 @@ func (s *SubaccountsService) DeactivateSubAccount(ctx context.Context, operatorI
 	}
 }
 
-// CompatGetOperator: Retrieve an operator
 // Returns specific operator.
 // Deprecated: Subaccounts API is deprecated, to get a user that's a member of your merchant account please use
 // [Get member](https://developer.sumup.com/api/members/get) instead.
@@ -233,11 +229,10 @@ func (s *SubaccountsService) CompatGetOperator(ctx context.Context, operatorID i
 	}
 }
 
-// UpdateSubAccount: Update an operator
 // Updates operator. If the operator was disabled and their password is updated they will be unblocked.
 // Deprecated: Subaccounts API is deprecated, to update a user that's a member of your merchant account please
 // use [Update member](https://developer.sumup.com/api/members/update) instead.
-func (s *SubaccountsService) UpdateSubAccount(ctx context.Context, operatorID int32, body UpdateSubAccountBody) (*Operator, error) {
+func (s *SubaccountsService) UpdateSubAccount(ctx context.Context, operatorID int32, body UpdateSubAccount) (*Operator, error) {
 	path := fmt.Sprintf("/v0.1/me/accounts/%v", operatorID)
 
 	resp, err := s.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))

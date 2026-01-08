@@ -63,7 +63,7 @@ func main() {
 	ctx := context.Background()
 	client := sumup.NewClient()
 
-	merchant, err := client.Merchants.Get(ctx, merchantCode, merchants.GetMerchantParams{})
+	merchant, err := client.Merchants.Get(ctx, merchantCode, merchants.GetParams{})
 	if err != nil {
 		slog.Error("Failed to load merchant information", "error", err)
 		os.Exit(1)
@@ -118,7 +118,7 @@ func main() {
 		checkoutID := generateRandomCheckoutID()
 
 		// Create checkout using the SDK
-		checkout, err := client.Checkouts.Create(ctx, checkouts.CreateCheckoutBody{
+		checkout, err := client.Checkouts.Create(ctx, checkouts.Create{
 			MerchantCode:      merchant.MerchantCode,
 			Amount:            req.Amount,
 			Currency:          shared.Currency(merchant.DefaultCurrency),
