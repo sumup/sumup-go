@@ -16,6 +16,38 @@ import (
 	"github.com/sumup/sumup-go/shared"
 )
 
+// Amount of the event.
+type AmountEvent = shared.AmountEvent
+
+// Issuing card network of the payment card used for the transaction.
+type CardType = shared.CardType
+
+// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
+// currency values are enumerated above.
+type Currency = shared.Currency
+
+// Entry mode of the payment details.
+type EntryMode = shared.EntryMode
+
+// Unique ID of the transaction event.
+// Format: int64
+type EventID = shared.EventID
+
+// Status of the transaction event.
+type EventStatus = shared.EventStatus
+
+// Type of the transaction event.
+type EventType = shared.EventType
+
+// Payment type used for the transaction.
+type PaymentType = shared.PaymentType
+
+// Date and time of the transaction event.
+type TimestampEvent = shared.TimestampEvent
+
+// Unique ID of the transaction.
+type TransactionID = shared.TransactionID
+
 // Details of the payment card.
 type CardResponse struct {
 	// Last 4 digits of the payment card number.

@@ -16,6 +16,20 @@ import (
 	"github.com/sumup/sumup-go/shared"
 )
 
+// Object attributes that are modifiable only by SumUp applications.
+type Attributes = shared.Attributes
+
+// Pending invitation for membership.
+type Invite = shared.Invite
+
+// The status of the membership.
+type MembershipStatus = shared.MembershipStatus
+
+// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
+// submit whole metadata. Maximum of 64 parameters are allowed in the object.
+// Max properties: 64
+type Metadata = shared.Metadata
+
 // A member is user within specific resource identified by resource id, resource type, and associated roles.
 type Member struct {
 	// Object attributes that are modifiable only by SumUp applications.

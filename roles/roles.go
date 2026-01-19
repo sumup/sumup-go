@@ -13,6 +13,11 @@ import (
 	"github.com/sumup/sumup-go/shared"
 )
 
+// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
+// submit whole metadata. Maximum of 64 parameters are allowed in the object.
+// Max properties: 64
+type Metadata = shared.Metadata
+
 // A custom role that can be used to assign set of permissions to members.
 type Role struct {
 	// The timestamp of when the role was created.
