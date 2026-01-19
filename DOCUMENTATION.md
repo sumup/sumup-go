@@ -5658,29 +5658,39 @@ Issuing card network of the payment card used for the transaction.
 type CardType string
 ```
 
-<a name="CardTypeAmex"></a>
+<a name="CardTypeAlelo"></a>
 
 ```go
 const (
+    CardTypeAlelo        CardType = "ALELO"
     CardTypeAmex         CardType = "AMEX"
+    CardTypeConecs       CardType = "CONECS"
     CardTypeCup          CardType = "CUP"
     CardTypeDiners       CardType = "DINERS"
     CardTypeDiscover     CardType = "DISCOVER"
+    CardTypeEftpos       CardType = "EFTPOS"
     CardTypeElo          CardType = "ELO"
     CardTypeElv          CardType = "ELV"
+    CardTypeGirocard     CardType = "GIROCARD"
     CardTypeHipercard    CardType = "HIPERCARD"
+    CardTypeInterac      CardType = "INTERAC"
     CardTypeJcb          CardType = "JCB"
     CardTypeMaestro      CardType = "MAESTRO"
     CardTypeMastercard   CardType = "MASTERCARD"
+    CardTypePluxee       CardType = "PLUXEE"
+    CardTypeSwile        CardType = "SWILE"
+    CardTypeTicket       CardType = "TICKET"
     CardTypeUnknown      CardType = "UNKNOWN"
     CardTypeVisa         CardType = "VISA"
     CardTypeVisaElectron CardType = "VISA_ELECTRON"
     CardTypeVisaVpay     CardType = "VISA_VPAY"
+    CardTypeVpay         CardType = "VPAY"
+    CardTypeVr           CardType = "VR"
 )
 ```
 
 <a name="Currency"></a>
-## type [Currency](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L56>)
+## type [Currency](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L66>)
 
 Three\-letter \[ISO4217\]\(https://en.wikipedia.org/wiki/ISO_4217\) code of the currency for the amount. Currently supported currency values are enumerated above.
 
@@ -5711,7 +5721,7 @@ const (
 ```
 
 <a name="EntryMode"></a>
-## type [EntryMode](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L77>)
+## type [EntryMode](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L87>)
 
 Entry mode of the payment details.
 
@@ -5753,7 +5763,7 @@ const (
 ```
 
 <a name="Error"></a>
-## type [Error](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L109-L114>)
+## type [Error](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L119-L124>)
 
 Error message structure.
 
@@ -5767,7 +5777,7 @@ type Error struct {
 ```
 
 <a name="Error.Error"></a>
-### func \(\*Error\) [Error](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L116>)
+### func \(\*Error\) [Error](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L126>)
 
 ```go
 func (e *Error) Error() string
@@ -5776,7 +5786,7 @@ func (e *Error) Error() string
 
 
 <a name="ErrorForbidden"></a>
-## type [ErrorForbidden](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L123-L130>)
+## type [ErrorForbidden](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L133-L140>)
 
 Error message for forbidden requests.
 
@@ -5792,7 +5802,7 @@ type ErrorForbidden struct {
 ```
 
 <a name="ErrorForbidden.Error"></a>
-### func \(\*ErrorForbidden\) [Error](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L132>)
+### func \(\*ErrorForbidden\) [Error](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L142>)
 
 ```go
 func (e *ErrorForbidden) Error() string
@@ -5801,7 +5811,7 @@ func (e *ErrorForbidden) Error() string
 
 
 <a name="EventID"></a>
-## type [EventID](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L140>)
+## type [EventID](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L150>)
 
 Unique ID of the transaction event. Format: int64
 
@@ -5810,7 +5820,7 @@ type EventID int64
 ```
 
 <a name="EventStatus"></a>
-## type [EventStatus](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L143>)
+## type [EventStatus](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L153>)
 
 Status of the transaction event.
 
@@ -5832,7 +5842,7 @@ const (
 ```
 
 <a name="EventType"></a>
-## type [EventType](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L155>)
+## type [EventType](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L165>)
 
 Type of the transaction event.
 
@@ -5852,7 +5862,7 @@ const (
 ```
 
 <a name="Invite"></a>
-## type [Invite](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L165-L170>)
+## type [Invite](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L175-L180>)
 
 Pending invitation for membership.
 
@@ -5866,7 +5876,7 @@ type Invite struct {
 ```
 
 <a name="MandateResponse"></a>
-## type [MandateResponse](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L173-L180>)
+## type [MandateResponse](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L183-L190>)
 
 Created mandate
 
@@ -5882,7 +5892,7 @@ type MandateResponse struct {
 ```
 
 <a name="MembershipStatus"></a>
-## type [MembershipStatus](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L183>)
+## type [MembershipStatus](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L193>)
 
 The status of the membership.
 
@@ -5903,7 +5913,7 @@ const (
 ```
 
 <a name="Metadata"></a>
-## type [Metadata](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L196>)
+## type [Metadata](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L206>)
 
 Set of user\-defined key\-value pairs attached to the object. Partial updates are not supported. When updating, always submit whole metadata. Maximum of 64 parameters are allowed in the object. Max properties: 64
 
@@ -5912,7 +5922,7 @@ type Metadata map[string]any
 ```
 
 <a name="PaymentType"></a>
-## type [PaymentType](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L199>)
+## type [PaymentType](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L209>)
 
 Payment type used for the transaction.
 
@@ -5939,7 +5949,7 @@ const (
 ```
 
 <a name="PersonalDetails"></a>
-## type [PersonalDetails](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L216-L233>)
+## type [PersonalDetails](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L226-L243>)
 
 Personal details for the customer.
 
@@ -5965,7 +5975,7 @@ type PersonalDetails struct {
 ```
 
 <a name="Problem"></a>
-## type [Problem](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L238-L253>)
+## type [Problem](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L248-L263>)
 
 A RFC 9457 problem details object.
 
@@ -5991,7 +6001,7 @@ type Problem struct {
 ```
 
 <a name="Problem.Error"></a>
-### func \(\*Problem\) [Error](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L255>)
+### func \(\*Problem\) [Error](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L265>)
 
 ```go
 func (e *Problem) Error() string
@@ -6000,7 +6010,7 @@ func (e *Problem) Error() string
 
 
 <a name="TimestampEvent"></a>
-## type [TimestampEvent](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L262>)
+## type [TimestampEvent](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L272>)
 
 Date and time of the transaction event.
 
@@ -6009,7 +6019,7 @@ type TimestampEvent string
 ```
 
 <a name="TransactionBase"></a>
-## type [TransactionBase](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L265-L284>)
+## type [TransactionBase](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L275-L294>)
 
 Details of the transaction.
 
@@ -6037,7 +6047,7 @@ type TransactionBase struct {
 ```
 
 <a name="TransactionBaseStatus"></a>
-## type [TransactionBaseStatus](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L287>)
+## type [TransactionBaseStatus](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L297>)
 
 Current status of the transaction.
 
@@ -6057,7 +6067,7 @@ const (
 ```
 
 <a name="TransactionCheckoutInfo"></a>
-## type [TransactionCheckoutInfo](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L297-L311>)
+## type [TransactionCheckoutInfo](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L307-L321>)
 
 TransactionCheckoutInfo is a schema definition.
 
@@ -6080,7 +6090,7 @@ type TransactionCheckoutInfo struct {
 ```
 
 <a name="TransactionID"></a>
-## type [TransactionID](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L314>)
+## type [TransactionID](<https://github.com/sumup/sumup-go/blob/main/shared/shared.go#L324>)
 
 Unique ID of the transaction.
 
