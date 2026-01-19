@@ -53,7 +53,7 @@ func (mt Method) ParamsString() string {
 }
 
 // pathsToMethods converts openapi3 path to golang methods.
-func (b *Builder) pathsToMethods(paths *openapi3.Paths) ([]*Method, error) {
+func (b *Builder) pathsToMethods(tagName string, paths *openapi3.Paths) ([]*Method, error) {
 	allMethods := make([]*Method, 0, paths.Len())
 
 	for _, path := range paths.InMatchingOrder() {
@@ -63,7 +63,7 @@ func (b *Builder) pathsToMethods(paths *openapi3.Paths) ([]*Method, error) {
 			continue
 		}
 
-		methods, err := b.pathToMethods(path, p)
+		methods, err := b.pathToMethods(tagName, path, p)
 		if err != nil {
 			return nil, err
 		}
@@ -75,7 +75,7 @@ func (b *Builder) pathsToMethods(paths *openapi3.Paths) ([]*Method, error) {
 }
 
 // pathToMethods converts single openapi3 path to golang methods.
-func (b *Builder) pathToMethods(path string, p *openapi3.PathItem) ([]*Method, error) {
+func (b *Builder) pathToMethods(tagName, path string, p *openapi3.PathItem) ([]*Method, error) {
 	ops := p.Operations()
 	keys := slices.Collect(maps.Keys(ops))
 	slices.Sort(keys)
@@ -84,7 +84,7 @@ func (b *Builder) pathToMethods(path string, p *openapi3.PathItem) ([]*Method, e
 	for _, method := range keys {
 		operationSpec := ops[method]
 		operationSpec.Parameters = append(operationSpec.Parameters, p.Parameters...)
-		method, err := b.operationToMethod(method, path, operationSpec)
+		method, err := b.operationToMethod(tagName, method, path, operationSpec)
 		if err != nil {
 			return nil, err
 		}
@@ -119,13 +119,14 @@ func pathBuilder(path string) string {
 	return fmt.Sprintf("fmt.Sprintf(%q, %s)", res.String(), strings.Join(params, ", "))
 }
 
-func (b *Builder) operationToMethod(method, path string, o *openapi3.Operation) (*Method, error) {
-	respType, err := b.getSuccessResponseType(o)
+func (b *Builder) operationToMethod(tagName, method, path string, o *openapi3.Operation) (*Method, error) {
+	respType, err := b.getSuccessResponseType(tagName, o)
 	if err != nil {
 		return nil, fmt.Errorf("get successful response type: %w", err)
 	}
 
 	methodName := operationMethodName(o)
+	typeName := b.operationTypeName(tagName, methodName)
 
 	params, err := b.buildPathParams("path", o.Parameters)
 	if err != nil {
@@ -138,7 +139,7 @@ func (b *Builder) operationToMethod(method, path string, o *openapi3.Operation) 
 		if ok && mt.Schema != nil {
 			params = append(params, Parameter{
 				Name: "body",
-				Type: methodName,
+				Type: typeName,
 			})
 			hasBody = true
 		}
@@ -150,14 +151,14 @@ func (b *Builder) operationToMethod(method, path string, o *openapi3.Operation) 
 	}) {
 		queryParams = &Parameter{
 			Name: "params",
-			Type: methodName + "Params",
+			Type: typeName + "Params",
 		}
 	}
 
 	responses := make([]Response, 0, o.Responses.Len())
 	for code, resp := range o.Responses.Map() {
 		operationName := strcase.ToCamel(o.OperationID)
-		typ := b.responseToType(operationName, resp, code)
+		typ := b.responseToType(tagName, operationName, resp, code)
 
 		description := code
 		if resp.Value.Description != nil {
@@ -221,7 +222,7 @@ type ResponseType struct {
 	IsOneOf bool
 }
 
-func (b *Builder) getSuccessResponseType(o *openapi3.Operation) (*ResponseType, error) {
+func (b *Builder) getSuccessResponseType(tagName string, o *openapi3.Operation) (*ResponseType, error) {
 	type responseInfo struct {
 		content *openapi3.MediaType
 		code    string
@@ -272,19 +273,21 @@ func (b *Builder) getSuccessResponseType(o *openapi3.Operation) (*ResponseType, 
 		}
 
 		operationName := strcase.ToCamel(o.OperationID)
+		typeName := b.operationTypeName(tagName, operationName)
 		return &ResponseType{
-			Type: b.getResponseName(operationName, resp.code, resp.content),
+			Type: b.getResponseName(typeName, resp.code, resp.content),
 		}, nil
 	}
 
 	operationName := strcase.ToCamel(o.OperationID)
+	typeName := b.operationTypeName(tagName, operationName)
 	return &ResponseType{
-		Type:    operationName + "Response",
+		Type:    typeName + "Response",
 		IsOneOf: true,
 	}, nil
 }
 
-func (b *Builder) responseToType(operationName string, resp *openapi3.ResponseRef, code string) string {
+func (b *Builder) responseToType(tagName, operationName string, resp *openapi3.ResponseRef, code string) string {
 	if resp.Ref != "" {
 		return strcase.ToCamel(strings.TrimPrefix(resp.Ref, "#/components/responses/")) + "Response"
 	}
@@ -303,7 +306,8 @@ func (b *Builder) responseToType(operationName string, resp *openapi3.ResponseRe
 	}
 
 	if content.Schema.Value != nil {
-		return b.getResponseName(operationName, code, content)
+		typeName := b.operationTypeName(tagName, operationName)
+		return b.getResponseName(typeName, code, content)
 	}
 
 	return ""
@@ -403,20 +407,9 @@ func (b *Builder) convertToValidGoType(property string, r *openapi3.SchemaRef) s
 func (b *Builder) getReferenceSchema(v *openapi3.SchemaRef) string {
 	if v.Ref != "" {
 		ref := strings.TrimPrefix(v.Ref, "#/components/schemas/")
-		isShared := slices.Contains(b.schemasByTag["shared"], v.Ref)
-
 		if len(v.Value.Enum) > 0 {
-			singularName := strcase.ToCamel(strcase.MakeSingular(ref))
-			if isShared {
-				return "shared." + singularName
-			}
-			return singularName
+			return strcase.ToCamel(strcase.MakeSingular(ref))
 		}
-
-		if isShared {
-			return "shared." + strcase.ToCamel(ref)
-		}
-
 		return strcase.ToCamel(ref)
 	}
 
