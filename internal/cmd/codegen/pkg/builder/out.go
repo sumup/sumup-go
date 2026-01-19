@@ -34,19 +34,19 @@ func (b *Builder) generateResource(tagName string, paths *openapi3.Paths) error 
 
 	types := b.schemasToTypes(resolvedSchemas, b.errorSchemas)
 
-	bodyTypes := b.pathsToBodyTypes(paths)
+	bodyTypes := b.pathsToBodyTypes(tagName, paths)
 	types = append(types, bodyTypes...)
 
-	paramTypes := b.pathsToParamTypes(paths)
+	paramTypes := b.pathsToParamTypes(tagName, paths)
 	types = append(types, paramTypes...)
 
-	responseTypes := b.pathsToResponseTypes(paths)
+	responseTypes := b.pathsToResponseTypes(tagName, paths)
 	types = append(types, responseTypes...)
 
 	respTypes := b.respToTypes(resolvedResponses, b.errorSchemas)
 	types = append(types, respTypes...)
 
-	methods, err := b.pathsToMethods(paths)
+	methods, err := b.pathsToMethods(tagName, paths)
 	if err != nil {
 		return fmt.Errorf("convert paths to methods: %w", err)
 	}
@@ -59,20 +59,28 @@ func (b *Builder) generateResource(tagName string, paths *openapi3.Paths) error 
 		slog.Int("response_structs", len(respTypes)),
 	)
 
-	if err := os.MkdirAll(path.Join(b.cfg.Out, strcase.ToSnake(tag.Name)), os.ModePerm); err != nil {
+	packageName := "sumup"
+	outDir := b.cfg.Out
+	if tagName == "shared" {
+		packageName = "shared"
+		outDir = path.Join(b.cfg.Out, "shared")
+	}
+
+	if err := os.MkdirAll(outDir, os.ModePerm); err != nil {
 		return err
 	}
 
 	buf := bytes.NewBuffer(nil)
 	if err := b.templates.ExecuteTemplate(buf, "resource.go.tmpl", templateData{
-		PackageName: strcase.ToSnake(tag.Name),
+		PackageName: packageName,
 		Types:       types,
 		Methods:     methods,
+		Service:     strcase.ToCamel(tag.Name),
 	}); err != nil {
 		return err
 	}
 
-	fName := path.Join(b.cfg.Out, strcase.ToSnake(tag.Name), fmt.Sprintf("%s.go", strcase.ToSnake(tag.Name)))
+	fName := path.Join(outDir, fmt.Sprintf("%s.go", strcase.ToSnake(tag.Name)))
 	f, err := openGeneratedFile(fName)
 	if err != nil {
 		return err
@@ -99,8 +107,8 @@ func (b *Builder) writeClientFile(fname string, tags []string) error {
 	defer func() { _ = f.Close() }()
 
 	type resource struct {
-		Name    string
-		Package string
+		Name       string
+		ClientName string
 	}
 
 	resources := make([]resource, 0, len(tags))
@@ -109,8 +117,8 @@ func (b *Builder) writeClientFile(fname string, tags []string) error {
 			continue
 		}
 		resources = append(resources, resource{
-			Name:    strcase.ToCamel(tags[i]),
-			Package: strcase.ToSnake(tags[i]),
+			Name:       strcase.ToCamel(tags[i]),
+			ClientName: strcase.ToCamel(tags[i]) + "Client",
 		})
 	}
 

@@ -28,7 +28,6 @@ import (
 
 	"github.com/sumup/sumup-go"
 	"github.com/sumup/sumup-go/client"
-	"github.com/sumup/sumup-go/merchants"
 )
 
 const StateCookieName = "oauth_state"
@@ -117,7 +116,7 @@ func main() {
 
 		client := sumup.NewClient(client.WithAPIKey(token.AccessToken))
 
-		merchant, err := client.Merchants.Get(r.Context(), defaultMerchantCode, merchants.GetParams{})
+		merchant, err := client.Merchants.Get(r.Context(), defaultMerchantCode, sumup.MerchantsGetParams{})
 		if err != nil {
 			log.Printf("get merchant information: %v\n", err)
 			w.WriteHeader(http.StatusInternalServerError)

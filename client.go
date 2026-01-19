@@ -2,36 +2,22 @@
 
 package sumup
 
-import (
-	"github.com/sumup/sumup-go/checkouts"
-	"github.com/sumup/sumup-go/client"
-	"github.com/sumup/sumup-go/customers"
-	"github.com/sumup/sumup-go/members"
-	"github.com/sumup/sumup-go/memberships"
-	"github.com/sumup/sumup-go/merchant"
-	"github.com/sumup/sumup-go/merchants"
-	"github.com/sumup/sumup-go/payouts"
-	"github.com/sumup/sumup-go/readers"
-	"github.com/sumup/sumup-go/receipts"
-	"github.com/sumup/sumup-go/roles"
-	"github.com/sumup/sumup-go/subaccounts"
-	"github.com/sumup/sumup-go/transactions"
-)
+import "github.com/sumup/sumup-go/client"
 
 type Client struct {
 	c            *client.Client
-	Checkouts    *checkouts.Client
-	Customers    *customers.Client
-	Members      *members.Client
-	Memberships  *memberships.Client
-	Merchant     *merchant.Client
-	Merchants    *merchants.Client
-	Payouts      *payouts.Client
-	Readers      *readers.Client
-	Receipts     *receipts.Client
-	Roles        *roles.Client
-	Subaccounts  *subaccounts.Client
-	Transactions *transactions.Client
+	Checkouts    *CheckoutsClient
+	Customers    *CustomersClient
+	Members      *MembersClient
+	Memberships  *MembershipsClient
+	Merchant     *MerchantClient
+	Merchants    *MerchantsClient
+	Payouts      *PayoutsClient
+	Readers      *ReadersClient
+	Receipts     *ReceiptsClient
+	Roles        *RolesClient
+	Subaccounts  *SubaccountsClient
+	Transactions *TransactionsClient
 }
 
 // NewClient creates new SumUp API client.
@@ -41,18 +27,18 @@ func NewClient(opts ...client.ClientOption) *Client {
 	client := client.New(opts...)
 
 	c := &Client{c: client}
-	c.Checkouts = checkouts.NewClient(client)
-	c.Customers = customers.NewClient(client)
-	c.Members = members.NewClient(client)
-	c.Memberships = memberships.NewClient(client)
-	c.Merchant = merchant.NewClient(client)
-	c.Merchants = merchants.NewClient(client)
-	c.Payouts = payouts.NewClient(client)
-	c.Readers = readers.NewClient(client)
-	c.Receipts = receipts.NewClient(client)
-	c.Roles = roles.NewClient(client)
-	c.Subaccounts = subaccounts.NewClient(client)
-	c.Transactions = transactions.NewClient(client)
+	c.Checkouts = NewCheckoutsClient(client)
+	c.Customers = NewCustomersClient(client)
+	c.Members = NewMembersClient(client)
+	c.Memberships = NewMembershipsClient(client)
+	c.Merchant = NewMerchantClient(client)
+	c.Merchants = NewMerchantsClient(client)
+	c.Payouts = NewPayoutsClient(client)
+	c.Readers = NewReadersClient(client)
+	c.Receipts = NewReceiptsClient(client)
+	c.Roles = NewRolesClient(client)
+	c.Subaccounts = NewSubaccountsClient(client)
+	c.Transactions = NewTransactionsClient(client)
 
 	return c
 }

@@ -67,7 +67,7 @@ func (b *Builder) respToTypes(schemas []*openapi3.ResponseRef, errorSchemas map[
 }
 
 // TODO: is this different from respToTypes?
-func (b *Builder) pathsToBodyTypes(paths *openapi3.Paths) []Writable {
+func (b *Builder) pathsToBodyTypes(tagName string, paths *openapi3.Paths) []Writable {
 	if paths == nil {
 		return nil
 	}
@@ -86,11 +86,12 @@ func (b *Builder) pathsToBodyTypes(paths *openapi3.Paths) []Writable {
 		for _, method := range operationKeys {
 			opSpec := operations[method]
 			operationName := operationMethodName(opSpec)
+			typeName := b.operationTypeName(tagName, operationName)
 
 			if opSpec.RequestBody != nil {
 				mt, ok := opSpec.RequestBody.Value.Content["application/json"]
 				if ok && mt.Schema != nil {
-					bodyObject, additionalTypes := b.createObject(mt.Schema.Value, operationName)
+					bodyObject, additionalTypes := b.createObject(mt.Schema.Value, typeName)
 					paramTypes = append(paramTypes, bodyObject)
 					paramTypes = append(paramTypes, additionalTypes...)
 				}
@@ -102,7 +103,7 @@ func (b *Builder) pathsToBodyTypes(paths *openapi3.Paths) []Writable {
 }
 
 // constructParamTypes constructs struct for query parameters for an operation.
-func (b *Builder) pathsToParamTypes(paths *openapi3.Paths) []Writable {
+func (b *Builder) pathsToParamTypes(tagName string, paths *openapi3.Paths) []Writable {
 	if paths == nil {
 		return nil
 	}
@@ -122,6 +123,7 @@ func (b *Builder) pathsToParamTypes(paths *openapi3.Paths) []Writable {
 		for _, method := range operationKeys {
 			opSpec := operations[method]
 			operationName := operationMethodName(opSpec)
+			typeName := b.operationTypeName(tagName, operationName)
 
 			if len(opSpec.Parameters) > 0 {
 				fields := make([]StructField, 0)
@@ -156,7 +158,7 @@ func (b *Builder) pathsToParamTypes(paths *openapi3.Paths) []Writable {
 				}
 
 				if len(fields) != 0 {
-					paramsTypeName := operationName + "Params"
+					paramsTypeName := typeName + "Params"
 					paramsTpl := TypeDeclaration{
 						Type:      "struct",
 						Name:      paramsTypeName,
@@ -176,7 +178,7 @@ func (b *Builder) pathsToParamTypes(paths *openapi3.Paths) []Writable {
 
 // pathsToResponseTypes generates response types for operations. This is responsible only for inlined
 // schemas that are specific to the operation itself and are not references.
-func (b *Builder) pathsToResponseTypes(paths *openapi3.Paths) []Writable {
+func (b *Builder) pathsToResponseTypes(tagName string, paths *openapi3.Paths) []Writable {
 	if paths == nil {
 		return nil
 	}
@@ -196,6 +198,7 @@ func (b *Builder) pathsToResponseTypes(paths *openapi3.Paths) []Writable {
 		for _, method := range operationKeys {
 			opSpec := operations[method]
 			operationName := strcase.ToCamel(opSpec.OperationID)
+			typeName := b.operationTypeName(tagName, operationName)
 
 			responses := opSpec.Responses.Map()
 			responseKeys := slices.Collect(maps.Keys(responses))
@@ -231,7 +234,7 @@ func (b *Builder) pathsToResponseTypes(paths *openapi3.Paths) []Writable {
 					continue
 				}
 
-				name := b.getResponseName(operationName, code, content)
+				name := b.getResponseName(typeName, code, content)
 
 				objects := b.generateSchemaComponents(name, content.Schema, isErr)
 				paramTypes = append(paramTypes, objects...)
@@ -249,7 +252,7 @@ func (b *Builder) pathsToResponseTypes(paths *openapi3.Paths) []Writable {
 				)
 
 				paramTypes = append(paramTypes, &OneOfDeclaration{
-					Name:    operationName + "Response",
+					Name:    typeName + "Response",
 					Options: successResponses,
 				})
 			}

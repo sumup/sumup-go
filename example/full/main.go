@@ -32,8 +32,6 @@ import (
 	"os"
 
 	"github.com/sumup/sumup-go"
-	"github.com/sumup/sumup-go/checkouts"
-	"github.com/sumup/sumup-go/merchants"
 	"github.com/sumup/sumup-go/shared"
 )
 
@@ -63,7 +61,7 @@ func main() {
 	ctx := context.Background()
 	client := sumup.NewClient()
 
-	merchant, err := client.Merchants.Get(ctx, merchantCode, merchants.GetParams{})
+	merchant, err := client.Merchants.Get(ctx, merchantCode, sumup.MerchantsGetParams{})
 	if err != nil {
 		slog.Error("Failed to load merchant information", "error", err)
 		os.Exit(1)
@@ -118,13 +116,13 @@ func main() {
 		checkoutID := generateRandomCheckoutID()
 
 		// Create checkout using the SDK
-		checkout, err := client.Checkouts.Create(ctx, checkouts.Create{
+		checkout, err := client.Checkouts.Create(ctx, sumup.CheckoutsCreate{
 			MerchantCode:      merchant.MerchantCode,
 			Amount:            req.Amount,
 			Currency:          shared.Currency(merchant.DefaultCurrency),
 			CheckoutReference: checkoutID,
 		})
-		if eErr := new(checkouts.ErrorExtended); errors.As(err, &eErr) {
+		if eErr := new(sumup.ErrorExtended); errors.As(err, &eErr) {
 			slog.Error("Failed to create checkout", "error_code", *eErr.ErrorCode, "message", *eErr.Message)
 			http.Error(w, "Failed to create checkout", http.StatusInternalServerError)
 			return
