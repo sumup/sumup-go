@@ -15,8 +15,14 @@ import (
 	"github.com/sumup/sumup-go/internal/cmd/codegen/internal/strcase"
 )
 
+type Alias struct {
+	Name    string
+	Comment string
+}
+
 type templateData struct {
 	PackageName string
+	Aliases     []Alias
 	Types       []Writable
 	Service     string
 	Methods     []*Method
@@ -46,6 +52,30 @@ func (b *Builder) generateResource(tagName string, paths *openapi3.Paths) error 
 	respTypes := b.respToTypes(resolvedResponses, b.errorSchemas)
 	types = append(types, respTypes...)
 
+	var aliases []Alias
+	for _, t := range types {
+		if td, ok := t.(*TypeDeclaration); ok {
+			for _, f := range td.Fields {
+				if alias, ok := strings.CutPrefix(f.Type, "shared."); ok {
+					aliases = append(aliases, Alias{
+						Name:    alias,
+						Comment: f.Comment,
+					})
+				}
+			}
+		}
+	}
+	if tagName == "shared" {
+		aliases = nil
+	} else {
+		slices.SortFunc(aliases, func(a, b Alias) int {
+			return strings.Compare(a.Name, b.Name)
+		})
+		aliases = slices.CompactFunc(aliases, func(a, b Alias) bool {
+			return a.Name == b.Name
+		})
+	}
+
 	methods, err := b.pathsToMethods(paths)
 	if err != nil {
 		return fmt.Errorf("convert paths to methods: %w", err)
@@ -53,6 +83,7 @@ func (b *Builder) generateResource(tagName string, paths *openapi3.Paths) error 
 
 	slog.Info("generating file",
 		slog.String("tag", tag.Name),
+		slog.Int("aliases", len(aliases)),
 		slog.Int("schema_structs", len(types)),
 		slog.Int("body_structs", len(bodyTypes)),
 		slog.Int("path_params_structs", len(paramTypes)),
@@ -66,6 +97,7 @@ func (b *Builder) generateResource(tagName string, paths *openapi3.Paths) error 
 	buf := bytes.NewBuffer(nil)
 	if err := b.templates.ExecuteTemplate(buf, "resource.go.tmpl", templateData{
 		PackageName: strcase.ToSnake(tag.Name),
+		Aliases:     aliases,
 		Types:       types,
 		Methods:     methods,
 	}); err != nil {
@@ -79,12 +111,12 @@ func (b *Builder) generateResource(tagName string, paths *openapi3.Paths) error 
 	}
 	defer func() { _ = f.Close() }()
 
-	replacer := strings.NewReplacer()
+	output := buf.String()
 	if tagName == "shared" {
-		replacer = strings.NewReplacer("shared.", "")
+		output = strings.ReplaceAll(output, "shared.", "")
 	}
 
-	if _, err := replacer.WriteString(f, buf.String()); err != nil {
+	if _, err := f.WriteString(output); err != nil {
 		return err
 	}
 

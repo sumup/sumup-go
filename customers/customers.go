@@ -13,6 +13,15 @@ import (
 	"github.com/sumup/sumup-go/shared"
 )
 
+// Issuing card network of the payment card used for the transaction.
+type CardType = shared.CardType
+
+// Created mandate
+type MandateResponse = shared.MandateResponse
+
+// Personal details for the customer.
+type PersonalDetails = shared.PersonalDetails
+
 // Customer is a schema definition.
 type Customer struct {
 	// Unique ID of the customer.

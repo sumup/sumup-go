@@ -15,6 +15,25 @@ import (
 	"github.com/sumup/sumup-go/shared"
 )
 
+// Issuing card network of the payment card used for the transaction.
+type CardType = shared.CardType
+
+// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
+// currency values are enumerated above.
+type Currency = shared.Currency
+
+// Entry mode of the payment details.
+type EntryMode = shared.EntryMode
+
+// Created mandate
+type MandateResponse = shared.MandateResponse
+
+// Payment type used for the transaction.
+type PaymentType = shared.PaymentType
+
+// Personal details for the customer.
+type PersonalDetails = shared.PersonalDetails
+
 // __Required when payment type is `card`.__ Details of the payment card.
 type Card struct {
 	// Three or four-digit card verification value (security code) of the payment card.

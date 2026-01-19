@@ -15,6 +15,25 @@ import (
 	"github.com/sumup/sumup-go/shared"
 )
 
+// Amount of the event.
+type AmountEvent = shared.AmountEvent
+
+// Unique ID of the transaction event.
+// Format: int64
+type EventID = shared.EventID
+
+// Status of the transaction event.
+type EventStatus = shared.EventStatus
+
+// Type of the transaction event.
+type EventType = shared.EventType
+
+// Date and time of the transaction event.
+type TimestampEvent = shared.TimestampEvent
+
+// Unique ID of the transaction.
+type TransactionID = shared.TransactionID
+
 // Receipt is a schema definition.
 type Receipt struct {
 	AcquirerData *ReceiptAcquirerData `json:"acquirer_data,omitempty"`

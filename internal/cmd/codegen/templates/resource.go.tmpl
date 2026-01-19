@@ -29,6 +29,11 @@ import (
 	{{- end }}
 )
 
+{{- range .Aliases }}
+// {{.Comment}}
+type {{.Name}} = shared.{{.Name}}
+{{- end }}
+
 {{- range $type := .Types }}
 {{ $type.String }}
 {{- end }}
