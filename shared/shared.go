@@ -35,20 +35,30 @@ type Attributes map[string]any
 type CardType string
 
 const (
+	CardTypeAlelo        CardType = "ALELO"
 	CardTypeAmex         CardType = "AMEX"
+	CardTypeConecs       CardType = "CONECS"
 	CardTypeCup          CardType = "CUP"
 	CardTypeDiners       CardType = "DINERS"
 	CardTypeDiscover     CardType = "DISCOVER"
+	CardTypeEftpos       CardType = "EFTPOS"
 	CardTypeElo          CardType = "ELO"
 	CardTypeElv          CardType = "ELV"
+	CardTypeGirocard     CardType = "GIROCARD"
 	CardTypeHipercard    CardType = "HIPERCARD"
+	CardTypeInterac      CardType = "INTERAC"
 	CardTypeJcb          CardType = "JCB"
 	CardTypeMaestro      CardType = "MAESTRO"
 	CardTypeMastercard   CardType = "MASTERCARD"
+	CardTypePluxee       CardType = "PLUXEE"
+	CardTypeSwile        CardType = "SWILE"
+	CardTypeTicket       CardType = "TICKET"
 	CardTypeUnknown      CardType = "UNKNOWN"
 	CardTypeVisa         CardType = "VISA"
 	CardTypeVisaElectron CardType = "VISA_ELECTRON"
 	CardTypeVisaVpay     CardType = "VISA_VPAY"
+	CardTypeVpay         CardType = "VPAY"
+	CardTypeVr           CardType = "VR"
 )
 
 // Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
