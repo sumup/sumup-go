@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.13.0](https://github.com/sumup/sumup-go/compare/v0.12.0...v0.13.0) (2026-01-20)
+
+
+### Features
+
+* alias shared objects in respective packages ([#179](https://github.com/sumup/sumup-go/issues/179)) ([ae34f17](https://github.com/sumup/sumup-go/commit/ae34f1727253cb95052a1a50ca44d61d58d40ed9))
+* report runtime info ([#180](https://github.com/sumup/sumup-go/issues/180)) ([da67f26](https://github.com/sumup/sumup-go/commit/da67f26590b20194514064b726eea8d618f9c963))
+
+
+### Bug Fixes
+
+* **cd:** gomarkdoc config ([32c04b6](https://github.com/sumup/sumup-go/commit/32c04b6d4c4402ce4816961bbb41c3d6ca1ffd64))
+
 ## [0.12.0](https://github.com/sumup/sumup-go/compare/v0.11.1...v0.12.0) (2026-01-08)
 
 
