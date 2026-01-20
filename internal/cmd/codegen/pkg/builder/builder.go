@@ -120,11 +120,11 @@ func (b *Builder) Build() error {
 		}
 	}
 
-	if err := b.writeClientPackage(path.Join(b.cfg.Out, "client/client.go")); err != nil {
+	if err := b.writeClientFile(path.Join(b.cfg.Out, "client.go"), slices.Collect(maps.Keys(b.pathsByTag))); err != nil {
 		return err
 	}
 
-	if err := b.writeClientFile(path.Join(b.cfg.Out, "client.go"), slices.Collect(maps.Keys(b.pathsByTag))); err != nil {
+	if err := b.writeAPIVersionFile(); err != nil {
 		return err
 	}
 

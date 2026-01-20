@@ -1351,7 +1351,7 @@ const (
 ```
 
 <a name="Client"></a>
-## type [Client](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L27-L37>)
+## type [Client](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L33-L43>)
 
 
 
@@ -1362,7 +1362,7 @@ type Client struct {
 ```
 
 <a name="New"></a>
-### func [New](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L45>)
+### func [New](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L51>)
 
 ```go
 func New(opts ...ClientOption) *Client
@@ -1371,7 +1371,7 @@ func New(opts ...ClientOption) *Client
 New creates new HTTP API client. The client is by default configured with environment variables \(e.g. \`SUMUP\_API\_KEY\`\). To override the default configuration use \[ClientOption\]s.
 
 <a name="Client.Call"></a>
-### func \(\*Client\) [Call](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L97-L99>)
+### func \(\*Client\) [Call](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L103-L105>)
 
 ```go
 func (c *Client) Call(ctx context.Context, method, path string, opts ...RequestOption) (*http.Response, error)
@@ -1380,7 +1380,7 @@ func (c *Client) Call(ctx context.Context, method, path string, opts ...RequestO
 Call executes an API call. Use \[RequestOption\]s to configure the request.
 
 <a name="Client.Do"></a>
-### func \(\*Client\) [Do](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L156>)
+### func \(\*Client\) [Do](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L164>)
 
 ```go
 func (c *Client) Do(req *http.Request) (*http.Response, error)
@@ -1389,7 +1389,7 @@ func (c *Client) Do(req *http.Request) (*http.Response, error)
 Do sends an HTTP request and returns an HTTP response, following policy \(such as redirects, cookies, auth\) as configured on the HTTP client.
 
 <a name="Client.NewRequest"></a>
-### func \(\*Client\) [NewRequest](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L129-L131>)
+### func \(\*Client\) [NewRequest](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L135-L137>)
 
 ```go
 func (c *Client) NewRequest(ctx context.Context, method, path string, body io.Reader) (*http.Request, error)
@@ -1400,7 +1400,7 @@ NewRequest returns a new \[http.Request\] given a method, URL, and optional body
 NewRequest returns a Request suitable for use with [Client.Do](<#Client.Do>).
 
 <a name="ClientOption"></a>
-## type [ClientOption](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L40>)
+## type [ClientOption](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L46>)
 
 ClientOption is an option for the API client.
 
@@ -1409,7 +1409,7 @@ type ClientOption func(c *Client) error
 ```
 
 <a name="WithAPIKey"></a>
-### func [WithAPIKey](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L62>)
+### func [WithAPIKey](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L68>)
 
 ```go
 func WithAPIKey(key string) ClientOption
@@ -1418,7 +1418,7 @@ func WithAPIKey(key string) ClientOption
 WithAPIKey returns a [ClientOption](<#ClientOption>) that configures the client with an API key for authorization.
 
 <a name="WithBaseURL"></a>
-### func [WithBaseURL](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L80>)
+### func [WithBaseURL](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L86>)
 
 ```go
 func WithBaseURL(base string) ClientOption
@@ -1427,7 +1427,7 @@ func WithBaseURL(base string) ClientOption
 WithBaseURL returns a [ClientOption](<#ClientOption>) that configures the client with a base URL that the individual API call paths will be resolved against.
 
 <a name="WithClient"></a>
-### func [WithClient](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L71>)
+### func [WithClient](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L77>)
 
 ```go
 func WithClient(client *http.Client) ClientOption
@@ -1436,7 +1436,7 @@ func WithClient(client *http.Client) ClientOption
 WithClient returns a [ClientOption](<#ClientOption>) that configures the client to use a specific http client for underlying requests.
 
 <a name="RequestOption"></a>
-## type [RequestOption](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L166>)
+## type [RequestOption](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L174>)
 
 RequestOption is an option for the request made by the [Client](<#Client>).
 
@@ -1445,7 +1445,7 @@ type RequestOption func(req *request) error
 ```
 
 <a name="WithHTTPClient"></a>
-### func [WithHTTPClient](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L170>)
+### func [WithHTTPClient](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L178>)
 
 ```go
 func WithHTTPClient(client *http.Client) RequestOption
@@ -1454,7 +1454,7 @@ func WithHTTPClient(client *http.Client) RequestOption
 WithHTTPClient returns a [RequestOption](<#RequestOption>) that overrides the underlying \[http.Client\] of the service used to make the request.
 
 <a name="WithHeader"></a>
-### func [WithHeader](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L179>)
+### func [WithHeader](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L187>)
 
 ```go
 func WithHeader(key, value string) RequestOption
@@ -1463,7 +1463,7 @@ func WithHeader(key, value string) RequestOption
 WithHeader returns a [RequestOption](<#RequestOption>) that sets a header key\-value pair. Any previously set value will be overwritten.
 
 <a name="WithJSONBody"></a>
-### func [WithJSONBody](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L187>)
+### func [WithJSONBody](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L195>)
 
 ```go
 func WithJSONBody(v any) RequestOption
@@ -1472,7 +1472,7 @@ func WithJSONBody(v any) RequestOption
 WithBody returns a [RequestOption](<#RequestOption>) that sets the request body as a JSON of the value v.
 
 <a name="WithQueryValues"></a>
-### func [WithQueryValues](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L201>)
+### func [WithQueryValues](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L209>)
 
 ```go
 func WithQueryValues(q url.Values) RequestOption
@@ -1801,6 +1801,31 @@ func (t *Time) UnmarshalJSON(b []byte) (err error)
 ```
 
 UnmarshalJSON parses a JSON string in HH:MM:SS format.
+
+# internal
+
+```go
+import "github.com/sumup/sumup-go/internal"
+```
+
+## Index
+
+- [Constants](<#constants>)
+
+
+## Constants
+
+<a name="APIVersion"></a>
+
+```go
+const APIVersion = "1.0.0"
+```
+
+<a name="Version"></a>
+
+```go
+const Version = "0.12.0" // x-release-please-version
+```
 
 # members
 
