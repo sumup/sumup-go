@@ -1,7 +1,7 @@
 {
 	"$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
 	"release-type": "go",
-	"extra-files": ["client/version.go"],
+	"extra-files": ["internal/version.go"],
 	"include-v-in-tag": true,
 	"include-component-in-tag": false,
 	"versioning": "prerelease",

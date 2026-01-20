@@ -159,21 +159,30 @@ func (b *Builder) writeClientFile(fname string, tags []string) error {
 	return nil
 }
 
-func (b *Builder) writeClientPackage(fname string) error {
-	if err := os.MkdirAll(path.Dir(fname), os.ModePerm); err != nil {
-		return err
+func (b *Builder) writeAPIVersionFile() error {
+	if b.spec == nil || b.spec.Info == nil {
+		return fmt.Errorf("missing specs info: call Load to load the specs first")
 	}
 
-	f, err := os.OpenFile(fname, os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.FileMode(0o755))
+	apiVersion := strings.TrimSpace(b.spec.Info.Version)
+	if apiVersion == "" {
+		return fmt.Errorf("missing api version in spec info")
+	}
+
+	dir := path.Join(b.cfg.Out, "internal")
+	if err := os.MkdirAll(dir, os.ModePerm); err != nil {
+		return fmt.Errorf("create %q: %w", dir, err)
+	}
+
+	fName := path.Join(dir, "apiversion.go")
+	f, err := openGeneratedFile(fName)
 	if err != nil {
-		return fmt.Errorf("create %q: %w", fname, err)
+		return err
 	}
 	defer func() { _ = f.Close() }()
 
-	if err := b.templates.ExecuteTemplate(f, "client.go.tmpl", map[string]any{
-		"Name": b.cfg.Name,
-	}); err != nil {
-		return fmt.Errorf("generate client: %w", err)
+	if _, err := fmt.Fprintf(f, "package internal\n\nconst APIVersion = %q\n", apiVersion); err != nil {
+		return fmt.Errorf("write %q: %w", fName, err)
 	}
 
 	return nil
