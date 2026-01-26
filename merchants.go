@@ -624,8 +624,8 @@ func (e *MerchantsListPersons500Response) Error() string {
 
 var _ error = (*MerchantsListPersons500Response)(nil)
 
-// MerchantsGetMerchant404Response is a schema definition.
-type MerchantsGetMerchant404Response struct {
+// MerchantsGet404Response is a schema definition.
+type MerchantsGet404Response struct {
 	// The category of the error.
 	Category *ErrorCategoryClient `json:"category,omitempty"`
 	// An error code specifying the exact error that occurred.
@@ -636,11 +636,11 @@ type MerchantsGetMerchant404Response struct {
 	Message *string `json:"message,omitempty"`
 }
 
-func (e *MerchantsGetMerchant404Response) Error() string {
+func (e *MerchantsGet404Response) Error() string {
 	return fmt.Sprintf("category=%v, code=%v, instance=%v, message=%v", e.Category, e.Code, e.Instance, e.Message)
 }
 
-var _ error = (*MerchantsGetMerchant404Response)(nil)
+var _ error = (*MerchantsGet404Response)(nil)
 
 // MerchantsGetPerson404Response is a schema definition.
 type MerchantsGetPerson404Response struct {
@@ -744,7 +744,7 @@ func (c *MerchantsClient) Get(ctx context.Context, merchantCode string, params M
 
 		return &v, nil
 	case http.StatusNotFound:
-		var apiErr MerchantsGetMerchant404Response
+		var apiErr MerchantsGet404Response
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}

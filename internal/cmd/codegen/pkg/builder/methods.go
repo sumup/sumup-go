@@ -120,6 +120,12 @@ func pathBuilder(path string) string {
 }
 
 func (b *Builder) operationToMethod(tagName, method, path string, o *openapi3.Operation) (*Method, error) {
+	successResponses, err := b.collectSuccessResponses(o)
+	if err != nil {
+		return nil, fmt.Errorf("collect successful responses: %w", err)
+	}
+	singleSuccess := len(successResponses) == 1
+
 	respType, err := b.getSuccessResponseType(tagName, o)
 	if err != nil {
 		return nil, fmt.Errorf("get successful response type: %w", err)
@@ -137,9 +143,10 @@ func (b *Builder) operationToMethod(tagName, method, path string, o *openapi3.Op
 	if o.RequestBody != nil {
 		mt, ok := o.RequestBody.Value.Content["application/json"]
 		if ok && mt.Schema != nil {
+			paramType := typeName + "Params"
 			params = append(params, Parameter{
 				Name: "body",
-				Type: typeName,
+				Type: paramType,
 			})
 			hasBody = true
 		}
@@ -157,8 +164,8 @@ func (b *Builder) operationToMethod(tagName, method, path string, o *openapi3.Op
 
 	responses := make([]Response, 0, o.Responses.Len())
 	for code, resp := range o.Responses.Map() {
-		operationName := strcase.ToCamel(o.OperationID)
-		typ := b.responseToType(tagName, operationName, resp, code)
+		operationName := operationMethodName(o)
+		typ := b.responseToType(tagName, operationName, resp, code, singleSuccess)
 
 		description := code
 		if resp.Value.Description != nil {
@@ -223,11 +230,71 @@ type ResponseType struct {
 }
 
 func (b *Builder) getSuccessResponseType(tagName string, o *openapi3.Operation) (*ResponseType, error) {
-	type responseInfo struct {
-		content *openapi3.MediaType
-		code    string
+	successResponses, err := b.collectSuccessResponses(o)
+	if err != nil {
+		return nil, err
 	}
 
+	if len(successResponses) == 0 {
+		return nil, nil
+	}
+
+	if len(successResponses) == 1 {
+		resp := successResponses[0]
+		if resp.content.Schema != nil && resp.content.Schema.Ref != "" {
+			return &ResponseType{
+				Type: b.getReferenceSchema(resp.content.Schema),
+			}, nil
+		}
+
+		operationName := operationMethodName(o)
+		typeName := b.operationTypeName(tagName, operationName)
+		return &ResponseType{
+			Type: b.getResponseName(typeName, resp.code, resp.content, true),
+		}, nil
+	}
+
+	operationName := operationMethodName(o)
+	typeName := b.operationTypeName(tagName, operationName)
+	return &ResponseType{
+		Type:    typeName + "Response",
+		IsOneOf: true,
+	}, nil
+}
+
+func (b *Builder) responseToType(tagName, operationName string, resp *openapi3.ResponseRef, code string, singleSuccess bool) string {
+	if resp.Ref != "" {
+		return strcase.ToCamel(strings.TrimPrefix(resp.Ref, "#/components/responses/")) + "Response"
+	}
+
+	content, ok := resp.Value.Content["application/json"]
+	if !ok {
+		return ""
+	}
+
+	if content.Schema == nil {
+		return ""
+	}
+
+	if content.Schema.Ref != "" {
+		return b.getReferenceSchema(content.Schema)
+	}
+
+	if content.Schema.Value != nil {
+		typeName := b.operationTypeName(tagName, operationName)
+		isSuccess := strings.HasPrefix(code, "2")
+		return b.getResponseName(typeName, code, content, isSuccess && singleSuccess)
+	}
+
+	return ""
+}
+
+type responseInfo struct {
+	content *openapi3.MediaType
+	code    string
+}
+
+func (b *Builder) collectSuccessResponses(o *openapi3.Operation) ([]responseInfo, error) {
 	successResponses := make([]responseInfo, 0)
 	for name, response := range o.Responses.Map() {
 		// TODO: throw error here?
@@ -260,57 +327,7 @@ func (b *Builder) getSuccessResponseType(tagName string, o *openapi3.Operation) 
 		}
 	}
 
-	if len(successResponses) == 0 {
-		return nil, nil
-	}
-
-	if len(successResponses) == 1 {
-		resp := successResponses[0]
-		if resp.content.Schema != nil && resp.content.Schema.Ref != "" {
-			return &ResponseType{
-				Type: b.getReferenceSchema(resp.content.Schema),
-			}, nil
-		}
-
-		operationName := strcase.ToCamel(o.OperationID)
-		typeName := b.operationTypeName(tagName, operationName)
-		return &ResponseType{
-			Type: b.getResponseName(typeName, resp.code, resp.content),
-		}, nil
-	}
-
-	operationName := strcase.ToCamel(o.OperationID)
-	typeName := b.operationTypeName(tagName, operationName)
-	return &ResponseType{
-		Type:    typeName + "Response",
-		IsOneOf: true,
-	}, nil
-}
-
-func (b *Builder) responseToType(tagName, operationName string, resp *openapi3.ResponseRef, code string) string {
-	if resp.Ref != "" {
-		return strcase.ToCamel(strings.TrimPrefix(resp.Ref, "#/components/responses/")) + "Response"
-	}
-
-	content, ok := resp.Value.Content["application/json"]
-	if !ok {
-		return ""
-	}
-
-	if content.Schema == nil {
-		return ""
-	}
-
-	if content.Schema.Ref != "" {
-		return b.getReferenceSchema(content.Schema)
-	}
-
-	if content.Schema.Value != nil {
-		typeName := b.operationTypeName(tagName, operationName)
-		return b.getResponseName(typeName, code, content)
-	}
-
-	return ""
+	return successResponses, nil
 }
 
 func (b *Builder) buildPathParams(paramType string, params openapi3.Parameters) ([]Parameter, error) {

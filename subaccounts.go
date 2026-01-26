@@ -47,38 +47,38 @@ type Permissions struct {
 	RefundTransactions         bool `json:"refund_transactions"`
 }
 
-// SubaccountsCreateSubAccount is a schema definition.
-type SubaccountsCreateSubAccount struct {
+// SubaccountsCreateSubAccountParams is a schema definition.
+type SubaccountsCreateSubAccountParams struct {
 	Nickname *string `json:"nickname,omitempty"`
 	// Min length: 8
-	Password    string                                  `json:"password"`
-	Permissions *SubaccountsCreateSubAccountPermissions `json:"permissions,omitempty"`
+	Password    string                                        `json:"password"`
+	Permissions *SubaccountsCreateSubAccountParamsPermissions `json:"permissions,omitempty"`
 	// Format: email
 	Username string `json:"username"`
 }
 
-// SubaccountsCreateSubAccountPermissions is a schema definition.
-type SubaccountsCreateSubAccountPermissions struct {
+// SubaccountsCreateSubAccountParamsPermissions is a schema definition.
+type SubaccountsCreateSubAccountParamsPermissions struct {
 	CreateMotoPayments         *bool `json:"create_moto_payments,omitempty"`
 	CreateReferral             *bool `json:"create_referral,omitempty"`
 	FullTransactionHistoryView *bool `json:"full_transaction_history_view,omitempty"`
 	RefundTransactions         *bool `json:"refund_transactions,omitempty"`
 }
 
-// SubaccountsUpdateSubAccount is a schema definition.
-type SubaccountsUpdateSubAccount struct {
+// SubaccountsUpdateSubAccountParams is a schema definition.
+type SubaccountsUpdateSubAccountParams struct {
 	Disabled *bool   `json:"disabled,omitempty"`
 	Nickname *string `json:"nickname,omitempty"`
 	// Min length: 8
-	Password    *string                                 `json:"password,omitempty"`
-	Permissions *SubaccountsUpdateSubAccountPermissions `json:"permissions,omitempty"`
+	Password    *string                                       `json:"password,omitempty"`
+	Permissions *SubaccountsUpdateSubAccountParamsPermissions `json:"permissions,omitempty"`
 	// Format: email
 	// Max length: 256
 	Username *string `json:"username,omitempty"`
 }
 
-// SubaccountsUpdateSubAccountPermissions is a schema definition.
-type SubaccountsUpdateSubAccountPermissions struct {
+// SubaccountsUpdateSubAccountParamsPermissions is a schema definition.
+type SubaccountsUpdateSubAccountParamsPermissions struct {
 	CreateMotoPayments         *bool `json:"create_moto_payments,omitempty"`
 	CreateReferral             *bool `json:"create_referral,omitempty"`
 	FullTransactionHistoryView *bool `json:"full_transaction_history_view,omitempty"`
@@ -111,8 +111,8 @@ func (p *SubaccountsListSubAccountsParams) QueryValues() url.Values {
 	return q
 }
 
-// SubaccountsListSubAccounts200Response is a schema definition.
-type SubaccountsListSubAccounts200Response []Operator
+// SubaccountsListSubAccountsResponse is a schema definition.
+type SubaccountsListSubAccountsResponse []Operator
 
 type SubaccountsClient struct {
 	c *client.Client
@@ -124,7 +124,7 @@ func NewSubaccountsClient(c *client.Client) *SubaccountsClient {
 
 // Returns list of operators for currently authorized user's merchant.
 // Deprecated: Subaccounts API is deprecated, to list users in your merchant account please use [List members](https://developer.sumup.com/api/members/list) instead.
-func (c *SubaccountsClient) ListSubAccounts(ctx context.Context, params SubaccountsListSubAccountsParams) (*SubaccountsListSubAccounts200Response, error) {
+func (c *SubaccountsClient) ListSubAccounts(ctx context.Context, params SubaccountsListSubAccountsParams) (*SubaccountsListSubAccountsResponse, error) {
 	path := fmt.Sprintf("/v0.1/me/accounts")
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
@@ -135,7 +135,7 @@ func (c *SubaccountsClient) ListSubAccounts(ctx context.Context, params Subaccou
 
 	switch resp.StatusCode {
 	case http.StatusOK:
-		var v SubaccountsListSubAccounts200Response
+		var v SubaccountsListSubAccountsResponse
 		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
 			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}
@@ -149,7 +149,7 @@ func (c *SubaccountsClient) ListSubAccounts(ctx context.Context, params Subaccou
 // Creates new operator for currently authorized users' merchant.
 // Deprecated: Subaccounts API is deprecated, to create a user in your merchant account please use [Create member](https://developer.sumup.com/api/members/create)
 // instead.
-func (c *SubaccountsClient) CreateSubAccount(ctx context.Context, body SubaccountsCreateSubAccount) (*Operator, error) {
+func (c *SubaccountsClient) CreateSubAccount(ctx context.Context, body SubaccountsCreateSubAccountParams) (*Operator, error) {
 	path := fmt.Sprintf("/v0.1/me/accounts")
 
 	resp, err := c.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
@@ -231,7 +231,7 @@ func (c *SubaccountsClient) CompatGetOperator(ctx context.Context, operatorID in
 // Updates operator. If the operator was disabled and their password is updated they will be unblocked.
 // Deprecated: Subaccounts API is deprecated, to update a user that's a member of your merchant account please
 // use [Update member](https://developer.sumup.com/api/members/update) instead.
-func (c *SubaccountsClient) UpdateSubAccount(ctx context.Context, operatorID int32, body SubaccountsUpdateSubAccount) (*Operator, error) {
+func (c *SubaccountsClient) UpdateSubAccount(ctx context.Context, operatorID int32, body SubaccountsUpdateSubAccountParams) (*Operator, error) {
 	path := fmt.Sprintf("/v0.1/me/accounts/%v", operatorID)
 
 	resp, err := c.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))

@@ -73,6 +73,7 @@ func (b *Builder) pathsToBodyTypes(tagName string, paths *openapi3.Paths) []Writ
 	}
 
 	paramTypes := make([]Writable, 0)
+	aliasTypes := make(map[string]bool)
 	for _, path := range paths.InMatchingOrder() {
 		pathSpec := paths.Find(path)
 		if pathSpec.Ref != "" {
@@ -91,7 +92,19 @@ func (b *Builder) pathsToBodyTypes(tagName string, paths *openapi3.Paths) []Writ
 			if opSpec.RequestBody != nil {
 				mt, ok := opSpec.RequestBody.Value.Content["application/json"]
 				if ok && mt.Schema != nil {
-					bodyObject, additionalTypes := b.createObject(mt.Schema.Value, typeName)
+					paramsName := typeName + "Params"
+					if mt.Schema.Ref != "" {
+						baseName := b.schemaTypeName(mt.Schema.Ref)
+						if paramsName != baseName && !aliasTypes[paramsName] {
+							paramTypes = append(paramTypes, &TypeDeclaration{
+								Name: paramsName,
+								Type: "= " + baseName,
+							})
+							aliasTypes[paramsName] = true
+						}
+						continue
+					}
+					bodyObject, additionalTypes := b.createObject(mt.Schema.Value, paramsName)
 					paramTypes = append(paramTypes, bodyObject)
 					paramTypes = append(paramTypes, additionalTypes...)
 				}
@@ -192,13 +205,22 @@ func (b *Builder) pathsToResponseTypes(tagName string, paths *openapi3.Paths) []
 		slices.Sort(operationKeys)
 		for _, method := range operationKeys {
 			opSpec := operations[method]
-			operationName := strcase.ToCamel(opSpec.OperationID)
+			operationName := operationMethodName(opSpec)
 			typeName := b.operationTypeName(tagName, operationName)
 
 			responses := opSpec.Responses.Map()
 			responseKeys := slices.Collect(maps.Keys(responses))
 
 			slices.Sort(responseKeys)
+
+			successInfos, err := b.collectSuccessResponses(opSpec)
+			if err != nil {
+				slog.Warn("failed to collect success responses",
+					slog.Any("error", err),
+					slog.String("operation_id", opSpec.OperationID),
+				)
+			}
+			singleSuccess := len(successInfos) == 1
 
 			var successResponses []string
 			for _, code := range responseKeys {
@@ -229,7 +251,7 @@ func (b *Builder) pathsToResponseTypes(tagName string, paths *openapi3.Paths) []
 					continue
 				}
 
-				name := b.getResponseName(typeName, code, content)
+				name := b.getResponseName(typeName, code, content, isSuccess && singleSuccess)
 
 				objects := b.generateSchemaComponents(name, content.Schema, isErr)
 				paramTypes = append(paramTypes, objects...)
@@ -761,7 +783,11 @@ func uniqueFunc[T any, C comparable](arr []T, keyFn func(T) C) []T {
 	return arr[:n]
 }
 
-func (b *Builder) getResponseName(operationName, responseCode string, content *openapi3.MediaType) string {
+func (b *Builder) getResponseName(operationName, responseCode string, content *openapi3.MediaType, singleSuccess bool) string {
+	if singleSuccess {
+		return operationName + "Response"
+	}
+
 	if content.Schema != nil && content.Schema.Value.Title != "" {
 		return operationName + strcase.ToCamel(content.Schema.Value.Title) + "Response"
 	}

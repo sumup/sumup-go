@@ -154,8 +154,8 @@ func (p *MembershipsListParams) QueryValues() url.Values {
 	return q
 }
 
-// MembershipsListMemberships200Response is a schema definition.
-type MembershipsListMemberships200Response struct {
+// MembershipsListResponse is a schema definition.
+type MembershipsListResponse struct {
 	Items      []Membership `json:"items"`
 	TotalCount int          `json:"total_count"`
 }
@@ -169,7 +169,7 @@ func NewMembershipsClient(c *client.Client) *MembershipsClient {
 }
 
 // List memberships of the current user.
-func (c *MembershipsClient) List(ctx context.Context, params MembershipsListParams) (*MembershipsListMemberships200Response, error) {
+func (c *MembershipsClient) List(ctx context.Context, params MembershipsListParams) (*MembershipsListResponse, error) {
 	path := fmt.Sprintf("/v0.1/memberships")
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
@@ -180,7 +180,7 @@ func (c *MembershipsClient) List(ctx context.Context, params MembershipsListPara
 
 	switch resp.StatusCode {
 	case http.StatusOK:
-		var v MembershipsListMemberships200Response
+		var v MembershipsListResponse
 		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
 			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}

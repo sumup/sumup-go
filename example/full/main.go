@@ -115,7 +115,7 @@ func main() {
 		checkoutID := generateRandomCheckoutID()
 
 		// Create checkout using the SDK
-		checkout, err := client.Checkouts.Create(ctx, sumup.CheckoutsCreate{
+		checkout, err := client.Checkouts.Create(ctx, sumup.CheckoutsCreateParams{
 			MerchantCode:      merchant.MerchantCode,
 			Amount:            req.Amount,
 			Currency:          sumup.Currency(merchant.DefaultCurrency),

@@ -511,150 +511,9 @@ const (
 	ProcessCheckoutPaymentTypeIdeal      ProcessCheckoutPaymentType = "ideal"
 )
 
-// Details of the payment checkout.
-type CheckoutsCreate struct {
-	// Amount of the payment.
-	Amount float32 `json:"amount"`
-	// Unique ID of the payment checkout specified by the client application when creating the checkout resource.
-	// Max length: 90
-	CheckoutReference string `json:"checkout_reference"`
-	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
-	// currency values are enumerated above.
-	Currency Currency `json:"currency"`
-	// Unique identification of a customer. If specified, the checkout session and payment instrument are associated with
-	// the referenced customer.
-	CustomerID *string `json:"customer_id,omitempty"`
-	// Date and time of the creation of the payment checkout. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
-	//
-	// Read only
-	Date *time.Time `json:"date,omitempty"`
-	// Short description of the checkout visible in the SumUp dashboard. The description can contribute to reporting, allowing
-	// easier identification of a checkout.
-	Description *string `json:"description,omitempty"`
-	// Unique ID of the checkout resource.
-	// Read only
-	ID *string `json:"id,omitempty"`
-	// Unique identifying code of the merchant profile.
-	MerchantCode string `json:"merchant_code"`
-	// Purpose of the checkout.
-	// Default: CHECKOUT
-	Purpose *CheckoutsCreatePurpose `json:"purpose,omitempty"`
-	// __Required__ for [APMs](https://developer.sumup.com/online-payments/apm/introduction) and __recommended__ for
-	// card payments. Refers to a url where the end user is redirected once the payment processing completes. If
-	// not specified, the [Payment Widget](https://developer.sumup.com/online-payments/tools/card-widget) renders [3DS
-	// challenge](https://developer.sumup.com/online-payments/features/3ds) within an iframe instead of performing a
-	// full-page redirect.
-	RedirectURL *string `json:"redirect_url,omitempty"`
-	// URL to which the SumUp platform sends the processing status of the payment checkout.
-	// Format: uri
-	ReturnURL *string `json:"return_url,omitempty"`
-	// Current status of the checkout.
-	// Read only
-	Status *CheckoutsCreateStatus `json:"status,omitempty"`
-	// List of transactions related to the payment.
-	// Read only
-	// Unique items only
-	Transactions []CheckoutsCreateTransaction `json:"transactions,omitempty"`
-	// Date and time of the checkout expiration before which the client application needs to send a processing request.
-	// If no value is present, the checkout does not have an expiration time.
-	ValidUntil *time.Time `json:"valid_until,omitempty"`
-}
+type CheckoutsCreateParams = CheckoutCreateRequest
 
-// Purpose of the checkout.
-// Default: CHECKOUT
-type CheckoutsCreatePurpose string
-
-const (
-	CheckoutsCreatePurposeCheckout              CheckoutsCreatePurpose = "CHECKOUT"
-	CheckoutsCreatePurposeSetupRecurringPayment CheckoutsCreatePurpose = "SETUP_RECURRING_PAYMENT"
-)
-
-// Current status of the checkout.
-// Read only
-type CheckoutsCreateStatus string
-
-const (
-	CheckoutsCreateStatusFailed  CheckoutsCreateStatus = "FAILED"
-	CheckoutsCreateStatusPaid    CheckoutsCreateStatus = "PAID"
-	CheckoutsCreateStatusPending CheckoutsCreateStatus = "PENDING"
-)
-
-// CheckoutsCreateTransaction is a schema definition.
-type CheckoutsCreateTransaction struct {
-	// Total amount of the transaction.
-	Amount *float32 `json:"amount,omitempty"`
-	// Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
-	AuthCode *string `json:"auth_code,omitempty"`
-	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
-	// currency values are enumerated above.
-	Currency *Currency `json:"currency,omitempty"`
-	// Entry mode of the payment details.
-	EntryMode *EntryMode `json:"entry_mode,omitempty"`
-	// Unique ID of the transaction.
-	ID *string `json:"id,omitempty"`
-	// Current number of the installment for deferred payments.
-	// Min: 1
-	InstallmentsCount *int `json:"installments_count,omitempty"`
-	// Internal unique ID of the transaction on the SumUp platform.
-	// Format: int64
-	InternalID *int64 `json:"internal_id,omitempty"`
-	// Unique code of the registered merchant to whom the payment is made.
-	MerchantCode *string `json:"merchant_code,omitempty"`
-	// Payment type used for the transaction.
-	PaymentType *PaymentType `json:"payment_type,omitempty"`
-	// Current status of the transaction.
-	Status *CheckoutsCreateTransactionStatus `json:"status,omitempty"`
-	// Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
-	Timestamp *time.Time `json:"timestamp,omitempty"`
-	// Amount of the tip (out of the total transaction amount).
-	TipAmount *float32 `json:"tip_amount,omitempty"`
-	// Transaction code returned by the acquirer/processing entity after processing the transaction.
-	TransactionCode *string `json:"transaction_code,omitempty"`
-	// Amount of the applicable VAT (out of the total transaction amount).
-	VATAmount *float32 `json:"vat_amount,omitempty"`
-}
-
-// Current status of the transaction.
-type CheckoutsCreateTransactionStatus string
-
-const (
-	CheckoutsCreateTransactionStatusCancelled  CheckoutsCreateTransactionStatus = "CANCELLED"
-	CheckoutsCreateTransactionStatusFailed     CheckoutsCreateTransactionStatus = "FAILED"
-	CheckoutsCreateTransactionStatusPending    CheckoutsCreateTransactionStatus = "PENDING"
-	CheckoutsCreateTransactionStatusSuccessful CheckoutsCreateTransactionStatus = "SUCCESSFUL"
-)
-
-// Details of the payment instrument for processing the checkout.
-type CheckoutsProcess struct {
-	// __Required when payment type is `card`.__ Details of the payment card.
-	Card *Card `json:"card,omitempty"`
-	// __Required when `token` is provided.__ Unique ID of the customer.
-	CustomerID *string `json:"customer_id,omitempty"`
-	// Number of installments for deferred payments. Available only to merchant users in Brazil.
-	// Min: 1
-	// Max: 12
-	Installments *int `json:"installments,omitempty"`
-	// Mandate is passed when a card is to be tokenized
-	Mandate *MandatePayload `json:"mandate,omitempty"`
-	// Describes the payment method used to attempt processing
-	PaymentType CheckoutsProcessPaymentType `json:"payment_type"`
-	// Personal details for the customer.
-	PersonalDetails *PersonalDetails `json:"personal_details,omitempty"`
-	// __Required when using a tokenized card to process a checkout.__ Unique token identifying the saved payment card
-	// for a customer.
-	Token *string `json:"token,omitempty"`
-}
-
-// Describes the payment method used to attempt processing
-type CheckoutsProcessPaymentType string
-
-const (
-	CheckoutsProcessPaymentTypeBancontact CheckoutsProcessPaymentType = "bancontact"
-	CheckoutsProcessPaymentTypeBlik       CheckoutsProcessPaymentType = "blik"
-	CheckoutsProcessPaymentTypeBoleto     CheckoutsProcessPaymentType = "boleto"
-	CheckoutsProcessPaymentTypeCard       CheckoutsProcessPaymentType = "card"
-	CheckoutsProcessPaymentTypeIdeal      CheckoutsProcessPaymentType = "ideal"
-)
+type CheckoutsProcessParams = ProcessCheckout
 
 // CheckoutsListParams are query parameters for ListCheckouts.
 type CheckoutsListParams struct {
@@ -697,35 +556,35 @@ func (p *CheckoutsListAvailablePaymentMethodsParams) QueryValues() url.Values {
 	return q
 }
 
-// CheckoutsListCheckouts200Response is a schema definition.
-type CheckoutsListCheckouts200Response []CheckoutSuccess
+// CheckoutsListResponse is a schema definition.
+type CheckoutsListResponse []CheckoutSuccess
 
-// CheckoutsGetPaymentMethods200Response is a schema definition.
-type CheckoutsGetPaymentMethods200Response struct {
-	AvailablePaymentMethods []CheckoutsGetPaymentMethods200ResponseAvailablePaymentMethod `json:"available_payment_methods,omitempty"`
+// CheckoutsListAvailablePaymentMethodsResponse is a schema definition.
+type CheckoutsListAvailablePaymentMethodsResponse struct {
+	AvailablePaymentMethods []CheckoutsListAvailablePaymentMethodsResponseAvailablePaymentMethod `json:"available_payment_methods,omitempty"`
 }
 
-// CheckoutsGetPaymentMethods200ResponseAvailablePaymentMethod is a schema definition.
-type CheckoutsGetPaymentMethods200ResponseAvailablePaymentMethod struct {
+// CheckoutsListAvailablePaymentMethodsResponseAvailablePaymentMethod is a schema definition.
+type CheckoutsListAvailablePaymentMethodsResponseAvailablePaymentMethod struct {
 	// The ID of the payment method.
 	ID string `json:"id"`
 }
 
-// CheckoutsProcessCheckout400Response is a schema definition.
-type CheckoutsProcessCheckout400Response json.RawMessage
+// CheckoutsProcess400Response is a schema definition.
+type CheckoutsProcess400Response json.RawMessage
 
-func (e *CheckoutsProcessCheckout400Response) Error() string {
+func (e *CheckoutsProcess400Response) Error() string {
 	return fmt.Sprintf("")
 }
 
-var _ error = (*CheckoutsProcessCheckout400Response)(nil)
+var _ error = (*CheckoutsProcess400Response)(nil)
 
-type CheckoutsProcessCheckoutResponse struct {
+type CheckoutsProcessResponse struct {
 	CheckoutSuccess  *CheckoutSuccess
 	CheckoutAccepted *CheckoutAccepted
 }
 
-func (r *CheckoutsProcessCheckoutResponse) AsCheckoutSuccess() (*CheckoutSuccess, bool) {
+func (r *CheckoutsProcessResponse) AsCheckoutSuccess() (*CheckoutSuccess, bool) {
 	if r.CheckoutSuccess != nil {
 		return r.CheckoutSuccess, true
 	}
@@ -733,7 +592,7 @@ func (r *CheckoutsProcessCheckoutResponse) AsCheckoutSuccess() (*CheckoutSuccess
 	return nil, false
 }
 
-func (r *CheckoutsProcessCheckoutResponse) AsCheckoutAccepted() (*CheckoutAccepted, bool) {
+func (r *CheckoutsProcessResponse) AsCheckoutAccepted() (*CheckoutAccepted, bool) {
 	if r.CheckoutAccepted != nil {
 		return r.CheckoutAccepted, true
 	}
@@ -750,7 +609,7 @@ func NewCheckoutsClient(c *client.Client) *CheckoutsClient {
 }
 
 // Lists created checkout resources according to the applied `checkout_reference`.
-func (c *CheckoutsClient) List(ctx context.Context, params CheckoutsListParams) (*CheckoutsListCheckouts200Response, error) {
+func (c *CheckoutsClient) List(ctx context.Context, params CheckoutsListParams) (*CheckoutsListResponse, error) {
 	path := fmt.Sprintf("/v0.1/checkouts")
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
@@ -761,7 +620,7 @@ func (c *CheckoutsClient) List(ctx context.Context, params CheckoutsListParams) 
 
 	switch resp.StatusCode {
 	case http.StatusOK:
-		var v CheckoutsListCheckouts200Response
+		var v CheckoutsListResponse
 		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
 			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}
@@ -785,7 +644,7 @@ func (c *CheckoutsClient) List(ctx context.Context, params CheckoutsListParams) 
 // For 3DS checkouts, add the `redirect_url` parameter to your request body schema.
 //
 // Follow by processing a checkout to charge the provided payment instrument.
-func (c *CheckoutsClient) Create(ctx context.Context, body CheckoutsCreate) (*Checkout, error) {
+func (c *CheckoutsClient) Create(ctx context.Context, body CheckoutsCreateParams) (*Checkout, error) {
 	path := fmt.Sprintf("/v0.1/checkouts")
 
 	resp, err := c.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
@@ -836,7 +695,7 @@ func (c *CheckoutsClient) Create(ctx context.Context, body CheckoutsCreate) (*Ch
 }
 
 // Get payment methods available for the given merchant to use with a checkout.
-func (c *CheckoutsClient) ListAvailablePaymentMethods(ctx context.Context, merchantCode string, params CheckoutsListAvailablePaymentMethodsParams) (*CheckoutsGetPaymentMethods200Response, error) {
+func (c *CheckoutsClient) ListAvailablePaymentMethods(ctx context.Context, merchantCode string, params CheckoutsListAvailablePaymentMethodsParams) (*CheckoutsListAvailablePaymentMethodsResponse, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/payment-methods", merchantCode)
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
@@ -847,7 +706,7 @@ func (c *CheckoutsClient) ListAvailablePaymentMethods(ctx context.Context, merch
 
 	switch resp.StatusCode {
 	case http.StatusOK:
-		var v CheckoutsGetPaymentMethods200Response
+		var v CheckoutsListAvailablePaymentMethodsResponse
 		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
 			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}
@@ -958,7 +817,7 @@ func (c *CheckoutsClient) Get(ctx context.Context, id string) (*CheckoutSuccess,
 // resource initiated in the `Create a checkout` endpoint.
 //
 // Follow this request with `Retrieve a checkout` to confirm its status.
-func (c *CheckoutsClient) Process(ctx context.Context, id string, body CheckoutsProcess) (*CheckoutsProcessCheckoutResponse, error) {
+func (c *CheckoutsClient) Process(ctx context.Context, id string, body CheckoutsProcessParams) (*CheckoutsProcessResponse, error) {
 	path := fmt.Sprintf("/v0.1/checkouts/%v", id)
 
 	resp, err := c.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))
@@ -974,7 +833,7 @@ func (c *CheckoutsClient) Process(ctx context.Context, id string, body Checkouts
 			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}
 
-		return &CheckoutsProcessCheckoutResponse{
+		return &CheckoutsProcessResponse{
 			CheckoutSuccess: &v,
 		}, nil
 	case http.StatusAccepted:
@@ -983,11 +842,11 @@ func (c *CheckoutsClient) Process(ctx context.Context, id string, body Checkouts
 			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}
 
-		return &CheckoutsProcessCheckoutResponse{
+		return &CheckoutsProcessResponse{
 			CheckoutAccepted: &v,
 		}, nil
 	case http.StatusBadRequest:
-		var apiErr CheckoutsProcessCheckout400Response
+		var apiErr CheckoutsProcess400Response
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}

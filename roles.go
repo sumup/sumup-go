@@ -35,8 +35,8 @@ type Role struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// RolesCreate is a schema definition.
-type RolesCreate struct {
+// RolesCreateParams is a schema definition.
+type RolesCreateParams struct {
 	// User-defined description of the role.
 	Description *string `json:"description,omitempty"`
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
@@ -50,8 +50,8 @@ type RolesCreate struct {
 	Permissions []string `json:"permissions"`
 }
 
-// RolesUpdate is a schema definition.
-type RolesUpdate struct {
+// RolesUpdateParams is a schema definition.
+type RolesUpdateParams struct {
 	// User-defined description of the role.
 	Description *string `json:"description,omitempty"`
 	// User-defined name of the role.
@@ -61,8 +61,8 @@ type RolesUpdate struct {
 	Permissions []string `json:"permissions,omitempty"`
 }
 
-// RolesListMerchantRoles200Response is a schema definition.
-type RolesListMerchantRoles200Response struct {
+// RolesListResponse is a schema definition.
+type RolesListResponse struct {
 	Items []Role `json:"items"`
 }
 
@@ -75,7 +75,7 @@ func NewRolesClient(c *client.Client) *RolesClient {
 }
 
 // List merchant's custom roles.
-func (c *RolesClient) List(ctx context.Context, merchantCode string) (*RolesListMerchantRoles200Response, error) {
+func (c *RolesClient) List(ctx context.Context, merchantCode string) (*RolesListResponse, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/roles", merchantCode)
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path)
@@ -86,7 +86,7 @@ func (c *RolesClient) List(ctx context.Context, merchantCode string) (*RolesList
 
 	switch resp.StatusCode {
 	case http.StatusOK:
-		var v RolesListMerchantRoles200Response
+		var v RolesListResponse
 		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
 			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}
@@ -106,7 +106,7 @@ func (c *RolesClient) List(ctx context.Context, merchantCode string) (*RolesList
 
 // Create a custom role for the merchant. Roles are defined by the set of permissions that they grant to the
 // members that they are assigned to.
-func (c *RolesClient) Create(ctx context.Context, merchantCode string, body RolesCreate) (*Role, error) {
+func (c *RolesClient) Create(ctx context.Context, merchantCode string, body RolesCreateParams) (*Role, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/roles", merchantCode)
 
 	resp, err := c.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
@@ -205,7 +205,7 @@ func (c *RolesClient) Get(ctx context.Context, merchantCode string, roleID strin
 }
 
 // Update a custom role.
-func (c *RolesClient) Update(ctx context.Context, merchantCode string, roleID string, body RolesUpdate) (*Role, error) {
+func (c *RolesClient) Update(ctx context.Context, merchantCode string, roleID string, body RolesUpdateParams) (*Role, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/roles/%v", merchantCode, roleID)
 
 	resp, err := c.c.Call(ctx, http.MethodPatch, path, client.WithJSONBody(body))

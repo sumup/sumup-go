@@ -429,7 +429,7 @@ const (
 )
 
 // Optional amount for partial refunds of transactions.
-type TransactionsRefund struct {
+type TransactionsRefundParams struct {
 	// Amount to be refunded. Eligible amount can't exceed the amount of the transaction and varies based on country
 	// and currency. If you do not specify a value, the system performs a full refund of the transaction.
 	Amount *float32 `json:"amount,omitempty"`
@@ -695,14 +695,14 @@ func (p *TransactionsGetParams) QueryValues() url.Values {
 	return q
 }
 
-// TransactionsListTransactions200Response is a schema definition.
-type TransactionsListTransactions200Response struct {
+// TransactionsListDeprecatedResponse is a schema definition.
+type TransactionsListDeprecatedResponse struct {
 	Items []TransactionHistory `json:"items,omitempty"`
 	Links []Link               `json:"links,omitempty"`
 }
 
-// TransactionsListTransactionsV21200Response is a schema definition.
-type TransactionsListTransactionsV21200Response struct {
+// TransactionsListResponse is a schema definition.
+type TransactionsListResponse struct {
 	Items []TransactionHistory `json:"items,omitempty"`
 	Links []Link               `json:"links,omitempty"`
 }
@@ -717,7 +717,7 @@ func NewTransactionsClient(c *client.Client) *TransactionsClient {
 
 // Lists detailed history of all transactions associated with the merchant profile.
 // Deprecated: this operation is deprecated
-func (c *TransactionsClient) ListDeprecated(ctx context.Context, params TransactionsListDeprecatedParams) (*TransactionsListTransactions200Response, error) {
+func (c *TransactionsClient) ListDeprecated(ctx context.Context, params TransactionsListDeprecatedParams) (*TransactionsListDeprecatedResponse, error) {
 	path := fmt.Sprintf("/v0.1/me/transactions/history")
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
@@ -728,7 +728,7 @@ func (c *TransactionsClient) ListDeprecated(ctx context.Context, params Transact
 
 	switch resp.StatusCode {
 	case http.StatusOK:
-		var v TransactionsListTransactions200Response
+		var v TransactionsListDeprecatedResponse
 		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
 			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}
@@ -793,7 +793,7 @@ func (c *TransactionsClient) GetDeprecated(ctx context.Context, params Transacti
 }
 
 // Lists detailed history of all transactions associated with the merchant profile.
-func (c *TransactionsClient) List(ctx context.Context, merchantCode string, params TransactionsListParams) (*TransactionsListTransactionsV21200Response, error) {
+func (c *TransactionsClient) List(ctx context.Context, merchantCode string, params TransactionsListParams) (*TransactionsListResponse, error) {
 	path := fmt.Sprintf("/v2.1/merchants/%v/transactions/history", merchantCode)
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
@@ -804,7 +804,7 @@ func (c *TransactionsClient) List(ctx context.Context, merchantCode string, para
 
 	switch resp.StatusCode {
 	case http.StatusOK:
-		var v TransactionsListTransactionsV21200Response
+		var v TransactionsListResponse
 		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
 			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}
@@ -867,7 +867,7 @@ func (c *TransactionsClient) Get(ctx context.Context, merchantCode string, param
 }
 
 // Refunds an identified transaction either in full or partially.
-func (c *TransactionsClient) Refund(ctx context.Context, txnID string, body TransactionsRefund) error {
+func (c *TransactionsClient) Refund(ctx context.Context, txnID string, body TransactionsRefundParams) error {
 	path := fmt.Sprintf("/v0.1/me/refund/%v", txnID)
 
 	resp, err := c.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))

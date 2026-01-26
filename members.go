@@ -76,8 +76,8 @@ type MembershipUserClassic struct {
 	UserID int32 `json:"user_id"`
 }
 
-// MembersCreate is a schema definition.
-type MembersCreate struct {
+// MembersCreateParams is a schema definition.
+type MembersCreateParams struct {
 	// Object attributes that are modifiable only by SumUp applications.
 	Attributes Attributes `json:"attributes,omitempty"`
 	// Email address of the member to add.
@@ -101,8 +101,8 @@ type MembersCreate struct {
 	Roles []string `json:"roles"`
 }
 
-// MembersUpdate is a schema definition.
-type MembersUpdate struct {
+// MembersUpdateParams is a schema definition.
+type MembersUpdateParams struct {
 	// Object attributes that are modifiable only by SumUp applications.
 	Attributes Attributes `json:"attributes,omitempty"`
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
@@ -111,11 +111,11 @@ type MembersUpdate struct {
 	Metadata Metadata `json:"metadata,omitempty"`
 	Roles    []string `json:"roles,omitempty"`
 	// Allows you to update user data of managed users.
-	User *MembersUpdateUser `json:"user,omitempty"`
+	User *MembersUpdateParamsUser `json:"user,omitempty"`
 }
 
 // Allows you to update user data of managed users.
-type MembersUpdateUser struct {
+type MembersUpdateParamsUser struct {
 	// User's preferred name. Used for display purposes only.
 	Nickname *string `json:"nickname,omitempty"`
 	// Password of the member to add. Only used if `is_managed_user` is true.
@@ -177,8 +177,8 @@ func (p *MembersListParams) QueryValues() url.Values {
 	return q
 }
 
-// MembersListMerchantMembers200Response is a schema definition.
-type MembersListMerchantMembers200Response struct {
+// MembersListResponse is a schema definition.
+type MembersListResponse struct {
 	Items      []Member `json:"items"`
 	TotalCount *int     `json:"total_count,omitempty"`
 }
@@ -192,7 +192,7 @@ func NewMembersClient(c *client.Client) *MembersClient {
 }
 
 // Lists merchant members.
-func (c *MembersClient) List(ctx context.Context, merchantCode string, params MembersListParams) (*MembersListMerchantMembers200Response, error) {
+func (c *MembersClient) List(ctx context.Context, merchantCode string, params MembersListParams) (*MembersListResponse, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/members", merchantCode)
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
@@ -203,7 +203,7 @@ func (c *MembersClient) List(ctx context.Context, merchantCode string, params Me
 
 	switch resp.StatusCode {
 	case http.StatusOK:
-		var v MembersListMerchantMembers200Response
+		var v MembersListResponse
 		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
 			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}
@@ -222,7 +222,7 @@ func (c *MembersClient) List(ctx context.Context, merchantCode string, params Me
 }
 
 // Create a merchant member.
-func (c *MembersClient) Create(ctx context.Context, merchantCode string, body MembersCreate) (*Member, error) {
+func (c *MembersClient) Create(ctx context.Context, merchantCode string, body MembersCreateParams) (*Member, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/members", merchantCode)
 
 	resp, err := c.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
@@ -321,7 +321,7 @@ func (c *MembersClient) Get(ctx context.Context, merchantCode string, memberID s
 }
 
 // Update the merchant member.
-func (c *MembersClient) Update(ctx context.Context, merchantCode string, memberID string, body MembersUpdate) (*Member, error) {
+func (c *MembersClient) Update(ctx context.Context, merchantCode string, memberID string, body MembersUpdateParams) (*Member, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/members/%v", merchantCode, memberID)
 
 	resp, err := c.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))

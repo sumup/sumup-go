@@ -14,7 +14,7 @@ import (
 func TestIntegrationWithGeneratedTypes(t *testing.T) {
 	// Create a member creation request with a password
 	pwd := secret.New("super-secret-password")
-	body := sumup.MembersCreate{
+	body := sumup.MembersCreateParams{
 		Email:    "test@example.com",
 		Password: &pwd,
 		Roles:    []string{"admin"},
@@ -52,7 +52,7 @@ func TestIntegrationWithGeneratedTypes(t *testing.T) {
 	}
 
 	// Unmarshal back
-	var decodedBody sumup.MembersCreate
+	var decodedBody sumup.MembersCreateParams
 	if err := json.Unmarshal(data, &decodedBody); err != nil {
 		t.Fatalf("json.Unmarshal() error = %v", err)
 	}
@@ -68,8 +68,8 @@ func TestIntegrationWithGeneratedTypes(t *testing.T) {
 // TestUpdateMemberPasswordMasking verifies password masking in update operations.
 func TestUpdateMemberPasswordMasking(t *testing.T) {
 	pwd := secret.New("new-password-123")
-	updateBody := sumup.MembersUpdate{
-		User: &sumup.MembersUpdateUser{
+	updateBody := sumup.MembersUpdateParams{
+		User: &sumup.MembersUpdateParamsUser{
 			Password: &pwd,
 		},
 	}

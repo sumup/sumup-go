@@ -58,22 +58,16 @@ const (
 	PaymentInstrumentResponseTypeCard PaymentInstrumentResponseType = "card"
 )
 
-// CustomersCreate is a schema definition.
-type CustomersCreate struct {
-	// Unique ID of the customer.
-	CustomerID string `json:"customer_id"`
+type CustomersCreateParams = Customer
+
+// CustomersUpdateParams is a schema definition.
+type CustomersUpdateParams struct {
 	// Personal details for the customer.
 	PersonalDetails *PersonalDetails `json:"personal_details,omitempty"`
 }
 
-// CustomersUpdate is a schema definition.
-type CustomersUpdate struct {
-	// Personal details for the customer.
-	PersonalDetails *PersonalDetails `json:"personal_details,omitempty"`
-}
-
-// CustomersListPaymentInstruments200Response is a schema definition.
-type CustomersListPaymentInstruments200Response []PaymentInstrumentResponse
+// CustomersListPaymentInstrumentsResponse is a schema definition.
+type CustomersListPaymentInstrumentsResponse []PaymentInstrumentResponse
 
 type CustomersClient struct {
 	c *client.Client
@@ -84,7 +78,7 @@ func NewCustomersClient(c *client.Client) *CustomersClient {
 }
 
 // Creates a new saved customer resource which you can later manipulate and save payment instruments to.
-func (c *CustomersClient) Create(ctx context.Context, body CustomersCreate) (*Customer, error) {
+func (c *CustomersClient) Create(ctx context.Context, body CustomersCreateParams) (*Customer, error) {
 	path := fmt.Sprintf("/v0.1/customers")
 
 	resp, err := c.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
@@ -128,7 +122,7 @@ func (c *CustomersClient) Create(ctx context.Context, body CustomersCreate) (*Cu
 }
 
 // Lists all payment instrument resources that are saved for an identified customer.
-func (c *CustomersClient) ListPaymentInstruments(ctx context.Context, customerID string) (*CustomersListPaymentInstruments200Response, error) {
+func (c *CustomersClient) ListPaymentInstruments(ctx context.Context, customerID string) (*CustomersListPaymentInstrumentsResponse, error) {
 	path := fmt.Sprintf("/v0.1/customers/%v/payment-instruments", customerID)
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path)
@@ -139,7 +133,7 @@ func (c *CustomersClient) ListPaymentInstruments(ctx context.Context, customerID
 
 	switch resp.StatusCode {
 	case http.StatusOK:
-		var v CustomersListPaymentInstruments200Response
+		var v CustomersListPaymentInstrumentsResponse
 		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
 			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}
@@ -220,7 +214,7 @@ func (c *CustomersClient) Get(ctx context.Context, customerID string) (*Customer
 //
 // The request only overwrites the parameters included in the request, all other parameters will remain with
 // their initially assigned values.
-func (c *CustomersClient) Update(ctx context.Context, customerID string, body CustomersUpdate) (*Customer, error) {
+func (c *CustomersClient) Update(ctx context.Context, customerID string, body CustomersUpdateParams) (*Customer, error) {
 	path := fmt.Sprintf("/v0.1/customers/%v", customerID)
 
 	resp, err := c.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))
