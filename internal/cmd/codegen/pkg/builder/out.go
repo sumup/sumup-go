@@ -40,83 +40,53 @@ func (b *Builder) generateResource(tagName string, paths *openapi3.Paths) error 
 
 	types := b.schemasToTypes(resolvedSchemas, b.errorSchemas)
 
-	bodyTypes := b.pathsToBodyTypes(paths)
+	bodyTypes := b.pathsToBodyTypes(tagName, paths)
 	types = append(types, bodyTypes...)
 
-	paramTypes := b.pathsToParamTypes(paths)
+	paramTypes := b.pathsToParamTypes(tagName, paths)
 	types = append(types, paramTypes...)
 
-	responseTypes := b.pathsToResponseTypes(paths)
+	responseTypes := b.pathsToResponseTypes(tagName, paths)
 	types = append(types, responseTypes...)
 
 	respTypes := b.respToTypes(resolvedResponses, b.errorSchemas)
 	types = append(types, respTypes...)
 
-	var aliases []Alias
-	for _, t := range types {
-		if td, ok := t.(*TypeDeclaration); ok {
-			for _, f := range td.Fields {
-				if alias, ok := strings.CutPrefix(f.Type, "shared."); ok {
-					aliases = append(aliases, Alias{
-						Name:    alias,
-						Comment: f.Comment,
-					})
-				}
-			}
-		}
-	}
-	if tagName == "shared" {
-		aliases = nil
-	} else {
-		slices.SortFunc(aliases, func(a, b Alias) int {
-			return strings.Compare(a.Name, b.Name)
-		})
-		aliases = slices.CompactFunc(aliases, func(a, b Alias) bool {
-			return a.Name == b.Name
-		})
-	}
-
-	methods, err := b.pathsToMethods(paths)
+	methods, err := b.pathsToMethods(tagName, paths)
 	if err != nil {
 		return fmt.Errorf("convert paths to methods: %w", err)
 	}
 
 	slog.Info("generating file",
 		slog.String("tag", tag.Name),
-		slog.Int("aliases", len(aliases)),
 		slog.Int("schema_structs", len(types)),
 		slog.Int("body_structs", len(bodyTypes)),
 		slog.Int("path_params_structs", len(paramTypes)),
 		slog.Int("response_structs", len(respTypes)),
 	)
 
-	if err := os.MkdirAll(path.Join(b.cfg.Out, strcase.ToSnake(tag.Name)), os.ModePerm); err != nil {
+	if err := os.MkdirAll(b.cfg.Out, os.ModePerm); err != nil {
 		return err
 	}
 
 	buf := bytes.NewBuffer(nil)
 	if err := b.templates.ExecuteTemplate(buf, "resource.go.tmpl", templateData{
 		PackageName: strcase.ToSnake(tag.Name),
-		Aliases:     aliases,
 		Types:       types,
 		Methods:     methods,
+		Service:     strcase.ToCamel(tag.Name),
 	}); err != nil {
 		return err
 	}
 
-	fName := path.Join(b.cfg.Out, strcase.ToSnake(tag.Name), fmt.Sprintf("%s.go", strcase.ToSnake(tag.Name)))
+	fName := path.Join(b.cfg.Out, fmt.Sprintf("%s.go", strcase.ToSnake(tag.Name)))
 	f, err := openGeneratedFile(fName)
 	if err != nil {
 		return err
 	}
 	defer func() { _ = f.Close() }()
 
-	output := buf.String()
-	if tagName == "shared" {
-		output = strings.ReplaceAll(output, "shared.", "")
-	}
-
-	if _, err := f.WriteString(output); err != nil {
+	if _, err := f.WriteString(buf.String()); err != nil {
 		return err
 	}
 
@@ -131,8 +101,8 @@ func (b *Builder) writeClientFile(fname string, tags []string) error {
 	defer func() { _ = f.Close() }()
 
 	type resource struct {
-		Name    string
-		Package string
+		Name       string
+		ClientName string
 	}
 
 	resources := make([]resource, 0, len(tags))
@@ -141,8 +111,8 @@ func (b *Builder) writeClientFile(fname string, tags []string) error {
 			continue
 		}
 		resources = append(resources, resource{
-			Name:    strcase.ToCamel(tags[i]),
-			Package: strcase.ToSnake(tags[i]),
+			Name:       strcase.ToCamel(tags[i]),
+			ClientName: strcase.ToCamel(tags[i]) + "Client",
 		})
 	}
 

@@ -5,14 +5,13 @@ import (
 	"log"
 
 	"github.com/sumup/sumup-go"
-	"github.com/sumup/sumup-go/checkouts"
 )
 
 func main() {
 	ctx := context.Background()
 	client := sumup.NewClient()
 
-	checkout, err := client.Checkouts.Create(ctx, checkouts.Create{
+	checkout, err := client.Checkouts.Create(ctx, sumup.CheckoutsCreateParams{
 		Amount:            123,
 		CheckoutReference: "TX000001",
 		Currency:          "EUR",
@@ -25,15 +24,15 @@ func main() {
 
 	log.Printf("[INFO] checkout created: id=%q, amount=%v, currency=%q", *checkout.ID, *checkout.Amount, string(*checkout.Currency))
 
-	checkoutSuccess, err := client.Checkouts.Process(ctx, *checkout.ID, checkouts.Process{
-		Card: &checkouts.Card{
+	checkoutSuccess, err := client.Checkouts.Process(ctx, *checkout.ID, sumup.CheckoutsProcessParams{
+		Card: &sumup.Card{
 			Cvv:         "123",
 			ExpiryMonth: "12",
 			ExpiryYear:  "2023",
 			Name:        "Boaty McBoatface",
 			Number:      "4200000000000042",
 		},
-		PaymentType: checkouts.ProcessPaymentTypeCard,
+		PaymentType: sumup.ProcessCheckoutPaymentTypeCard,
 	})
 	if err != nil {
 		log.Printf("[ERROR] process checkout: %v", err)

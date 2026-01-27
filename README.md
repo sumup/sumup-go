@@ -49,13 +49,12 @@ import (
 	"log"
 
 	"github.com/sumup/sumup-go"
-	"github.com/sumup/sumup-go/merchant"
 )
 
 func main() {
 	client := sumup.NewClient()
 
-	merchant, err := client.Merchants.Get(context.Background(), "MCNPLE22", merchant.GetAccountParams{})
+	merchant, err := client.Merchants.Get(context.Background(), "MCNPLE22", sumup.MerchantsGetParams{})
 	if err != nil {
 		log.Printf("[ERROR] get merchant account: %v", err)
 		return

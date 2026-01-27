@@ -23,6 +23,17 @@ func operationMethodName(op *openapi3.Operation) string {
 	return methodName
 }
 
+func (b *Builder) operationTypePrefix(tagName string) string {
+	if tagName == "" || tagName == "shared" {
+		return ""
+	}
+	return strcase.ToCamel(tagName)
+}
+
+func (b *Builder) operationTypeName(tagName, base string) string {
+	return b.operationTypePrefix(tagName) + base
+}
+
 func (b *Builder) schemaTypeName(ref string) string {
 	if ref == "" {
 		return ""

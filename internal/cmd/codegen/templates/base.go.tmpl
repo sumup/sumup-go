@@ -2,25 +2,13 @@
 
 package sumup
 
-import (
-	"context"
-	"encoding/json"
-	"fmt"
-	"io"
-	"net/http"
-	"strings"
-
-	"github.com/sumup/sumup-go/client"
-	{{- range .Resources }}
-	"github.com/sumup/sumup-go/{{.Package}}"
-	{{- end }}
-)
+import "github.com/sumup/sumup-go/client"
 
 type Client struct {
 	c *client.Client
 
 	{{- range .Resources}}
-	{{.Name}} *{{.Package}}.Client
+	{{.Name}} *{{.ClientName}}
 	{{- end}}
 }
 
@@ -33,7 +21,7 @@ func NewClient(opts ...client.ClientOption) *Client {
 	c := &Client{ c: client }
 
 	{{- range .Resources }}
-	c.{{.Name}} = {{.Package}}.NewClient(client)
+	c.{{.Name}} = New{{.ClientName}}(client)
 	{{- end}}
 
 	return c
