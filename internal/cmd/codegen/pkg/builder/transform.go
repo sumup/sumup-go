@@ -67,12 +67,13 @@ func (b *Builder) respToTypes(schemas []*openapi3.ResponseRef, errorSchemas map[
 }
 
 // TODO: is this different from respToTypes?
-func (b *Builder) pathsToBodyTypes(paths *openapi3.Paths) []Writable {
+func (b *Builder) pathsToBodyTypes(tagName string, paths *openapi3.Paths) []Writable {
 	if paths == nil {
 		return nil
 	}
 
 	paramTypes := make([]Writable, 0)
+	aliasTypes := make(map[string]bool)
 	for _, path := range paths.InMatchingOrder() {
 		pathSpec := paths.Find(path)
 		if pathSpec.Ref != "" {
@@ -86,11 +87,24 @@ func (b *Builder) pathsToBodyTypes(paths *openapi3.Paths) []Writable {
 		for _, method := range operationKeys {
 			opSpec := operations[method]
 			operationName := operationMethodName(opSpec)
+			typeName := b.operationTypeName(tagName, operationName)
 
 			if opSpec.RequestBody != nil {
 				mt, ok := opSpec.RequestBody.Value.Content["application/json"]
 				if ok && mt.Schema != nil {
-					bodyObject, additionalTypes := b.createObject(mt.Schema.Value, operationName)
+					paramsName := typeName + "Params"
+					if mt.Schema.Ref != "" {
+						baseName := b.schemaTypeName(mt.Schema.Ref)
+						if paramsName != baseName && !aliasTypes[paramsName] {
+							paramTypes = append(paramTypes, &TypeDeclaration{
+								Name: paramsName,
+								Type: "= " + baseName,
+							})
+							aliasTypes[paramsName] = true
+						}
+						continue
+					}
+					bodyObject, additionalTypes := b.createObject(mt.Schema.Value, paramsName)
 					paramTypes = append(paramTypes, bodyObject)
 					paramTypes = append(paramTypes, additionalTypes...)
 				}
@@ -102,7 +116,7 @@ func (b *Builder) pathsToBodyTypes(paths *openapi3.Paths) []Writable {
 }
 
 // constructParamTypes constructs struct for query parameters for an operation.
-func (b *Builder) pathsToParamTypes(paths *openapi3.Paths) []Writable {
+func (b *Builder) pathsToParamTypes(tagName string, paths *openapi3.Paths) []Writable {
 	if paths == nil {
 		return nil
 	}
@@ -122,6 +136,7 @@ func (b *Builder) pathsToParamTypes(paths *openapi3.Paths) []Writable {
 		for _, method := range operationKeys {
 			opSpec := operations[method]
 			operationName := operationMethodName(opSpec)
+			typeName := b.operationTypeName(tagName, operationName)
 
 			if len(opSpec.Parameters) > 0 {
 				fields := make([]StructField, 0)
@@ -138,11 +153,6 @@ func (b *Builder) pathsToParamTypes(paths *openapi3.Paths) []Writable {
 
 					typ := b.convertToValidGoType("", p.Value.Schema)
 
-					isShared := slices.Contains(b.schemasByTag["shared"], p.Value.Schema.Ref)
-					if isShared && !strings.HasPrefix(typ, "shared.") {
-						typ = "shared." + typ
-					}
-
 					optional := !p.Value.Required
 					pointer := shouldUsePointer(optional, p.Value.Schema, typ)
 					fields = append(fields, StructField{
@@ -156,7 +166,7 @@ func (b *Builder) pathsToParamTypes(paths *openapi3.Paths) []Writable {
 				}
 
 				if len(fields) != 0 {
-					paramsTypeName := operationName + "Params"
+					paramsTypeName := typeName + "Params"
 					paramsTpl := TypeDeclaration{
 						Type:      "struct",
 						Name:      paramsTypeName,
@@ -176,7 +186,7 @@ func (b *Builder) pathsToParamTypes(paths *openapi3.Paths) []Writable {
 
 // pathsToResponseTypes generates response types for operations. This is responsible only for inlined
 // schemas that are specific to the operation itself and are not references.
-func (b *Builder) pathsToResponseTypes(paths *openapi3.Paths) []Writable {
+func (b *Builder) pathsToResponseTypes(tagName string, paths *openapi3.Paths) []Writable {
 	if paths == nil {
 		return nil
 	}
@@ -195,12 +205,22 @@ func (b *Builder) pathsToResponseTypes(paths *openapi3.Paths) []Writable {
 		slices.Sort(operationKeys)
 		for _, method := range operationKeys {
 			opSpec := operations[method]
-			operationName := strcase.ToCamel(opSpec.OperationID)
+			operationName := operationMethodName(opSpec)
+			typeName := b.operationTypeName(tagName, operationName)
 
 			responses := opSpec.Responses.Map()
 			responseKeys := slices.Collect(maps.Keys(responses))
 
 			slices.Sort(responseKeys)
+
+			successInfos, err := b.collectSuccessResponses(opSpec)
+			if err != nil {
+				slog.Warn("failed to collect success responses",
+					slog.Any("error", err),
+					slog.String("operation_id", opSpec.OperationID),
+				)
+			}
+			singleSuccess := len(successInfos) == 1
 
 			var successResponses []string
 			for _, code := range responseKeys {
@@ -231,7 +251,7 @@ func (b *Builder) pathsToResponseTypes(paths *openapi3.Paths) []Writable {
 					continue
 				}
 
-				name := b.getResponseName(operationName, code, content)
+				name := b.getResponseName(typeName, code, content, isSuccess && singleSuccess)
 
 				objects := b.generateSchemaComponents(name, content.Schema, isErr)
 				paramTypes = append(paramTypes, objects...)
@@ -249,7 +269,7 @@ func (b *Builder) pathsToResponseTypes(paths *openapi3.Paths) []Writable {
 				)
 
 				paramTypes = append(paramTypes, &OneOfDeclaration{
-					Name:    operationName + "Response",
+					Name:    typeName + "Response",
 					Options: successResponses,
 				})
 			}
@@ -495,11 +515,6 @@ func (b *Builder) createFields(properties map[string]*openapi3.SchemaRef, name s
 	for _, property := range keys {
 		schema := properties[property]
 		typeName, moreTypes := b.genSchema(schema, name+strcase.ToCamel(property))
-
-		isShared := slices.Contains(b.schemasByTag["shared"], schema.Ref)
-		if isShared {
-			typeName = "shared." + typeName
-		}
 
 		tags := []string{strcase.ToSnake(property)}
 		if !slices.Contains(required, property) {
@@ -768,7 +783,11 @@ func uniqueFunc[T any, C comparable](arr []T, keyFn func(T) C) []T {
 	return arr[:n]
 }
 
-func (b *Builder) getResponseName(operationName, responseCode string, content *openapi3.MediaType) string {
+func (b *Builder) getResponseName(operationName, responseCode string, content *openapi3.MediaType, singleSuccess bool) string {
+	if singleSuccess {
+		return operationName + "Response"
+	}
+
 	if content.Schema != nil && content.Schema.Value.Title != "" {
 		return operationName + strcase.ToCamel(content.Schema.Value.Title) + "Response"
 	}
