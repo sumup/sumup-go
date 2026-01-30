@@ -6,7 +6,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/getkin/kin-openapi/openapi3"
+	"github.com/pb33f/libopenapi/datamodel/high/base"
+	v3 "github.com/pb33f/libopenapi/datamodel/high/v3"
 
 	"github.com/sumup/sumup-go/internal/cmd/codegen/internal/strcase"
 )
@@ -106,20 +107,20 @@ func (et *EnumDeclaration[E]) String() string {
 	return buf.String()
 }
 
-func dereferenceSchema(ref *openapi3.SchemaRef) *openapi3.SchemaRef {
+func dereferenceSchema(ref *base.SchemaProxy) *base.SchemaProxy {
 	if ref == nil {
 		return nil
 	}
-	if ref.Ref != "" || ref.Value == nil {
+	if ref.IsReference() || ref.Schema() == nil {
 		return ref
 	}
-	if len(ref.Value.AllOf) > 0 {
-		return dereferenceSchema(ref.Value.AllOf[0])
+	if len(ref.Schema().AllOf) > 0 {
+		return dereferenceSchema(ref.Schema().AllOf[0])
 	}
 	return ref
 }
 
-func paramToString(name string, param *openapi3.Parameter) string {
+func paramToString(name string, param *v3.Parameter) string {
 	if param == nil || param.Schema == nil {
 		return name
 	}
@@ -130,17 +131,19 @@ func paramToString(name string, param *openapi3.Parameter) string {
 	}
 
 	// HACK: also handles component references wrapped via allOf used for nullable enums.
-	if schema.Ref != "" {
+	if schema.IsReference() {
 		return fmt.Sprintf("string(%s)", name)
 	}
 
-	if schema.Value == nil {
+	if schema.Schema() == nil {
 		return name
 	}
 
+	schemaValue := schema.Schema()
+
 	switch {
-	case schema.Value.Type.Is("string"):
-		switch schema.Value.Format {
+	case slices.Contains(schemaValue.Type, "string"):
+		switch schemaValue.Format {
 		case "date-time":
 			name = strings.TrimPrefix(name, "*")
 			return fmt.Sprintf("%s.Format(time.RFC3339)", name)
@@ -153,8 +156,8 @@ func paramToString(name string, param *openapi3.Parameter) string {
 		default:
 			return name
 		}
-	case schema.Value.Type.Is("integer"):
-		switch schema.Value.Format {
+	case slices.Contains(schemaValue.Type, "integer"):
+		switch schemaValue.Format {
 		case "int32":
 			return fmt.Sprintf("strconv.FormatInt(int64(%s), 10)", name)
 		case "int64":
@@ -162,10 +165,10 @@ func paramToString(name string, param *openapi3.Parameter) string {
 		default:
 			return fmt.Sprintf("strconv.Itoa(%s)", name)
 		}
-	case schema.Value.Type.Is("boolean"):
+	case slices.Contains(schemaValue.Type, "boolean"):
 		return fmt.Sprintf("strconv.FormatBool(%s)", name)
-	case schema.Value.Type.Is("number"):
-		switch schema.Value.Format {
+	case slices.Contains(schemaValue.Type, "number"):
+		switch schemaValue.Format {
 		case "float":
 			return fmt.Sprintf("strconv.FormatFloat(float64(%s), 'f', -1, 32)", name)
 		case "double":
@@ -173,16 +176,16 @@ func paramToString(name string, param *openapi3.Parameter) string {
 		default:
 			return fmt.Sprintf("strconv.FormatFloat(%s, 'f', -1, 64)", name)
 		}
-	case schema.Value.Type.Is("array"):
+	case slices.Contains(schemaValue.Type, "array"):
 		// For array items that are schema references (e.g., enums), we need to convert each item to string
-		if schema.Value.Items != nil && schema.Value.Items.Ref != "" {
+		if schemaValue.Items != nil && schemaValue.Items.IsA() && schemaValue.Items.A != nil && schemaValue.Items.A.IsReference() {
 			return fmt.Sprintf("string(%s)", name)
 		}
 		return name
 	default:
 		slog.Warn("need to implement conversion for",
-			slog.String("ref", schema.Ref),
-			slog.String("type", strings.Join(schema.Value.Type.Slice(), ",")),
+			slog.String("ref", schema.GetReference()),
+			slog.String("type", strings.Join(schemaValue.Type, ",")),
 			slog.String("name", name),
 		)
 		return name
@@ -200,13 +203,14 @@ func (e toQueryValues) String() string {
 	fmt.Fprintf(buf, "\tq := make(url.Values)\n\n")
 	for _, f := range e.Typ.Fields {
 		name := strcase.ToCamel(f.Name)
-		if f.Parameter.Schema.Value.Type.Is("array") {
+		if f.Parameter.Schema != nil && f.Parameter.Schema.Schema() != nil && slices.Contains(f.Parameter.Schema.Schema().Type, "array") {
 			field := fmt.Sprintf("p.%s", name)
 			fmt.Fprintf(buf, "\tfor _, v := range %s {\n", field)
 			fmt.Fprintf(buf, "\t\tq.Add(%q, %s)\n", f.Name, paramToString("v", f.Parameter))
 			fmt.Fprintf(buf, "\t}\n")
 		} else {
-			if f.Parameter.Required {
+			required := f.Parameter.Required != nil && *f.Parameter.Required
+			if required {
 				field := fmt.Sprintf("p.%s", name)
 				fmt.Fprintf(buf, "\tq.Set(%q, %s)\n", f.Name, paramToString(field, f.Parameter))
 			} else {
@@ -218,57 +222,7 @@ func (e toQueryValues) String() string {
 		}
 		fmt.Fprint(buf, "\n")
 	}
-	fmt.Fprintf(buf, "\treturn q\n")
-	fmt.Fprint(buf, "}\n")
-	return buf.String()
-}
-
-type typeAssertionDeclaration struct {
-	typ string
-}
-
-func (e typeAssertionDeclaration) String() string {
-	return fmt.Sprintf(`var _ error = (*%s)(nil)`, e.typ)
-}
-
-// errorImplementation is used to generate `error` interface for types returned
-// by error responses.
-type errorImplementation struct {
-	Typ *TypeDeclaration
-}
-
-func (e errorImplementation) String() string {
-	buf := new(strings.Builder)
-	fmt.Fprintf(buf, "func (e *%s) Error() string {\n", e.Typ.Name)
-	fmt.Fprintf(buf, "\treturn fmt.Sprintf(\"")
-	for i, f := range e.Typ.Fields {
-		if i > 0 {
-			fmt.Fprint(buf, ", ")
-		}
-		fmt.Fprintf(buf, "%s=%%v", f.Name)
-	}
-	fmt.Fprint(buf, "\", ")
-	for i, f := range e.Typ.Fields {
-		if i > 0 {
-			fmt.Fprint(buf, ", ")
-		}
-		fmt.Fprintf(buf, "e.%s", strcase.ToCamel(f.Name))
-	}
-	fmt.Fprint(buf, ")\n")
-	fmt.Fprint(buf, "}\n")
-	return buf.String()
-}
-
-// staticErrorImplementation implements `error` for responses with empty schemas.
-type staticErrorImplementation struct {
-	Typ  string
-	Name string
-}
-
-func (e staticErrorImplementation) String() string {
-	buf := new(strings.Builder)
-	fmt.Fprintf(buf, "func (e *%s) Error() string {\n", e.Typ)
-	fmt.Fprintf(buf, "\treturn %q\n", e.Name)
-	fmt.Fprint(buf, "}\n")
+	fmt.Fprint(buf, "\treturn q\n")
+	fmt.Fprintf(buf, "}\n")
 	return buf.String()
 }

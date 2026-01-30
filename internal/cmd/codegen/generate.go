@@ -6,7 +6,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/getkin/kin-openapi/openapi3"
+	"github.com/pb33f/libopenapi"
 	"github.com/urfave/cli/v2"
 
 	"github.com/sumup/sumup-go/internal/cmd/codegen/pkg/builder"
@@ -29,16 +29,26 @@ func Generate() *cli.Command {
 				return fmt.Errorf("create output directory %q: %w", out, err)
 			}
 
-			spec, err := openapi3.NewLoader().LoadFromFile(specs)
+			spec, err := os.ReadFile(specs)
 			if err != nil {
-				return err
+				return fmt.Errorf("read specs: %w", err)
+			}
+
+			doc, err := libopenapi.NewDocument(spec)
+			if err != nil {
+				return fmt.Errorf("load openapi document: %w", err)
+			}
+
+			model, err := doc.BuildV3Model()
+			if err != nil {
+				return fmt.Errorf("build openapi v3 model: %w", err)
 			}
 
 			builder := builder.New(builder.Config{
 				Out: out,
 			})
 
-			if err := builder.Load(spec); err != nil {
+			if err := builder.Load(&model.Model); err != nil {
 				return fmt.Errorf("load spec: %w", err)
 			}
 
