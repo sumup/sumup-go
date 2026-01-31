@@ -3,7 +3,8 @@ package builder
 import (
 	"cmp"
 
-	"github.com/getkin/kin-openapi/openapi3"
+	"github.com/pb33f/libopenapi/datamodel/high/base"
+	v3 "github.com/pb33f/libopenapi/datamodel/high/v3"
 )
 
 // TypeDeclaration holds the information for generating a type.
@@ -21,9 +22,9 @@ type TypeDeclaration struct {
 	// One of response, operation, or schema will be populated
 	// based on what the type declaration was created from.
 
-	Response  *openapi3.Response
-	Operation *openapi3.Operation
-	Schema    *openapi3.Schema
+	Response  *v3.Response
+	Operation *v3.Operation
+	Schema    *base.Schema
 }
 
 type OneOfDeclaration struct {
@@ -48,7 +49,7 @@ type StructField struct {
 
 	Comment string
 
-	Parameter *openapi3.Parameter
+	Parameter *v3.Parameter
 }
 
 type EnumOption[E cmp.Ordered] struct {
@@ -60,6 +61,11 @@ type EnumOption[E cmp.Ordered] struct {
 type EnumDeclaration[E cmp.Ordered] struct {
 	Type   TypeDeclaration
 	Values []EnumOption[E]
+}
+
+type NamedSchema struct {
+	Ref    string
+	Schema *base.SchemaProxy
 }
 
 type Response struct {

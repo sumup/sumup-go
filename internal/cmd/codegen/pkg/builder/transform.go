@@ -3,23 +3,25 @@ package builder
 import (
 	"fmt"
 	"log/slog"
-	"maps"
 	"slices"
 	"strings"
 
-	"github.com/getkin/kin-openapi/openapi3"
+	"github.com/pb33f/libopenapi/datamodel/high/base"
+	v3 "github.com/pb33f/libopenapi/datamodel/high/v3"
+	"github.com/pb33f/libopenapi/orderedmap"
 
 	"github.com/sumup/sumup-go/internal/cmd/codegen/internal/strcase"
 )
 
 // schemasToTypes converts openapi3 schemas to golang struct and enum types.
-func (b *Builder) schemasToTypes(schemas []*openapi3.SchemaRef, errorSchemas map[string]struct{}) []Writable {
+func (b *Builder) schemasToTypes(schemas []NamedSchema, errorSchemas map[string]struct{}) []Writable {
 	var allTypes []Writable
 
 	for _, s := range schemas {
-		_, isErr := errorSchemas[s.Ref]
-		name := b.schemaTypeName(s.Ref)
-		typeTpl := b.generateSchemaComponents(name, s, isErr)
+		ref := s.Ref
+		_, isErr := errorSchemas[ref]
+		name := b.schemaTypeName(ref)
+		typeTpl := b.generateSchemaComponents(name, s.Schema, isErr)
 		allTypes = append(allTypes, typeTpl...)
 	}
 
@@ -27,29 +29,26 @@ func (b *Builder) schemasToTypes(schemas []*openapi3.SchemaRef, errorSchemas map
 }
 
 // schemasToTypes converts openapi3 schemas to golang struct and enum types.
-func (b *Builder) respToTypes(schemas []*openapi3.ResponseRef, errorSchemas map[string]struct{}) []Writable {
+func (b *Builder) respToTypes(schemas []*v3.Response, errorSchemas map[string]struct{}) []Writable {
 	var allTypes []Writable
 
 	for _, s := range schemas {
-		_, isErr := errorSchemas[s.Ref]
-		name := strcase.ToCamel(strings.TrimPrefix(s.Ref, "#/components/responses/")) + "Response"
-		if s.Value.Content == nil {
+		_, isErr := errorSchemas[s.Reference]
+		name := strcase.ToCamel(strings.TrimPrefix(s.Reference, "#/components/responses/")) + "Response"
+		if s.Content == nil {
 			if isErr {
 				allTypes = append(allTypes, typeAssertionDeclaration{
 					typ: name,
 				})
 			}
 
-			var description string
-			if s.Value.Description != nil {
-				description = *s.Value.Description
-			}
+			description := s.Description
 
 			allTypes = append(allTypes, &TypeDeclaration{
 				Comment:  description,
 				Type:     "struct{}",
 				Name:     name,
-				Response: s.Value,
+				Response: s,
 			})
 			if isErr {
 				allTypes = append(allTypes, staticErrorImplementation{
@@ -59,7 +58,13 @@ func (b *Builder) respToTypes(schemas []*openapi3.ResponseRef, errorSchemas map[
 			}
 			continue
 		}
-		typeTpl := b.generateSchemaComponents(name, s.Value.Content["application/json"].Schema, isErr)
+
+		content, ok := s.Content.Get("application/json")
+		if !ok || content.Schema == nil {
+			continue
+		}
+
+		typeTpl := b.generateSchemaComponents(name, content.Schema, isErr)
 		allTypes = append(allTypes, typeTpl...)
 	}
 
@@ -67,34 +72,33 @@ func (b *Builder) respToTypes(schemas []*openapi3.ResponseRef, errorSchemas map[
 }
 
 // TODO: is this different from respToTypes?
-func (b *Builder) pathsToBodyTypes(tagName string, paths *openapi3.Paths) []Writable {
+func (b *Builder) pathsToBodyTypes(tagName string, paths *v3.Paths) []Writable {
 	if paths == nil {
 		return nil
 	}
 
 	paramTypes := make([]Writable, 0)
 	aliasTypes := make(map[string]bool)
-	for _, path := range paths.InMatchingOrder() {
-		pathSpec := paths.Find(path)
-		if pathSpec.Ref != "" {
+	for _, path := range pathsInMatchingOrder(paths) {
+		pathSpec, ok := paths.PathItems.Get(path)
+		if !ok {
+			continue
+		}
+		if pathSpec.IsReference() {
 			slog.Warn(fmt.Sprintf("TODO: skipping path for %q, since it is a reference", path))
 			continue
 		}
 
-		operations := pathSpec.Operations()
-		operationKeys := slices.Collect(maps.Keys(operations))
-		slices.Sort(operationKeys)
-		for _, method := range operationKeys {
-			opSpec := operations[method]
+		for _, opSpec := range pathSpec.GetOperations().FromOldest() {
 			operationName := operationMethodName(opSpec)
 			typeName := b.operationTypeName(tagName, operationName)
 
-			if opSpec.RequestBody != nil {
-				mt, ok := opSpec.RequestBody.Value.Content["application/json"]
+			if opSpec.RequestBody != nil && opSpec.RequestBody.Content != nil {
+				mt, ok := opSpec.RequestBody.Content.Get("application/json")
 				if ok && mt.Schema != nil {
 					paramsName := typeName + "Params"
-					if mt.Schema.Ref != "" {
-						baseName := b.schemaTypeName(mt.Schema.Ref)
+					if mt.Schema.IsReference() {
+						baseName := b.schemaTypeName(mt.Schema.GetReference())
 						if paramsName != baseName && !aliasTypes[paramsName] {
 							paramTypes = append(paramTypes, &TypeDeclaration{
 								Name: paramsName,
@@ -104,7 +108,10 @@ func (b *Builder) pathsToBodyTypes(tagName string, paths *openapi3.Paths) []Writ
 						}
 						continue
 					}
-					bodyObject, additionalTypes := b.createObject(mt.Schema.Value, paramsName)
+					if mt.Schema.Schema() == nil {
+						continue
+					}
+					bodyObject, additionalTypes := b.createObject(mt.Schema.Schema(), paramsName)
 					paramTypes = append(paramTypes, bodyObject)
 					paramTypes = append(paramTypes, additionalTypes...)
 				}
@@ -116,52 +123,56 @@ func (b *Builder) pathsToBodyTypes(tagName string, paths *openapi3.Paths) []Writ
 }
 
 // constructParamTypes constructs struct for query parameters for an operation.
-func (b *Builder) pathsToParamTypes(tagName string, paths *openapi3.Paths) []Writable {
+func (b *Builder) pathsToParamTypes(tagName string, paths *v3.Paths) []Writable {
 	if paths == nil {
 		return nil
 	}
 
 	paramTypes := make([]Writable, 0)
 
-	for _, path := range paths.InMatchingOrder() {
-		pathSpec := paths.Find(path)
-		if pathSpec.Ref != "" {
+	for _, path := range pathsInMatchingOrder(paths) {
+		pathSpec, ok := paths.PathItems.Get(path)
+		if !ok {
+			continue
+		}
+		if pathSpec.IsReference() {
 			slog.Warn(fmt.Sprintf("TODO: skipping path for %q, since it is a reference", path))
 			continue
 		}
 
-		operations := pathSpec.Operations()
-		operationKeys := slices.Collect(maps.Keys(operations))
-		slices.Sort(operationKeys)
-		for _, method := range operationKeys {
-			opSpec := operations[method]
+		for _, opSpec := range pathSpec.GetOperations().FromOldest() {
 			operationName := operationMethodName(opSpec)
 			typeName := b.operationTypeName(tagName, operationName)
 
 			if len(opSpec.Parameters) > 0 {
 				fields := make([]StructField, 0)
 				for _, p := range opSpec.Parameters {
-					// path parameters are passed as a parameters to the generated method
-					if p.Value.In == "path" {
+					param := b.resolveParameter(p)
+					if param == nil {
+						if p != nil && p.Reference != "" {
+							slog.Warn(fmt.Sprintf("param not resolved: %q", p.Reference))
+						}
 						continue
 					}
 
-					name := p.Value.Name
-					if p.Ref != "" {
-						name = strcase.ToCamel(strings.TrimPrefix(p.Ref, "#/components/schemas/"))
+					// path parameters are passed as a parameters to the generated method
+					if param.In == "path" {
+						continue
 					}
 
-					typ := b.convertToValidGoType("", p.Value.Schema)
+					name := param.Name
 
-					optional := !p.Value.Required
-					pointer := shouldUsePointer(optional, p.Value.Schema, typ)
+					typ := b.convertToValidGoType("", param.Schema)
+
+					optional := param.Required == nil || !*param.Required
+					pointer := shouldUsePointer(optional, param.Schema, typ)
 					fields = append(fields, StructField{
 						Name:      name,
 						Type:      typ,
-						Parameter: p.Value,
+						Parameter: param,
 						Optional:  optional,
 						Pointer:   pointer,
-						Comment:   parameterPropertyGodoc(p.Value),
+						Comment:   parameterPropertyGodoc(param),
 					})
 				}
 
@@ -186,30 +197,36 @@ func (b *Builder) pathsToParamTypes(tagName string, paths *openapi3.Paths) []Wri
 
 // pathsToResponseTypes generates response types for operations. This is responsible only for inlined
 // schemas that are specific to the operation itself and are not references.
-func (b *Builder) pathsToResponseTypes(tagName string, paths *openapi3.Paths) []Writable {
+func (b *Builder) pathsToResponseTypes(tagName string, paths *v3.Paths) []Writable {
 	if paths == nil {
 		return nil
 	}
 
 	paramTypes := make([]Writable, 0)
 
-	for _, path := range paths.InMatchingOrder() {
-		pathSpec := paths.Find(path)
-		if pathSpec.Ref != "" {
+	for _, path := range pathsInMatchingOrder(paths) {
+		pathSpec, ok := paths.PathItems.Get(path)
+		if !ok {
+			continue
+		}
+		if pathSpec.IsReference() {
 			slog.Warn(fmt.Sprintf("TODO: skipping path for %q, since it is a reference", path))
 			continue
 		}
 
-		operations := pathSpec.Operations()
-		operationKeys := slices.Collect(maps.Keys(operations))
-		slices.Sort(operationKeys)
-		for _, method := range operationKeys {
-			opSpec := operations[method]
+		for _, opSpec := range pathSpec.GetOperations().FromOldest() {
 			operationName := operationMethodName(opSpec)
 			typeName := b.operationTypeName(tagName, operationName)
 
-			responses := opSpec.Responses.Map()
-			responseKeys := slices.Collect(maps.Keys(responses))
+			if opSpec.Responses == nil {
+				continue
+			}
+
+			responses := opSpec.Responses.Codes
+			responseKeys := make([]string, 0, responses.Len())
+			for key := range responses.KeysFromOldest() {
+				responseKeys = append(responseKeys, key)
+			}
 
 			slices.Sort(responseKeys)
 
@@ -217,23 +234,33 @@ func (b *Builder) pathsToResponseTypes(tagName string, paths *openapi3.Paths) []
 			if err != nil {
 				slog.Warn("failed to collect success responses",
 					slog.Any("error", err),
-					slog.String("operation_id", opSpec.OperationID),
+					slog.String("operation_id", opSpec.OperationId),
 				)
 			}
 			singleSuccess := len(successInfos) == 1
 
 			var successResponses []string
 			for _, code := range responseKeys {
-				response := responses[code]
+				response, ok := responses.Get(code)
+				if !ok {
+					continue
+				}
 				isSuccess := strings.HasPrefix(code, "2")
 				isErr := code == "default" || strings.HasPrefix(code, "4") || strings.HasPrefix(code, "5")
 
-				if response.Ref != "" {
-					ref := strings.TrimPrefix(response.Ref, "#/components/responses/")
-					response = b.spec.Components.Responses[ref]
+				if response.Reference != "" {
+					resolved := b.resolveResponseRef(response.Reference)
+					if resolved == nil {
+						continue
+					}
+					response = resolved
 				}
 
-				content, ok := response.Value.Content["application/json"]
+				if response.Content == nil {
+					continue
+				}
+
+				content, ok := response.Content.Get("application/json")
 				if !ok {
 					continue
 				}
@@ -242,9 +269,9 @@ func (b *Builder) pathsToResponseTypes(tagName string, paths *openapi3.Paths) []
 					continue
 				}
 
-				if content.Schema.Ref != "" {
+				if content.Schema.IsReference() {
 					if isSuccess {
-						name := strcase.ToCamel(strings.TrimPrefix(content.Schema.Ref, "#/components/schemas/"))
+						name := strcase.ToCamel(strings.TrimPrefix(content.Schema.GetReference(), "#/components/schemas/"))
 						successResponses = append(successResponses, name)
 					}
 					// schemas are handled separately, here we only care about inline schemas in the operation
@@ -257,8 +284,9 @@ func (b *Builder) pathsToResponseTypes(tagName string, paths *openapi3.Paths) []
 				paramTypes = append(paramTypes, objects...)
 
 				if strings.HasPrefix(code, "2") {
-					resp, _ := objects[0].(*TypeDeclaration)
-					successResponses = append(successResponses, resp.Name)
+					if resp, ok := objects[0].(*TypeDeclaration); ok {
+						successResponses = append(successResponses, resp.Name)
+					}
 				}
 			}
 
@@ -282,9 +310,13 @@ func (b *Builder) pathsToResponseTypes(tagName string, paths *openapi3.Paths) []
 // generateSchemaComponents generates types from schema reference.
 // This should be used to generate top-level types, that is - named schemas that are listed
 // in `#/components/schemas/` part of the OpenAPI specs.
-func (b *Builder) generateSchemaComponents(name string, schema *openapi3.SchemaRef, isErr bool) []Writable {
+func (b *Builder) generateSchemaComponents(name string, schema *base.SchemaProxy, isErr bool) []Writable {
 	types := make([]Writable, 0)
-	spec := schema.Value
+	if schema == nil || schema.Schema() == nil {
+		return types
+	}
+
+	spec := schema.Schema()
 
 	switch {
 	case len(spec.Enum) > 0:
@@ -292,36 +324,39 @@ func (b *Builder) generateSchemaComponents(name string, schema *openapi3.SchemaR
 		if enum != nil {
 			types = append(types, enum)
 		}
-	case spec.Type.Is("string"):
+	case slices.Contains(spec.Type, "string"):
 		types = append(types, &TypeDeclaration{
 			Comment: schemaGodoc(name, spec),
 			Type:    "string",
 			Name:    name,
 			Schema:  spec,
 		})
-	case spec.Type.Is("integer"):
+	case slices.Contains(spec.Type, "integer"):
 		types = append(types, &TypeDeclaration{
 			Comment: schemaGodoc(name, spec),
 			Type:    formatIntegerType(spec),
 			Name:    name,
 			Schema:  spec,
 		})
-	case spec.Type.Is("number"):
+	case slices.Contains(spec.Type, "number"):
 		types = append(types, &TypeDeclaration{
 			Comment: schemaGodoc(name, spec),
 			Type:    formatNumberType(spec),
 			Name:    name,
 			Schema:  spec,
 		})
-	case spec.Type.Is("boolean"):
+	case slices.Contains(spec.Type, "boolean"):
 		types = append(types, &TypeDeclaration{
 			Comment: schemaGodoc(name, spec),
 			Type:    "bool",
 			Name:    name,
 			Schema:  spec,
 		})
-	case spec.Type.Is("array"):
-		typeName, itemTypes := b.genSchema(spec.Items, strcase.MakeSingular(name))
+	case slices.Contains(spec.Type, "array"):
+		if spec.Items == nil || !spec.Items.IsA() || spec.Items.A == nil {
+			return types
+		}
+		typeName, itemTypes := b.genSchema(spec.Items.A, strcase.MakeSingular(name))
 		types = append(types, itemTypes...)
 		types = append(types, &TypeDeclaration{
 			Comment: schemaGodoc(name, spec),
@@ -329,7 +364,7 @@ func (b *Builder) generateSchemaComponents(name string, schema *openapi3.SchemaR
 			Name:    name,
 			Schema:  spec,
 		})
-	case spec.Type.Is("object"):
+	case slices.Contains(spec.Type, "object"):
 		object, additionalTypes := b.createObject(spec, name)
 		types = append(types, object)
 		types = append(types, additionalTypes...)
@@ -386,10 +421,14 @@ func (b *Builder) generateSchemaComponents(name string, schema *openapi3.SchemaR
 
 // genSchema is very similar to [generateSchemaComponents] but assumes that all schema components
 // have been already generated.
-func (b *Builder) genSchema(schema *openapi3.SchemaRef, name string) (string, []Writable) {
-	if schema.Ref != "" {
-		ref := strings.TrimPrefix(schema.Ref, "#/components/schemas/")
-		if len(schema.Value.Enum) > 0 {
+func (b *Builder) genSchema(schema *base.SchemaProxy, name string) (string, []Writable) {
+	if schema == nil {
+		return "any", nil
+	}
+
+	if schema.IsReference() {
+		ref := strings.TrimPrefix(schema.GetReference(), "#/components/schemas/")
+		if schema.Schema() != nil && len(schema.Schema().Enum) > 0 {
 			return strcase.ToCamel(strcase.MakeSingular(ref)), nil
 		}
 
@@ -397,7 +436,10 @@ func (b *Builder) genSchema(schema *openapi3.SchemaRef, name string) (string, []
 	}
 
 	types := make([]Writable, 0)
-	spec := schema.Value
+	spec := schema.Schema()
+	if spec == nil {
+		return "any", nil
+	}
 
 	switch {
 	case len(spec.Enum) > 0:
@@ -406,19 +448,22 @@ func (b *Builder) genSchema(schema *openapi3.SchemaRef, name string) (string, []
 			types = append(types, enum)
 		}
 		return strcase.MakeSingular(name), types
-	case spec.Type.Is("string"):
-		return formatStringType(schema.Value), nil
-	case spec.Type.Is("integer"):
-		return formatIntegerType(schema.Value), nil
-	case spec.Type.Is("number"):
-		return formatNumberType(schema.Value), nil
-	case spec.Type.Is("boolean"):
+	case slices.Contains(spec.Type, "string"):
+		return formatStringType(spec), nil
+	case slices.Contains(spec.Type, "integer"):
+		return formatIntegerType(spec), nil
+	case slices.Contains(spec.Type, "number"):
+		return formatNumberType(spec), nil
+	case slices.Contains(spec.Type, "boolean"):
 		return "bool", nil
-	case spec.Type.Is("array"):
-		typeName, schemas := b.genSchema(spec.Items, strcase.MakeSingular(name))
+	case slices.Contains(spec.Type, "array"):
+		if spec.Items == nil || !spec.Items.IsA() || spec.Items.A == nil {
+			return "[]any", nil
+		}
+		typeName, schemas := b.genSchema(spec.Items.A, strcase.MakeSingular(name))
 		types = append(types, schemas...)
 		return "[]" + typeName, types
-	case spec.Type.Is("object"):
+	case slices.Contains(spec.Type, "object"):
 		object, additionalTypes := b.createObject(spec, name)
 		types = append(types, object)
 		types = append(types, additionalTypes...)
@@ -448,32 +493,35 @@ func (b *Builder) genSchema(schema *openapi3.SchemaRef, name string) (string, []
 	}
 }
 
-func isAdditionalPropertiesMap(schema *openapi3.Schema) bool {
+func isAdditionalPropertiesMap(schema *base.Schema) bool {
 	if schema == nil {
 		return false
 	}
-	if len(schema.Properties) != 0 {
+	if schema.Properties != nil && schema.Properties.Len() != 0 {
 		return false
 	}
-	if schema.AdditionalProperties.Has != nil && *schema.AdditionalProperties.Has {
-		return true
+	if schema.AdditionalProperties == nil {
+		return false
 	}
-	return schema.AdditionalProperties.Schema != nil
+	if schema.AdditionalProperties.IsB() {
+		return schema.AdditionalProperties.B
+	}
+	return schema.AdditionalProperties.IsA() && schema.AdditionalProperties.A != nil
 }
 
-func isArraySchema(schema *openapi3.Schema) bool {
+func isArraySchema(schema *base.Schema) bool {
 	if schema == nil {
 		return false
 	}
-	return schema.Type.Is("array")
+	return slices.Contains(schema.Type, "array")
 }
 
-func shouldUsePointer(optional bool, schema *openapi3.SchemaRef, typeName string) bool {
+func shouldUsePointer(optional bool, schema *base.SchemaProxy, typeName string) bool {
 	if !optional {
 		return false
 	}
-	if schema != nil && schema.Value != nil {
-		if isAdditionalPropertiesMap(schema.Value) || isArraySchema(schema.Value) {
+	if schema != nil && schema.Schema() != nil {
+		if isAdditionalPropertiesMap(schema.Schema()) || isArraySchema(schema.Schema()) {
 			return false
 		}
 	}
@@ -484,7 +532,7 @@ func shouldUsePointer(optional bool, schema *openapi3.SchemaRef, typeName string
 }
 
 // createObject converts openapi schema into golang object.
-func (b *Builder) createObject(schema *openapi3.Schema, name string) (*TypeDeclaration, []Writable) {
+func (b *Builder) createObject(schema *base.Schema, name string) (*TypeDeclaration, []Writable) {
 	if isAdditionalPropertiesMap(schema) {
 		return &TypeDeclaration{
 			Comment: schemaGodoc(name, schema),
@@ -505,15 +553,28 @@ func (b *Builder) createObject(schema *openapi3.Schema, name string) (*TypeDecla
 }
 
 // createFields returns list of fields for openapi schema properties.
-func (b *Builder) createFields(properties map[string]*openapi3.SchemaRef, name string, required []string) ([]StructField, []Writable) {
+func (b *Builder) createFields(properties *orderedmap.Map[string, *base.SchemaProxy], name string, required []string) ([]StructField, []Writable) {
 	fields := []StructField{}
 	types := []Writable{}
+	if properties == nil {
+		return fields, types
+	}
 
-	keys := slices.Collect(maps.Keys(properties))
+	keys := make([]string, 0, properties.Len())
+	for key := range properties.FromOldest() {
+		keys = append(keys, key)
+	}
+	if len(keys) == 0 {
+		return fields, types
+	}
+
 	slices.Sort(keys)
 
 	for _, property := range keys {
-		schema := properties[property]
+		schema, ok := properties.Get(property)
+		if !ok {
+			continue
+		}
 		typeName, moreTypes := b.genSchema(schema, name+strcase.ToCamel(property))
 
 		tags := []string{strcase.ToSnake(property)}
@@ -525,7 +586,7 @@ func (b *Builder) createFields(properties map[string]*openapi3.SchemaRef, name s
 		fields = append(fields, StructField{
 			Name:    property,
 			Type:    typeName,
-			Comment: schemaPropertyGodoc(schema.Value),
+			Comment: schemaPropertyGodoc(schema.Schema()),
 			Tags: map[string][]string{
 				"json": tags,
 			},
@@ -538,18 +599,20 @@ func (b *Builder) createFields(properties map[string]*openapi3.SchemaRef, name s
 	return fields, types
 }
 
-func createEnum(schema *openapi3.Schema, name string) Writable {
+func createEnum(schema *base.Schema, name string) Writable {
 	enumName := strcase.MakeSingular(name)
 	switch {
-	case schema.Type.Is("string"):
+	case slices.Contains(schema.Type, "string"):
 		values := make([]EnumOption[string], 0)
 		for _, v := range schema.Enum {
-			option, ok := v.(string)
-			if !ok {
+			var option string
+			if err := v.Decode(&option); err != nil {
 				slog.Warn("invalid enum value",
 					slog.String("enum", name),
 					slog.String("expected", "string"),
 					slog.String("got", fmt.Sprintf("%T", v)),
+					slog.String("err", err.Error()),
+					slog.Any("raw", v),
 				)
 				continue
 			}
@@ -569,16 +632,18 @@ func createEnum(schema *openapi3.Schema, name string) Writable {
 			},
 			Values: values,
 		}
-	case schema.Type.Is("integer"):
+	case slices.Contains(schema.Type, "integer"):
 		if schema.Format == "int64" {
 			values := make([]EnumOption[int64], 0)
 			for _, v := range schema.Enum {
-				option, ok := v.(float64)
-				if !ok {
+				var option float64
+				if err := v.Decode(&option); err != nil {
 					slog.Warn("invalid enum value",
 						slog.String("enum", name),
 						slog.String("expected", "int64"),
 						slog.String("got", fmt.Sprintf("%T", v)),
+						slog.String("err", err.Error()),
+						slog.Any("raw", v),
 					)
 					continue
 				}
@@ -603,12 +668,14 @@ func createEnum(schema *openapi3.Schema, name string) Writable {
 		if schema.Format == "int32" {
 			values := make([]EnumOption[int32], 0)
 			for _, v := range schema.Enum {
-				option, ok := v.(float64)
-				if !ok {
+				var option float64
+				if err := v.Decode(&option); err != nil {
 					slog.Warn("invalid enum value",
 						slog.String("enum", name),
 						slog.String("expected", "int32"),
 						slog.String("got", fmt.Sprintf("%T", v)),
+						slog.String("err", err.Error()),
+						slog.Any("raw", v),
 					)
 					continue
 				}
@@ -632,12 +699,14 @@ func createEnum(schema *openapi3.Schema, name string) Writable {
 
 		values := make([]EnumOption[int], 0)
 		for _, v := range schema.Enum {
-			option, ok := v.(float64)
-			if !ok {
+			var option float64
+			if err := v.Decode(&option); err != nil {
 				slog.Warn("invalid enum value",
 					slog.String("enum", name),
 					slog.String("expected", "int"),
 					slog.String("got", fmt.Sprintf("%T", v)),
+					slog.String("err", err.Error()),
+					slog.Any("raw", v),
 				)
 				continue
 			}
@@ -657,16 +726,18 @@ func createEnum(schema *openapi3.Schema, name string) Writable {
 			},
 			Values: values,
 		}
-	case schema.Type.Is("number"):
+	case slices.Contains(schema.Type, "number"):
 		if schema.Format == "float" {
 			values := make([]EnumOption[float32], 0)
 			for _, v := range schema.Enum {
-				option, ok := v.(float64)
-				if !ok {
+				var option float64
+				if err := v.Decode(&option); err != nil {
 					slog.Warn("invalid enum value",
 						slog.String("enum", name),
 						slog.String("expected", "float32"),
 						slog.String("got", fmt.Sprintf("%T", v)),
+						slog.String("err", err.Error()),
+						slog.Any("raw", v),
 					)
 					continue
 				}
@@ -690,12 +761,14 @@ func createEnum(schema *openapi3.Schema, name string) Writable {
 
 		values := make([]EnumOption[float64], 0)
 		for _, v := range schema.Enum {
-			option, ok := v.(float64)
-			if !ok {
+			var option float64
+			if err := v.Decode(&option); err != nil {
 				slog.Warn("invalid enum value",
 					slog.String("enum", name),
 					slog.String("expected", "float64"),
 					slog.String("got", fmt.Sprintf("%T", v)),
+					slog.String("err", err.Error()),
+					slog.Any("raw", v),
 				)
 				continue
 			}
@@ -721,23 +794,33 @@ func createEnum(schema *openapi3.Schema, name string) Writable {
 }
 
 // createAllOf creates a type declaration for `allOf` schema.
-func (b *Builder) createAllOf(schema *openapi3.Schema, name string) (*TypeDeclaration, []Writable) {
+func (b *Builder) createAllOf(schema *base.Schema, name string) (*TypeDeclaration, []Writable) {
 	types := []Writable{}
 	var fields []StructField
-	var seen []string
+	seen := make(map[string]struct{})
+
 	for _, s := range schema.AllOf {
-		// Solve collision between the properties of `allOf` before we pass it further to avoid
-		// generating nested objects and enums multiple times.
-		properties := s.Value.Properties
-		for _, f := range seen {
-			delete(properties, f)
+		if s == nil || s.Schema() == nil {
+			continue
 		}
 
-		objectFields, additionalTypes := b.createFields(properties, name, s.Value.Required)
+		properties := s.Schema().Properties
+		if properties == nil {
+			continue
+		}
+
+		filtered := orderedmap.New[string, *base.SchemaProxy]()
+		for propName, propSchema := range properties.FromOldest() {
+			if _, ok := seen[propName]; ok {
+				continue
+			}
+			filtered.Set(propName, propSchema)
+			seen[propName] = struct{}{}
+		}
+
+		objectFields, additionalTypes := b.createFields(filtered, name, s.Schema().Required)
 		fields = append(fields, objectFields...)
 		types = append(types, additionalTypes...)
-
-		seen = append(seen, slices.Collect(maps.Keys(properties))...)
 	}
 
 	return &TypeDeclaration{
@@ -750,7 +833,7 @@ func (b *Builder) createAllOf(schema *openapi3.Schema, name string) (*TypeDeclar
 }
 
 // createOneOf creates a type declaration for `oneOf` schema.
-func createOneOf(schema *openapi3.Schema, name string) *TypeDeclaration {
+func createOneOf(schema *base.Schema, name string) *TypeDeclaration {
 	// TODO: implement `func (v *{{name}}) AsXXX() (XXX, error) { ... }`
 	// that allows converting one of from `json.RawMessage` to possible variants.
 
@@ -783,13 +866,13 @@ func uniqueFunc[T any, C comparable](arr []T, keyFn func(T) C) []T {
 	return arr[:n]
 }
 
-func (b *Builder) getResponseName(operationName, responseCode string, content *openapi3.MediaType, singleSuccess bool) string {
+func (b *Builder) getResponseName(operationName, responseCode string, content *v3.MediaType, singleSuccess bool) string {
 	if singleSuccess {
 		return operationName + "Response"
 	}
 
-	if content.Schema != nil && content.Schema.Value.Title != "" {
-		return operationName + strcase.ToCamel(content.Schema.Value.Title) + "Response"
+	if content.Schema != nil && content.Schema.Schema() != nil && content.Schema.Schema().Title != "" {
+		return operationName + strcase.ToCamel(content.Schema.Schema().Title) + "Response"
 	}
 
 	return operationName + responseCode + "Response"

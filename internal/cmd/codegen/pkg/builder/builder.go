@@ -10,7 +10,9 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/getkin/kin-openapi/openapi3"
+	"github.com/pb33f/libopenapi/datamodel/high/base"
+	v3 "github.com/pb33f/libopenapi/datamodel/high/v3"
+	v3low "github.com/pb33f/libopenapi/datamodel/low/v3"
 
 	"github.com/sumup/sumup-go/internal/cmd/codegen/internal/strcase"
 	"github.com/sumup/sumup-go/internal/cmd/codegen/templates"
@@ -25,20 +27,20 @@ type Builder struct {
 
 	// spec are the OpenAPI specs we are working with.
 	// Load the specs using [Builder.Load].
-	spec *openapi3.T
+	spec *v3.Document
 
 	// schemasByTag maps tags to respective schema references.
 	schemasByTag    map[string][]string
-	resolvedSchemas map[string][]*openapi3.SchemaRef
+	resolvedSchemas map[string][]NamedSchema
 
 	responsesByTag    map[string][]string
-	resolvedResponses map[string][]*openapi3.ResponseRef
+	resolvedResponses map[string][]*v3.Response
 
 	// errorSchemas are refs of schemas that are used for error responses (status code >= 400).
 	errorSchemas map[string]struct{}
 	// schemaNameOverrides maps schema refs to overridden type names.
 	schemaNameOverrides map[string]string
-	pathsByTag          map[string]*openapi3.Paths
+	pathsByTag          map[string]*v3.Paths
 
 	templates *template.Template
 
@@ -69,9 +71,9 @@ func New(cfg Config, opts ...Option) *Builder {
 	b := &Builder{
 		cfg:                 cfg,
 		schemasByTag:        make(map[string][]string),
-		resolvedSchemas:     make(map[string][]*openapi3.SchemaRef),
-		resolvedResponses:   make(map[string][]*openapi3.ResponseRef),
-		pathsByTag:          make(map[string]*openapi3.Paths),
+		resolvedSchemas:     make(map[string][]NamedSchema),
+		resolvedResponses:   make(map[string][]*v3.Response),
+		pathsByTag:          make(map[string]*v3.Paths),
 		errorSchemas:        make(map[string]struct{}),
 		schemaNameOverrides: make(map[string]string),
 		templates:           templates,
@@ -86,7 +88,7 @@ func New(cfg Config, opts ...Option) *Builder {
 
 // Load loads OpenAPI specs into the builder.
 // To generated the SDK, call [Builder.Build].
-func (b *Builder) Load(spec *openapi3.T) error {
+func (b *Builder) Load(spec *v3.Document) error {
 	b.start = time.Now()
 	b.spec = spec
 
@@ -111,7 +113,7 @@ func (b *Builder) Build() error {
 	}
 
 	if _, ok := b.pathsByTag["shared"]; !ok {
-		b.pathsByTag["shared"] = openapi3.NewPaths()
+		b.pathsByTag["shared"] = v3.NewPaths(&v3low.Paths{})
 	}
 
 	for tagName, paths := range b.pathsByTag {
@@ -135,8 +137,8 @@ func (b *Builder) Build() error {
 }
 
 func (b *Builder) collectPaths() {
-	for path, pathSpec := range b.spec.Paths.Map() {
-		for method, operationSpec := range pathSpec.Operations() {
+	for path, pathSpec := range b.spec.Paths.PathItems.FromOldest() {
+		for method, operationSpec := range pathSpec.GetOperations().FromOldest() {
 			var tag string
 			if len(operationSpec.Tags) > 1 {
 				slog.Warn("multiple tags for operation, picking first tag",
@@ -161,21 +163,32 @@ func (b *Builder) collectPaths() {
 
 			tagPaths, ok := b.pathsByTag[tag]
 			if !ok {
-				tagPaths = openapi3.NewPaths()
+				tagPaths = v3.NewPaths(&v3low.Paths{})
 				b.pathsByTag[tag] = tagPaths
 			}
 
-			tagPaths.Set(path, pathSpec)
+			tagPaths.PathItems.Set(path, pathSpec)
 		}
 	}
 }
 
 func (b *Builder) resolveResponses() {
+	if b.spec == nil || b.spec.Components == nil || b.spec.Components.Responses == nil {
+		return
+	}
+
 	for tag, refs := range b.responsesByTag {
 		for _, ref := range refs {
 			name := strings.TrimPrefix(ref, "#/components/responses/")
-			resolved := b.spec.Components.Responses[name]
-			resolved.Ref = ref
+			resolved, ok := b.spec.Components.Responses.Get(name)
+			if !ok {
+				slog.Warn("response reference not found",
+					slog.String("ref", ref),
+					slog.String("tag", tag),
+				)
+				continue
+			}
+			resolved.Reference = ref
 			b.resolvedResponses[tag] = append(b.resolvedResponses[tag], resolved)
 		}
 	}
@@ -184,14 +197,15 @@ func (b *Builder) resolveResponses() {
 func (b *Builder) resolveSchemas() error {
 	for tag, refs := range b.schemasByTag {
 		for _, ref := range refs {
-			resolved, err := ResolveRef(b.spec, ref)
+			resolved, err := b.resolveSchemaRef(ref)
 			if err != nil {
 				return fmt.Errorf("resolve reference %q: %w", ref, err)
 			}
 
-			// TODO: remove, currently used for struct name in [generateTypes].
-			resolved.Ref = ref
-			b.resolvedSchemas[tag] = append(b.resolvedSchemas[tag], resolved)
+			b.resolvedSchemas[tag] = append(b.resolvedSchemas[tag], NamedSchema{
+				Ref:    ref,
+				Schema: resolved,
+			})
 		}
 	}
 
@@ -205,9 +219,9 @@ func (b *Builder) collectSchemas() {
 	// Map of schemas to list of tags that reference them
 	schemaRefs := make(map[string][]string)
 
-	for _, pathItem := range b.spec.Paths.Map() {
-		for _, op := range pathItem.Operations() {
-			operationName := strcase.ToCamel(op.OperationID)
+	for _, pathItem := range b.spec.Paths.PathItems.FromOldest() {
+		for _, op := range pathItem.GetOperations().FromOldest() {
+			operationName := strcase.ToCamel(op.OperationId)
 			methodName := operationMethodName(op)
 
 			requestSchemas := collectSchemasInRequest(op)
@@ -216,11 +230,11 @@ func (b *Builder) collectSchemas() {
 			schemas = append(schemas, requestSchemas...)
 			if methodName != operationName {
 				for _, schema := range requestSchemas {
-					if schema == nil || schema.Ref == "" {
+					if schema == nil || schema.GetReference() == "" {
 						continue
 					}
 
-					refName := strings.TrimPrefix(schema.Ref, "#/components/schemas/")
+					refName := strings.TrimPrefix(schema.GetReference(), "#/components/schemas/")
 					if !strings.HasPrefix(refName, operationName) {
 						continue
 					}
@@ -230,28 +244,29 @@ func (b *Builder) collectSchemas() {
 						continue
 					}
 
-					b.schemaNameOverrides[schema.Ref] = methodName + suffix
+					b.schemaNameOverrides[schema.GetReference()] = methodName + suffix
 				}
 			}
 
 			for _, schema := range schemas {
-				if schema.Ref == "" {
+				if schema == nil || schema.GetReference() == "" {
 					continue
 				}
 
+				ref := schema.GetReference()
 				if len(op.Tags) == 0 {
 					tag := "shared"
-					schemasByTag[tag] = append(schemasByTag[tag], schema.Ref)
-					schemaRefs[schema.Ref] = []string{}
+					schemasByTag[tag] = append(schemasByTag[tag], ref)
+					schemaRefs[ref] = []string{}
 				}
 
 				for _, tag := range op.Tags {
 					tagLower := strings.ToLower(tag)
-					if !slices.Contains(schemasByTag[tagLower], schema.Ref) {
-						schemasByTag[tagLower] = append(schemasByTag[tagLower], schema.Ref)
+					if !slices.Contains(schemasByTag[tagLower], ref) {
+						schemasByTag[tagLower] = append(schemasByTag[tagLower], ref)
 					}
-					if !slices.Contains(schemaRefs[schema.Ref], tagLower) {
-						schemaRefs[schema.Ref] = append(schemaRefs[schema.Ref], tagLower)
+					if !slices.Contains(schemaRefs[ref], tagLower) {
+						schemaRefs[ref] = append(schemaRefs[ref], tagLower)
 					}
 				}
 			}
@@ -283,40 +298,40 @@ func (b *Builder) collectResponses() {
 	responsesByTag := make(map[string][]string)
 	tagsByResponse := make(map[string][]string)
 
-	for _, pathItem := range b.spec.Paths.Map() {
-		for _, op := range pathItem.Operations() {
+	for _, pathItem := range b.spec.Paths.PathItems.FromOldest() {
+		for _, op := range pathItem.GetOperations().FromOldest() {
 			if op.Responses == nil {
 				continue
 			}
 
-			schemas := make([]*openapi3.ResponseRef, 0, op.Responses.Len())
-			for code, response := range op.Responses.Map() {
-				if response.Ref != "" {
+			schemas := make([]*v3.Response, 0, op.Responses.Codes.Len())
+			for code, response := range op.Responses.Codes.FromOldest() {
+				if response.Reference != "" {
 					schemas = append(schemas, response)
 					if code == "default" || !strings.HasPrefix(code, "2") {
-						b.errorSchemas[response.Ref] = struct{}{}
+						b.errorSchemas[response.Reference] = struct{}{}
 					}
 				}
 			}
 
 			for _, schema := range schemas {
-				if schema.Ref == "" {
+				if schema == nil || schema.Reference == "" {
 					continue
 				}
 
 				if len(op.Tags) == 0 {
 					tag := "shared"
-					responsesByTag[tag] = append(responsesByTag[tag], schema.Ref)
-					tagsByResponse[schema.Ref] = []string{}
+					responsesByTag[tag] = append(responsesByTag[tag], schema.Reference)
+					tagsByResponse[schema.Reference] = []string{}
 				}
 
 				for _, tag := range op.Tags {
 					tagLower := strings.ToLower(tag)
-					if !slices.Contains(responsesByTag[tagLower], schema.Ref) {
-						responsesByTag[tagLower] = append(responsesByTag[tagLower], schema.Ref)
+					if !slices.Contains(responsesByTag[tagLower], schema.Reference) {
+						responsesByTag[tagLower] = append(responsesByTag[tagLower], schema.Reference)
 					}
-					if !slices.Contains(tagsByResponse[schema.Ref], tagLower) {
-						tagsByResponse[schema.Ref] = append(tagsByResponse[schema.Ref], tagLower)
+					if !slices.Contains(tagsByResponse[schema.Reference], tagLower) {
+						tagsByResponse[schema.Reference] = append(tagsByResponse[schema.Reference], tagLower)
 					}
 				}
 			}
@@ -345,21 +360,35 @@ func (b *Builder) collectResponses() {
 }
 
 // Collect the schemas that are referenced in the response body of the given operation.
-func (b *Builder) collectSchemasInResponse(op *openapi3.Operation) []*openapi3.SchemaRef {
-	if op.Responses == nil || op.Responses.Len() == 0 {
+func (b *Builder) collectSchemasInResponse(op *v3.Operation) []*base.SchemaProxy {
+	if op.Responses == nil || op.Responses.Codes.Len() == 0 {
 		return nil
 	}
 
-	schemas := make([]*openapi3.SchemaRef, 0, op.Responses.Len())
-	for code, response := range op.Responses.Map() {
+	schemas := make([]*base.SchemaProxy, 0, op.Responses.Codes.Len())
+	for code, response := range op.Responses.Codes.FromOldest() {
 		// TODO: handle content-type correctly
-		for _, mediaType := range response.Value.Content {
+		if response.Reference != "" {
+			resolved := b.resolveResponseRef(response.Reference)
+			if resolved == nil {
+				continue
+			}
+			response = resolved
+		}
+
+		if response.Content == nil {
+			continue
+		}
+
+		for _, mediaType := range response.Content.FromOldest() {
 			schema := mediaType.Schema
 			if schema == nil {
 				continue
 			}
 			if code == "default" || !strings.HasPrefix(code, "2") {
-				b.errorSchemas[schema.Ref] = struct{}{}
+				if schema.GetReference() != "" {
+					b.errorSchemas[schema.GetReference()] = struct{}{}
+				}
 			}
 			schemas = append(schemas, schema)
 		}
@@ -368,11 +397,11 @@ func (b *Builder) collectSchemasInResponse(op *openapi3.Operation) []*openapi3.S
 	return collectReferencedSchemas(schemas)
 }
 
-func (b *Builder) tagByTagName(name string) *openapi3.Tag {
-	idx := slices.IndexFunc(b.spec.Tags, func(tag *openapi3.Tag) bool {
+func (b *Builder) tagByTagName(name string) *base.Tag {
+	idx := slices.IndexFunc(b.spec.Tags, func(tag *base.Tag) bool {
 		return strings.EqualFold(tag.Name, name)
 	})
-	tag := &openapi3.Tag{
+	tag := &base.Tag{
 		Name: name,
 	}
 	if idx != -1 {
@@ -382,34 +411,34 @@ func (b *Builder) tagByTagName(name string) *openapi3.Tag {
 }
 
 // Collect the schemas that are referenced in the request parameters of the given operation.
-func collectSchemasInParams(op *openapi3.Operation) []*openapi3.SchemaRef {
+func collectSchemasInParams(op *v3.Operation) []*base.SchemaProxy {
 	if len(op.Parameters) == 0 {
 		return nil
 	}
 
-	schemas := make([]*openapi3.SchemaRef, 0, len(op.Parameters))
+	schemas := make([]*base.SchemaProxy, 0, len(op.Parameters))
 
 	// Iterate over the parameters of the operation
 	for _, param := range op.Parameters {
-		if param == nil || param.Value == nil {
+		if param == nil || param.Schema == nil {
 			continue
 		}
-		schemas = append(schemas, param.Value.Schema)
+		schemas = append(schemas, param.Schema)
 	}
 
 	return append(schemas, collectReferencedSchemas(schemas)...)
 }
 
 // Collect the schemas that are referenced in the request body of the given operation.
-func collectSchemasInRequest(op *openapi3.Operation) []*openapi3.SchemaRef {
-	if op.RequestBody == nil {
+func collectSchemasInRequest(op *v3.Operation) []*base.SchemaProxy {
+	if op.RequestBody == nil || op.RequestBody.Content == nil {
 		return nil
 	}
 
-	schemas := make([]*openapi3.SchemaRef, 0, len(op.RequestBody.Value.Content))
+	schemas := make([]*base.SchemaProxy, 0, op.RequestBody.Content.Len())
 
 	// Iterate over the responses of the operation
-	for _, mediaType := range op.RequestBody.Value.Content {
+	for _, mediaType := range op.RequestBody.Content.FromOldest() {
 		if mediaType.Schema == nil {
 			continue
 		}
@@ -420,8 +449,8 @@ func collectSchemasInRequest(op *openapi3.Operation) []*openapi3.SchemaRef {
 }
 
 // Collect the schemas that are referenced by the given schemas
-func collectReferencedSchemas(schemas []*openapi3.SchemaRef) []*openapi3.SchemaRef {
-	referencedSchemasMap := make(map[string]*openapi3.SchemaRef)
+func collectReferencedSchemas(schemas []*base.SchemaProxy) []*base.SchemaProxy {
+	referencedSchemasMap := make(map[string]*base.SchemaProxy)
 
 	// Iterate over the given schemas
 	for _, schema := range schemas {
@@ -434,45 +463,102 @@ func collectReferencedSchemas(schemas []*openapi3.SchemaRef) []*openapi3.SchemaR
 
 // Recursively collect the schemas that are referenced by the given schema
 func collectReferencedSchemasRecursive(
-	schema *openapi3.SchemaRef,
-	referencedSchemasMap map[string]*openapi3.SchemaRef,
+	schema *base.SchemaProxy,
+	referencedSchemasMap map[string]*base.SchemaProxy,
 ) {
 	if schema == nil {
 		return
 	}
 
 	// save referenced schemas for later lookup
-	if schema.Ref != "" {
-		referencedSchemasMap[schema.Ref] = schema
+	if schema.GetReference() != "" {
+		referencedSchemasMap[schema.GetReference()] = schema
 	}
 
-	if schema.Value.Type.Is("object") {
-		for _, prop := range schema.Value.Properties {
+	inner := schema.Schema()
+	if inner == nil {
+		return
+	}
+
+	if slices.Contains(inner.Type, "object") && inner.Properties != nil {
+		for _, prop := range inner.Properties.FromOldest() {
 			collectReferencedSchemasRecursive(prop, referencedSchemasMap)
 		}
 	}
 
-	if schema.Value.Type.Is("array") && schema.Value.Items != nil {
-		collectReferencedSchemasRecursive(schema.Value.Items, referencedSchemasMap)
+	if inner.Items != nil && inner.Items.IsA() && inner.Items.A != nil {
+		collectReferencedSchemasRecursive(inner.Items.A, referencedSchemasMap)
 	}
 
-	if schema.Value.AnyOf != nil {
-		for _, one := range schema.Value.AnyOf {
+	if inner.AnyOf != nil {
+		for _, one := range inner.AnyOf {
 			collectReferencedSchemasRecursive(one, referencedSchemasMap)
 		}
 	}
 
-	if schema.Value.AllOf != nil {
-		for _, one := range schema.Value.AllOf {
+	if inner.AllOf != nil {
+		for _, one := range inner.AllOf {
 			collectReferencedSchemasRecursive(one, referencedSchemasMap)
 		}
 	}
 
-	if schema.Value.OneOf != nil {
-		for _, one := range schema.Value.OneOf {
+	if inner.OneOf != nil {
+		for _, one := range inner.OneOf {
 			collectReferencedSchemasRecursive(one, referencedSchemasMap)
 		}
 	}
+}
+
+func (b *Builder) resolveSchemaRef(ref string) (*base.SchemaProxy, error) {
+	components := b.spec.Components
+	if components == nil || components.Schemas == nil {
+		return nil, fmt.Errorf("missing components.schemas")
+	}
+
+	name := strings.TrimPrefix(ref, "#/components/schemas/")
+	resolved, ok := components.Schemas.Get(name)
+	if !ok {
+		return nil, fmt.Errorf("cannot resolve $ref: %s", ref)
+	}
+
+	return resolved, nil
+}
+
+func (b *Builder) resolveResponseRef(ref string) *v3.Response {
+	components := b.spec.Components
+	if components == nil || components.Responses == nil {
+		return nil
+	}
+
+	name := strings.TrimPrefix(ref, "#/components/responses/")
+	resolved, ok := components.Responses.Get(name)
+	if !ok {
+		return nil
+	}
+
+	return resolved
+}
+
+func (b *Builder) resolveParameter(param *v3.Parameter) *v3.Parameter {
+	if param == nil {
+		return nil
+	}
+	if !param.IsReference() {
+		return param
+	}
+
+	components := b.spec.Components
+	if components == nil || components.Parameters == nil {
+		return nil
+	}
+
+	name := strings.TrimPrefix(param.GetReference(), "#/components/parameters/")
+	resolved, ok := components.Parameters.Get(name)
+	if !ok {
+		return nil
+	}
+
+	return resolved
 }
 
 func remove[T any](slice []T, s int) []T {

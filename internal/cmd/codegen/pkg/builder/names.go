@@ -3,19 +3,18 @@ package builder
 import (
 	"strings"
 
-	"github.com/getkin/kin-openapi/openapi3"
+	v3 "github.com/pb33f/libopenapi/datamodel/high/v3"
 
 	"github.com/sumup/sumup-go/internal/cmd/codegen/internal/strcase"
+	"github.com/sumup/sumup-go/internal/cmd/codegen/pkg/extension"
 )
 
-func operationMethodName(op *openapi3.Operation) string {
-	methodName := strcase.ToCamel(op.OperationID)
-	if ext, ok := op.Extensions["x-codegen"]; ok {
-		if extMap, ok := ext.(map[string]any); ok {
-			if name, ok := extMap["method_name"]; ok {
-				if nameString, ok := name.(string); ok {
-					methodName = strcase.ToCamel(nameString)
-				}
+func operationMethodName(op *v3.Operation) string {
+	methodName := strcase.ToCamel(op.OperationId)
+	if ext, ok := extension.Get[map[string]any](op.Extensions, "x-codegen"); ok {
+		if name, ok := ext["method_name"]; ok {
+			if nameString, ok := name.(string); ok {
+				methodName = strcase.ToCamel(nameString)
 			}
 		}
 	}

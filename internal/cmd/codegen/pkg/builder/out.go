@@ -10,7 +10,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/getkin/kin-openapi/openapi3"
+	v3 "github.com/pb33f/libopenapi/datamodel/high/v3"
 
 	"github.com/sumup/sumup-go/internal/cmd/codegen/internal/strcase"
 )
@@ -28,7 +28,7 @@ type templateData struct {
 	Methods     []*Method
 }
 
-func (b *Builder) generateResource(tagName string, paths *openapi3.Paths) error {
+func (b *Builder) generateResource(tagName string, paths *v3.Paths) error {
 	if tagName == "" {
 		return fmt.Errorf("empty tag name")
 	}
@@ -107,7 +107,7 @@ func (b *Builder) writeClientFile(fname string, tags []string) error {
 
 	resources := make([]resource, 0, len(tags))
 	for i := range tags {
-		if p := b.pathsByTag[tags[i]]; p.Len() == 0 {
+		if p := b.pathsByTag[tags[i]]; p.PathItems.Len() == 0 {
 			continue
 		}
 		resources = append(resources, resource{
