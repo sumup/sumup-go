@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.0](https://github.com/sumup/sumup-go/compare/v0.13.0...v0.14.0) (2026-02-02)
+
+
+### Features
+
+* refactor into flat structure ([#181](https://github.com/sumup/sumup-go/issues/181)) ([a6d1b68](https://github.com/sumup/sumup-go/commit/a6d1b688ac165d3be66fe0db887ba9164e4ccffc))
+
 ## [0.13.0](https://github.com/sumup/sumup-go/compare/v0.12.0...v0.13.0) (2026-01-20)
 
 
