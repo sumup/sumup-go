@@ -1,16 +1,16 @@
 {
 	"$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
-	"release-type": "go",
-	"extra-files": ["internal/version.go"],
-	"include-v-in-tag": true,
-	"include-component-in-tag": false,
-	"versioning": "prerelease",
-	"prerelease": true,
 	"bump-minor-pre-major": true,
 	"bump-patch-for-minor-pre-major": false,
+  "draft": true,
+	"extra-files": ["internal/version.go"],
+	"extra-label": "release",
+	"include-component-in-tag": false,
+	"include-v-in-tag": true,
 	"pull-request-header": "Automated sumup-go release",
 	"pull-request-title-pattern": "release: ${version}",
-	"extra-label": "release",
+	"release-type": "go",
+	"versioning": "prerelease",
 	"packages": {
 		".": {}
 	}
