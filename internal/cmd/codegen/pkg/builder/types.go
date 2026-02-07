@@ -143,6 +143,10 @@ func paramToString(name string, param *v3.Parameter) string {
 
 	switch {
 	case slices.Contains(schemaValue.Type, "string"):
+		if isNumericStringFormat(schemaValue.Format) {
+			return fmt.Sprintf("%s.String()", name)
+		}
+
 		switch schemaValue.Format {
 		case "date-time":
 			name = strings.TrimPrefix(name, "*")
