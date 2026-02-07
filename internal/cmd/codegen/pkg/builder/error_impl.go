@@ -17,14 +17,19 @@ func (e errorImplementation) String() string {
 	}
 
 	if len(e.Typ.Fields) == 0 {
-		return fmt.Sprintf("\nfunc (e *%s) Error() string {\n\treturn fmt.Sprintf(\"\")\n}\n", e.Typ.Name)
+		return fmt.Sprintf("\nfunc (e *%s) Error() string {\n\treturn %q\n}\n", e.Typ.Name, e.Typ.Name)
 	}
 
 	parts := make([]string, 0, len(e.Typ.Fields))
 	args := make([]string, 0, len(e.Typ.Fields))
 	for _, field := range e.Typ.Fields {
 		parts = append(parts, fmt.Sprintf("%s=%%v", field.Name))
-		args = append(args, fmt.Sprintf("e.%s", strcase.ToCamel(field.Name)))
+		fieldName := strcase.ToCamel(field.Name)
+		if field.Pointer {
+			args = append(args, fmt.Sprintf("ptr.OrNil(e.%s)", fieldName))
+			continue
+		}
+		args = append(args, fmt.Sprintf("e.%s", fieldName))
 	}
 
 	return fmt.Sprintf(

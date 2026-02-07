@@ -12,6 +12,7 @@ import (
 
 	"github.com/sumup/sumup-go/client"
 	"github.com/sumup/sumup-go/datetime"
+	"github.com/sumup/sumup-go/internal/ptr"
 )
 
 // An address somewhere in the world. The address fields used depend on the country conventions. For example, in
@@ -601,7 +602,7 @@ type MerchantsListPersons404Response struct {
 }
 
 func (e *MerchantsListPersons404Response) Error() string {
-	return fmt.Sprintf("category=%v, code=%v, instance=%v, message=%v", e.Category, e.Code, e.Instance, e.Message)
+	return fmt.Sprintf("category=%v, code=%v, instance=%v, message=%v", ptr.OrNil(e.Category), ptr.OrNil(e.Code), ptr.OrNil(e.Instance), ptr.OrNil(e.Message))
 }
 
 var _ error = (*MerchantsListPersons404Response)(nil)
@@ -619,7 +620,7 @@ type MerchantsListPersons500Response struct {
 }
 
 func (e *MerchantsListPersons500Response) Error() string {
-	return fmt.Sprintf("category=%v, code=%v, instance=%v, message=%v", e.Category, e.Code, e.Instance, e.Message)
+	return fmt.Sprintf("category=%v, code=%v, instance=%v, message=%v", ptr.OrNil(e.Category), ptr.OrNil(e.Code), ptr.OrNil(e.Instance), ptr.OrNil(e.Message))
 }
 
 var _ error = (*MerchantsListPersons500Response)(nil)
@@ -637,7 +638,7 @@ type MerchantsGet404Response struct {
 }
 
 func (e *MerchantsGet404Response) Error() string {
-	return fmt.Sprintf("category=%v, code=%v, instance=%v, message=%v", e.Category, e.Code, e.Instance, e.Message)
+	return fmt.Sprintf("category=%v, code=%v, instance=%v, message=%v", ptr.OrNil(e.Category), ptr.OrNil(e.Code), ptr.OrNil(e.Instance), ptr.OrNil(e.Message))
 }
 
 var _ error = (*MerchantsGet404Response)(nil)
@@ -655,7 +656,7 @@ type MerchantsGetPerson404Response struct {
 }
 
 func (e *MerchantsGetPerson404Response) Error() string {
-	return fmt.Sprintf("category=%v, code=%v, instance=%v, message=%v", e.Category, e.Code, e.Instance, e.Message)
+	return fmt.Sprintf("category=%v, code=%v, instance=%v, message=%v", ptr.OrNil(e.Category), ptr.OrNil(e.Code), ptr.OrNil(e.Instance), ptr.OrNil(e.Message))
 }
 
 var _ error = (*MerchantsGetPerson404Response)(nil)
@@ -673,7 +674,7 @@ type MerchantsGetPerson500Response struct {
 }
 
 func (e *MerchantsGetPerson500Response) Error() string {
-	return fmt.Sprintf("category=%v, code=%v, instance=%v, message=%v", e.Category, e.Code, e.Instance, e.Message)
+	return fmt.Sprintf("category=%v, code=%v, instance=%v, message=%v", ptr.OrNil(e.Category), ptr.OrNil(e.Code), ptr.OrNil(e.Instance), ptr.OrNil(e.Message))
 }
 
 var _ error = (*MerchantsGetPerson500Response)(nil)
