@@ -18,15 +18,13 @@ import (
 	"path"
 	"strings"
 	"time"
-	
+
 	"gopkg.in/yaml.v2"
 
 	"github.com/sumup/sumup-go/client"
-	"github.com/sumup/sumup-go/secret"
 	"github.com/sumup/sumup-go/datetime"
-	{{- if ne .PackageName "shared" }}
-	"github.com/sumup/sumup-go/shared"
-	{{- end }}
+	"github.com/sumup/sumup-go/internal/ptr"
+	"github.com/sumup/sumup-go/secret"
 )
 
 {{- range $type := .Types }}

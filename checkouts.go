@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/sumup/sumup-go/client"
+	"github.com/sumup/sumup-go/internal/ptr"
 )
 
 // __Required when payment type is `card`.__ Details of the payment card.
@@ -439,7 +440,7 @@ type DetailsErrorFailedConstraint struct {
 }
 
 func (e *DetailsError) Error() string {
-	return fmt.Sprintf("details=%v, failed_constraints=%v, status=%v, title=%v", e.Details, e.FailedConstraints, e.Status, e.Title)
+	return fmt.Sprintf("details=%v, failed_constraints=%v, status=%v, title=%v", ptr.OrNil(e.Details), e.FailedConstraints, ptr.OrNil(e.Status), ptr.OrNil(e.Title))
 }
 
 var _ error = (*DetailsError)(nil)
@@ -457,7 +458,7 @@ type ErrorExtended struct {
 }
 
 func (e *ErrorExtended) Error() string {
-	return fmt.Sprintf("error_code=%v, message=%v, param=%v", e.ErrorCode, e.Message, e.Param)
+	return fmt.Sprintf("error_code=%v, message=%v, param=%v", ptr.OrNil(e.ErrorCode), ptr.OrNil(e.Message), ptr.OrNil(e.Param))
 }
 
 var _ error = (*ErrorExtended)(nil)
@@ -574,7 +575,7 @@ type CheckoutsListAvailablePaymentMethodsResponseAvailablePaymentMethod struct {
 type CheckoutsProcess400Response json.RawMessage
 
 func (e *CheckoutsProcess400Response) Error() string {
-	return fmt.Sprintf("")
+	return ""
 }
 
 var _ error = (*CheckoutsProcess400Response)(nil)

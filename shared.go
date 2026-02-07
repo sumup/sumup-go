@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/sumup/sumup-go/datetime"
+	"github.com/sumup/sumup-go/internal/ptr"
 )
 
 // Profile's personal address information.
@@ -124,7 +125,7 @@ type Error struct {
 }
 
 func (e *Error) Error() string {
-	return fmt.Sprintf("error_code=%v, message=%v", e.ErrorCode, e.Message)
+	return fmt.Sprintf("error_code=%v, message=%v", ptr.OrNil(e.ErrorCode), ptr.OrNil(e.Message))
 }
 
 var _ error = (*Error)(nil)
@@ -140,7 +141,7 @@ type ErrorForbidden struct {
 }
 
 func (e *ErrorForbidden) Error() string {
-	return fmt.Sprintf("error_code=%v, error_message=%v, status_code=%v", e.ErrorCode, e.ErrorMessage, e.StatusCode)
+	return fmt.Sprintf("error_code=%v, error_message=%v, status_code=%v", ptr.OrNil(e.ErrorCode), ptr.OrNil(e.ErrorMessage), ptr.OrNil(e.StatusCode))
 }
 
 var _ error = (*ErrorForbidden)(nil)
@@ -263,7 +264,7 @@ type Problem struct {
 }
 
 func (e *Problem) Error() string {
-	return fmt.Sprintf("detail=%v, instance=%v, status=%v, title=%v, type=%v", e.Detail, e.Instance, e.Status, e.Title, e.Type)
+	return fmt.Sprintf("detail=%v, instance=%v, status=%v, title=%v, type=%v", ptr.OrNil(e.Detail), ptr.OrNil(e.Instance), ptr.OrNil(e.Status), ptr.OrNil(e.Title), e.Type)
 }
 
 var _ error = (*Problem)(nil)
