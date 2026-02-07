@@ -4986,7 +4986,7 @@ ReceiptEvent is a schema definition.
 type ReceiptEvent struct {
     // Amount of the event.
     // Format: double
-    Amount *string `json:"amount,omitempty"`
+    Amount *json.Number `json:"amount,omitempty"`
     // Unique ID of the transaction event.
     // Format: int64
     ID        *EventID `json:"id,omitempty"`
@@ -5097,28 +5097,28 @@ type ReceiptTransactionProduct struct {
     Name *string `json:"name,omitempty"`
     // Product price
     // Format: double
-    Price *string `json:"price,omitempty"`
+    Price *json.Number `json:"price,omitempty"`
     // Product price including VAT
     // Format: double
-    PriceWithVAT *string `json:"price_with_vat,omitempty"`
+    PriceWithVAT *json.Number `json:"price_with_vat,omitempty"`
     // Product quantity
     // Format: int64
     Quantity *int64 `json:"quantity,omitempty"`
     // VAT amount for a single product
     // Format: double
-    SingleVATAmount *string `json:"single_vat_amount,omitempty"`
+    SingleVATAmount *json.Number `json:"single_vat_amount,omitempty"`
     // Quantity x product price
     // Format: double
-    TotalPrice *string `json:"total_price,omitempty"`
+    TotalPrice *json.Number `json:"total_price,omitempty"`
     // Total price including VAT
     // Format: double
-    TotalWithVAT *string `json:"total_with_vat,omitempty"`
+    TotalWithVAT *json.Number `json:"total_with_vat,omitempty"`
     // VAT amount
     // Format: double
-    VATAmount *string `json:"vat_amount,omitempty"`
+    VATAmount *json.Number `json:"vat_amount,omitempty"`
     // VAT rate
     // Format: double
-    VATRate *string `json:"vat_rate,omitempty"`
+    VATRate *json.Number `json:"vat_rate,omitempty"`
 }
 ```
 

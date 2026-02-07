@@ -478,6 +478,10 @@ func (b *Builder) getReferenceSchema(v *base.SchemaProxy) string {
 
 // formatStringType converts a string schema to a valid Go type.
 func formatStringType(t *base.Schema) string {
+	if isNumericStringFormat(t.Format) {
+		return "json.Number"
+	}
+
 	switch t.Format {
 	case "date-time":
 		return "time.Time"
@@ -489,6 +493,15 @@ func formatStringType(t *base.Schema) string {
 		return "secret.Secret"
 	default:
 		return "string"
+	}
+}
+
+func isNumericStringFormat(format string) bool {
+	switch format {
+	case "int", "int32", "int64", "integer", "float", "double", "decimal", "number":
+		return true
+	default:
+		return false
 	}
 }
 
