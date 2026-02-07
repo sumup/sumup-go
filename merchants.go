@@ -37,6 +37,7 @@ type Address struct {
 	// type to allow for support of future countries in client code.
 	// Min length: 2
 	// Max length: 2
+	// Pattern: ^[A-Z]{2}$
 	Country CountryCode `json:"country"`
 	// A county is a geographic region of a country used for administrative or other purposes in some nations. Used
 	// in countries such as Ireland, Romania, etc.
@@ -122,6 +123,7 @@ type BasePerson struct {
 	// type to allow for support of future countries in client code.
 	// Min length: 2
 	// Max length: 2
+	// Pattern: ^[A-Z]{2}$
 	Citizenship *CountryCode `json:"citizenship,omitempty"`
 	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code representing the country
 	// where the person resides.
@@ -297,6 +299,7 @@ type CompanyIdentifiers []CompanyIdentifier
 // type to allow for support of future countries in client code.
 // Min length: 2
 // Max length: 2
+// Pattern: ^[A-Z]{2}$
 type CountryCode string
 
 // The category of the error.
@@ -377,6 +380,7 @@ type Merchant struct {
 	// type to allow for support of future countries in client code.
 	// Min length: 2
 	// Max length: 2
+	// Pattern: ^[A-Z]{2}$
 	Country CountryCode `json:"country"`
 	// The date and time when the resource was created. This is a string as defined in [RFC 3339, section 5.6](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6).
 	// Read only
@@ -459,6 +463,7 @@ type Person struct {
 	// type to allow for support of future countries in client code.
 	// Min length: 2
 	// Max length: 2
+	// Pattern: ^[A-Z]{2}$
 	Citizenship *CountryCode `json:"citizenship,omitempty"`
 	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code representing the country
 	// where the person resides.
@@ -504,8 +509,10 @@ type Person struct {
 // PersonalIdentifier is a schema definition.
 type PersonalIdentifier struct {
 	// The unique reference for the personal identifier type.
+	// Max length: 32
 	Ref string `json:"ref"`
 	// The company identifier value.
+	// Max length: 128
 	Value string `json:"value"`
 }
 

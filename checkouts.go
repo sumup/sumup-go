@@ -575,7 +575,7 @@ type CheckoutsListAvailablePaymentMethodsResponseAvailablePaymentMethod struct {
 type CheckoutsProcess400Response json.RawMessage
 
 func (e *CheckoutsProcess400Response) Error() string {
-	return ""
+	return "CheckoutsProcess400Response"
 }
 
 var _ error = (*CheckoutsProcess400Response)(nil)
