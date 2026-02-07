@@ -61,7 +61,7 @@ const (
 // Event is a schema definition.
 type Event struct {
 	// Amount of the event.
-	Amount *AmountEvent `json:"amount,omitempty"`
+	Amount *float32 `json:"amount,omitempty"`
 	// Amount deducted for the event.
 	DeductedAmount *float32 `json:"deducted_amount,omitempty"`
 	// Amount of the fee deducted for the event.
@@ -76,7 +76,7 @@ type Event struct {
 	// Status of the transaction event.
 	Status *EventStatus `json:"status,omitempty"`
 	// Date and time of the transaction event.
-	Timestamp *TimestampEvent `json:"timestamp,omitempty"`
+	Timestamp *time.Time `json:"timestamp,omitempty"`
 	// Unique ID of the transaction.
 	TransactionID *TransactionID `json:"transaction_id,omitempty"`
 	// Type of the transaction event.
@@ -151,7 +151,7 @@ type Product struct {
 // Details of a transaction event.
 type TransactionEvent struct {
 	// Amount of the event.
-	Amount *AmountEvent `json:"amount,omitempty"`
+	Amount *float32 `json:"amount,omitempty"`
 	// Date when the transaction event occurred.
 	// Format: date
 	Date *datetime.Date `json:"date,omitempty"`
@@ -168,7 +168,7 @@ type TransactionEvent struct {
 	// Status of the transaction event.
 	Status *EventStatus `json:"status,omitempty"`
 	// Date and time of the transaction event.
-	Timestamp *TimestampEvent `json:"timestamp,omitempty"`
+	Timestamp *time.Time `json:"timestamp,omitempty"`
 }
 
 // TransactionFull is a schema definition.

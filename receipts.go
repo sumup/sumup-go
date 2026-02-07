@@ -47,7 +47,8 @@ type ReceiptCard struct {
 // ReceiptEvent is a schema definition.
 type ReceiptEvent struct {
 	// Amount of the event.
-	Amount *AmountEvent `json:"amount,omitempty"`
+	// Format: double
+	Amount *string `json:"amount,omitempty"`
 	// Unique ID of the transaction event.
 	// Format: int64
 	ID        *EventID `json:"id,omitempty"`
@@ -55,7 +56,7 @@ type ReceiptEvent struct {
 	// Status of the transaction event.
 	Status *EventStatus `json:"status,omitempty"`
 	// Date and time of the transaction event.
-	Timestamp *TimestampEvent `json:"timestamp,omitempty"`
+	Timestamp *time.Time `json:"timestamp,omitempty"`
 	// Unique ID of the transaction.
 	TransactionID *TransactionID `json:"transaction_id,omitempty"`
 	// Type of the transaction event.
@@ -124,16 +125,32 @@ type ReceiptTransaction struct {
 
 // ReceiptTransactionProduct is a schema definition.
 type ReceiptTransactionProduct struct {
-	// Product description.
-	Description *string `json:"description,omitempty"`
-	// Product name.
+	// Product name
 	Name *string `json:"name,omitempty"`
-	// Product price.
-	Price *float32 `json:"price,omitempty"`
-	// Product quantity.
-	Quantity *int `json:"quantity,omitempty"`
-	// Quantity x product price.
-	TotalPrice *float32 `json:"total_price,omitempty"`
+	// Product price
+	// Format: double
+	Price *string `json:"price,omitempty"`
+	// Product price including VAT
+	// Format: double
+	PriceWithVAT *string `json:"price_with_vat,omitempty"`
+	// Product quantity
+	// Format: int64
+	Quantity *int64 `json:"quantity,omitempty"`
+	// VAT amount for a single product
+	// Format: double
+	SingleVATAmount *string `json:"single_vat_amount,omitempty"`
+	// Quantity x product price
+	// Format: double
+	TotalPrice *string `json:"total_price,omitempty"`
+	// Total price including VAT
+	// Format: double
+	TotalWithVAT *string `json:"total_with_vat,omitempty"`
+	// VAT amount
+	// Format: double
+	VATAmount *string `json:"vat_amount,omitempty"`
+	// VAT rate
+	// Format: double
+	VATRate *string `json:"vat_rate,omitempty"`
 }
 
 // ReceiptTransactionVATRate is a schema definition.
