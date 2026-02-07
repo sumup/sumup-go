@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.14.1](https://github.com/sumup/sumup-go/compare/v0.14.0...v0.14.1) (2026-02-07)
+
+
+### Bug Fixes
+
+* **sdk:** improve error ([#190](https://github.com/sumup/sumup-go/issues/190)) ([e554731](https://github.com/sumup/sumup-go/commit/e554731a4ea3d799321be0fcc22b0e77a6ce46be))
+* **sdk:** json numbers ([#193](https://github.com/sumup/sumup-go/issues/193)) ([f417fe1](https://github.com/sumup/sumup-go/commit/f417fe1e0c97a46323eeeb3d9046237182a19177))
+
 ## [0.14.0](https://github.com/sumup/sumup-go/compare/v0.13.0...v0.14.0) (2026-02-02)
 
 
