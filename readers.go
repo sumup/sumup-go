@@ -299,6 +299,11 @@ type Reader struct {
 	// Custom human-readable, user-defined name for easier identification of the reader.
 	// Max length: 500
 	Name ReaderName `json:"name"`
+	// Identifier of the system-managed service account associated with this reader.
+	// Present only for readers that are already paired.
+	// This field is currently in beta and may change.
+	// Format: uuid
+	ServiceAccountID *string `json:"service_account_id,omitempty"`
 	// The status of the reader object gives information about the current state of the reader.
 	//
 	// Possible values:

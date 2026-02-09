@@ -4571,7 +4571,7 @@ type Product struct {
 ```
 
 <a name="Reader"></a>
-## type [Reader](<https://github.com/sumup/sumup-go/blob/main/readers.go#L282-L313>)
+## type [Reader](<https://github.com/sumup/sumup-go/blob/main/readers.go#L282-L318>)
 
 A physical card reader device that can accept in\-person payments.
 
@@ -4596,6 +4596,11 @@ type Reader struct {
     // Custom human-readable, user-defined name for easier identification of the reader.
     // Max length: 500
     Name ReaderName `json:"name"`
+    // Identifier of the system-managed service account associated with this reader.
+    // Present only for readers that are already paired.
+    // This field is currently in beta and may change.
+    // Format: uuid
+    ServiceAccountID *string `json:"service_account_id,omitempty"`
     // The status of the reader object gives information about the current state of the reader.
     //
     // Possible values:
@@ -4611,7 +4616,7 @@ type Reader struct {
 ```
 
 <a name="ReaderDevice"></a>
-## type [ReaderDevice](<https://github.com/sumup/sumup-go/blob/main/readers.go#L316-L321>)
+## type [ReaderDevice](<https://github.com/sumup/sumup-go/blob/main/readers.go#L321-L326>)
 
 Information about the underlying physical device.
 
@@ -4625,7 +4630,7 @@ type ReaderDevice struct {
 ```
 
 <a name="ReaderDeviceModel"></a>
-## type [ReaderDeviceModel](<https://github.com/sumup/sumup-go/blob/main/readers.go#L324>)
+## type [ReaderDeviceModel](<https://github.com/sumup/sumup-go/blob/main/readers.go#L329>)
 
 Identifier of the model of the device.
 
@@ -4643,7 +4648,7 @@ const (
 ```
 
 <a name="ReaderID"></a>
-## type [ReaderID](<https://github.com/sumup/sumup-go/blob/main/readers.go#L338>)
+## type [ReaderID](<https://github.com/sumup/sumup-go/blob/main/readers.go#L343>)
 
 Unique identifier of the object.
 
@@ -4656,7 +4661,7 @@ type ReaderID string
 ```
 
 <a name="ReaderName"></a>
-## type [ReaderName](<https://github.com/sumup/sumup-go/blob/main/readers.go#L342>)
+## type [ReaderName](<https://github.com/sumup/sumup-go/blob/main/readers.go#L347>)
 
 Custom human\-readable, user\-defined name for easier identification of the reader. Max length: 500
 
@@ -4665,7 +4670,7 @@ type ReaderName string
 ```
 
 <a name="ReaderPairingCode"></a>
-## type [ReaderPairingCode](<https://github.com/sumup/sumup-go/blob/main/readers.go#L348>)
+## type [ReaderPairingCode](<https://github.com/sumup/sumup-go/blob/main/readers.go#L353>)
 
 The pairing code is a 8 or 9 character alphanumeric string that is displayed on a SumUp Device after initiating the pairing. It is used to link the physical device to the created pairing. Min length: 8 Max length: 9
 
@@ -4674,7 +4679,7 @@ type ReaderPairingCode string
 ```
 
 <a name="ReaderStatus"></a>
-## type [ReaderStatus](<https://github.com/sumup/sumup-go/blob/main/readers.go#L358>)
+## type [ReaderStatus](<https://github.com/sumup/sumup-go/blob/main/readers.go#L363>)
 
 The status of the reader object gives information about the current state of the reader.
 
@@ -4698,7 +4703,7 @@ const (
 ```
 
 <a name="ReadersClient"></a>
-## type [ReadersClient](<https://github.com/sumup/sumup-go/blob/main/readers.go#L529-L531>)
+## type [ReadersClient](<https://github.com/sumup/sumup-go/blob/main/readers.go#L534-L536>)
 
 
 
@@ -4709,7 +4714,7 @@ type ReadersClient struct {
 ```
 
 <a name="NewReadersClient"></a>
-### func [NewReadersClient](<https://github.com/sumup/sumup-go/blob/main/readers.go#L533>)
+### func [NewReadersClient](<https://github.com/sumup/sumup-go/blob/main/readers.go#L538>)
 
 ```go
 func NewReadersClient(c *client.Client) *ReadersClient
@@ -4718,7 +4723,7 @@ func NewReadersClient(c *client.Client) *ReadersClient
 
 
 <a name="ReadersClient.Create"></a>
-### func \(\*ReadersClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/readers.go#L561>)
+### func \(\*ReadersClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/readers.go#L566>)
 
 ```go
 func (c *ReadersClient) Create(ctx context.Context, merchantCode string, body ReadersCreateParams) (*Reader, error)
@@ -4727,7 +4732,7 @@ func (c *ReadersClient) Create(ctx context.Context, merchantCode string, body Re
 Create a new Reader for the merchant account.
 
 <a name="ReadersClient.CreateCheckout"></a>
-### func \(\*ReadersClient\) [CreateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers.go#L771>)
+### func \(\*ReadersClient\) [CreateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers.go#L776>)
 
 ```go
 func (c *ReadersClient) CreateCheckout(ctx context.Context, merchantCode string, readerID string, body ReadersCreateCheckoutParams) (*CreateReaderCheckoutResponse, error)
@@ -4742,7 +4747,7 @@ There are some caveats when using this endpoint: \* The target device must be on
 \*\*Note\*\*: If the target device is a Solo, it must be in version 3.3.24.3 or higher.
 
 <a name="ReadersClient.Delete"></a>
-### func \(\*ReadersClient\) [Delete](<https://github.com/sumup/sumup-go/blob/main/readers.go#L836>)
+### func \(\*ReadersClient\) [Delete](<https://github.com/sumup/sumup-go/blob/main/readers.go#L841>)
 
 ```go
 func (c *ReadersClient) Delete(ctx context.Context, merchantCode string, id ReaderID) error
@@ -4751,7 +4756,7 @@ func (c *ReadersClient) Delete(ctx context.Context, merchantCode string, id Read
 Delete a reader.
 
 <a name="ReadersClient.Get"></a>
-### func \(\*ReadersClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/readers.go#L861>)
+### func \(\*ReadersClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/readers.go#L866>)
 
 ```go
 func (c *ReadersClient) Get(ctx context.Context, merchantCode string, id ReaderID, params ReadersGetParams) (*Reader, error)
@@ -4760,7 +4765,7 @@ func (c *ReadersClient) Get(ctx context.Context, merchantCode string, id ReaderI
 Retrieve a Reader.
 
 <a name="ReadersClient.GetStatus"></a>
-### func \(\*ReadersClient\) [GetStatus](<https://github.com/sumup/sumup-go/blob/main/readers.go#L697>)
+### func \(\*ReadersClient\) [GetStatus](<https://github.com/sumup/sumup-go/blob/main/readers.go#L702>)
 
 ```go
 func (c *ReadersClient) GetStatus(ctx context.Context, merchantCode string, readerID string, params ReadersGetStatusParams) (*StatusResponse, error)
@@ -4781,7 +4786,7 @@ This endpoint allows you to retrieve updates from the connected card reader, inc
 \*\*Note\*\*: If the target device is a Solo, it must be in version 3.3.39.0 or higher.
 
 <a name="ReadersClient.List"></a>
-### func \(\*ReadersClient\) [List](<https://github.com/sumup/sumup-go/blob/main/readers.go#L538>)
+### func \(\*ReadersClient\) [List](<https://github.com/sumup/sumup-go/blob/main/readers.go#L543>)
 
 ```go
 func (c *ReadersClient) List(ctx context.Context, merchantCode string) (*ReadersListResponse, error)
@@ -4790,7 +4795,7 @@ func (c *ReadersClient) List(ctx context.Context, merchantCode string) (*Readers
 List all readers of the merchant.
 
 <a name="ReadersClient.TerminateCheckout"></a>
-### func \(\*ReadersClient\) [TerminateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers.go#L618>)
+### func \(\*ReadersClient\) [TerminateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers.go#L623>)
 
 ```go
 func (c *ReadersClient) TerminateCheckout(ctx context.Context, merchantCode string, readerID string) error
@@ -4807,7 +4812,7 @@ If a transaction is successfully terminated and \`return\_url\` was provided on 
 \*\*Note\*\*: If the target device is a Solo, it must be in version 3.3.28.0 or higher.
 
 <a name="ReadersClient.Update"></a>
-### func \(\*ReadersClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/readers.go#L891>)
+### func \(\*ReadersClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/readers.go#L896>)
 
 ```go
 func (c *ReadersClient) Update(ctx context.Context, merchantCode string, id ReaderID, body ReadersUpdateParams) (*Reader, error)
@@ -4816,7 +4821,7 @@ func (c *ReadersClient) Update(ctx context.Context, merchantCode string, id Read
 Update a Reader.
 
 <a name="ReadersCreateCheckoutParams"></a>
-## type [ReadersCreateCheckoutParams](<https://github.com/sumup/sumup-go/blob/main/readers.go#L468>)
+## type [ReadersCreateCheckoutParams](<https://github.com/sumup/sumup-go/blob/main/readers.go#L473>)
 
 
 
@@ -4825,7 +4830,7 @@ type ReadersCreateCheckoutParams = CreateCheckoutRequest
 ```
 
 <a name="ReadersCreateParams"></a>
-## type [ReadersCreateParams](<https://github.com/sumup/sumup-go/blob/main/readers.go#L453-L466>)
+## type [ReadersCreateParams](<https://github.com/sumup/sumup-go/blob/main/readers.go#L458-L471>)
 
 ReadersCreateParams is a schema definition.
 
@@ -4847,7 +4852,7 @@ type ReadersCreateParams struct {
 ```
 
 <a name="ReadersGetParams"></a>
-## type [ReadersGetParams](<https://github.com/sumup/sumup-go/blob/main/readers.go#L502-L511>)
+## type [ReadersGetParams](<https://github.com/sumup/sumup-go/blob/main/readers.go#L507-L516>)
 
 ReadersGetParams are query parameters for GetReader.
 
@@ -4865,7 +4870,7 @@ type ReadersGetParams struct {
 ```
 
 <a name="ReadersGetParams.QueryValues"></a>
-### func \(\*ReadersGetParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/readers.go#L514>)
+### func \(\*ReadersGetParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/readers.go#L519>)
 
 ```go
 func (p *ReadersGetParams) QueryValues() url.Values
@@ -4874,7 +4879,7 @@ func (p *ReadersGetParams) QueryValues() url.Values
 QueryValues converts [ReadersGetParams](<#ReadersGetParams>) into \[url.Values\].
 
 <a name="ReadersGetStatusParams"></a>
-## type [ReadersGetStatusParams](<https://github.com/sumup/sumup-go/blob/main/readers.go#L482-L486>)
+## type [ReadersGetStatusParams](<https://github.com/sumup/sumup-go/blob/main/readers.go#L487-L491>)
 
 ReadersGetStatusParams are query parameters for GetReaderStatus.
 
@@ -4887,7 +4892,7 @@ type ReadersGetStatusParams struct {
 ```
 
 <a name="ReadersGetStatusParams.QueryValues"></a>
-### func \(\*ReadersGetStatusParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/readers.go#L489>)
+### func \(\*ReadersGetStatusParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/readers.go#L494>)
 
 ```go
 func (p *ReadersGetStatusParams) QueryValues() url.Values
@@ -4896,7 +4901,7 @@ func (p *ReadersGetStatusParams) QueryValues() url.Values
 QueryValues converts [ReadersGetStatusParams](<#ReadersGetStatusParams>) into \[url.Values\].
 
 <a name="ReadersListResponse"></a>
-## type [ReadersListResponse](<https://github.com/sumup/sumup-go/blob/main/readers.go#L525-L527>)
+## type [ReadersListResponse](<https://github.com/sumup/sumup-go/blob/main/readers.go#L530-L532>)
 
 ReadersListResponse is a schema definition.
 
@@ -4907,7 +4912,7 @@ type ReadersListResponse struct {
 ```
 
 <a name="ReadersUpdateParams"></a>
-## type [ReadersUpdateParams](<https://github.com/sumup/sumup-go/blob/main/readers.go#L471-L479>)
+## type [ReadersUpdateParams](<https://github.com/sumup/sumup-go/blob/main/readers.go#L476-L484>)
 
 ReadersUpdateParams is a schema definition.
 
@@ -5345,7 +5350,7 @@ type RolesUpdateParams struct {
 ```
 
 <a name="StatusResponse"></a>
-## type [StatusResponse](<https://github.com/sumup/sumup-go/blob/main/readers.go#L368-L370>)
+## type [StatusResponse](<https://github.com/sumup/sumup-go/blob/main/readers.go#L373-L375>)
 
 Status of a device
 
@@ -5356,7 +5361,7 @@ type StatusResponse struct {
 ```
 
 <a name="StatusResponseData"></a>
-## type [StatusResponseData](<https://github.com/sumup/sumup-go/blob/main/readers.go#L373-L390>)
+## type [StatusResponseData](<https://github.com/sumup/sumup-go/blob/main/readers.go#L378-L395>)
 
 StatusResponseData is a schema definition.
 
@@ -5382,7 +5387,7 @@ type StatusResponseData struct {
 ```
 
 <a name="StatusResponseDataConnectionType"></a>
-## type [StatusResponseDataConnectionType](<https://github.com/sumup/sumup-go/blob/main/readers.go#L393>)
+## type [StatusResponseDataConnectionType](<https://github.com/sumup/sumup-go/blob/main/readers.go#L398>)
 
 Type of connection used by the device
 
@@ -5405,7 +5410,7 @@ const (
 ```
 
 <a name="StatusResponseDataState"></a>
-## type [StatusResponseDataState](<https://github.com/sumup/sumup-go/blob/main/readers.go#L406>)
+## type [StatusResponseDataState](<https://github.com/sumup/sumup-go/blob/main/readers.go#L411>)
 
 Latest state of the device
 
@@ -5427,7 +5432,7 @@ const (
 ```
 
 <a name="StatusResponseDataStatus"></a>
-## type [StatusResponseDataStatus](<https://github.com/sumup/sumup-go/blob/main/readers.go#L418>)
+## type [StatusResponseDataStatus](<https://github.com/sumup/sumup-go/blob/main/readers.go#L423>)
 
 Status of a device
 
@@ -6406,7 +6411,7 @@ type TransactionsRefundParams struct {
 ```
 
 <a name="Unauthorized"></a>
-## type [Unauthorized](<https://github.com/sumup/sumup-go/blob/main/readers.go#L426-L428>)
+## type [Unauthorized](<https://github.com/sumup/sumup-go/blob/main/readers.go#L431-L433>)
 
 401 Unauthorized
 
@@ -6417,7 +6422,7 @@ type Unauthorized struct {
 ```
 
 <a name="Unauthorized.Error"></a>
-### func \(\*Unauthorized\) [Error](<https://github.com/sumup/sumup-go/blob/main/readers.go#L446>)
+### func \(\*Unauthorized\) [Error](<https://github.com/sumup/sumup-go/blob/main/readers.go#L451>)
 
 ```go
 func (e *Unauthorized) Error() string
@@ -6426,7 +6431,7 @@ func (e *Unauthorized) Error() string
 
 
 <a name="UnauthorizedErrors"></a>
-## type [UnauthorizedErrors](<https://github.com/sumup/sumup-go/blob/main/readers.go#L431-L436>)
+## type [UnauthorizedErrors](<https://github.com/sumup/sumup-go/blob/main/readers.go#L436-L441>)
 
 UnauthorizedErrors is a schema definition.
 
@@ -6440,7 +6445,7 @@ type UnauthorizedErrors struct {
 ```
 
 <a name="UnauthorizedErrorsType"></a>
-## type [UnauthorizedErrorsType](<https://github.com/sumup/sumup-go/blob/main/readers.go#L439>)
+## type [UnauthorizedErrorsType](<https://github.com/sumup/sumup-go/blob/main/readers.go#L444>)
 
 Key indicating type of error
 
@@ -6766,7 +6771,7 @@ const APIVersion = "1.0.0"
 <a name="Version"></a>
 
 ```go
-const Version = "0.14.0" // x-release-please-version
+const Version = "0.14.1" // x-release-please-version
 ```
 
 # secret
