@@ -95,4 +95,4 @@ jobs:
         with:
           token: ${{ steps.app-token.outputs.token }}
           target-branch: ${{ github.ref_name }}
-          skip-github-pull-request: ${{ startsWith(github.event.head_commit.message, 'release: ') }}
+          skip-github-pull-request: "${{ startsWith(github.event.head_commit.message, 'release: ') }}"
