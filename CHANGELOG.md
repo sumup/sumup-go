@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.14.2](https://github.com/sumup/sumup-go/compare/v0.14.1...v0.14.2) (2026-02-12)
+
+
+### Bug Fixes
+
+* **cd:** race condition on release ([b42dd90](https://github.com/sumup/sumup-go/commit/b42dd908e9f3d7b72b105f67f6753229ad7fa5dd))
+* **cd:** yaml syntax ([#199](https://github.com/sumup/sumup-go/issues/199)) ([5067342](https://github.com/sumup/sumup-go/commit/506734224ea62327d6d764749a165ff36887dde5))
+
 ## [0.14.1](https://github.com/sumup/sumup-go/compare/v0.14.0...v0.14.1) (2026-02-07)
 
 
