@@ -5,6 +5,7 @@ package sumup
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -12,7 +13,6 @@ import (
 
 	"github.com/sumup/sumup-go/client"
 	"github.com/sumup/sumup-go/datetime"
-	"github.com/sumup/sumup-go/internal/ptr"
 )
 
 // An address somewhere in the world. The address fields used depend on the country conventions. For example, in
@@ -85,14 +85,6 @@ type Address struct {
 	// A US system of postal codes used by the United States Postal Service (USPS).
 	// Max length: 512
 	ZipCode *string `json:"zip_code,omitempty"`
-}
-
-// BaseError is a schema definition.
-type BaseError struct {
-	// A unique identifier for the error instance. This can be used to trace the error back to the server logs.
-	Instance *string `json:"instance,omitempty"`
-	// A human-readable message describing the error that occurred.
-	Message *string `json:"message,omitempty"`
 }
 
 // Base schema for a person associated with a merchant. This can be a legal representative, business owner (ultimate
@@ -301,34 +293,6 @@ type CompanyIdentifiers []CompanyIdentifier
 // Max length: 2
 // Pattern: ^[A-Z]{2}$
 type CountryCode string
-
-// The category of the error.
-type ErrorCategoryClient string
-
-const (
-	ErrorCategoryClientClientError ErrorCategoryClient = "client_error"
-)
-
-// The category of the error.
-type ErrorCategoryServer string
-
-const (
-	ErrorCategoryServerServerError ErrorCategoryServer = "server_error"
-)
-
-// An error code specifying the exact error that occurred.
-type ErrorCodeInternalServerError string
-
-const (
-	ErrorCodeInternalServerErrorInternalError ErrorCodeInternalServerError = "internal_error"
-)
-
-// An error code specifying the exact error that occurred.
-type ErrorCodeNotFound string
-
-const (
-	ErrorCodeNotFoundNotFound ErrorCodeNotFound = "not_found"
-)
 
 // The unique legal type reference as defined in the country SDK. We do not rely on IDs as used by other services.
 // Consumers of this API are expected to use the country SDK to map to any other IDs, translation keys, or
@@ -596,96 +560,6 @@ func (p *MerchantsGetPersonParams) QueryValues() url.Values {
 	return q
 }
 
-// MerchantsListPersons404Response is a schema definition.
-type MerchantsListPersons404Response struct {
-	// The category of the error.
-	Category *ErrorCategoryClient `json:"category,omitempty"`
-	// An error code specifying the exact error that occurred.
-	Code *ErrorCodeNotFound `json:"code,omitempty"`
-	// A unique identifier for the error instance. This can be used to trace the error back to the server logs.
-	Instance *string `json:"instance,omitempty"`
-	// A human-readable message describing the error that occurred.
-	Message *string `json:"message,omitempty"`
-}
-
-func (e *MerchantsListPersons404Response) Error() string {
-	return fmt.Sprintf("category=%v, code=%v, instance=%v, message=%v", ptr.OrNil(e.Category), ptr.OrNil(e.Code), ptr.OrNil(e.Instance), ptr.OrNil(e.Message))
-}
-
-var _ error = (*MerchantsListPersons404Response)(nil)
-
-// MerchantsListPersons500Response is a schema definition.
-type MerchantsListPersons500Response struct {
-	// The category of the error.
-	Category *ErrorCategoryServer `json:"category,omitempty"`
-	// An error code specifying the exact error that occurred.
-	Code *ErrorCodeInternalServerError `json:"code,omitempty"`
-	// A unique identifier for the error instance. This can be used to trace the error back to the server logs.
-	Instance *string `json:"instance,omitempty"`
-	// A human-readable message describing the error that occurred.
-	Message *string `json:"message,omitempty"`
-}
-
-func (e *MerchantsListPersons500Response) Error() string {
-	return fmt.Sprintf("category=%v, code=%v, instance=%v, message=%v", ptr.OrNil(e.Category), ptr.OrNil(e.Code), ptr.OrNil(e.Instance), ptr.OrNil(e.Message))
-}
-
-var _ error = (*MerchantsListPersons500Response)(nil)
-
-// MerchantsGet404Response is a schema definition.
-type MerchantsGet404Response struct {
-	// The category of the error.
-	Category *ErrorCategoryClient `json:"category,omitempty"`
-	// An error code specifying the exact error that occurred.
-	Code *ErrorCodeNotFound `json:"code,omitempty"`
-	// A unique identifier for the error instance. This can be used to trace the error back to the server logs.
-	Instance *string `json:"instance,omitempty"`
-	// A human-readable message describing the error that occurred.
-	Message *string `json:"message,omitempty"`
-}
-
-func (e *MerchantsGet404Response) Error() string {
-	return fmt.Sprintf("category=%v, code=%v, instance=%v, message=%v", ptr.OrNil(e.Category), ptr.OrNil(e.Code), ptr.OrNil(e.Instance), ptr.OrNil(e.Message))
-}
-
-var _ error = (*MerchantsGet404Response)(nil)
-
-// MerchantsGetPerson404Response is a schema definition.
-type MerchantsGetPerson404Response struct {
-	// The category of the error.
-	Category *ErrorCategoryClient `json:"category,omitempty"`
-	// An error code specifying the exact error that occurred.
-	Code *ErrorCodeNotFound `json:"code,omitempty"`
-	// A unique identifier for the error instance. This can be used to trace the error back to the server logs.
-	Instance *string `json:"instance,omitempty"`
-	// A human-readable message describing the error that occurred.
-	Message *string `json:"message,omitempty"`
-}
-
-func (e *MerchantsGetPerson404Response) Error() string {
-	return fmt.Sprintf("category=%v, code=%v, instance=%v, message=%v", ptr.OrNil(e.Category), ptr.OrNil(e.Code), ptr.OrNil(e.Instance), ptr.OrNil(e.Message))
-}
-
-var _ error = (*MerchantsGetPerson404Response)(nil)
-
-// MerchantsGetPerson500Response is a schema definition.
-type MerchantsGetPerson500Response struct {
-	// The category of the error.
-	Category *ErrorCategoryServer `json:"category,omitempty"`
-	// An error code specifying the exact error that occurred.
-	Code *ErrorCodeInternalServerError `json:"code,omitempty"`
-	// A unique identifier for the error instance. This can be used to trace the error back to the server logs.
-	Instance *string `json:"instance,omitempty"`
-	// A human-readable message describing the error that occurred.
-	Message *string `json:"message,omitempty"`
-}
-
-func (e *MerchantsGetPerson500Response) Error() string {
-	return fmt.Sprintf("category=%v, code=%v, instance=%v, message=%v", ptr.OrNil(e.Category), ptr.OrNil(e.Code), ptr.OrNil(e.Instance), ptr.OrNil(e.Message))
-}
-
-var _ error = (*MerchantsGetPerson500Response)(nil)
-
 type MerchantsClient struct {
 	c *client.Client
 }
@@ -714,19 +588,9 @@ func (c *MerchantsClient) ListPersons(ctx context.Context, merchantCode string, 
 
 		return &v, nil
 	case http.StatusNotFound:
-		var apiErr MerchantsListPersons404Response
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, errors.New("The requested Merchant does not exist.")
 	case http.StatusInternalServerError:
-		var apiErr MerchantsListPersons500Response
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, errors.New("An internal server error occurred.")
 	default:
 		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
@@ -752,12 +616,7 @@ func (c *MerchantsClient) Get(ctx context.Context, merchantCode string, params M
 
 		return &v, nil
 	case http.StatusNotFound:
-		var apiErr MerchantsGet404Response
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, errors.New("The requested Merchant does not exist.")
 	default:
 		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
@@ -783,19 +642,9 @@ func (c *MerchantsClient) GetPerson(ctx context.Context, merchantCode string, pe
 
 		return &v, nil
 	case http.StatusNotFound:
-		var apiErr MerchantsGetPerson404Response
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, errors.New("The requested Person does not exist.")
 	case http.StatusInternalServerError:
-		var apiErr MerchantsGetPerson500Response
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, errors.New("An internal server error occurred.")
 	default:
 		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
