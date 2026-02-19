@@ -151,7 +151,7 @@ func (b *Builder) operationToMethod(tagName, method, path string, o *v3.Operatio
 
 	hasBody := false
 	if o.RequestBody != nil && o.RequestBody.Content != nil {
-		mt, ok := o.RequestBody.Content.Get("application/json")
+		mt, ok := getJSONMediaType(o.RequestBody.Content)
 		if ok && mt.Schema != nil {
 			paramType := typeName + "Params"
 			params = append(params, Parameter{
@@ -282,7 +282,7 @@ func (b *Builder) responseToType(tagName, operationName string, resp *v3.Respons
 		return ""
 	}
 
-	content, ok := resp.Content.Get("application/json")
+	content, ok := getJSONMediaType(resp.Content)
 	if !ok {
 		return ""
 	}
@@ -339,7 +339,7 @@ func (b *Builder) collectSuccessResponses(o *v3.Operation) ([]responseInfo, erro
 			continue
 		}
 
-		if content, ok := response.Content.Get("application/json"); ok {
+		if content, ok := getJSONMediaType(response.Content); ok {
 			if content.Schema != nil {
 				successResponses = append(successResponses, responseInfo{
 					content: content,

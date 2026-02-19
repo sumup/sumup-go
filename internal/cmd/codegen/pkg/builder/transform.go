@@ -59,7 +59,7 @@ func (b *Builder) respToTypes(schemas []*v3.Response, errorSchemas map[string]st
 			continue
 		}
 
-		content, ok := s.Content.Get("application/json")
+		content, ok := getJSONMediaType(s.Content)
 		if !ok || content.Schema == nil {
 			continue
 		}
@@ -94,7 +94,7 @@ func (b *Builder) pathsToBodyTypes(tagName string, paths *v3.Paths) []Writable {
 			typeName := b.operationTypeName(tagName, operationName)
 
 			if opSpec.RequestBody != nil && opSpec.RequestBody.Content != nil {
-				mt, ok := opSpec.RequestBody.Content.Get("application/json")
+				mt, ok := getJSONMediaType(opSpec.RequestBody.Content)
 				if ok && mt.Schema != nil {
 					paramsName := typeName + "Params"
 					if mt.Schema.IsReference() {
@@ -260,7 +260,7 @@ func (b *Builder) pathsToResponseTypes(tagName string, paths *v3.Paths) []Writab
 					continue
 				}
 
-				content, ok := response.Content.Get("application/json")
+				content, ok := getJSONMediaType(response.Content)
 				if !ok {
 					continue
 				}
