@@ -5,7 +5,6 @@ package sumup
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -588,9 +587,19 @@ func (c *MerchantsClient) ListPersons(ctx context.Context, merchantCode string, 
 
 		return &v, nil
 	case http.StatusNotFound:
-		return nil, errors.New("The requested Merchant does not exist.")
+		var apiErr Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	case http.StatusInternalServerError:
-		return nil, errors.New("An internal server error occurred.")
+		var apiErr Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	default:
 		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
@@ -616,7 +625,12 @@ func (c *MerchantsClient) Get(ctx context.Context, merchantCode string, params M
 
 		return &v, nil
 	case http.StatusNotFound:
-		return nil, errors.New("The requested Merchant does not exist.")
+		var apiErr Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	default:
 		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
@@ -642,9 +656,19 @@ func (c *MerchantsClient) GetPerson(ctx context.Context, merchantCode string, pe
 
 		return &v, nil
 	case http.StatusNotFound:
-		return nil, errors.New("The requested Person does not exist.")
+		var apiErr Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	case http.StatusInternalServerError:
-		return nil, errors.New("An internal server error occurred.")
+		var apiErr Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	default:
 		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
