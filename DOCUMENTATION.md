@@ -6590,7 +6590,7 @@ type Field[T any] struct {
 ```
 
 <a name="Bool"></a>
-### func [Bool](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L87>)
+### func [Bool](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L89>)
 
 ```go
 func Bool(value bool) *Field[bool]
@@ -6599,7 +6599,7 @@ func Bool(value bool) *Field[bool]
 Bool is a nullable field helper for constructing nullable bools with a value.
 
 <a name="Float"></a>
-### func [Float](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L81>)
+### func [Float](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L83>)
 
 ```go
 func Float(value float32) *Field[float32]
@@ -6608,7 +6608,7 @@ func Float(value float32) *Field[float32]
 Float is a nullable field helper for constructing nullable floats with a value.
 
 <a name="Float64"></a>
-### func [Float64](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L84>)
+### func [Float64](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L86>)
 
 ```go
 func Float64(value float64) *Field[float64]
@@ -6617,7 +6617,7 @@ func Float64(value float64) *Field[float64]
 Float64 is a nullable field helper for constructing nullable float64 values.
 
 <a name="Int"></a>
-### func [Int](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L69>)
+### func [Int](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L71>)
 
 ```go
 func Int(value int) *Field[int]
@@ -6626,7 +6626,7 @@ func Int(value int) *Field[int]
 Int is a nullable field helper for constructing nullable integers with a value.
 
 <a name="Int32"></a>
-### func [Int32](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L72>)
+### func [Int32](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L74>)
 
 ```go
 func Int32(value int32) *Field[int32]
@@ -6635,7 +6635,7 @@ func Int32(value int32) *Field[int32]
 Int32 is a nullable field helper for constructing nullable int32 values.
 
 <a name="Int64"></a>
-### func [Int64](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L75>)
+### func [Int64](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L77>)
 
 ```go
 func Int64(value int64) *Field[int64]
@@ -6644,7 +6644,7 @@ func Int64(value int64) *Field[int64]
 Int64 is a nullable field helper for constructing nullable int64 values.
 
 <a name="Null"></a>
-### func [Null](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L66>)
+### func [Null](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L68>)
 
 ```go
 func Null[T any]() *Field[T]
@@ -6653,7 +6653,7 @@ func Null[T any]() *Field[T]
 Null is a nullable field helper for constructing a generic null fields.
 
 <a name="String"></a>
-### func [String](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L78>)
+### func [String](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L80>)
 
 ```go
 func String(value string) *Field[string]
@@ -6662,7 +6662,7 @@ func String(value string) *Field[string]
 String is a nullable field helper for constructing nullable strings with a value.
 
 <a name="Value"></a>
-### func [Value](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L63>)
+### func [Value](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L65>)
 
 ```go
 func Value[T any](value T) *Field[T]
@@ -6689,7 +6689,7 @@ func (f *Field[T]) Null() bool
 Null returns true if the field is present and has explicit null value.
 
 <a name="Field[T].String"></a>
-### func \(Field\[T\]\) [String](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L57>)
+### func \(Field\[T\]\) [String](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L59>)
 
 ```go
 func (f Field[T]) String() string

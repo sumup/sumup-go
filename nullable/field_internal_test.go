@@ -10,6 +10,7 @@ type Foo struct {
 	X *Field[string] `json:"x,omitempty"`
 	Y *Field[string] `json:"y,omitempty"`
 	Z *Field[string] `json:"z,omitempty"`
+	W Field[string]  `json:"w"`
 }
 
 func TestField(t *testing.T) {
@@ -23,7 +24,7 @@ func TestField(t *testing.T) {
 		t.Fatalf("Marshal() error = %v", err)
 	}
 
-	if got, want := string(data), `{"x":"foo","y":null}`; got != want {
+	if got, want := string(data), `{"x":"foo","y":null,"w":null}`; got != want {
 		t.Fatalf("Marshal() = %q, want %q", got, want)
 	}
 }

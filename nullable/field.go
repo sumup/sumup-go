@@ -13,8 +13,8 @@ var _ json.Unmarshaler = (*Field[string])(nil)
 // Field is a wrapper for nullable fields to distinguish zero values
 // from null or omitted fields.
 type Field[T any] struct {
-	val  T
-	null bool
+	val     T
+	present bool
 }
 
 // Null returns true if the field is present and has explicit null value.
@@ -23,14 +23,14 @@ func (f *Field[T]) Null() bool {
 		return false
 	}
 
-	return f.null
+	return !f.present
 }
 
 // Value returns the value of the nullable field if the field is present and has value set.
 // Using [Value] you loose information about nullability, i.e. it is no longer possible
 // to distinguish between the field not being present or the field being present as null.
 func (f *Field[T]) Value() *T {
-	if f == nil || f.null {
+	if f == nil || !f.present {
 		return nil
 	}
 
@@ -38,7 +38,7 @@ func (f *Field[T]) Value() *T {
 }
 
 func (f Field[T]) MarshalJSON() ([]byte, error) {
-	if f.null {
+	if !f.present {
 		return []byte("null"), nil // Explicitly set to null
 	}
 	return json.Marshal(f.val)
@@ -46,11 +46,13 @@ func (f Field[T]) MarshalJSON() ([]byte, error) {
 
 func (f *Field[T]) UnmarshalJSON(data []byte) error {
 	if string(data) == "null" {
-		f.null = true
+		f.present = false
 		var zeroValue T
 		f.val = zeroValue // Reset value
 		return nil
 	}
+
+	f.present = true
 	return json.Unmarshal(data, &f.val)
 }
 
@@ -60,10 +62,10 @@ func (f Field[T]) String() string {
 
 // Value is a nullable field helper for constructing a generic nullable field
 // with a value.
-func Value[T any](value T) *Field[T] { return &Field[T]{val: value} }
+func Value[T any](value T) *Field[T] { return &Field[T]{val: value, present: true} }
 
 // Null is a nullable field helper for constructing a generic null fields.
-func Null[T any]() *Field[T] { return &Field[T]{null: true} }
+func Null[T any]() *Field[T] { return &Field[T]{} }
 
 // Int is a nullable field helper for constructing nullable integers with a value.
 func Int(value int) *Field[int] { return Value(value) }
