@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/sumup/sumup-go/client"
+	"github.com/sumup/sumup-go/nullable"
 )
 
 // 502 Bad Gateway
@@ -80,7 +81,7 @@ var _ error = (*CreateReaderCheckoutError)(nil)
 type CreateCheckoutRequest struct {
 	// Affiliate metadata for the transaction.
 	// It is a field that allow for integrators to track the source of the transaction.
-	Affiliate *CreateCheckoutRequestAffiliate `json:"affiliate,omitempty"`
+	Affiliate *nullable.Field[CreateCheckoutRequestAffiliate] `json:"affiliate,omitempty"`
 	// The card type of the card used for the transaction.
 	// Is is required only for some countries (e.g: Brazil).
 	CardType *CreateCheckoutRequestCardType `json:"card_type,omitempty"`
@@ -93,7 +94,7 @@ type CreateCheckoutRequest struct {
 	// Omit if the merchant country does support installments.
 	// Otherwise, the checkout will be rejected.
 	// Min: 1
-	Installments *int `json:"installments,omitempty"`
+	Installments *nullable.Field[int] `json:"installments,omitempty"`
 	// Webhook URL to which the payment result will be sent.
 	// It must be a HTTPS url.
 	// Format: uri

@@ -577,12 +577,20 @@ func (b *Builder) createFields(properties *orderedmap.Map[string, *base.SchemaPr
 		}
 		typeName, moreTypes := b.genSchema(schema, name+strcase.ToCamel(property))
 
+		optional := !slices.Contains(required, property)
+
 		tags := []string{strcase.ToSnake(property)}
-		if !slices.Contains(required, property) {
+		if optional {
 			tags = append(tags, "omitempty")
 		}
-		optional := !slices.Contains(required, property)
+
+		nullable := isNullableSchema(schema)
+		if nullable {
+			typeName = "nullable.Field[" + typeName + "]"
+		}
+
 		pointer := shouldUsePointer(optional, schema, typeName)
+
 		fields = append(fields, StructField{
 			Name:    property,
 			Type:    typeName,
@@ -597,6 +605,15 @@ func (b *Builder) createFields(properties *orderedmap.Map[string, *base.SchemaPr
 	}
 
 	return fields, types
+}
+
+// isNullableSchema returns whether nullable is explicitly set in the source schema.
+func isNullableSchema(schema *base.SchemaProxy) bool {
+	if schema == nil || schema.Schema() == nil {
+		return false
+	}
+
+	return schema.Schema().Nullable != nil && *schema.Schema().Nullable
 }
 
 func createEnum(schema *base.Schema, name string) Writable {
