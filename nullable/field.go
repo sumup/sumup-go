@@ -13,62 +13,75 @@ var _ json.Unmarshaler = (*Field[string])(nil)
 // Field is a wrapper for nullable fields to distinguish zero values
 // from null or omitted fields.
 type Field[T any] struct {
-	Value   T
-	Null    bool
-	Present bool
+	val  T
+	null bool
 }
 
-func (f Field[T]) IsZero() bool {
-	return !f.Present
+// Null returns true if the field is present and has explicit null value.
+func (f *Field[T]) Null() bool {
+	if f == nil {
+		return false
+	}
+
+	return f.null
+}
+
+// Value returns the value of the nullable field if the field is present and has value set.
+// Using [Value] you loose information about nullability, i.e. it is no longer possible
+// to distinguish between the field not being present or the field being present as null.
+func (f *Field[T]) Value() *T {
+	if f == nil || f.null {
+		return nil
+	}
+
+	return &f.val
 }
 
 func (f Field[T]) MarshalJSON() ([]byte, error) {
-	if f.Null {
+	if f.null {
 		return []byte("null"), nil // Explicitly set to null
 	}
-	return json.Marshal(f.Value)
+	return json.Marshal(f.val)
 }
 
 func (f *Field[T]) UnmarshalJSON(data []byte) error {
 	if string(data) == "null" {
-		f.Null = true
-		f.Present = true
+		f.null = true
 		var zeroValue T
-		f.Value = zeroValue // Reset value
+		f.val = zeroValue // Reset value
 		return nil
 	}
-	f.Present = true
-	return json.Unmarshal(data, &f.Value)
+	return json.Unmarshal(data, &f.val)
 }
 
 func (f Field[T]) String() string {
-	return fmt.Sprintf("%v", f.Value)
+	return fmt.Sprintf("%v", f.val)
 }
 
 // Value is a nullable field helper for constructing a generic nullable field
 // with a value.
-func Value[T any](value T) Field[T] { return Field[T]{Value: value, Present: true} }
+func Value[T any](value T) *Field[T] { return &Field[T]{val: value} }
 
 // Null is a nullable field helper for constructing a generic null fields.
-func Null[T any]() Field[T] { return Field[T]{Null: true, Present: true} }
+func Null[T any]() *Field[T] { return &Field[T]{null: true} }
 
 // Int is a nullable field helper for constructing nullable integers with a value.
-func Int(value int) Field[int] { return Value(value) }
+func Int(value int) *Field[int] { return Value(value) }
 
 // Int32 is a nullable field helper for constructing nullable int32 values.
-func Int32(value int32) Field[int32] { return Value(value) }
+func Int32(value int32) *Field[int32] { return Value(value) }
 
 // Int64 is a nullable field helper for constructing nullable int64 values.
-func Int64(value int64) Field[int64] { return Value(value) }
+func Int64(value int64) *Field[int64] { return Value(value) }
 
 // String is a nullable field helper for constructing nullable strings with a value.
-func String(value string) Field[string] { return Value(value) }
+func String(value string) *Field[string] { return Value(value) }
 
 // Float is a nullable field helper for constructing nullable floats with a value.
-func Float(value float32) Field[float32] { return Value(value) }
+func Float(value float32) *Field[float32] { return Value(value) }
 
 // Float64 is a nullable field helper for constructing nullable float64 values.
-func Float64(value float64) Field[float64] { return Value(value) }
+func Float64(value float64) *Field[float64] { return Value(value) }
 
 // Bool is a nullable field helper for constructing nullable bools with a value.
-func Bool(value bool) Field[bool] { return Value(value) }
+func Bool(value bool) *Field[bool] { return Value(value) }

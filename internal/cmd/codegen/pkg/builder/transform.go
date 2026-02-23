@@ -578,20 +578,18 @@ func (b *Builder) createFields(properties *orderedmap.Map[string, *base.SchemaPr
 		typeName, moreTypes := b.genSchema(schema, name+strcase.ToCamel(property))
 
 		optional := !slices.Contains(required, property)
-		nullable := isNullableSchema(schema)
 
 		tags := []string{strcase.ToSnake(property)}
-		if nullable {
-			tags = append(tags, "omitzero")
-			typeName = "nullable.Field[" + typeName + "]"
-		} else if optional {
+		if optional {
 			tags = append(tags, "omitempty")
 		}
 
-		pointer := shouldUsePointer(optional, schema, typeName)
+		nullable := isNullableSchema(schema)
 		if nullable {
-			pointer = false
+			typeName = "nullable.Field[" + typeName + "]"
 		}
+
+		pointer := shouldUsePointer(optional, schema, typeName)
 
 		fields = append(fields, StructField{
 			Name:    property,

@@ -737,7 +737,7 @@ type BasePerson struct {
     // where the person resides.
     // Min length: 2
     // Max length: 2
-    CountryOfResidence nullable.Field[string] `json:"country_of_residence,omitzero"`
+    CountryOfResidence *nullable.Field[string] `json:"country_of_residence,omitempty"`
     // The last name(s) of the individual.
     // Max length: 60
     FamilyName *string `json:"family_name,omitempty"`
@@ -757,8 +757,8 @@ type BasePerson struct {
     MiddleName *string `json:"middle_name,omitempty"`
     // The persons nationality. May be an [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country
     // code, but legacy data may not conform to this standard.
-    Nationality nullable.Field[string] `json:"nationality,omitzero"`
-    Ownership   *Ownership             `json:"ownership,omitempty"`
+    Nationality *nullable.Field[string] `json:"nationality,omitempty"`
+    Ownership   *Ownership              `json:"ownership,omitempty"`
     // A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
     // Max length: 64
     PhoneNumber *PhoneNumber `json:"phone_number,omitempty"`
@@ -1049,7 +1049,7 @@ type Checkout struct {
     Transactions []CheckoutTransaction `json:"transactions,omitempty"`
     // Date and time of the checkout expiration before which the client application needs to send a processing request.
     // If no value is present, the checkout does not have an expiration time.
-    ValidUntil nullable.Field[time.Time] `json:"valid_until,omitzero"`
+    ValidUntil *nullable.Field[time.Time] `json:"valid_until,omitempty"`
 }
 ```
 
@@ -1168,7 +1168,7 @@ type CheckoutCreateRequest struct {
     Transactions []CheckoutCreateRequestTransaction `json:"transactions,omitempty"`
     // Date and time of the checkout expiration before which the client application needs to send a processing request.
     // If no value is present, the checkout does not have an expiration time.
-    ValidUntil nullable.Field[time.Time] `json:"valid_until,omitzero"`
+    ValidUntil *nullable.Field[time.Time] `json:"valid_until,omitempty"`
 }
 ```
 
@@ -1342,7 +1342,7 @@ type CheckoutSuccess struct {
     Transactions []CheckoutSuccessTransaction `json:"transactions,omitempty"`
     // Date and time of the checkout expiration before which the client application needs to send a processing request.
     // If no value is present, the checkout does not have an expiration time.
-    ValidUntil nullable.Field[time.Time] `json:"valid_until,omitzero"`
+    ValidUntil *nullable.Field[time.Time] `json:"valid_until,omitempty"`
 }
 ```
 
@@ -1846,7 +1846,7 @@ type Company struct {
     TradingAddress *Address `json:"trading_address,omitempty"`
     // HTTP(S) URL of the company's website.
     // Max length: 255
-    Website nullable.Field[string] `json:"website,omitzero"`
+    Website *nullable.Field[string] `json:"website,omitempty"`
 }
 ```
 
@@ -1910,7 +1910,7 @@ Reader Checkout
 type CreateCheckoutRequest struct {
     // Affiliate metadata for the transaction.
     // It is a field that allow for integrators to track the source of the transaction.
-    Affiliate nullable.Field[CreateCheckoutRequestAffiliate] `json:"affiliate,omitzero"`
+    Affiliate *nullable.Field[CreateCheckoutRequestAffiliate] `json:"affiliate,omitempty"`
     // The card type of the card used for the transaction.
     // Is is required only for some countries (e.g: Brazil).
     CardType *CreateCheckoutRequestCardType `json:"card_type,omitempty"`
@@ -1923,7 +1923,7 @@ type CreateCheckoutRequest struct {
     // Omit if the merchant country does support installments.
     // Otherwise, the checkout will be rejected.
     // Min: 1
-    Installments nullable.Field[int] `json:"installments,omitzero"`
+    Installments *nullable.Field[int] `json:"installments,omitempty"`
     // Webhook URL to which the payment result will be sent.
     // It must be a HTTPS url.
     // Format: uri
@@ -3835,8 +3835,8 @@ type Operator struct {
     CreatedAt time.Time `json:"created_at"`
     Disabled  bool      `json:"disabled"`
     // Format: int32
-    ID       int32                  `json:"id"`
-    Nickname nullable.Field[string] `json:"nickname,omitzero"`
+    ID       int32                   `json:"id"`
+    Nickname *nullable.Field[string] `json:"nickname,omitempty"`
     // Permissions assigned to an operator or user.
     Permissions Permissions `json:"permissions"`
     // The timestamp of when the operator was last updated.
@@ -4124,7 +4124,7 @@ type Person struct {
     // where the person resides.
     // Min length: 2
     // Max length: 2
-    CountryOfResidence nullable.Field[string] `json:"country_of_residence,omitzero"`
+    CountryOfResidence *nullable.Field[string] `json:"country_of_residence,omitempty"`
     // The last name(s) of the individual.
     // Max length: 60
     FamilyName *string `json:"family_name,omitempty"`
@@ -4144,8 +4144,8 @@ type Person struct {
     MiddleName *string `json:"middle_name,omitempty"`
     // The persons nationality. May be an [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country
     // code, but legacy data may not conform to this standard.
-    Nationality nullable.Field[string] `json:"nationality,omitzero"`
-    Ownership   *Ownership             `json:"ownership,omitempty"`
+    Nationality *nullable.Field[string] `json:"nationality,omitempty"`
+    Ownership   *Ownership              `json:"ownership,omitempty"`
     // A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
     // Max length: 64
     PhoneNumber *PhoneNumber `json:"phone_number,omitempty"`
@@ -6562,126 +6562,116 @@ import "github.com/sumup/sumup-go/nullable"
 ## Index
 
 - [type Field](<#Field>)
-  - [func Bool\(value bool\) Field\[bool\]](<#Bool>)
-  - [func Float\(value float32\) Field\[float32\]](<#Float>)
-  - [func Float64\(value float64\) Field\[float64\]](<#Float64>)
-  - [func Int\(value int\) Field\[int\]](<#Int>)
-  - [func Int32\(value int32\) Field\[int32\]](<#Int32>)
-  - [func Int64\(value int64\) Field\[int64\]](<#Int64>)
-  - [func Null\[T any\]\(\) Field\[T\]](<#Null>)
-  - [func String\(value string\) Field\[string\]](<#String>)
-  - [func Value\[T any\]\(value T\) Field\[T\]](<#Value>)
-  - [func \(f Field\[T\]\) IsZero\(\) bool](<#Field[T].IsZero>)
+  - [func Bool\(value bool\) \*Field\[bool\]](<#Bool>)
+  - [func Float\(value float32\) \*Field\[float32\]](<#Float>)
+  - [func Float64\(value float64\) \*Field\[float64\]](<#Float64>)
+  - [func Int\(value int\) \*Field\[int\]](<#Int>)
+  - [func Int32\(value int32\) \*Field\[int32\]](<#Int32>)
+  - [func Int64\(value int64\) \*Field\[int64\]](<#Int64>)
+  - [func Null\[T any\]\(\) \*Field\[T\]](<#Null>)
+  - [func String\(value string\) \*Field\[string\]](<#String>)
+  - [func Value\[T any\]\(value T\) \*Field\[T\]](<#Value>)
   - [func \(f Field\[T\]\) MarshalJSON\(\) \(\[\]byte, error\)](<#Field[T].MarshalJSON>)
+  - [func \(f \*Field\[T\]\) Null\(\) bool](<#Field[T].Null>)
   - [func \(f Field\[T\]\) String\(\) string](<#Field[T].String>)
   - [func \(f \*Field\[T\]\) UnmarshalJSON\(data \[\]byte\) error](<#Field[T].UnmarshalJSON>)
+  - [func \(f \*Field\[T\]\) Value\(\) \*T](<#Field[T].Value>)
 
 
 <a name="Field"></a>
-## type [Field](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L15-L19>)
+## type [Field](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L15-L18>)
 
 Field is a wrapper for nullable fields to distinguish zero values from null or omitted fields.
 
 ```go
 type Field[T any] struct {
-    Value   T
-    Null    bool
-    Present bool
+    // contains filtered or unexported fields
 }
 ```
 
 <a name="Bool"></a>
-### func [Bool](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L74>)
+### func [Bool](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L87>)
 
 ```go
-func Bool(value bool) Field[bool]
+func Bool(value bool) *Field[bool]
 ```
 
 Bool is a nullable field helper for constructing nullable bools with a value.
 
 <a name="Float"></a>
-### func [Float](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L68>)
+### func [Float](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L81>)
 
 ```go
-func Float(value float32) Field[float32]
+func Float(value float32) *Field[float32]
 ```
 
 Float is a nullable field helper for constructing nullable floats with a value.
 
 <a name="Float64"></a>
-### func [Float64](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L71>)
+### func [Float64](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L84>)
 
 ```go
-func Float64(value float64) Field[float64]
+func Float64(value float64) *Field[float64]
 ```
 
 Float64 is a nullable field helper for constructing nullable float64 values.
 
 <a name="Int"></a>
-### func [Int](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L56>)
+### func [Int](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L69>)
 
 ```go
-func Int(value int) Field[int]
+func Int(value int) *Field[int]
 ```
 
 Int is a nullable field helper for constructing nullable integers with a value.
 
 <a name="Int32"></a>
-### func [Int32](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L59>)
+### func [Int32](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L72>)
 
 ```go
-func Int32(value int32) Field[int32]
+func Int32(value int32) *Field[int32]
 ```
 
 Int32 is a nullable field helper for constructing nullable int32 values.
 
 <a name="Int64"></a>
-### func [Int64](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L62>)
+### func [Int64](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L75>)
 
 ```go
-func Int64(value int64) Field[int64]
+func Int64(value int64) *Field[int64]
 ```
 
 Int64 is a nullable field helper for constructing nullable int64 values.
 
 <a name="Null"></a>
-### func [Null](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L53>)
+### func [Null](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L66>)
 
 ```go
-func Null[T any]() Field[T]
+func Null[T any]() *Field[T]
 ```
 
 Null is a nullable field helper for constructing a generic null fields.
 
 <a name="String"></a>
-### func [String](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L65>)
+### func [String](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L78>)
 
 ```go
-func String(value string) Field[string]
+func String(value string) *Field[string]
 ```
 
 String is a nullable field helper for constructing nullable strings with a value.
 
 <a name="Value"></a>
-### func [Value](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L50>)
+### func [Value](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L63>)
 
 ```go
-func Value[T any](value T) Field[T]
+func Value[T any](value T) *Field[T]
 ```
 
 Value is a nullable field helper for constructing a generic nullable field with a value.
 
-<a name="Field[T].IsZero"></a>
-### func \(Field\[T\]\) [IsZero](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L21>)
-
-```go
-func (f Field[T]) IsZero() bool
-```
-
-
-
 <a name="Field[T].MarshalJSON"></a>
-### func \(Field\[T\]\) [MarshalJSON](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L25>)
+### func \(Field\[T\]\) [MarshalJSON](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L40>)
 
 ```go
 func (f Field[T]) MarshalJSON() ([]byte, error)
@@ -6689,8 +6679,17 @@ func (f Field[T]) MarshalJSON() ([]byte, error)
 
 
 
+<a name="Field[T].Null"></a>
+### func \(\*Field\[T\]\) [Null](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L21>)
+
+```go
+func (f *Field[T]) Null() bool
+```
+
+Null returns true if the field is present and has explicit null value.
+
 <a name="Field[T].String"></a>
-### func \(Field\[T\]\) [String](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L44>)
+### func \(Field\[T\]\) [String](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L57>)
 
 ```go
 func (f Field[T]) String() string
@@ -6699,13 +6698,22 @@ func (f Field[T]) String() string
 
 
 <a name="Field[T].UnmarshalJSON"></a>
-### func \(\*Field\[T\]\) [UnmarshalJSON](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L32>)
+### func \(\*Field\[T\]\) [UnmarshalJSON](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L47>)
 
 ```go
 func (f *Field[T]) UnmarshalJSON(data []byte) error
 ```
 
 
+
+<a name="Field[T].Value"></a>
+### func \(\*Field\[T\]\) [Value](<https://github.com/sumup/sumup-go/blob/main/nullable/field.go#L32>)
+
+```go
+func (f *Field[T]) Value() *T
+```
+
+Value returns the value of the nullable field if the field is present and has value set. Using [Value](<#Value>) you loose information about nullability, i.e. it is no longer possible to distinguish between the field not being present or the field being present as null.
 
 # secret
 

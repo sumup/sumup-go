@@ -22,8 +22,8 @@ type Operator struct {
 	CreatedAt time.Time `json:"created_at"`
 	Disabled  bool      `json:"disabled"`
 	// Format: int32
-	ID       int32                  `json:"id"`
-	Nickname nullable.Field[string] `json:"nickname,omitzero"`
+	ID       int32                   `json:"id"`
+	Nickname *nullable.Field[string] `json:"nickname,omitempty"`
 	// Permissions assigned to an operator or user.
 	Permissions Permissions `json:"permissions"`
 	// The timestamp of when the operator was last updated.
