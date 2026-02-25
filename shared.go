@@ -69,6 +69,7 @@ const (
 	CurrencyCHF Currency = "CHF"
 	CurrencyCLP Currency = "CLP"
 	CurrencyCZK Currency = "CZK"
+	CurrencyCop Currency = "COP"
 	CurrencyDKK Currency = "DKK"
 	CurrencyEUR Currency = "EUR"
 	CurrencyGBP Currency = "GBP"

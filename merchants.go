@@ -20,7 +20,7 @@ import (
 // is `state`, whereas in Chile it's `region`.
 // Whether an address is valid or not depends on whether the locally required fields are present. Fields not
 // supported in a country will be ignored.
-// Address documentation: https://sumup.roadie.so/docs/default/Component/merchants/merchant/#addresses
+// Address documentation: https://backstage.sumup.net/docs/default/Component/merchants/merchant/#addresses
 type Address struct {
 	// In Spain, an autonomous community is the first sub-national level of political and administrative division.
 	// Max length: 512
@@ -98,7 +98,7 @@ type BasePerson struct {
 	// is `state`, whereas in Chile it's `region`.
 	// Whether an address is valid or not depends on whether the locally required fields are present. Fields not
 	// supported in a country will be ignored.
-	// Address documentation: https://sumup.roadie.so/docs/default/Component/merchants/merchant/#addresses
+	// Address documentation: https://backstage.sumup.net/docs/default/Component/merchants/merchant/#addresses
 	Address *Address `json:"address,omitempty"`
 	// The date of birth of the individual, represented as an ISO 8601:2004 [ISO8601‑2004] YYYY-MM-DD format.
 	// Format: date
@@ -189,7 +189,7 @@ type BusinessProfile struct {
 	// is `state`, whereas in Chile it's `region`.
 	// Whether an address is valid or not depends on whether the locally required fields are present. Fields not
 	// supported in a country will be ignored.
-	// Address documentation: https://sumup.roadie.so/docs/default/Component/merchants/merchant/#addresses
+	// Address documentation: https://backstage.sumup.net/docs/default/Component/merchants/merchant/#addresses
 	Address *Address `json:"address,omitempty"`
 	// Settings used to apply the Merchant's branding to email receipts, invoices, checkouts, and other products.
 	Branding *Branding `json:"branding,omitempty"`
@@ -238,7 +238,7 @@ type Company struct {
 	// is `state`, whereas in Chile it's `region`.
 	// Whether an address is valid or not depends on whether the locally required fields are present. Fields not
 	// supported in a country will be ignored.
-	// Address documentation: https://sumup.roadie.so/docs/default/Component/merchants/merchant/#addresses
+	// Address documentation: https://backstage.sumup.net/docs/default/Component/merchants/merchant/#addresses
 	Address *Address `json:"address,omitempty"`
 	// Object attributes that are modifiable only by SumUp applications.
 	Attributes Attributes `json:"attributes,omitempty"`
@@ -266,7 +266,7 @@ type Company struct {
 	// is `state`, whereas in Chile it's `region`.
 	// Whether an address is valid or not depends on whether the locally required fields are present. Fields not
 	// supported in a country will be ignored.
-	// Address documentation: https://sumup.roadie.so/docs/default/Component/merchants/merchant/#addresses
+	// Address documentation: https://backstage.sumup.net/docs/default/Component/merchants/merchant/#addresses
 	TradingAddress *Address `json:"trading_address,omitempty"`
 	// HTTP(S) URL of the company's website.
 	// Max length: 255
@@ -410,7 +410,7 @@ type Person struct {
 	// is `state`, whereas in Chile it's `region`.
 	// Whether an address is valid or not depends on whether the locally required fields are present. Fields not
 	// supported in a country will be ignored.
-	// Address documentation: https://sumup.roadie.so/docs/default/Component/merchants/merchant/#addresses
+	// Address documentation: https://backstage.sumup.net/docs/default/Component/merchants/merchant/#addresses
 	Address *Address `json:"address,omitempty"`
 	// The date of birth of the individual, represented as an ISO 8601:2004 [ISO8601‑2004] YYYY-MM-DD format.
 	// Format: date

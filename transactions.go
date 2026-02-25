@@ -26,6 +26,32 @@ type CardResponse struct {
 	Type *CardType `json:"type,omitempty"`
 }
 
+// Device is a schema definition.
+type Device struct {
+	// Device model.
+	Model *string `json:"model,omitempty"`
+	// Device name.
+	Name *string `json:"name,omitempty"`
+	// Device OS.
+	SystemName *string `json:"system_name,omitempty"`
+	// Device OS version.
+	SystemVersion *string `json:"system_version,omitempty"`
+	// Device UUID.
+	UUID *string `json:"uuid,omitempty"`
+}
+
+// ElvCardAccount is a schema definition.
+type ElvCardAccount struct {
+	// ELV IBAN.
+	IBAN *string `json:"iban,omitempty"`
+	// ELV card account number last 4 digits.
+	Last4Digits *string `json:"last_4_digits,omitempty"`
+	// ELV card sequence number.
+	SequenceNo *int `json:"sequence_no,omitempty"`
+	// ELV card sort code.
+	SortCode *string `json:"sort_code,omitempty"`
+}
+
 // Entry mode value accepted by the `entry_modes[]` filter.
 type EntryModeFilter string
 
@@ -102,56 +128,47 @@ type Link struct {
 	Type *string `json:"type,omitempty"`
 }
 
-// LinkRefund is a schema definition.
-type LinkRefund struct {
-	// URL for accessing the related resource.
-	// Format: uri
-	Href *string `json:"href,omitempty"`
-	// Maximum allowed amount for the refund.
-	MaxAmount *float32 `json:"max_amount,omitempty"`
-	// Minimum allowed amount for the refund.
-	MinAmount *float32 `json:"min_amount,omitempty"`
-	// Specifies the relation to the current resource.
-	Rel *string `json:"rel,omitempty"`
-	// Specifies the media type of the related resource.
-	Type *string `json:"type,omitempty"`
-}
-
 // Longitude value from the coordinates of the payment location (as received from the payment terminal reader).
 // Min: 0
 // Max: 180
 type Lon float32
 
-// Details of the product for which the payment is made.
+// Purchase product.
 type Product struct {
-	// Name of the product from the merchant's catalog.
+	// Product name.
 	Name *string `json:"name,omitempty"`
-	// Price of the product without VAT.
-	Price *float32 `json:"price,omitempty"`
-	// Price of a single product item with VAT.
-	PriceWithVAT *float32 `json:"price_with_vat,omitempty"`
-	// Number of product items for the purchase.
-	Quantity *float64 `json:"quantity,omitempty"`
-	// Amount of the VAT for a single product item (calculated as the product of `price` and `vat_rate`, i.e. `single_vat_amount
-	// = price * vat_rate`).
-	SingleVATAmount *float32 `json:"single_vat_amount,omitempty"`
-	// Total price of the product items without VAT (calculated as the product of `price` and `quantity`, i.e. `total_price
-	// = price * quantity`).
-	TotalPrice *float32 `json:"total_price,omitempty"`
-	// Total price of the product items including VAT (calculated as the product of `price_with_vat` and `quantity`, i.e.
-	// `total_with_vat = price_with_vat * quantity`).
-	TotalWithVAT *float32 `json:"total_with_vat,omitempty"`
-	// Total VAT amount for the purchase (calculated as the product of `single_vat_amount` and `quantity`, i.e. `vat_amount
-	// = single_vat_amount * quantity`).
-	VATAmount *float32 `json:"vat_amount,omitempty"`
-	// VAT rate applicable to the product.
-	VATRate *float32 `json:"vat_rate,omitempty"`
+	// Product price.
+	// Format: decimal
+	Price *float64 `json:"price,omitempty"`
+	// Product description.
+	PriceLabel *string `json:"price_label,omitempty"`
+	// Product price incl. VAT.
+	// Format: decimal
+	PriceWithVAT *float64 `json:"price_with_vat,omitempty"`
+	// Product quantity.
+	Quantity *int `json:"quantity,omitempty"`
+	// VAT amount for a single product.
+	// Format: decimal
+	SingleVATAmount *float64 `json:"single_vat_amount,omitempty"`
+	// Quantity x product price.
+	// Format: decimal
+	TotalPrice *float64 `json:"total_price,omitempty"`
+	// Total price incl. VAT.
+	// Format: decimal
+	TotalWithVAT *float64 `json:"total_with_vat,omitempty"`
+	// VAT amount.
+	// Format: decimal
+	VATAmount *float64 `json:"vat_amount,omitempty"`
+	// VAT percentage.
+	// Format: decimal
+	VATRate *float64 `json:"vat_rate,omitempty"`
 }
 
 // Details of a transaction event.
 type TransactionEvent struct {
 	// Amount of the event.
-	Amount *float32 `json:"amount,omitempty"`
+	// Format: decimal
+	Amount *float64 `json:"amount,omitempty"`
 	// Date when the transaction event occurred.
 	// Format: date
 	Date *datetime.Date `json:"date,omitempty"`
@@ -179,14 +196,22 @@ type TransactionFull struct {
 	AuthCode *string `json:"auth_code,omitempty"`
 	// Details of the payment card.
 	Card *CardResponse `json:"card,omitempty"`
+	// Client transaction id.
+	ClientTransactionID *string `json:"client_transaction_id,omitempty"`
 	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
 	// currency values are enumerated above.
-	Currency *Currency `json:"currency,omitempty"`
+	Currency   *Currency       `json:"currency,omitempty"`
+	DeviceInfo *Device         `json:"device_info,omitempty"`
+	ElvAccount *ElvCardAccount `json:"elv_account,omitempty"`
 	// Entry mode of the payment details.
 	EntryMode *EntryMode `json:"entry_mode,omitempty"`
 	// List of events related to the transaction.
-	// Unique items only
 	Events []Event `json:"events,omitempty"`
+	// Transaction SumUp total fee amount.
+	// Format: decimal
+	FeeAmount *float64 `json:"fee_amount,omitempty"`
+	// External/foreign transaction id (passed by clients).
+	ForeignTransactionID *string `json:"foreign_transaction_id,omitempty"`
 	// Indication of the precision of the geographical position received from the payment terminal.
 	HorizontalAccuracy *HorizontalAccuracy `json:"horizontal_accuracy,omitempty"`
 	// Unique ID of the transaction.
@@ -202,8 +227,7 @@ type TransactionFull struct {
 	// Max: 90
 	Lat *Lat `json:"lat,omitempty"`
 	// List of hyperlinks for accessing related resources.
-	// Unique items only
-	Links []any `json:"links,omitempty"`
+	Links []Link `json:"links,omitempty"`
 	// Local date and time of the creation of the transaction.
 	LocalTime *time.Time `json:"local_time,omitempty"`
 	// Details of the payment location as received from the payment terminal.
@@ -214,8 +238,14 @@ type TransactionFull struct {
 	Lon *Lon `json:"lon,omitempty"`
 	// Unique code of the registered merchant to whom the payment is made.
 	MerchantCode *string `json:"merchant_code,omitempty"`
+	// SumUp merchant internal Id.
+	// Format: int64
+	MerchantID *int64 `json:"merchant_id,omitempty"`
 	// Payment type used for the transaction.
 	PaymentType *PaymentType `json:"payment_type,omitempty"`
+	// The date of the payout.
+	// Format: date
+	PayoutDate *datetime.Date `json:"payout_date,omitempty"`
 	// Payout plan of the registered user at the time when the transaction was made.
 	PayoutPlan *TransactionFullPayoutPlan `json:"payout_plan,omitempty"`
 	// Payout type for the transaction.
@@ -224,6 +254,8 @@ type TransactionFull struct {
 	PayoutsReceived *int `json:"payouts_received,omitempty"`
 	// Total number of payouts to the registered user specified in the `user` property.
 	PayoutsTotal *int `json:"payouts_total,omitempty"`
+	// Debit/Credit.
+	ProcessAs *TransactionFullProcessA `json:"process_as,omitempty"`
 	// Short description of the payment. The value is taken from the `description` property of the related checkout resource.
 	ProductSummary *string `json:"product_summary,omitempty"`
 	// List of products from the merchant's catalogue for which the transaction serves as a payment.
@@ -250,7 +282,7 @@ type TransactionFull struct {
 	// Amount of the applicable VAT (out of the total transaction amount).
 	VATAmount *float32 `json:"vat_amount,omitempty"`
 	// List of VAT rates applicable to the transaction.
-	VATRates []any `json:"vat_rates,omitempty"`
+	VATRates []TransactionFullVATRate `json:"vat_rates,omitempty"`
 	// Verification method used for the transaction.
 	VerificationMethod *TransactionFullVerificationMethod `json:"verification_method,omitempty"`
 }
@@ -292,22 +324,36 @@ type TransactionFullLocation struct {
 type TransactionFullPayoutType string
 
 const (
-	TransactionFullPayoutTypeBalance     TransactionFullPayoutType = "BALANCE"
 	TransactionFullPayoutTypeBankAccount TransactionFullPayoutType = "BANK_ACCOUNT"
 	TransactionFullPayoutTypePrepaidCard TransactionFullPayoutType = "PREPAID_CARD"
+)
+
+// Debit/Credit.
+type TransactionFullProcessA string
+
+const (
+	TransactionFullProcessACredit TransactionFullProcessA = "CREDIT"
+	TransactionFullProcessADebit  TransactionFullProcessA = "DEBIT"
 )
 
 // Simple name of the payment type.
 type TransactionFullSimplePaymentType string
 
 const (
-	TransactionFullSimplePaymentTypeCash              TransactionFullSimplePaymentType = "CASH"
-	TransactionFullSimplePaymentTypeCcCustomerEntered TransactionFullSimplePaymentType = "CC_CUSTOMER_ENTERED"
-	TransactionFullSimplePaymentTypeCcSignature       TransactionFullSimplePaymentType = "CC_SIGNATURE"
-	TransactionFullSimplePaymentTypeElv               TransactionFullSimplePaymentType = "ELV"
-	TransactionFullSimplePaymentTypeEmv               TransactionFullSimplePaymentType = "EMV"
-	TransactionFullSimplePaymentTypeManualEntry       TransactionFullSimplePaymentType = "MANUAL_ENTRY"
-	TransactionFullSimplePaymentTypeMoto              TransactionFullSimplePaymentType = "MOTO"
+	TransactionFullSimplePaymentTypeApm                 TransactionFullSimplePaymentType = "APM"
+	TransactionFullSimplePaymentTypeBalance             TransactionFullSimplePaymentType = "BALANCE"
+	TransactionFullSimplePaymentTypeBitcoin             TransactionFullSimplePaymentType = "BITCOIN"
+	TransactionFullSimplePaymentTypeBoleto              TransactionFullSimplePaymentType = "BOLETO"
+	TransactionFullSimplePaymentTypeCard                TransactionFullSimplePaymentType = "CARD"
+	TransactionFullSimplePaymentTypeCash                TransactionFullSimplePaymentType = "CASH"
+	TransactionFullSimplePaymentTypeCcCustomerEntered   TransactionFullSimplePaymentType = "CC_CUSTOMER_ENTERED"
+	TransactionFullSimplePaymentTypeCcSignature         TransactionFullSimplePaymentType = "CC_SIGNATURE"
+	TransactionFullSimplePaymentTypeElv                 TransactionFullSimplePaymentType = "ELV"
+	TransactionFullSimplePaymentTypeElvWithoutSignature TransactionFullSimplePaymentType = "ELV_WITHOUT_SIGNATURE"
+	TransactionFullSimplePaymentTypeEmv                 TransactionFullSimplePaymentType = "EMV"
+	TransactionFullSimplePaymentTypeManualEntry         TransactionFullSimplePaymentType = "MANUAL_ENTRY"
+	TransactionFullSimplePaymentTypeMoto                TransactionFullSimplePaymentType = "MOTO"
+	TransactionFullSimplePaymentTypeRecurring           TransactionFullSimplePaymentType = "RECURRING"
 )
 
 // Status generated from the processing status and the latest transaction state.
@@ -320,22 +366,38 @@ const (
 	TransactionFullSimpleStatusFailed        TransactionFullSimpleStatus = "FAILED"
 	TransactionFullSimpleStatusNonCollection TransactionFullSimpleStatus = "NON_COLLECTION"
 	TransactionFullSimpleStatusPaidOut       TransactionFullSimpleStatus = "PAID_OUT"
+	TransactionFullSimpleStatusPending       TransactionFullSimpleStatus = "PENDING"
 	TransactionFullSimpleStatusRefundFailed  TransactionFullSimpleStatus = "REFUND_FAILED"
 	TransactionFullSimpleStatusRefunded      TransactionFullSimpleStatus = "REFUNDED"
 	TransactionFullSimpleStatusSuccessful    TransactionFullSimpleStatus = "SUCCESSFUL"
 )
 
+// TransactionFullVATRate is a schema definition.
+type TransactionFullVATRate struct {
+	// Gross amount of products having this VAT rate applied.
+	// Format: decimal
+	Gross *float64 `json:"gross,omitempty"`
+	// NET amount of products having this VAT rate applied.
+	// Format: decimal
+	Net *float64 `json:"net,omitempty"`
+	// VAT rate.
+	// Format: decimal
+	Rate *float64 `json:"rate,omitempty"`
+	// VAT amount of this rate applied.
+	// Format: decimal
+	VAT *float64 `json:"vat,omitempty"`
+}
+
 // Verification method used for the transaction.
 type TransactionFullVerificationMethod string
 
 const (
-	TransactionFullVerificationMethodConfirmationCodeVerified TransactionFullVerificationMethod = "confirmation code verified"
-	TransactionFullVerificationMethodNa                       TransactionFullVerificationMethod = "na"
-	TransactionFullVerificationMethodNone                     TransactionFullVerificationMethod = "none"
-	TransactionFullVerificationMethodOfflinePIN               TransactionFullVerificationMethod = "offline PIN"
-	TransactionFullVerificationMethodOfflinePINSignature      TransactionFullVerificationMethod = "offline PIN + signature"
-	TransactionFullVerificationMethodOnlinePIN                TransactionFullVerificationMethod = "online PIN"
-	TransactionFullVerificationMethodSignature                TransactionFullVerificationMethod = "signature"
+	TransactionFullVerificationMethodNa                  TransactionFullVerificationMethod = "na"
+	TransactionFullVerificationMethodNone                TransactionFullVerificationMethod = "none"
+	TransactionFullVerificationMethodOfflinePIN          TransactionFullVerificationMethod = "offline PIN"
+	TransactionFullVerificationMethodOfflinePINSignature TransactionFullVerificationMethod = "offline PIN + signature"
+	TransactionFullVerificationMethodOnlinePIN           TransactionFullVerificationMethod = "online PIN"
+	TransactionFullVerificationMethodSignature           TransactionFullVerificationMethod = "signature"
 )
 
 // TransactionHistory is a schema definition.
@@ -356,14 +418,22 @@ type TransactionHistory struct {
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Payment type used for the transaction.
 	PaymentType *PaymentType `json:"payment_type,omitempty"`
+	// Payout date (if paid out at once).
+	// Format: date
+	PayoutDate *datetime.Date `json:"payout_date,omitempty"`
 	// Payout plan of the registered user at the time when the transaction was made.
 	PayoutPlan *TransactionHistoryPayoutPlan `json:"payout_plan,omitempty"`
+	// Payout type.
+	PayoutType *TransactionHistoryPayoutType `json:"payout_type,omitempty"`
 	// Number of payouts that are made to the registered user specified in the `user` property.
 	PayoutsReceived *int `json:"payouts_received,omitempty"`
 	// Total number of payouts to the registered user specified in the `user` property.
 	PayoutsTotal *int `json:"payouts_total,omitempty"`
 	// Short description of the payment. The value is taken from the `description` property of the related checkout resource.
 	ProductSummary *string `json:"product_summary,omitempty"`
+	// Total refunded amount.
+	// Format: decimal
+	RefundedAmount *float64 `json:"refunded_amount,omitempty"`
 	// Current status of the transaction.
 	Status *TransactionHistoryStatus `json:"status,omitempty"`
 	// Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
@@ -398,6 +468,14 @@ const (
 	TransactionHistoryPayoutPlanTrueInstallment        TransactionHistoryPayoutPlan = "TRUE_INSTALLMENT"
 )
 
+// Payout type.
+type TransactionHistoryPayoutType string
+
+const (
+	TransactionHistoryPayoutTypeBankAccount TransactionHistoryPayoutType = "BANK_ACCOUNT"
+	TransactionHistoryPayoutTypePrepaidCard TransactionHistoryPayoutType = "PREPAID_CARD"
+)
+
 // Type of the transaction for the registered user specified in the `user` property.
 type TransactionHistoryType string
 
@@ -427,6 +505,14 @@ const (
 	TransactionMixinHistoryPayoutPlanSinglePayment          TransactionMixinHistoryPayoutPlan = "SINGLE_PAYMENT"
 	TransactionMixinHistoryPayoutPlanTrueInstallment        TransactionMixinHistoryPayoutPlan = "TRUE_INSTALLMENT"
 )
+
+// TransactionsHistoryLink is a schema definition.
+type TransactionsHistoryLink struct {
+	// Location.
+	Href string `json:"href"`
+	// Relation.
+	Rel string `json:"rel"`
+}
 
 // Optional amount for partial refunds of transactions.
 type TransactionsRefundParams struct {
@@ -697,14 +783,14 @@ func (p *TransactionsGetParams) QueryValues() url.Values {
 
 // TransactionsListDeprecatedResponse is a schema definition.
 type TransactionsListDeprecatedResponse struct {
-	Items []TransactionHistory `json:"items,omitempty"`
-	Links []Link               `json:"links,omitempty"`
+	Items []TransactionHistory      `json:"items,omitempty"`
+	Links []TransactionsHistoryLink `json:"links,omitempty"`
 }
 
 // TransactionsListResponse is a schema definition.
 type TransactionsListResponse struct {
-	Items []TransactionHistory `json:"items,omitempty"`
-	Links []Link               `json:"links,omitempty"`
+	Items []TransactionHistory      `json:"items,omitempty"`
+	Links []TransactionsHistoryLink `json:"links,omitempty"`
 }
 
 type TransactionsClient struct {

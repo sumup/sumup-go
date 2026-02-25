@@ -69,6 +69,8 @@ type CreateReaderCheckoutError struct {
 type CreateReaderCheckoutErrorErrors struct {
 	// Error message
 	Detail *string `json:"detail,omitempty"`
+	// Error code
+	Type string `json:"type"`
 }
 
 func (e *CreateReaderCheckoutError) Error() string {
@@ -206,6 +208,8 @@ type CreateReaderTerminateError struct {
 type CreateReaderTerminateErrorErrors struct {
 	// Error message
 	Detail *string `json:"detail,omitempty"`
+	// Error code
+	Type string `json:"type"`
 }
 
 func (e *CreateReaderTerminateError) Error() string {
@@ -484,26 +488,6 @@ type ReadersUpdateParams struct {
 	Name *ReaderName `json:"name,omitempty"`
 }
 
-// ReadersGetStatusParams are query parameters for GetReaderStatus.
-type ReadersGetStatusParams struct {
-	Accept        string
-	Authorization string
-	ContentType   string
-}
-
-// QueryValues converts [ReadersGetStatusParams] into [url.Values].
-func (p *ReadersGetStatusParams) QueryValues() url.Values {
-	q := make(url.Values)
-
-	q.Set("Accept", p.Accept)
-
-	q.Set("Authorization", p.Authorization)
-
-	q.Set("Content-Type", p.ContentType)
-
-	return q
-}
-
 // ReadersGetParams are query parameters for GetReader.
 type ReadersGetParams struct {
 	// Return the reader only if it has been modified after the specified timestamp given in the headers.
@@ -700,10 +684,10 @@ func (c *ReadersClient) TerminateCheckout(ctx context.Context, merchantCode stri
 // * `OFFLINE` – Device disconnected (last state persisted)
 //
 // **Note**: If the target device is a Solo, it must be in version 3.3.39.0 or higher.
-func (c *ReadersClient) GetStatus(ctx context.Context, merchantCode string, readerID string, params ReadersGetStatusParams) (*StatusResponse, error) {
+func (c *ReadersClient) GetStatus(ctx context.Context, merchantCode string, readerID string) (*StatusResponse, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v/status", merchantCode, readerID)
 
-	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
+	resp, err := c.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
 		return nil, fmt.Errorf("error building request: %v", err)
 	}
