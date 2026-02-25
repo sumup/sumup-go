@@ -9,12 +9,8 @@ import "github.com/sumup/sumup-go"
 ## Index
 
 - [Variables](<#variables>)
-- [type AccountLegacy](<#AccountLegacy>)
-- [type AccountLegacyType](<#AccountLegacyType>)
 - [type Address](<#Address>)
 - [type AddressLegacy](<#AddressLegacy>)
-- [type AddressWithDetails](<#AddressWithDetails>)
-- [type AppSettings](<#AppSettings>)
 - [type Attributes](<#Attributes>)
 - [type BadGateway](<#BadGateway>)
   - [func \(e \*BadGateway\) Error\(\) string](<#BadGateway.Error>)
@@ -23,11 +19,8 @@ import "github.com/sumup/sumup-go"
   - [func \(e \*BadRequest\) Error\(\) string](<#BadRequest.Error>)
 - [type BadRequestErrors](<#BadRequestErrors>)
 - [type BadRequestErrorsType](<#BadRequestErrorsType>)
-- [type BankAccount](<#BankAccount>)
 - [type BasePerson](<#BasePerson>)
 - [type Branding](<#Branding>)
-- [type BusinessOwner](<#BusinessOwner>)
-- [type BusinessOwners](<#BusinessOwners>)
 - [type BusinessProfile](<#BusinessProfile>)
 - [type Card](<#Card>)
 - [type CardExpiryMonth](<#CardExpiryMonth>)
@@ -81,7 +74,6 @@ import "github.com/sumup/sumup-go"
 - [type CompanyIdentifier](<#CompanyIdentifier>)
 - [type CompanyIdentifiers](<#CompanyIdentifiers>)
 - [type CountryCode](<#CountryCode>)
-- [type CountryDetails](<#CountryDetails>)
 - [type CreateCheckoutRequest](<#CreateCheckoutRequest>)
 - [type CreateCheckoutRequestAffiliate](<#CreateCheckoutRequestAffiliate>)
 - [type CreateCheckoutRequestAffiliateTags](<#CreateCheckoutRequestAffiliateTags>)
@@ -117,8 +109,6 @@ import "github.com/sumup/sumup-go"
   - [func \(e \*DetailsError\) Error\(\) string](<#DetailsError.Error>)
 - [type DetailsErrorFailedConstraint](<#DetailsErrorFailedConstraint>)
 - [type Device](<#Device>)
-- [type DoingBusinessAsLegacy](<#DoingBusinessAsLegacy>)
-- [type DoingBusinessAsLegacyAddress](<#DoingBusinessAsLegacyAddress>)
 - [type ElvCardAccount](<#ElvCardAccount>)
 - [type EntryMode](<#EntryMode>)
 - [type EntryModeFilter](<#EntryModeFilter>)
@@ -146,7 +136,6 @@ import "github.com/sumup/sumup-go"
 - [type Invite](<#Invite>)
 - [type Lat](<#Lat>)
 - [type LegalType](<#LegalType>)
-- [type LegalTypeLegacy](<#LegalTypeLegacy>)
 - [type Link](<#Link>)
 - [type ListPersonsResponseBody](<#ListPersonsResponseBody>)
 - [type Lon](<#Lon>)
@@ -179,18 +168,6 @@ import "github.com/sumup/sumup-go"
   - [func \(p \*MembershipsListParams\) QueryValues\(\) url.Values](<#MembershipsListParams.QueryValues>)
 - [type MembershipsListResponse](<#MembershipsListResponse>)
 - [type Merchant](<#Merchant>)
-- [type MerchantAccount](<#MerchantAccount>)
-- [type MerchantClient](<#MerchantClient>)
-  - [func NewMerchantClient\(c \*client.Client\) \*MerchantClient](<#NewMerchantClient>)
-  - [func \(c \*MerchantClient\) Get\(ctx context.Context, params MerchantGetParams\) \(\*MerchantAccount, error\)](<#MerchantClient.Get>)
-  - [func \(c \*MerchantClient\) GetDoingBusinessAs\(ctx context.Context\) \(\*DoingBusinessAsLegacy, error\)](<#MerchantClient.GetDoingBusinessAs>)
-  - [func \(c \*MerchantClient\) GetMerchantProfile\(ctx context.Context\) \(\*MerchantProfileLegacy, error\)](<#MerchantClient.GetMerchantProfile>)
-  - [func \(c \*MerchantClient\) GetPersonalProfile\(ctx context.Context\) \(\*PersonalProfileLegacy, error\)](<#MerchantClient.GetPersonalProfile>)
-- [type MerchantGetParams](<#MerchantGetParams>)
-  - [func \(p \*MerchantGetParams\) QueryValues\(\) url.Values](<#MerchantGetParams.QueryValues>)
-- [type MerchantProfileLegacy](<#MerchantProfileLegacy>)
-- [type MerchantSettings](<#MerchantSettings>)
-- [type MerchantSettingsMotoPayment](<#MerchantSettingsMotoPayment>)
 - [type MerchantsClient](<#MerchantsClient>)
   - [func NewMerchantsClient\(c \*client.Client\) \*MerchantsClient](<#NewMerchantsClient>)
   - [func \(c \*MerchantsClient\) Get\(ctx context.Context, merchantCode string, params MerchantsGetParams\) \(\*Merchant, error\)](<#MerchantsClient.Get>)
@@ -223,11 +200,9 @@ import "github.com/sumup/sumup-go"
 - [type PayoutsListParams](<#PayoutsListParams>)
   - [func \(p \*PayoutsListParams\) QueryValues\(\) url.Values](<#PayoutsListParams.QueryValues>)
 - [type Permissions](<#Permissions>)
-- [type PermissionsLegacy](<#PermissionsLegacy>)
 - [type Person](<#Person>)
 - [type PersonalDetails](<#PersonalDetails>)
 - [type PersonalIdentifier](<#PersonalIdentifier>)
-- [type PersonalProfileLegacy](<#PersonalProfileLegacy>)
 - [type PhoneNumber](<#PhoneNumber>)
 - [type Problem](<#Problem>)
   - [func \(e \*Problem\) Error\(\) string](<#Problem.Error>)
@@ -304,7 +279,6 @@ import "github.com/sumup/sumup-go"
 - [type SubaccountsListSubAccountsResponse](<#SubaccountsListSubAccountsResponse>)
 - [type SubaccountsUpdateSubAccountParams](<#SubaccountsUpdateSubAccountParams>)
 - [type SubaccountsUpdateSubAccountParamsPermissions](<#SubaccountsUpdateSubAccountParamsPermissions>)
-- [type TimeoffsetDetails](<#TimeoffsetDetails>)
 - [type Timestamps](<#Timestamps>)
 - [type TransactionBase](<#TransactionBase>)
 - [type TransactionBaseStatus](<#TransactionBaseStatus>)
@@ -351,7 +325,6 @@ import "github.com/sumup/sumup-go"
   - [func \(e \*Unauthorized\) Error\(\) string](<#Unauthorized.Error>)
 - [type UnauthorizedErrors](<#UnauthorizedErrors>)
 - [type UnauthorizedErrorsType](<#UnauthorizedErrorsType>)
-- [type VATRates](<#VATRates>)
 - [type Version](<#Version>)
 
 
@@ -364,38 +337,6 @@ var OAuth2Endpoint = oauth2.Endpoint{
     AuthURL:  "https://api.sumup.com/authorize",
     TokenURL: "https://api.sumup.com/token",
 }
-```
-
-<a name="AccountLegacy"></a>
-## type [AccountLegacy](<https://github.com/sumup/sumup-go/blob/main/merchant.go#L16-L21>)
-
-Profile information.
-
-```go
-type AccountLegacy struct {
-    // The role of the user.
-    Type *AccountLegacyType `json:"type,omitempty"`
-    // Username of the user profile.
-    Username *string `json:"username,omitempty"`
-}
-```
-
-<a name="AccountLegacyType"></a>
-## type [AccountLegacyType](<https://github.com/sumup/sumup-go/blob/main/merchant.go#L24>)
-
-The role of the user.
-
-```go
-type AccountLegacyType string
-```
-
-<a name="AccountLegacyTypeNormal"></a>
-
-```go
-const (
-    AccountLegacyTypeNormal   AccountLegacyType = "normal"
-    AccountLegacyTypeOperator AccountLegacyType = "operator"
-)
 ```
 
 <a name="Address"></a>
@@ -493,88 +434,6 @@ type AddressLegacy struct {
 }
 ```
 
-<a name="AddressWithDetails"></a>
-## type [AddressWithDetails](<https://github.com/sumup/sumup-go/blob/main/merchant.go#L32-L63>)
-
-Details of the registered address.
-
-```go
-type AddressWithDetails struct {
-    // Address line 1
-    AddressLine1 *string `json:"address_line_1,omitempty"`
-    // Address line 2
-    AddressLine2 *string `json:"address_line_2,omitempty"`
-    // City
-    City *string `json:"city,omitempty"`
-    // undefined
-    Company *string `json:"company,omitempty"`
-    // Country ISO 3166-1 code
-    Country *string `json:"country,omitempty"`
-    // Country Details
-    CountryDetails *CountryDetails `json:"country_details,omitempty"`
-    // undefined
-    FirstName *string `json:"first_name,omitempty"`
-    // Landline number
-    Landline *string `json:"landline,omitempty"`
-    // undefined
-    LastName *string `json:"last_name,omitempty"`
-    // Postal code
-    PostCode *string `json:"post_code,omitempty"`
-    // Region code
-    RegionCode *string `json:"region_code,omitempty"`
-    // Country region id
-    RegionID *float64 `json:"region_id,omitempty"`
-    // Region name
-    RegionName *string `json:"region_name,omitempty"`
-    // undefined
-    StateID *string `json:"state_id,omitempty"`
-    // TimeOffset Details
-    TimeoffsetDetails *TimeoffsetDetails `json:"timeoffset_details,omitempty"`
-}
-```
-
-<a name="AppSettings"></a>
-## type [AppSettings](<https://github.com/sumup/sumup-go/blob/main/merchant.go#L66-L99>)
-
-Mobile app settings
-
-```go
-type AppSettings struct {
-    // Advanced mode.
-    AdvancedMode *string `json:"advanced_mode,omitempty"`
-    // Barcode scanner.
-    BarcodeScanner *string `json:"barcode_scanner,omitempty"`
-    // Cash payment.
-    CashPayment *string `json:"cash_payment,omitempty"`
-    // Checkout preference
-    CheckoutPreference *string `json:"checkout_preference,omitempty"`
-    // Expected max transaction amount.
-    ExpectedMaxTransactionAmount *float64 `json:"expected_max_transaction_amount,omitempty"`
-    // Include vat.
-    IncludeVAT *bool `json:"include_vat,omitempty"`
-    // Manual entry.
-    ManualEntry *string `json:"manual_entry,omitempty"`
-    // Manual entry tutorial.
-    ManualEntryTutorial *bool `json:"manual_entry_tutorial,omitempty"`
-    // Mobile payment.
-    MobilePayment *string `json:"mobile_payment,omitempty"`
-    // Mobile payment tutorial.
-    MobilePaymentTutorial *bool `json:"mobile_payment_tutorial,omitempty"`
-    // Reader payment.
-    ReaderPayment *string `json:"reader_payment,omitempty"`
-    // Referral.
-    Referral *string `json:"referral,omitempty"`
-    // Tax enabled.
-    TaxEnabled *bool `json:"tax_enabled,omitempty"`
-    // Terminal mode tutorial.
-    TerminalModeTutorial *bool `json:"terminal_mode_tutorial,omitempty"`
-    // Tip rates.
-    TipRates []float32 `json:"tip_rates,omitempty"`
-    // Tipping.
-    Tipping *string `json:"tipping,omitempty"`
-}
-```
-
 <a name="Attributes"></a>
 ## type [Attributes](<https://github.com/sumup/sumup-go/blob/main/shared.go#L30>)
 
@@ -668,39 +527,6 @@ const (
     BadRequestErrorsTypeInvalidUserAgent       BadRequestErrorsType = "INVALID_USER_AGENT"
     BadRequestErrorsTypeNotEnoughUnpaidPayouts BadRequestErrorsType = "NOT_ENOUGH_UNPAID_PAYOUTS"
 )
-```
-
-<a name="BankAccount"></a>
-## type [BankAccount](<https://github.com/sumup/sumup-go/blob/main/merchant.go#L102-L126>)
-
-BankAccount is a schema definition.
-
-```go
-type BankAccount struct {
-    // Account category - business or personal
-    AccountCategory   *string `json:"account_category,omitempty"`
-    AccountHolderName *string `json:"account_holder_name,omitempty"`
-    // Account number
-    AccountNumber *string `json:"account_number,omitempty"`
-    // Type of the account
-    AccountType *string `json:"account_type,omitempty"`
-    // Bank code
-    BankCode *string `json:"bank_code,omitempty"`
-    // Bank name
-    BankName *string `json:"bank_name,omitempty"`
-    // Branch code
-    BranchCode *string `json:"branch_code,omitempty"`
-    // Creation date of the bank account
-    CreatedAt *string `json:"created_at,omitempty"`
-    // IBAN
-    IBAN *string `json:"iban,omitempty"`
-    // The primary bank account is the one used for payouts
-    Primary *bool `json:"primary,omitempty"`
-    // Status in the verification process
-    Status *string `json:"status,omitempty"`
-    // SWIFT code
-    Swift *string `json:"swift,omitempty"`
-}
 ```
 
 <a name="BasePerson"></a>
@@ -806,37 +632,6 @@ type Branding struct {
     // A hex color value representing the color of the text displayed on secondary branding color of this merchant.
     SecondaryColorFg *string `json:"secondary_color_fg,omitempty"`
 }
-```
-
-<a name="BusinessOwner"></a>
-## type [BusinessOwner](<https://github.com/sumup/sumup-go/blob/main/merchant.go#L129-L142>)
-
-BusinessOwner is a schema definition.
-
-```go
-type BusinessOwner struct {
-    // Date of birth
-    DateOfBirth *string `json:"date_of_birth,omitempty"`
-    // BO's first name
-    FirstName *string `json:"first_name,omitempty"`
-    // BO's Landline
-    Landline *string `json:"landline,omitempty"`
-    // BO's last name of the user
-    LastName *string `json:"last_name,omitempty"`
-    // Mobile phone number
-    MobilePhone *string `json:"mobile_phone,omitempty"`
-    // Ownership percentage
-    Ownership *float64 `json:"ownership,omitempty"`
-}
-```
-
-<a name="BusinessOwners"></a>
-## type [BusinessOwners](<https://github.com/sumup/sumup-go/blob/main/merchant.go#L145>)
-
-Business owners information.
-
-```go
-type BusinessOwners []BusinessOwner
 ```
 
 <a name="BusinessProfile"></a>
@@ -1773,6 +1568,7 @@ package main
 import (
 	"context"
 	"log"
+	"os"
 
 	"github.com/sumup/sumup-go"
 )
@@ -1780,13 +1576,13 @@ import (
 func main() {
 	client := sumup.NewClient()
 
-	account, err := client.Merchant.Get(context.Background(), sumup.MerchantGetParams{})
+	merchant, err := client.Merchants.Get(context.Background(), os.Getenv("SUMUP_MERCHANT_CODE"), sumup.MerchantsGetParams{})
 	if err != nil {
 		log.Printf("[ERROR] get merchant account: %v", err)
 		return
 	}
 
-	log.Printf("[INFO] merchant profile: %+v", *account.MerchantProfile)
+	log.Printf("[INFO] business profile: %+v", merchant.BusinessProfile)
 }
 ```
 
@@ -1883,24 +1679,6 @@ An \[ISO3166\-1 alpha\-2\]\(https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2\) c
 
 ```go
 type CountryCode string
-```
-
-<a name="CountryDetails"></a>
-## type [CountryDetails](<https://github.com/sumup/sumup-go/blob/main/merchant.go#L148-L157>)
-
-Country Details
-
-```go
-type CountryDetails struct {
-    // Currency ISO 4217 code
-    Currency *string `json:"currency,omitempty"`
-    // Country EN name
-    EnName *string `json:"en_name,omitempty"`
-    // Country ISO code
-    IsoCode *string `json:"iso_code,omitempty"`
-    // Country native name
-    NativeName *string `json:"native_name,omitempty"`
-}
 ```
 
 <a name="CreateCheckoutRequest"></a>
@@ -2379,51 +2157,6 @@ type Device struct {
 }
 ```
 
-<a name="DoingBusinessAsLegacy"></a>
-## type [DoingBusinessAsLegacy](<https://github.com/sumup/sumup-go/blob/main/merchant.go#L160-L172>)
-
-Doing Business As information
-
-```go
-type DoingBusinessAsLegacy struct {
-    Address *DoingBusinessAsLegacyAddress `json:"address,omitempty"`
-    // Doing business as name
-    BusinessName *string `json:"business_name,omitempty"`
-    // Doing business as company registration number
-    CompanyRegistrationNumber *string `json:"company_registration_number,omitempty"`
-    // Doing business as email
-    Email *string `json:"email,omitempty"`
-    // Doing business as VAT ID
-    VATID *string `json:"vat_id,omitempty"`
-    // Doing business as website
-    Website *string `json:"website,omitempty"`
-}
-```
-
-<a name="DoingBusinessAsLegacyAddress"></a>
-## type [DoingBusinessAsLegacyAddress](<https://github.com/sumup/sumup-go/blob/main/merchant.go#L175-L190>)
-
-DoingBusinessAsLegacyAddress is a schema definition.
-
-```go
-type DoingBusinessAsLegacyAddress struct {
-    // Address line 1
-    AddressLine1 *string `json:"address_line_1,omitempty"`
-    // Address line 2
-    AddressLine2 *string `json:"address_line_2,omitempty"`
-    // City
-    City *string `json:"city,omitempty"`
-    // Country ISO 3166-1 code
-    Country *string `json:"country,omitempty"`
-    // Postal code
-    PostCode *string `json:"post_code,omitempty"`
-    // Country region ID
-    RegionID *float64 `json:"region_id,omitempty"`
-    // Country region name
-    RegionName *string `json:"region_name,omitempty"`
-}
-```
-
 <a name="ElvCardAccount"></a>
 ## type [ElvCardAccount](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L44-L53>)
 
@@ -2856,24 +2589,6 @@ Min length: 4 Max length: 64 The country SDK documentation for legal types.: htt
 
 ```go
 type LegalType string
-```
-
-<a name="LegalTypeLegacy"></a>
-## type [LegalTypeLegacy](<https://github.com/sumup/sumup-go/blob/main/merchant.go#L193-L202>)
-
-Id of the legal type of the merchant profile
-
-```go
-type LegalTypeLegacy struct {
-    // Legal type short description
-    Description *string `json:"description,omitempty"`
-    // Legal type description
-    FullDescription *string `json:"full_description,omitempty"`
-    // Unique id
-    ID  *float64 `json:"id,omitempty"`
-    // Sole trader legal type if true
-    SoleTrader *bool `json:"sole_trader,omitempty"`
-}
 ```
 
 <a name="Link"></a>
@@ -3474,208 +3189,6 @@ type Merchant struct {
 }
 ```
 
-<a name="MerchantAccount"></a>
-## type [MerchantAccount](<https://github.com/sumup/sumup-go/blob/main/merchant.go#L205-L216>)
-
-Details of the merchant account.
-
-```go
-type MerchantAccount struct {
-    // Profile information.
-    Account *AccountLegacy `json:"account,omitempty"`
-    // Mobile app settings
-    AppSettings *AppSettings `json:"app_settings,omitempty"`
-    // Account's merchant profile
-    MerchantProfile *MerchantProfileLegacy `json:"merchant_profile,omitempty"`
-    // User permissions
-    Permissions *PermissionsLegacy `json:"permissions,omitempty"`
-    // Account's personal profile.
-    PersonalProfile *PersonalProfileLegacy `json:"personal_profile,omitempty"`
-}
-```
-
-<a name="MerchantClient"></a>
-## type [MerchantClient](<https://github.com/sumup/sumup-go/blob/main/merchant.go#L369-L371>)
-
-
-
-```go
-type MerchantClient struct {
-    // contains filtered or unexported fields
-}
-```
-
-<a name="NewMerchantClient"></a>
-### func [NewMerchantClient](<https://github.com/sumup/sumup-go/blob/main/merchant.go#L373>)
-
-```go
-func NewMerchantClient(c *client.Client) *MerchantClient
-```
-
-
-
-<a name="MerchantClient.Get"></a>
-### func \(\*MerchantClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/merchant.go#L483>)
-
-```go
-func (c *MerchantClient) Get(ctx context.Context, params MerchantGetParams) (*MerchantAccount, error)
-```
-
-Returns user profile information. Deprecated: The \_Retrieve a profile\_ endpoint is deprecated, please use the \`Merchant\` object instead \(see \[Merchants\]\(https://developer.sumup.com/api/merchants\)\).
-
-<a name="MerchantClient.GetDoingBusinessAs"></a>
-### func \(\*MerchantClient\) [GetDoingBusinessAs](<https://github.com/sumup/sumup-go/blob/main/merchant.go#L412>)
-
-```go
-func (c *MerchantClient) GetDoingBusinessAs(ctx context.Context) (*DoingBusinessAsLegacy, error)
-```
-
-Retrieves Doing Business As profile. Deprecated: The \_Retrieve DBA\_ endpoint is deprecated, please use the \`business\_profile\` field of the \`Merchant\` object instead \(see \[Merchants\]\(https://developer.sumup.com/api/merchants\)\).
-
-<a name="MerchantClient.GetMerchantProfile"></a>
-### func \(\*MerchantClient\) [GetMerchantProfile](<https://github.com/sumup/sumup-go/blob/main/merchant.go#L444>)
-
-```go
-func (c *MerchantClient) GetMerchantProfile(ctx context.Context) (*MerchantProfileLegacy, error)
-```
-
-Retrieves merchant profile data. Deprecated: The \_Retrieve a merchant profile\_ endpoint is deprecated, please use the \`Merchant\` object instead \(see \[Merchants\]\(https://developer.sumup.com/api/merchants\)\).
-
-<a name="MerchantClient.GetPersonalProfile"></a>
-### func \(\*MerchantClient\) [GetPersonalProfile](<https://github.com/sumup/sumup-go/blob/main/merchant.go#L380>)
-
-```go
-func (c *MerchantClient) GetPersonalProfile(ctx context.Context) (*PersonalProfileLegacy, error)
-```
-
-Retrieves personal profile data. Deprecated: The \_Retrieve a personal profile\_ endpoint is deprecated, please use the \`persons\` field of the \`Merchant\` object instead. \(see \[Merchants\]\(https://developer.sumup.com/api/merchants\)\).
-
-<a name="MerchantGetParams"></a>
-## type [MerchantGetParams](<https://github.com/sumup/sumup-go/blob/main/merchant.go#L352-L356>)
-
-MerchantGetParams are query parameters for GetAccount.
-
-```go
-type MerchantGetParams struct {
-    // A list of additional information you want to receive for the user. By default only personal and merchant profile
-    // information will be returned.
-    Include []string
-}
-```
-
-<a name="MerchantGetParams.QueryValues"></a>
-### func \(\*MerchantGetParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/merchant.go#L359>)
-
-```go
-func (p *MerchantGetParams) QueryValues() url.Values
-```
-
-QueryValues converts [MerchantGetParams](<#MerchantGetParams>) into \[url.Values\].
-
-<a name="MerchantProfileLegacy"></a>
-## type [MerchantProfileLegacy](<https://github.com/sumup/sumup-go/blob/main/merchant.go#L219-L260>)
-
-Account's merchant profile
-
-```go
-type MerchantProfileLegacy struct {
-    // Details of the registered address.
-    Address      *AddressWithDetails `json:"address,omitempty"`
-    BankAccounts []BankAccount       `json:"bank_accounts,omitempty"`
-    // Business owners information.
-    BusinessOwners BusinessOwners `json:"business_owners,omitempty"`
-    // Company name
-    CompanyName *string `json:"company_name,omitempty"`
-    // Company registration number
-    CompanyRegistrationNumber *string `json:"company_registration_number,omitempty"`
-    // Merchant country code formatted according to [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) &#40;for
-    // internal usage only&#41;
-    Country *string `json:"country,omitempty"`
-    // Doing Business As information
-    DoingBusinessAs *DoingBusinessAsLegacy `json:"doing_business_as,omitempty"`
-    // True if the merchant is extdev
-    Extdev *bool `json:"extdev,omitempty"`
-    // Id of the legal type of the merchant profile
-    LegalType *LegalTypeLegacy `json:"legal_type,omitempty"`
-    // Merchant locale &#40;for internal usage only&#41;
-    Locale *string `json:"locale,omitempty"`
-    // Merchant category code
-    MerchantCategoryCode *string `json:"merchant_category_code,omitempty"`
-    // Unique identifying code of the merchant profile
-    MerchantCode *string `json:"merchant_code,omitempty"`
-    // Mobile phone number
-    MobilePhone *string `json:"mobile_phone,omitempty"`
-    // Nature and purpose of the business
-    NatureAndPurpose *string `json:"nature_and_purpose,omitempty"`
-    // True if the payout zone of this merchant is migrated
-    PayoutZoneMigrated *bool `json:"payout_zone_migrated,omitempty"`
-    // Permanent certificate access code &#40;Portugal&#41;
-    PermanentCertificateAccessCode *string `json:"permanent_certificate_access_code,omitempty"`
-    // Merchant settings &#40;like \"payout_type\", \"payout_period\"&#41;
-    Settings *MerchantSettings `json:"settings,omitempty"`
-    // Vat ID
-    VATID *string `json:"vat_id,omitempty"`
-    // Merchant VAT rates
-    VATRates *VATRates `json:"vat_rates,omitempty"`
-    // Website
-    Website *string `json:"website,omitempty"`
-}
-```
-
-<a name="MerchantSettings"></a>
-## type [MerchantSettings](<https://github.com/sumup/sumup-go/blob/main/merchant.go#L263-L288>)
-
-Merchant settings &\#40;like \\"payout\_type\\", \\"payout\_period\\"&\#41;
-
-```go
-type MerchantSettings struct {
-    // Whether merchant will receive daily payout emails
-    DailyPayoutEmail *bool `json:"daily_payout_email,omitempty"`
-    // Whether merchant has gross settlement enabled
-    GrossSettlement *bool `json:"gross_settlement,omitempty"`
-    // Whether merchant will receive monthly payout emails
-    MonthlyPayoutEmail *bool `json:"monthly_payout_email,omitempty"`
-    // Whether merchant can make MOTO payments
-    MotoPayment *MerchantSettingsMotoPayment `json:"moto_payment,omitempty"`
-    // Payout Instrument
-    PayoutInstrument *string `json:"payout_instrument,omitempty"`
-    // Whether merchant will receive payouts on demand
-    PayoutOnDemand *bool `json:"payout_on_demand,omitempty"`
-    // Whether merchant can edit payouts on demand
-    PayoutOnDemandAvailable *bool `json:"payout_on_demand_available,omitempty"`
-    // Payout frequency
-    PayoutPeriod *string `json:"payout_period,omitempty"`
-    // Payout type
-    PayoutType *string `json:"payout_type,omitempty"`
-    // Whether to show printers in mobile app
-    PrintersEnabled *bool `json:"printers_enabled,omitempty"`
-    // Stone merchant code
-    StoneMerchantCode *string `json:"stone_merchant_code,omitempty"`
-    // Whether to show tax in receipts &#40;saved per transaction&#41;
-    TaxEnabled *bool `json:"tax_enabled,omitempty"`
-}
-```
-
-<a name="MerchantSettingsMotoPayment"></a>
-## type [MerchantSettingsMotoPayment](<https://github.com/sumup/sumup-go/blob/main/merchant.go#L291>)
-
-Whether merchant can make MOTO payments
-
-```go
-type MerchantSettingsMotoPayment string
-```
-
-<a name="MerchantSettingsMotoPaymentEnforced"></a>
-
-```go
-const (
-    MerchantSettingsMotoPaymentEnforced    MerchantSettingsMotoPayment = "ENFORCED"
-    MerchantSettingsMotoPaymentOff         MerchantSettingsMotoPayment = "OFF"
-    MerchantSettingsMotoPaymentOn          MerchantSettingsMotoPayment = "ON"
-    MerchantSettingsMotoPaymentUnavailable MerchantSettingsMotoPayment = "UNAVAILABLE"
-)
-```
-
 <a name="MerchantsClient"></a>
 ## type [MerchantsClient](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L563-L565>)
 
@@ -4095,24 +3608,6 @@ type Permissions struct {
 }
 ```
 
-<a name="PermissionsLegacy"></a>
-## type [PermissionsLegacy](<https://github.com/sumup/sumup-go/blob/main/merchant.go#L301-L310>)
-
-User permissions
-
-```go
-type PermissionsLegacy struct {
-    // Create MOTO payments
-    CreateMotoPayments *bool `json:"create_moto_payments,omitempty"`
-    // Create referral
-    CreateReferral *bool `json:"create_referral,omitempty"`
-    // Can view full merchant transaction history
-    FullTransactionHistoryView *bool `json:"full_transaction_history_view,omitempty"`
-    // Refund transactions
-    RefundTransactions *bool `json:"refund_transactions,omitempty"`
-}
-```
-
 <a name="Person"></a>
 ## type [Person](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L407-L471>)
 
@@ -4225,27 +3720,6 @@ type PersonalIdentifier struct {
     // The company identifier value.
     // Max length: 128
     Value string `json:"value"`
-}
-```
-
-<a name="PersonalProfileLegacy"></a>
-## type [PersonalProfileLegacy](<https://github.com/sumup/sumup-go/blob/main/merchant.go#L313-L325>)
-
-Account's personal profile.
-
-```go
-type PersonalProfileLegacy struct {
-    // Details of the registered address.
-    Address  *AddressWithDetails `json:"address,omitempty"`
-    Complete *bool               `json:"complete,omitempty"`
-    // Date of birth
-    DateOfBirth *string `json:"date_of_birth,omitempty"`
-    // First name of the user
-    FirstName *string `json:"first_name,omitempty"`
-    // Last name of the user
-    LastName *string `json:"last_name,omitempty"`
-    // Mobile phone number
-    MobilePhone *string `json:"mobile_phone,omitempty"`
 }
 ```
 
@@ -5397,22 +4871,6 @@ type SubaccountsUpdateSubAccountParamsPermissions struct {
 }
 ```
 
-<a name="TimeoffsetDetails"></a>
-## type [TimeoffsetDetails](<https://github.com/sumup/sumup-go/blob/main/merchant.go#L328-L335>)
-
-TimeOffset Details
-
-```go
-type TimeoffsetDetails struct {
-    // Daylight Saving Time
-    Dst *bool `json:"dst,omitempty"`
-    // UTC offset
-    Offset *float64 `json:"offset,omitempty"`
-    // Postal code
-    PostCode *string `json:"post_code,omitempty"`
-}
-```
-
 <a name="Timestamps"></a>
 ## type [Timestamps](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L489-L497>)
 
@@ -6348,26 +5806,6 @@ const (
     UnauthorizedErrorsTypeInvalidAccessToken UnauthorizedErrorsType = "INVALID_ACCESS_TOKEN"
     UnauthorizedErrorsTypeInvalidPassword    UnauthorizedErrorsType = "INVALID_PASSWORD"
 )
-```
-
-<a name="VATRates"></a>
-## type [VATRates](<https://github.com/sumup/sumup-go/blob/main/merchant.go#L338-L349>)
-
-Merchant VAT rates
-
-```go
-type VATRates struct {
-    // Country ISO code
-    Country *string `json:"country,omitempty"`
-    // Description
-    Description *string `json:"description,omitempty"`
-    // Internal ID
-    ID  *float64 `json:"id,omitempty"`
-    // Ordering
-    Ordering *float64 `json:"ordering,omitempty"`
-    // Rate
-    Rate *float64 `json:"rate,omitempty"`
-}
 ```
 
 <a name="Version"></a>
