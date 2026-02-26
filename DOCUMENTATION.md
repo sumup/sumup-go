@@ -269,7 +269,6 @@ import "github.com/sumup/sumup-go"
   - [func NewSubaccountsClient\(c \*client.Client\) \*SubaccountsClient](<#NewSubaccountsClient>)
   - [func \(c \*SubaccountsClient\) CompatGetOperator\(ctx context.Context, operatorID int32\) \(\*Operator, error\)](<#SubaccountsClient.CompatGetOperator>)
   - [func \(c \*SubaccountsClient\) CreateSubAccount\(ctx context.Context, body SubaccountsCreateSubAccountParams\) \(\*Operator, error\)](<#SubaccountsClient.CreateSubAccount>)
-  - [func \(c \*SubaccountsClient\) DeactivateSubAccount\(ctx context.Context, operatorID int32\) \(\*Operator, error\)](<#SubaccountsClient.DeactivateSubAccount>)
   - [func \(c \*SubaccountsClient\) ListSubAccounts\(ctx context.Context, params SubaccountsListSubAccountsParams\) \(\*SubaccountsListSubAccountsResponse, error\)](<#SubaccountsClient.ListSubAccounts>)
   - [func \(c \*SubaccountsClient\) UpdateSubAccount\(ctx context.Context, operatorID int32, body SubaccountsUpdateSubAccountParams\) \(\*Operator, error\)](<#SubaccountsClient.UpdateSubAccount>)
 - [type SubaccountsCreateSubAccountParams](<#SubaccountsCreateSubAccountParams>)
@@ -4730,7 +4729,7 @@ func NewSubaccountsClient(c *client.Client) *SubaccountsClient
 
 
 <a name="SubaccountsClient.CompatGetOperator"></a>
-### func \(\*SubaccountsClient\) [CompatGetOperator](<https://github.com/sumup/sumup-go/blob/main/subaccounts.go#L210>)
+### func \(\*SubaccountsClient\) [CompatGetOperator](<https://github.com/sumup/sumup-go/blob/main/subaccounts.go#L185>)
 
 ```go
 func (c *SubaccountsClient) CompatGetOperator(ctx context.Context, operatorID int32) (*Operator, error)
@@ -4747,15 +4746,6 @@ func (c *SubaccountsClient) CreateSubAccount(ctx context.Context, body Subaccoun
 
 Creates new operator for currently authorized users' merchant. Deprecated: Subaccounts API is deprecated, to create a user in your merchant account please use \[Create member\]\(https://developer.sumup.com/api/members/create\) instead.
 
-<a name="SubaccountsClient.DeactivateSubAccount"></a>
-### func \(\*SubaccountsClient\) [DeactivateSubAccount](<https://github.com/sumup/sumup-go/blob/main/subaccounts.go#L185>)
-
-```go
-func (c *SubaccountsClient) DeactivateSubAccount(ctx context.Context, operatorID int32) (*Operator, error)
-```
-
-Disable the specified operator for the merchant account. Deprecated: Subaccounts API is deprecated, to remove a user that's a member of your merchant account please use \[Delete member\]\(https://developer.sumup.com/api/members/delete\) instead.
-
 <a name="SubaccountsClient.ListSubAccounts"></a>
 ### func \(\*SubaccountsClient\) [ListSubAccounts](<https://github.com/sumup/sumup-go/blob/main/subaccounts.go#L128>)
 
@@ -4766,7 +4756,7 @@ func (c *SubaccountsClient) ListSubAccounts(ctx context.Context, params Subaccou
 Returns list of operators for currently authorized user's merchant. Deprecated: Subaccounts API is deprecated, to list users in your merchant account please use \[List members\]\(https://developer.sumup.com/api/members/list\) instead.
 
 <a name="SubaccountsClient.UpdateSubAccount"></a>
-### func \(\*SubaccountsClient\) [UpdateSubAccount](<https://github.com/sumup/sumup-go/blob/main/subaccounts.go#L235>)
+### func \(\*SubaccountsClient\) [UpdateSubAccount](<https://github.com/sumup/sumup-go/blob/main/subaccounts.go#L210>)
 
 ```go
 func (c *SubaccountsClient) UpdateSubAccount(ctx context.Context, operatorID int32, body SubaccountsUpdateSubAccountParams) (*Operator, error)
