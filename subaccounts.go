@@ -179,31 +179,6 @@ func (c *SubaccountsClient) CreateSubAccount(ctx context.Context, body Subaccoun
 	}
 }
 
-// Disable the specified operator for the merchant account.
-// Deprecated: Subaccounts API is deprecated, to remove a user that's a member of your merchant account please
-// use [Delete member](https://developer.sumup.com/api/members/delete) instead.
-func (c *SubaccountsClient) DeactivateSubAccount(ctx context.Context, operatorID int32) (*Operator, error) {
-	path := fmt.Sprintf("/v0.1/me/accounts/%v", operatorID)
-
-	resp, err := c.c.Call(ctx, http.MethodDelete, path)
-	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
-	}
-	defer resp.Body.Close()
-
-	switch resp.StatusCode {
-	case http.StatusOK:
-		var v Operator
-		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-			return nil, fmt.Errorf("decode response: %s", err.Error())
-		}
-
-		return &v, nil
-	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
-}
-
 // Returns specific operator.
 // Deprecated: Subaccounts API is deprecated, to get a user that's a member of your merchant account please use
 // [Get member](https://developer.sumup.com/api/members/get) instead.
