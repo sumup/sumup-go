@@ -169,6 +169,7 @@ func (c *Client) NewRequest(
 	}
 
 	req.Header.Add("Authorization", "Bearer "+c.key)
+	req.Header.Add("Accept", "application/problem+json, application/json")
 	req.Header.Add("User-Agent", c.userAgent)
 
 	maps.Copy(req.Header, runtimeInfo)
