@@ -11,8 +11,8 @@ func getJSONMediaType(content *orderedmap.Map[string, *v3.MediaType]) (*v3.Media
 	}
 
 	for _, mediaType := range []string{
-		"application/json",
 		"application/problem+json",
+		"application/json",
 	} {
 		mt, ok := content.Get(mediaType)
 		if ok && mt != nil {
