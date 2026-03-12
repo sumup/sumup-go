@@ -14,23 +14,6 @@ import (
 	"github.com/sumup/sumup-go/nullable"
 )
 
-// 502 Bad Gateway
-type BadGateway struct {
-	Errors BadGatewayErrors `json:"errors"`
-}
-
-// BadGatewayErrors is a schema definition.
-type BadGatewayErrors struct {
-	// Fuller message giving context to error
-	Detail string `json:"detail"`
-}
-
-func (e *BadGateway) Error() string {
-	return fmt.Sprintf("errors=%v", e.Errors)
-}
-
-var _ error = (*BadGateway)(nil)
-
 // 400 Bad Request
 type BadRequest struct {
 	Errors BadRequestErrors `json:"errors"`
@@ -232,40 +215,6 @@ func (e *CreateReaderTerminateUnprocessableEntity) Error() string {
 
 var _ error = (*CreateReaderTerminateUnprocessableEntity)(nil)
 
-// 504 Gateway Timeout
-type GatewayTimeout struct {
-	Errors GatewayTimeoutErrors `json:"errors"`
-}
-
-// GatewayTimeoutErrors is a schema definition.
-type GatewayTimeoutErrors struct {
-	// Fuller message giving context to error
-	Detail string `json:"detail"`
-}
-
-func (e *GatewayTimeout) Error() string {
-	return fmt.Sprintf("errors=%v", e.Errors)
-}
-
-var _ error = (*GatewayTimeout)(nil)
-
-// 500 Internal Server Error
-type InternalServerError struct {
-	Errors InternalServerErrorErrors `json:"errors"`
-}
-
-// InternalServerErrorErrors is a schema definition.
-type InternalServerErrorErrors struct {
-	// Fuller message giving context to error
-	Detail string `json:"detail"`
-}
-
-func (e *InternalServerError) Error() string {
-	return fmt.Sprintf("errors=%v", e.Errors)
-}
-
-var _ error = (*InternalServerError)(nil)
-
 // 404 Not Found
 type NotFound struct {
 	Errors NotFoundErrors `json:"errors"`
@@ -440,12 +389,14 @@ type Unauthorized struct {
 // UnauthorizedErrors is a schema definition.
 type UnauthorizedErrors struct {
 	// Fuller message giving context to error
-	Detail *string `json:"detail,omitempty"`
-	// Key indicating type of error
-	Type UnauthorizedErrorsType `json:"type"`
+	Detail string `json:"detail"`
+	// Key indicating type of error. Present only for typed 401 responses (e.g. invalid token, invalid password). Absent
+	// for generic unauthorized responses.
+	Type *UnauthorizedErrorsType `json:"type,omitempty"`
 }
 
-// Key indicating type of error
+// Key indicating type of error. Present only for typed 401 responses (e.g. invalid token, invalid password). Absent
+// for generic unauthorized responses.
 type UnauthorizedErrorsType string
 
 const (
@@ -618,42 +569,28 @@ func (c *ReadersClient) TerminateCheckout(ctx context.Context, merchantCode stri
 	case http.StatusAccepted:
 		return nil
 	case http.StatusBadRequest:
-		var apiErr CreateReaderTerminateError
+		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return &apiErr
 	case http.StatusUnauthorized:
-		var apiErr CreateReaderTerminateError
+		var apiErr Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return &apiErr
+	case http.StatusNotFound:
+		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return &apiErr
 	case http.StatusUnprocessableEntity:
-		var apiErr CreateReaderTerminateUnprocessableEntity
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return &apiErr
-	case http.StatusInternalServerError:
-		var apiErr CreateReaderTerminateError
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return &apiErr
-	case http.StatusBadGateway:
-		var apiErr CreateReaderTerminateError
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return &apiErr
-	case http.StatusGatewayTimeout:
-		var apiErr CreateReaderTerminateError
+		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return fmt.Errorf("read error response: %s", err.Error())
 		}
@@ -702,42 +639,21 @@ func (c *ReadersClient) GetStatus(ctx context.Context, merchantCode string, read
 
 		return &v, nil
 	case http.StatusBadRequest:
-		var apiErr BadRequest
+		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
 	case http.StatusUnauthorized:
-		var apiErr Unauthorized
+		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
 	case http.StatusNotFound:
-		var apiErr NotFound
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	case http.StatusInternalServerError:
-		var apiErr InternalServerError
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	case http.StatusBadGateway:
-		var apiErr BadGateway
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	case http.StatusGatewayTimeout:
-		var apiErr GatewayTimeout
+		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
@@ -776,42 +692,28 @@ func (c *ReadersClient) CreateCheckout(ctx context.Context, merchantCode string,
 
 		return &v, nil
 	case http.StatusBadRequest:
-		var apiErr CreateReaderCheckoutError
+		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
 	case http.StatusUnauthorized:
-		var apiErr CreateReaderCheckoutError
+		var apiErr Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	case http.StatusNotFound:
+		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
 		return nil, &apiErr
 	case http.StatusUnprocessableEntity:
-		var apiErr CreateReaderCheckoutUnprocessableEntity
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	case http.StatusInternalServerError:
-		var apiErr CreateReaderCheckoutError
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	case http.StatusBadGateway:
-		var apiErr CreateReaderCheckoutError
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	case http.StatusGatewayTimeout:
-		var apiErr CreateReaderCheckoutError
+		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}

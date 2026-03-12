@@ -128,6 +128,24 @@ func (e *Error) Error() string {
 
 var _ error = (*Error)(nil)
 
+// Error payload with the invalid parameter reference.
+type ErrorExtended struct {
+	// Platform code for the error.
+	ErrorCode *string `json:"error_code,omitempty"`
+	// Short description of the error.
+	Message *string `json:"message,omitempty"`
+	// Parameter name (with relative location) to which the error applies. Parameters from embedded resources are
+	// displayed using dot notation. For example, `card.name` refers to the `name` parameter embedded in the `card`
+	// object.
+	Param *string `json:"param,omitempty"`
+}
+
+func (e *ErrorExtended) Error() string {
+	return fmt.Sprintf("error_code=%v, message=%v, param=%v", ptr.OrNil(e.ErrorCode), ptr.OrNil(e.Message), ptr.OrNil(e.Param))
+}
+
+var _ error = (*ErrorExtended)(nil)
+
 // Error message for forbidden requests.
 type ErrorForbidden struct {
 	// Platform code for the error.
@@ -297,7 +315,7 @@ const (
 	TransactionBaseStatusSuccessful TransactionBaseStatus = "SUCCESSFUL"
 )
 
-// TransactionCheckoutInfo is a schema definition.
+// Checkout-specific fields associated with a transaction.
 type TransactionCheckoutInfo struct {
 	// Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
 	AuthCode *string `json:"auth_code,omitempty"`
