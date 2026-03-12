@@ -312,7 +312,7 @@ const (
 	CheckoutCreateRequestTransactionStatusSuccessful CheckoutCreateRequestTransactionStatus = "SUCCESSFUL"
 )
 
-// CheckoutSuccess is a schema definition.
+// Checkout response returned after a successful processing attempt.
 type CheckoutSuccess struct {
 	// Amount of the payment.
 	Amount *float32 `json:"amount,omitempty"`
@@ -426,7 +426,8 @@ type CheckoutSuccessPaymentInstrument struct {
 // Error message structure.
 type DetailsError struct {
 	// Details of the error.
-	Details           *string                        `json:"details,omitempty"`
+	Details *string `json:"details,omitempty"`
+	// List of violated validation constraints.
 	FailedConstraints []DetailsErrorFailedConstraint `json:"failed_constraints,omitempty"`
 	// The status code.
 	Status *float64 `json:"status,omitempty"`
@@ -445,24 +446,6 @@ func (e *DetailsError) Error() string {
 }
 
 var _ error = (*DetailsError)(nil)
-
-// ErrorExtended is a schema definition.
-type ErrorExtended struct {
-	// Platform code for the error.
-	ErrorCode *string `json:"error_code,omitempty"`
-	// Short description of the error.
-	Message *string `json:"message,omitempty"`
-	// Parameter name (with relative location) to which the error applies. Parameters from embedded resources are
-	// displayed using dot notation. For example, `card.name` refers to the `name` parameter embedded in the `card`
-	// object.
-	Param *string `json:"param,omitempty"`
-}
-
-func (e *ErrorExtended) Error() string {
-	return fmt.Sprintf("error_code=%v, message=%v, param=%v", ptr.OrNil(e.ErrorCode), ptr.OrNil(e.Message), ptr.OrNil(e.Param))
-}
-
-var _ error = (*ErrorExtended)(nil)
 
 // Mandate is passed when a card is to be tokenized
 type MandatePayload struct {
@@ -536,8 +519,7 @@ func (p *CheckoutsListParams) QueryValues() url.Values {
 
 // CheckoutsListAvailablePaymentMethodsParams are query parameters for GetPaymentMethods.
 type CheckoutsListAvailablePaymentMethodsParams struct {
-	// The amount for which the payment methods should be eligible, in major units. Note that currency must also
-	// be provided when filtering by amount.
+	// The amount for which the payment methods should be eligible, in major units.
 	Amount *float64
 	// The currency for which the payment methods should be eligible.
 	Currency *string
@@ -629,7 +611,7 @@ func (c *CheckoutsClient) List(ctx context.Context, params CheckoutsListParams) 
 
 		return &v, nil
 	case http.StatusUnauthorized:
-		var apiErr Error
+		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
@@ -671,7 +653,7 @@ func (c *CheckoutsClient) Create(ctx context.Context, body CheckoutsCreateParams
 
 		return nil, &apiErr
 	case http.StatusUnauthorized:
-		var apiErr Error
+		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
@@ -721,13 +703,6 @@ func (c *CheckoutsClient) ListAvailablePaymentMethods(ctx context.Context, merch
 		}
 
 		return nil, &apiErr
-	case http.StatusUnauthorized:
-		var apiErr Error
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
 	default:
 		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
@@ -752,7 +727,7 @@ func (c *CheckoutsClient) Deactivate(ctx context.Context, id string) (*Checkout,
 
 		return &v, nil
 	case http.StatusUnauthorized:
-		var apiErr Error
+		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
@@ -797,7 +772,7 @@ func (c *CheckoutsClient) Get(ctx context.Context, id string) (*CheckoutSuccess,
 
 		return &v, nil
 	case http.StatusUnauthorized:
-		var apiErr Error
+		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
@@ -855,7 +830,7 @@ func (c *CheckoutsClient) Process(ctx context.Context, id string, body Checkouts
 
 		return nil, &apiErr
 	case http.StatusUnauthorized:
-		var apiErr Error
+		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}

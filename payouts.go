@@ -47,7 +47,7 @@ const (
 	FinancialPayoutTypeRefundDeduction     FinancialPayoutType = "REFUND_DEDUCTION"
 )
 
-// FinancialPayouts is a schema definition.
+// List of payout summaries.
 type FinancialPayouts []FinancialPayout
 
 // PayoutsListDeprecatedParams are query parameters for ListPayouts.
@@ -118,6 +118,16 @@ func (p *PayoutsListParams) QueryValues() url.Values {
 	return q
 }
 
+// PayoutsListDeprecated400Response is a schema definition.
+type PayoutsListDeprecated400Response []ErrorExtended
+
+var _ error = (*PayoutsListDeprecated400Response)(nil)
+
+// PayoutsList400Response is a schema definition.
+type PayoutsList400Response []ErrorExtended
+
+var _ error = (*PayoutsList400Response)(nil)
+
 type PayoutsClient struct {
 	c *client.Client
 }
@@ -145,8 +155,15 @@ func (c *PayoutsClient) ListDeprecated(ctx context.Context, params PayoutsListDe
 		}
 
 		return &v, nil
+	case http.StatusBadRequest:
+		var apiErr PayoutsListDeprecated400Response
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	case http.StatusUnauthorized:
-		var apiErr Error
+		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
@@ -175,8 +192,15 @@ func (c *PayoutsClient) List(ctx context.Context, merchantCode string, params Pa
 		}
 
 		return &v, nil
+	case http.StatusBadRequest:
+		var apiErr PayoutsList400Response
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	case http.StatusUnauthorized:
-		var apiErr Error
+		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}

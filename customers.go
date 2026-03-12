@@ -12,7 +12,7 @@ import (
 	"github.com/sumup/sumup-go/client"
 )
 
-// Customer is a schema definition.
+// Saved customer details.
 type Customer struct {
 	// Unique ID of the customer.
 	CustomerID string `json:"customer_id"`
@@ -66,6 +66,15 @@ type CustomersUpdateParams struct {
 	PersonalDetails *PersonalDetails `json:"personal_details,omitempty"`
 }
 
+// CustomersCreate400Response is a schema definition.
+type CustomersCreate400Response json.RawMessage
+
+func (e *CustomersCreate400Response) Error() string {
+	return "CustomersCreate400Response"
+}
+
+var _ error = (*CustomersCreate400Response)(nil)
+
 // CustomersListPaymentInstrumentsResponse is a schema definition.
 type CustomersListPaymentInstrumentsResponse []PaymentInstrumentResponse
 
@@ -95,8 +104,15 @@ func (c *CustomersClient) Create(ctx context.Context, body CustomersCreateParams
 		}
 
 		return &v, nil
+	case http.StatusBadRequest:
+		var apiErr CustomersCreate400Response
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	case http.StatusUnauthorized:
-		var apiErr Error
+		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
@@ -140,7 +156,7 @@ func (c *CustomersClient) ListPaymentInstruments(ctx context.Context, customerID
 
 		return &v, nil
 	case http.StatusUnauthorized:
-		var apiErr Error
+		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
@@ -185,7 +201,7 @@ func (c *CustomersClient) Get(ctx context.Context, customerID string) (*Customer
 
 		return &v, nil
 	case http.StatusUnauthorized:
-		var apiErr Error
+		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
@@ -232,7 +248,7 @@ func (c *CustomersClient) Update(ctx context.Context, customerID string, body Cu
 
 		return &v, nil
 	case http.StatusUnauthorized:
-		var apiErr Error
+		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
@@ -270,8 +286,15 @@ func (c *CustomersClient) DeactivatePaymentInstrument(ctx context.Context, custo
 	switch resp.StatusCode {
 	case http.StatusNoContent:
 		return nil
-	case http.StatusUnauthorized:
+	case http.StatusBadRequest:
 		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return &apiErr
+	case http.StatusUnauthorized:
+		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return fmt.Errorf("read error response: %s", err.Error())
 		}

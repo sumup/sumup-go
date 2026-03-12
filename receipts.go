@@ -14,17 +14,19 @@ import (
 	"github.com/sumup/sumup-go/client"
 )
 
-// Receipt is a schema definition.
+// Receipt details for a transaction.
 type Receipt struct {
+	// Acquirer-specific metadata related to the card authorization.
 	AcquirerData *ReceiptAcquirerData `json:"acquirer_data,omitempty"`
-	EmvData      *ReceiptEmvData      `json:"emv_data,omitempty"`
+	// EMV-specific metadata returned for card-present payments.
+	EmvData *ReceiptEmvData `json:"emv_data,omitempty"`
 	// Receipt merchant data
 	MerchantData *ReceiptMerchantData `json:"merchant_data,omitempty"`
 	// Transaction information.
 	TransactionData *ReceiptTransaction `json:"transaction_data,omitempty"`
 }
 
-// ReceiptAcquirerData is a schema definition.
+// Acquirer-specific metadata related to the card authorization.
 type ReceiptAcquirerData struct {
 	AuthorizationCode *string `json:"authorization_code,omitempty"`
 	LocalTime         *string `json:"local_time,omitempty"`
@@ -32,11 +34,11 @@ type ReceiptAcquirerData struct {
 	Tid               *string `json:"tid,omitempty"`
 }
 
-// ReceiptEmvData is a schema definition.
+// EMV-specific metadata returned for card-present payments.
 type ReceiptEmvData struct {
 }
 
-// ReceiptCard is a schema definition.
+// Payment card details displayed on the receipt.
 type ReceiptCard struct {
 	// Card last 4 digits.
 	Last4Digits *string `json:"last_4_digits,omitempty"`
@@ -44,15 +46,16 @@ type ReceiptCard struct {
 	Type *string `json:"type,omitempty"`
 }
 
-// ReceiptEvent is a schema definition.
+// Transaction event details as rendered on the receipt.
 type ReceiptEvent struct {
 	// Amount of the event.
 	// Format: double
 	Amount *json.Number `json:"amount,omitempty"`
 	// Unique ID of the transaction event.
 	// Format: int64
-	ID        *EventID `json:"id,omitempty"`
-	ReceiptNo *string  `json:"receipt_no,omitempty"`
+	ID *EventID `json:"id,omitempty"`
+	// Receipt number associated with the event.
+	ReceiptNo *string `json:"receipt_no,omitempty"`
 	// Status of the transaction event.
 	Status *EventStatus `json:"status,omitempty"`
 	// Date and time of the transaction event.
@@ -65,11 +68,13 @@ type ReceiptEvent struct {
 
 // Receipt merchant data
 type ReceiptMerchantData struct {
-	Locale          *string                             `json:"locale,omitempty"`
+	// Locale used for rendering localized receipt fields.
+	Locale *string `json:"locale,omitempty"`
+	// Merchant profile details displayed on the receipt.
 	MerchantProfile *ReceiptMerchantDataMerchantProfile `json:"merchant_profile,omitempty"`
 }
 
-// ReceiptMerchantDataMerchantProfile is a schema definition.
+// Merchant profile details displayed on the receipt.
 type ReceiptMerchantDataMerchantProfile struct {
 	Address      *ReceiptMerchantDataMerchantProfileAddress `json:"address,omitempty"`
 	BusinessName *string                                    `json:"business_name,omitempty"`
@@ -91,8 +96,9 @@ type ReceiptMerchantDataMerchantProfileAddress struct {
 // Transaction information.
 type ReceiptTransaction struct {
 	// Transaction amount.
-	Amount *string      `json:"amount,omitempty"`
-	Card   *ReceiptCard `json:"card,omitempty"`
+	Amount *string `json:"amount,omitempty"`
+	// Payment card details displayed on the receipt.
+	Card *ReceiptCard `json:"card,omitempty"`
 	// Transaction currency.
 	Currency *string `json:"currency,omitempty"`
 	// Transaction entry mode.
@@ -220,6 +226,13 @@ func (c *ReceiptsClient) Get(ctx context.Context, id string, params ReceiptsGetP
 
 		return nil, &apiErr
 	case http.StatusUnauthorized:
+		var apiErr Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	case http.StatusNotFound:
 		var apiErr Error
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())

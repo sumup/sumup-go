@@ -26,7 +26,7 @@ type CardResponse struct {
 	Type *CardType `json:"type,omitempty"`
 }
 
-// Device is a schema definition.
+// Details of the device used to create the transaction.
 type Device struct {
 	// Device model.
 	Model *string `json:"model,omitempty"`
@@ -40,7 +40,7 @@ type Device struct {
 	UUID *string `json:"uuid,omitempty"`
 }
 
-// ElvCardAccount is a schema definition.
+// Details of the ELV card account associated with the transaction.
 type ElvCardAccount struct {
 	// ELV IBAN.
 	IBAN *string `json:"iban,omitempty"`
@@ -84,7 +84,7 @@ const (
 	EntryModeFilterSofort               EntryModeFilter = "SOFORT"
 )
 
-// Event is a schema definition.
+// Transaction event details.
 type Event struct {
 	// Amount of the event.
 	Amount *float32 `json:"amount,omitempty"`
@@ -188,7 +188,7 @@ type TransactionEvent struct {
 	Timestamp *time.Time `json:"timestamp,omitempty"`
 }
 
-// TransactionFull is a schema definition.
+// Full transaction resource with checkout, payout, and event details.
 type TransactionFull struct {
 	// Total amount of the transaction.
 	Amount *float32 `json:"amount,omitempty"`
@@ -200,8 +200,10 @@ type TransactionFull struct {
 	ClientTransactionID *string `json:"client_transaction_id,omitempty"`
 	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
 	// currency values are enumerated above.
-	Currency   *Currency       `json:"currency,omitempty"`
-	DeviceInfo *Device         `json:"device_info,omitempty"`
+	Currency *Currency `json:"currency,omitempty"`
+	// Details of the device used to create the transaction.
+	DeviceInfo *Device `json:"device_info,omitempty"`
+	// Details of the ELV card account associated with the transaction.
 	ElvAccount *ElvCardAccount `json:"elv_account,omitempty"`
 	// Entry mode of the payment details.
 	EntryMode *EntryMode `json:"entry_mode,omitempty"`
@@ -400,7 +402,7 @@ const (
 	TransactionFullVerificationMethodSignature           TransactionFullVerificationMethod = "signature"
 )
 
-// TransactionHistory is a schema definition.
+// Transaction entry returned in history listing responses.
 type TransactionHistory struct {
 	// Total amount of the transaction.
 	Amount *float32 `json:"amount,omitempty"`
@@ -485,7 +487,7 @@ const (
 	TransactionHistoryTypeRefund     TransactionHistoryType = "REFUND"
 )
 
-// TransactionMixinHistory is a schema definition.
+// Additional transaction fields used by history and detailed views.
 type TransactionMixinHistory struct {
 	// Payout plan of the registered user at the time when the transaction was made.
 	PayoutPlan *TransactionMixinHistoryPayoutPlan `json:"payout_plan,omitempty"`
@@ -506,7 +508,7 @@ const (
 	TransactionMixinHistoryPayoutPlanTrueInstallment        TransactionMixinHistoryPayoutPlan = "TRUE_INSTALLMENT"
 )
 
-// TransactionsHistoryLink is a schema definition.
+// Hypermedia link used for transaction history pagination.
 type TransactionsHistoryLink struct {
 	// Location.
 	Href string `json:"href"`
@@ -594,7 +596,7 @@ func (p *TransactionsListDeprecatedParams) QueryValues() url.Values {
 	}
 
 	for _, v := range p.Statuses {
-		q.Add("statuses", v)
+		q.Add("statuses[]", v)
 	}
 
 	if p.TransactionCode != nil {
@@ -721,7 +723,7 @@ func (p *TransactionsListParams) QueryValues() url.Values {
 	}
 
 	for _, v := range p.Statuses {
-		q.Add("statuses", v)
+		q.Add("statuses[]", v)
 	}
 
 	if p.TransactionCode != nil {
@@ -820,8 +822,15 @@ func (c *TransactionsClient) ListDeprecated(ctx context.Context, params Transact
 		}
 
 		return &v, nil
-	case http.StatusUnauthorized:
+	case http.StatusBadRequest:
 		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	case http.StatusUnauthorized:
+		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
@@ -860,7 +869,7 @@ func (c *TransactionsClient) GetDeprecated(ctx context.Context, params Transacti
 
 		return &v, nil
 	case http.StatusUnauthorized:
-		var apiErr Error
+		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
@@ -896,8 +905,15 @@ func (c *TransactionsClient) List(ctx context.Context, merchantCode string, para
 		}
 
 		return &v, nil
-	case http.StatusUnauthorized:
+	case http.StatusBadRequest:
 		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	case http.StatusUnauthorized:
+		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
@@ -934,7 +950,7 @@ func (c *TransactionsClient) Get(ctx context.Context, merchantCode string, param
 
 		return &v, nil
 	case http.StatusUnauthorized:
-		var apiErr Error
+		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
