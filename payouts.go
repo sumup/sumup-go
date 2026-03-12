@@ -121,10 +121,18 @@ func (p *PayoutsListParams) QueryValues() url.Values {
 // PayoutsListDeprecated400Response is a schema definition.
 type PayoutsListDeprecated400Response []ErrorExtended
 
+func (e *PayoutsListDeprecated400Response) Error() string {
+	return "PayoutsListDeprecated400Response"
+}
+
 var _ error = (*PayoutsListDeprecated400Response)(nil)
 
 // PayoutsList400Response is a schema definition.
 type PayoutsList400Response []ErrorExtended
+
+func (e *PayoutsList400Response) Error() string {
+	return "PayoutsList400Response"
+}
 
 var _ error = (*PayoutsList400Response)(nil)
 

@@ -317,90 +317,91 @@ func (b *Builder) generateSchemaComponents(name string, schema *base.SchemaProxy
 	}
 
 	spec := schema.Schema()
+	var errType *TypeDeclaration
 
 	switch {
 	case len(spec.Enum) > 0:
 		enum := createEnum(spec, name)
 		if enum != nil {
 			types = append(types, enum)
+			errType = enumTypeDeclaration(enum)
 		}
 	case slices.Contains(spec.Type, "string"):
-		types = append(types, &TypeDeclaration{
+		typ := &TypeDeclaration{
 			Comment: schemaGodoc(name, spec),
 			Type:    "string",
 			Name:    name,
 			Schema:  spec,
-		})
+		}
+		types = append(types, typ)
+		errType = typ
 	case slices.Contains(spec.Type, "integer"):
-		types = append(types, &TypeDeclaration{
+		typ := &TypeDeclaration{
 			Comment: schemaGodoc(name, spec),
 			Type:    formatIntegerType(spec),
 			Name:    name,
 			Schema:  spec,
-		})
+		}
+		types = append(types, typ)
+		errType = typ
 	case slices.Contains(spec.Type, "number"):
-		types = append(types, &TypeDeclaration{
+		typ := &TypeDeclaration{
 			Comment: schemaGodoc(name, spec),
 			Type:    formatNumberType(spec),
 			Name:    name,
 			Schema:  spec,
-		})
+		}
+		types = append(types, typ)
+		errType = typ
 	case slices.Contains(spec.Type, "boolean"):
-		types = append(types, &TypeDeclaration{
+		typ := &TypeDeclaration{
 			Comment: schemaGodoc(name, spec),
 			Type:    "bool",
 			Name:    name,
 			Schema:  spec,
-		})
+		}
+		types = append(types, typ)
+		errType = typ
 	case slices.Contains(spec.Type, "array"):
 		if spec.Items == nil || !spec.Items.IsA() || spec.Items.A == nil {
 			return types
 		}
 		typeName, itemTypes := b.genSchema(spec.Items.A, strcase.MakeSingular(name))
 		types = append(types, itemTypes...)
-		types = append(types, &TypeDeclaration{
+		typ := &TypeDeclaration{
 			Comment: schemaGodoc(name, spec),
 			Type:    fmt.Sprintf("[]%s", typeName),
 			Name:    name,
 			Schema:  spec,
-		})
+		}
+		types = append(types, typ)
+		errType = typ
 	case slices.Contains(spec.Type, "object"):
 		object, additionalTypes := b.createObject(spec, name)
 		types = append(types, object)
 		types = append(types, additionalTypes...)
-
-		if isErr {
-			types = append(types, errorImplementation{
-				Typ: object,
-			})
-		}
+		errType = object
 	case spec.OneOf != nil:
 		object := createOneOf(spec, name)
 		types = append(types, object)
-		if isErr {
-			types = append(types, errorImplementation{
-				Typ: object,
-			})
-		}
+		errType = object
 	case spec.AnyOf != nil:
 		slog.Warn("AnyOf not supported, falling back to 'any'",
 			slog.Any("name", name),
 		)
-		types = append(types, &TypeDeclaration{
+		typ := &TypeDeclaration{
 			Comment: schemaGodoc(name, spec),
 			Type:    "any",
 			Name:    name,
 			Schema:  spec,
-		})
+		}
+		types = append(types, typ)
+		errType = typ
 	case spec.AllOf != nil:
 		object, additionalTypes := b.createAllOf(spec, name)
 		types = append(types, object)
 		types = append(types, additionalTypes...)
-		if isErr {
-			types = append(types, errorImplementation{
-				Typ: object,
-			})
-		}
+		errType = object
 	default:
 		if spec.Type != nil {
 			slog.Warn("skipping unknown type",
@@ -411,6 +412,9 @@ func (b *Builder) generateSchemaComponents(name string, schema *base.SchemaProxy
 	}
 
 	if isErr {
+		types = append(types, errorImplementation{
+			Typ: errType,
+		})
 		types = append(types, typeAssertionDeclaration{
 			typ: name,
 		})
@@ -805,6 +809,21 @@ func createEnum(schema *base.Schema, name string) Writable {
 			},
 			Values: values,
 		}
+	default:
+		return nil
+	}
+}
+
+func enumTypeDeclaration(w Writable) *TypeDeclaration {
+	switch v := w.(type) {
+	case *EnumDeclaration[string]:
+		return &v.Type
+	case *EnumDeclaration[int]:
+		return &v.Type
+	case *EnumDeclaration[int32]:
+		return &v.Type
+	case *EnumDeclaration[int64]:
+		return &v.Type
 	default:
 		return nil
 	}
