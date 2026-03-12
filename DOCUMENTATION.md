@@ -189,7 +189,9 @@ import "github.com/sumup/sumup-go"
   - [func \(c \*PayoutsClient\) List\(ctx context.Context, merchantCode string, params PayoutsListParams\) \(\*FinancialPayouts, error\)](<#PayoutsClient.List>)
   - [func \(c \*PayoutsClient\) ListDeprecated\(ctx context.Context, params PayoutsListDeprecatedParams\) \(\*FinancialPayouts, error\)](<#PayoutsClient.ListDeprecated>)
 - [type PayoutsList400Response](<#PayoutsList400Response>)
+  - [func \(e \*PayoutsList400Response\) Error\(\) string](<#PayoutsList400Response.Error>)
 - [type PayoutsListDeprecated400Response](<#PayoutsListDeprecated400Response>)
+  - [func \(e \*PayoutsListDeprecated400Response\) Error\(\) string](<#PayoutsListDeprecated400Response.Error>)
 - [type PayoutsListDeprecatedParams](<#PayoutsListDeprecatedParams>)
   - [func \(p \*PayoutsListDeprecatedParams\) QueryValues\(\) url.Values](<#PayoutsListDeprecatedParams.QueryValues>)
 - [type PayoutsListParams](<#PayoutsListParams>)
@@ -3420,7 +3422,7 @@ const (
 ```
 
 <a name="PayoutsClient"></a>
-## type [PayoutsClient](<https://github.com/sumup/sumup-go/blob/main/payouts.go#L131-L133>)
+## type [PayoutsClient](<https://github.com/sumup/sumup-go/blob/main/payouts.go#L139-L141>)
 
 
 
@@ -3431,7 +3433,7 @@ type PayoutsClient struct {
 ```
 
 <a name="NewPayoutsClient"></a>
-### func [NewPayoutsClient](<https://github.com/sumup/sumup-go/blob/main/payouts.go#L135>)
+### func [NewPayoutsClient](<https://github.com/sumup/sumup-go/blob/main/payouts.go#L143>)
 
 ```go
 func NewPayoutsClient(c *client.Client) *PayoutsClient
@@ -3440,7 +3442,7 @@ func NewPayoutsClient(c *client.Client) *PayoutsClient
 
 
 <a name="PayoutsClient.List"></a>
-### func \(\*PayoutsClient\) [List](<https://github.com/sumup/sumup-go/blob/main/payouts.go#L178>)
+### func \(\*PayoutsClient\) [List](<https://github.com/sumup/sumup-go/blob/main/payouts.go#L186>)
 
 ```go
 func (c *PayoutsClient) List(ctx context.Context, merchantCode string, params PayoutsListParams) (*FinancialPayouts, error)
@@ -3449,7 +3451,7 @@ func (c *PayoutsClient) List(ctx context.Context, merchantCode string, params Pa
 Lists ordered payouts for the merchant profile.
 
 <a name="PayoutsClient.ListDeprecated"></a>
-### func \(\*PayoutsClient\) [ListDeprecated](<https://github.com/sumup/sumup-go/blob/main/payouts.go#L141>)
+### func \(\*PayoutsClient\) [ListDeprecated](<https://github.com/sumup/sumup-go/blob/main/payouts.go#L149>)
 
 ```go
 func (c *PayoutsClient) ListDeprecated(ctx context.Context, params PayoutsListDeprecatedParams) (*FinancialPayouts, error)
@@ -3458,13 +3460,22 @@ func (c *PayoutsClient) ListDeprecated(ctx context.Context, params PayoutsListDe
 Lists ordered payouts for the merchant profile. Deprecated: this operation is deprecated
 
 <a name="PayoutsList400Response"></a>
-## type [PayoutsList400Response](<https://github.com/sumup/sumup-go/blob/main/payouts.go#L127>)
+## type [PayoutsList400Response](<https://github.com/sumup/sumup-go/blob/main/payouts.go#L131>)
 
 PayoutsList400Response is a schema definition.
 
 ```go
 type PayoutsList400Response []ErrorExtended
 ```
+
+<a name="PayoutsList400Response.Error"></a>
+### func \(\*PayoutsList400Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/payouts.go#L133>)
+
+```go
+func (e *PayoutsList400Response) Error() string
+```
+
+
 
 <a name="PayoutsListDeprecated400Response"></a>
 ## type [PayoutsListDeprecated400Response](<https://github.com/sumup/sumup-go/blob/main/payouts.go#L122>)
@@ -3474,6 +3485,15 @@ PayoutsListDeprecated400Response is a schema definition.
 ```go
 type PayoutsListDeprecated400Response []ErrorExtended
 ```
+
+<a name="PayoutsListDeprecated400Response.Error"></a>
+### func \(\*PayoutsListDeprecated400Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/payouts.go#L124>)
+
+```go
+func (e *PayoutsListDeprecated400Response) Error() string
+```
+
+
 
 <a name="PayoutsListDeprecatedParams"></a>
 ## type [PayoutsListDeprecatedParams](<https://github.com/sumup/sumup-go/blob/main/payouts.go#L54-L62>)
