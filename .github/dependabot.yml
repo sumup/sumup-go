@@ -7,9 +7,6 @@ updates:
       interval: "weekly"
     cooldown:
       default-days: 7
-    commit-message:
-      prefix: chore
-      include: scope
   - package-ecosystem: "gomod"
     directory: "/"
     open-pull-requests-limit: 5
@@ -17,9 +14,6 @@ updates:
       interval: "weekly"
     cooldown:
       default-days: 7
-    commit-message:
-      prefix: chore
-      include: scope
   - package-ecosystem: "gomod"
     directory: "/internal/cmd/codegen"
     open-pull-requests-limit: 5
@@ -27,6 +21,3 @@ updates:
       interval: "weekly"
     cooldown:
       default-days: 7
-    commit-message:
-      prefix: chore
-      include: scope
