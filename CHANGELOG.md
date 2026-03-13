@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.15.1](https://github.com/sumup/sumup-go/compare/v0.15.0...v0.15.1) (2026-03-13)
+
+
+### Bug Fixes
+
+* **client:** send problem+json accept header ([#213](https://github.com/sumup/sumup-go/issues/213)) ([8fd6477](https://github.com/sumup/sumup-go/commit/8fd6477fe1a1a48bbaed9343acbe7a78422cd7ef))
+* **codegen:** prefer problem+json for response schemas ([#215](https://github.com/sumup/sumup-go/issues/215)) ([ab3cd5e](https://github.com/sumup/sumup-go/commit/ab3cd5e76e1493bfa56d20ab271153a9c1d7be25))
+
 ## [0.15.0](https://github.com/sumup/sumup-go/compare/v0.14.1...v0.15.0) (2026-02-23)
 
 
