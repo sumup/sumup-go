@@ -6051,7 +6051,7 @@ const APIVersion = "1.0.0"
 <a name="Version"></a>
 
 ```go
-const Version = "0.15.0" // x-release-please-version
+const Version = "0.15.1" // x-release-please-version
 ```
 
 # nullable
