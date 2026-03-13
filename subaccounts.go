@@ -142,6 +142,13 @@ func (c *SubaccountsClient) ListSubAccounts(ctx context.Context, params Subaccou
 		}
 
 		return &v, nil
+	case http.StatusUnauthorized:
+		var apiErr Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	default:
 		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
@@ -199,6 +206,13 @@ func (c *SubaccountsClient) CompatGetOperator(ctx context.Context, operatorID in
 		}
 
 		return &v, nil
+	case http.StatusUnauthorized:
+		var apiErr Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	default:
 		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
