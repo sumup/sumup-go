@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.15.2](https://github.com/sumup/sumup-go/compare/v0.15.1...v0.15.2) (2026-03-13)
+
+
+### Chores
+
+* align release automation config ([#218](https://github.com/sumup/sumup-go/issues/218)) ([6c78308](https://github.com/sumup/sumup-go/commit/6c78308c4e78864162d65fd89d8dc43f75c35422))
+* **deps:** bump github/codeql-action from 4.32.4 to 4.32.6 ([#220](https://github.com/sumup/sumup-go/issues/220)) ([e781473](https://github.com/sumup/sumup-go/commit/e781473f1b020569426b16887714118de2ec7e50))
+* synced file(s) with sumup/apis ([#217](https://github.com/sumup/sumup-go/issues/217)) ([8eaf41d](https://github.com/sumup/sumup-go/commit/8eaf41d530b6f51d1f422e562a84cc0bf2adddfd))
+
 ## [0.15.1](https://github.com/sumup/sumup-go/compare/v0.15.0...v0.15.1) (2026-03-13)
 
 
