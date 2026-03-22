@@ -31,11 +31,6 @@ type Card struct {
 	// Min length: 2
 	// Max length: 4
 	ExpiryYear string `json:"expiry_year"`
-	// Last 4 digits of the payment card number.
-	// Read only
-	// Min length: 4
-	// Max length: 4
-	Last4Digits string `json:"last_4_digits"`
 	// Name of the cardholder as it appears on the payment card.
 	// Write only
 	Name string `json:"name"`
@@ -212,16 +207,9 @@ type CheckoutCreateRequest struct {
 	// Unique identification of a customer. If specified, the checkout session and payment instrument are associated with
 	// the referenced customer.
 	CustomerID *string `json:"customer_id,omitempty"`
-	// Date and time of the creation of the payment checkout. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
-	//
-	// Read only
-	Date *time.Time `json:"date,omitempty"`
 	// Short description of the checkout visible in the SumUp dashboard. The description can contribute to reporting, allowing
 	// easier identification of a checkout.
 	Description *string `json:"description,omitempty"`
-	// Unique ID of the checkout resource.
-	// Read only
-	ID *string `json:"id,omitempty"`
 	// Unique identifying code of the merchant profile.
 	MerchantCode string `json:"merchant_code"`
 	// Purpose of the checkout.
@@ -236,13 +224,6 @@ type CheckoutCreateRequest struct {
 	// URL to which the SumUp platform sends the processing status of the payment checkout.
 	// Format: uri
 	ReturnURL *string `json:"return_url,omitempty"`
-	// Current status of the checkout.
-	// Read only
-	Status *CheckoutCreateRequestStatus `json:"status,omitempty"`
-	// List of transactions related to the payment.
-	// Read only
-	// Unique items only
-	Transactions []CheckoutCreateRequestTransaction `json:"transactions,omitempty"`
 	// Date and time of the checkout expiration before which the client application needs to send a processing request.
 	// If no value is present, the checkout does not have an expiration time.
 	ValidUntil *nullable.Field[time.Time] `json:"valid_until,omitempty"`
@@ -255,61 +236,6 @@ type CheckoutCreateRequestPurpose string
 const (
 	CheckoutCreateRequestPurposeCheckout              CheckoutCreateRequestPurpose = "CHECKOUT"
 	CheckoutCreateRequestPurposeSetupRecurringPayment CheckoutCreateRequestPurpose = "SETUP_RECURRING_PAYMENT"
-)
-
-// Current status of the checkout.
-// Read only
-type CheckoutCreateRequestStatus string
-
-const (
-	CheckoutCreateRequestStatusFailed  CheckoutCreateRequestStatus = "FAILED"
-	CheckoutCreateRequestStatusPaid    CheckoutCreateRequestStatus = "PAID"
-	CheckoutCreateRequestStatusPending CheckoutCreateRequestStatus = "PENDING"
-)
-
-// CheckoutCreateRequestTransaction is a schema definition.
-type CheckoutCreateRequestTransaction struct {
-	// Total amount of the transaction.
-	Amount *float32 `json:"amount,omitempty"`
-	// Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
-	AuthCode *string `json:"auth_code,omitempty"`
-	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
-	// currency values are enumerated above.
-	Currency *Currency `json:"currency,omitempty"`
-	// Entry mode of the payment details.
-	EntryMode *EntryMode `json:"entry_mode,omitempty"`
-	// Unique ID of the transaction.
-	ID *string `json:"id,omitempty"`
-	// Current number of the installment for deferred payments.
-	// Min: 1
-	InstallmentsCount *int `json:"installments_count,omitempty"`
-	// Internal unique ID of the transaction on the SumUp platform.
-	// Format: int64
-	InternalID *int64 `json:"internal_id,omitempty"`
-	// Unique code of the registered merchant to whom the payment is made.
-	MerchantCode *string `json:"merchant_code,omitempty"`
-	// Payment type used for the transaction.
-	PaymentType *PaymentType `json:"payment_type,omitempty"`
-	// Current status of the transaction.
-	Status *CheckoutCreateRequestTransactionStatus `json:"status,omitempty"`
-	// Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
-	Timestamp *time.Time `json:"timestamp,omitempty"`
-	// Amount of the tip (out of the total transaction amount).
-	TipAmount *float32 `json:"tip_amount,omitempty"`
-	// Transaction code returned by the acquirer/processing entity after processing the transaction.
-	TransactionCode *string `json:"transaction_code,omitempty"`
-	// Amount of the applicable VAT (out of the total transaction amount).
-	VATAmount *float32 `json:"vat_amount,omitempty"`
-}
-
-// Current status of the transaction.
-type CheckoutCreateRequestTransactionStatus string
-
-const (
-	CheckoutCreateRequestTransactionStatusCancelled  CheckoutCreateRequestTransactionStatus = "CANCELLED"
-	CheckoutCreateRequestTransactionStatusFailed     CheckoutCreateRequestTransactionStatus = "FAILED"
-	CheckoutCreateRequestTransactionStatusPending    CheckoutCreateRequestTransactionStatus = "PENDING"
-	CheckoutCreateRequestTransactionStatusSuccessful CheckoutCreateRequestTransactionStatus = "SUCCESSFUL"
 )
 
 // Checkout response returned after a successful processing attempt.
