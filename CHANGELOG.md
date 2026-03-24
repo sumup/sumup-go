@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.15.2](https://github.com/sumup/sumup-go/compare/v0.15.1...v0.15.2) (2026-03-24)
+
+
+### Chores
+
+* align release automation config ([#218](https://github.com/sumup/sumup-go/issues/218)) ([6c78308](https://github.com/sumup/sumup-go/commit/6c78308c4e78864162d65fd89d8dc43f75c35422))
+* **deps:** bump actions/create-github-app-token from 2.2.1 to 3.0.0 ([#224](https://github.com/sumup/sumup-go/issues/224)) ([8756651](https://github.com/sumup/sumup-go/commit/875665133cf821cffc15920d5ed1732e98337e28))
+* **deps:** bump github.com/buger/jsonparser from 1.1.1 to 1.1.2 in /internal/cmd/codegen in the go_modules group across 1 directory ([#222](https://github.com/sumup/sumup-go/issues/222)) ([35167c8](https://github.com/sumup/sumup-go/commit/35167c8d88e7954fca57e48c140403d55d1ed704))
+* **deps:** bump github.com/pb33f/libopenapi from 0.34.0 to 0.34.1 in /internal/cmd/codegen ([#221](https://github.com/sumup/sumup-go/issues/221)) ([90458a5](https://github.com/sumup/sumup-go/commit/90458a52e92ecf116c419c62bbed2eb54334b3f4))
+* **deps:** bump github.com/pb33f/libopenapi from 0.34.1 to 0.34.3 in /internal/cmd/codegen ([#225](https://github.com/sumup/sumup-go/issues/225)) ([1b8a142](https://github.com/sumup/sumup-go/commit/1b8a1425e4d84e87b0990e5885296d1c6f7ca70d))
+* **deps:** bump github.com/pb33f/libopenapi from 0.34.1 to 0.34.3 in /internal/cmd/codegen ([#225](https://github.com/sumup/sumup-go/issues/225)) ([3cfe220](https://github.com/sumup/sumup-go/commit/3cfe220cdc37b9332fe790365487cd9b3bfc8bd7))
+* **deps:** bump github/codeql-action from 4.32.4 to 4.32.6 ([#220](https://github.com/sumup/sumup-go/issues/220)) ([e781473](https://github.com/sumup/sumup-go/commit/e781473f1b020569426b16887714118de2ec7e50))
+* synced file(s) with sumup/apis ([#217](https://github.com/sumup/sumup-go/issues/217)) ([8eaf41d](https://github.com/sumup/sumup-go/commit/8eaf41d530b6f51d1f422e562a84cc0bf2adddfd))
+* synced file(s) with sumup/apis ([#223](https://github.com/sumup/sumup-go/issues/223)) ([ac9ddd7](https://github.com/sumup/sumup-go/commit/ac9ddd710176a254cc14de0264595da61e5a35b4))
+* synced file(s) with sumup/apis ([#226](https://github.com/sumup/sumup-go/issues/226)) ([0e9bd29](https://github.com/sumup/sumup-go/commit/0e9bd29c6142d12d63dec57c74e254f42f7972cb))
+* synced file(s) with sumup/apis ([#227](https://github.com/sumup/sumup-go/issues/227)) ([86f92e4](https://github.com/sumup/sumup-go/commit/86f92e4c9cc64b83f0a45a79c2f42cd2122cbd10))
+
 ## [0.15.1](https://github.com/sumup/sumup-go/compare/v0.15.0...v0.15.1) (2026-03-13)
 
 
