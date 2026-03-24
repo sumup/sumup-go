@@ -3880,7 +3880,7 @@ func (c *ReadersClient) CreateCheckout(ctx context.Context, merchantCode string,
 
 Creates a Checkout for a Reader.
 
-This process is asynchronous and the actual transaction may take some time to be stared on the device.
+This process is asynchronous and the actual transaction may take some time to be started on the device.
 
 There are some caveats when using this endpoint: \* The target device must be online, otherwise checkout won't be accepted \* After the checkout is accepted, the system has 60 seconds to start the payment on the target device. During this time, any other checkout for the same device will be rejected.
 
