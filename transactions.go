@@ -82,6 +82,7 @@ const (
 	EntryModeFilterQrCodePix            EntryModeFilter = "QR_CODE_PIX"
 	EntryModeFilterSatispay             EntryModeFilter = "SATISPAY"
 	EntryModeFilterSofort               EntryModeFilter = "SOFORT"
+	EntryModeFilterTwint                EntryModeFilter = "TWINT"
 )
 
 // Transaction event details.
@@ -122,6 +123,10 @@ type Link struct {
 	// URL for accessing the related resource.
 	// Format: uri
 	Href *string `json:"href,omitempty"`
+	// Maximum allowed amount for the refund.
+	MaxAmount *float32 `json:"max_amount,omitempty"`
+	// Minimum allowed amount for the refund.
+	MinAmount *float32 `json:"min_amount,omitempty"`
 	// Specifies the relation to the current resource.
 	Rel *string `json:"rel,omitempty"`
 	// Specifies the media type of the related resource.
