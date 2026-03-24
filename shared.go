@@ -112,6 +112,7 @@ const (
 	EntryModeQrCodePix            EntryMode = "qr code pix"
 	EntryModeSatispay             EntryMode = "satispay"
 	EntryModeSofort               EntryMode = "sofort"
+	EntryModeTwint                EntryMode = "twint"
 )
 
 // Error message structure.
