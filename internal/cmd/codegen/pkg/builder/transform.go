@@ -161,8 +161,16 @@ func (b *Builder) pathsToParamTypes(tagName string, paths *v3.Paths) []Writable 
 					}
 
 					name := param.Name
+					paramTypeName := typeName + strcase.ToCamel(name)
+					if p != nil && p.Reference != "" {
+						paramTypeName = typeName + strcase.ToCamel(strings.TrimPrefix(p.Reference, "#/components/parameters/"))
+					}
 
 					typ := b.convertToValidGoType("", param.Schema)
+					if enumTypeName, additionalTypes, ok := generateParamEnumType(param.Schema, paramTypeName); ok {
+						typ = enumTypeName
+						paramTypes = append(paramTypes, additionalTypes...)
+					}
 
 					optional := param.Required == nil || !*param.Required
 					pointer := shouldUsePointer(optional, param.Schema, typ)
@@ -193,6 +201,44 @@ func (b *Builder) pathsToParamTypes(tagName string, paths *v3.Paths) []Writable 
 	}
 
 	return paramTypes
+}
+
+func generateParamEnumType(schema *base.SchemaProxy, name string) (string, []Writable, bool) {
+	if schema == nil || schema.IsReference() || schema.Schema() == nil {
+		return "", nil, false
+	}
+
+	spec := schema.Schema()
+	if len(spec.Enum) > 0 {
+		enum := createEnum(spec, name)
+		if enum == nil {
+			return "", nil, false
+		}
+		enumType := enumTypeDeclaration(enum)
+		if enumType == nil {
+			return "", nil, false
+		}
+		return enumType.Name, []Writable{enum}, true
+	}
+
+	if !slices.Contains(spec.Type, "array") || spec.Items == nil || !spec.Items.IsA() || spec.Items.A == nil {
+		return "", nil, false
+	}
+
+	itemSchema := spec.Items.A
+	if itemSchema.IsReference() || itemSchema.Schema() == nil || len(itemSchema.Schema().Enum) == 0 {
+		return "", nil, false
+	}
+
+	enum := createEnum(itemSchema.Schema(), name+"Item")
+	if enum == nil {
+		return "", nil, false
+	}
+	enumType := enumTypeDeclaration(enum)
+	if enumType == nil {
+		return "", nil, false
+	}
+	return "[]" + enumType.Name, []Writable{enum}, true
 }
 
 // pathsToResponseTypes generates response types for operations. This is responsible only for inlined

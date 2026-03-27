@@ -495,6 +495,35 @@ type TransactionsRefundParams struct {
 	Amount *float32 `json:"amount,omitempty"`
 }
 
+// TransactionsListDeprecatedOrder is a schema definition.
+// Default: ascending
+type TransactionsListDeprecatedOrder string
+
+const (
+	TransactionsListDeprecatedOrderAscending  TransactionsListDeprecatedOrder = "ascending"
+	TransactionsListDeprecatedOrderDescending TransactionsListDeprecatedOrder = "descending"
+)
+
+// TransactionsListDeprecatedStatusesItem is a schema definition.
+type TransactionsListDeprecatedStatusesItem string
+
+const (
+	TransactionsListDeprecatedStatusesItemCancelled  TransactionsListDeprecatedStatusesItem = "CANCELLED"
+	TransactionsListDeprecatedStatusesItemChargeBack TransactionsListDeprecatedStatusesItem = "CHARGE_BACK"
+	TransactionsListDeprecatedStatusesItemFailed     TransactionsListDeprecatedStatusesItem = "FAILED"
+	TransactionsListDeprecatedStatusesItemRefunded   TransactionsListDeprecatedStatusesItem = "REFUNDED"
+	TransactionsListDeprecatedStatusesItemSuccessful TransactionsListDeprecatedStatusesItem = "SUCCESSFUL"
+)
+
+// TransactionsListDeprecatedTypesItem is a schema definition.
+type TransactionsListDeprecatedTypesItem string
+
+const (
+	TransactionsListDeprecatedTypesItemChargeBack TransactionsListDeprecatedTypesItem = "CHARGE_BACK"
+	TransactionsListDeprecatedTypesItemPayment    TransactionsListDeprecatedTypesItem = "PAYMENT"
+	TransactionsListDeprecatedTypesItemRefund     TransactionsListDeprecatedTypesItem = "REFUND"
+)
+
 // TransactionsListDeprecatedParams are query parameters for ListTransactions.
 type TransactionsListDeprecatedParams struct {
 	// Filters the results by the latest modification time of resources and returns only transactions that are modified
@@ -518,15 +547,15 @@ type TransactionsListDeprecatedParams struct {
 	// or after* the specified timestamp (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
 	OldestTime *time.Time
 	// Specifies the order in which the returned results are displayed.
-	Order *string
+	Order *TransactionsListDeprecatedOrder
 	// Filters the returned results by the specified list of payment types used for the transactions.
 	PaymentTypes []PaymentType
 	// Filters the returned results by the specified list of final statuses of the transactions.
-	Statuses []string
+	Statuses []TransactionsListDeprecatedStatusesItem
 	// Retrieves the transaction resource with the specified transaction code.
 	TransactionCode *string
 	// Filters the returned results by the specified list of transaction types.
-	Types []string
+	Types []TransactionsListDeprecatedTypesItem
 	// Filters the returned results by user email.
 	Users []string
 }
@@ -560,7 +589,7 @@ func (p *TransactionsListDeprecatedParams) QueryValues() url.Values {
 	}
 
 	if p.Order != nil {
-		q.Set("order", *p.Order)
+		q.Set("order", string(*p.Order))
 	}
 
 	for _, v := range p.PaymentTypes {
@@ -568,7 +597,7 @@ func (p *TransactionsListDeprecatedParams) QueryValues() url.Values {
 	}
 
 	for _, v := range p.Statuses {
-		q.Add("statuses[]", v)
+		q.Add("statuses[]", string(v))
 	}
 
 	if p.TransactionCode != nil {
@@ -576,7 +605,7 @@ func (p *TransactionsListDeprecatedParams) QueryValues() url.Values {
 	}
 
 	for _, v := range p.Types {
-		q.Add("types", v)
+		q.Add("types", string(v))
 	}
 
 	for _, v := range p.Users {
@@ -616,6 +645,35 @@ func (p *TransactionsGetDeprecatedParams) QueryValues() url.Values {
 	return q
 }
 
+// TransactionsListOrder is a schema definition.
+// Default: ascending
+type TransactionsListOrder string
+
+const (
+	TransactionsListOrderAscending  TransactionsListOrder = "ascending"
+	TransactionsListOrderDescending TransactionsListOrder = "descending"
+)
+
+// TransactionsListStatusesItem is a schema definition.
+type TransactionsListStatusesItem string
+
+const (
+	TransactionsListStatusesItemCancelled  TransactionsListStatusesItem = "CANCELLED"
+	TransactionsListStatusesItemChargeBack TransactionsListStatusesItem = "CHARGE_BACK"
+	TransactionsListStatusesItemFailed     TransactionsListStatusesItem = "FAILED"
+	TransactionsListStatusesItemRefunded   TransactionsListStatusesItem = "REFUNDED"
+	TransactionsListStatusesItemSuccessful TransactionsListStatusesItem = "SUCCESSFUL"
+)
+
+// TransactionsListTypesItem is a schema definition.
+type TransactionsListTypesItem string
+
+const (
+	TransactionsListTypesItemChargeBack TransactionsListTypesItem = "CHARGE_BACK"
+	TransactionsListTypesItemPayment    TransactionsListTypesItem = "PAYMENT"
+	TransactionsListTypesItemRefund     TransactionsListTypesItem = "REFUND"
+)
+
 // TransactionsListParams are query parameters for ListTransactionsV2.1.
 type TransactionsListParams struct {
 	// Filters the results by the latest modification time of resources and returns only transactions that are modified
@@ -641,15 +699,15 @@ type TransactionsListParams struct {
 	// or after* the specified timestamp (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
 	OldestTime *time.Time
 	// Specifies the order in which the returned results are displayed.
-	Order *string
+	Order *TransactionsListOrder
 	// Filters the returned results by the specified list of payment types used for the transactions.
 	PaymentTypes []PaymentType
 	// Filters the returned results by the specified list of final statuses of the transactions.
-	Statuses []string
+	Statuses []TransactionsListStatusesItem
 	// Retrieves the transaction resource with the specified transaction code.
 	TransactionCode *string
 	// Filters the returned results by the specified list of transaction types.
-	Types []string
+	Types []TransactionsListTypesItem
 	// Filters the returned results by user email.
 	Users []string
 }
@@ -687,7 +745,7 @@ func (p *TransactionsListParams) QueryValues() url.Values {
 	}
 
 	if p.Order != nil {
-		q.Set("order", *p.Order)
+		q.Set("order", string(*p.Order))
 	}
 
 	for _, v := range p.PaymentTypes {
@@ -695,7 +753,7 @@ func (p *TransactionsListParams) QueryValues() url.Values {
 	}
 
 	for _, v := range p.Statuses {
-		q.Add("statuses[]", v)
+		q.Add("statuses[]", string(v))
 	}
 
 	if p.TransactionCode != nil {
@@ -703,7 +761,7 @@ func (p *TransactionsListParams) QueryValues() url.Values {
 	}
 
 	for _, v := range p.Types {
-		q.Add("types", v)
+		q.Add("types", string(v))
 	}
 
 	for _, v := range p.Users {
