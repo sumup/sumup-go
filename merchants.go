@@ -195,6 +195,7 @@ type BusinessProfile struct {
 	Branding *Branding `json:"branding,omitempty"`
 	// The descriptor is the text that your customer sees on their bank account statement.
 	// The more recognisable your descriptor is, the less risk you have of receiving disputes (e.g. chargebacks).
+	// Min length: 1
 	// Max length: 30
 	// Pattern: ^[a-zA-Z0-9 \-+\'_.]{0,30}$
 	DynamicDescriptor *string `json:"dynamic_descriptor,omitempty"`
@@ -202,12 +203,14 @@ type BusinessProfile struct {
 	// Max length: 256
 	Email *string `json:"email,omitempty"`
 	// The customer-facing business name.
+	// Min length: 1
 	// Max length: 512
 	Name *string `json:"name,omitempty"`
 	// A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
 	// Max length: 64
 	PhoneNumber *PhoneNumber `json:"phone_number,omitempty"`
 	// The business's publicly available website.
+	// Format: uri
 	// Max length: 512
 	Website *string `json:"website,omitempty"`
 }
@@ -256,6 +259,7 @@ type Company struct {
 	// Pattern: ^[0-9]{4}$
 	MerchantCategoryCode *string `json:"merchant_category_code,omitempty"`
 	// The company's legal name.
+	// Min length: 1
 	// Max length: 512
 	Name *string `json:"name,omitempty"`
 	// A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
@@ -269,6 +273,7 @@ type Company struct {
 	// Address documentation: https://backstage.sumup.net/docs/default/Component/merchants/merchant/#addresses
 	TradingAddress *Address `json:"trading_address,omitempty"`
 	// HTTP(S) URL of the company's website.
+	// Format: uri
 	// Max length: 255
 	Website *nullable.Field[string] `json:"website,omitempty"`
 }
@@ -316,7 +321,7 @@ type Merchant struct {
 	Alias *string `json:"alias,omitempty"`
 	// A user-facing small-format logo for use in dashboards and other user-facing applications. For customer-facing branding
 	// see `merchant.business_profile.branding`.
-	// Format: url
+	// Format: uri
 	Avatar *string `json:"avatar,omitempty"`
 	// Business information about the merchant. This information will be visible to the merchant's customers.
 	BusinessProfile *BusinessProfile `json:"business_profile,omitempty"`
