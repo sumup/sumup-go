@@ -52,39 +52,6 @@ type ElvCardAccount struct {
 	SortCode *string `json:"sort_code,omitempty"`
 }
 
-// Entry mode value accepted by the `entry_modes[]` filter.
-type EntryModeFilter string
-
-const (
-	EntryModeFilterApplePay             EntryModeFilter = "APPLE_PAY"
-	EntryModeFilterBancontact           EntryModeFilter = "BANCONTACT"
-	EntryModeFilterBlik                 EntryModeFilter = "BLIK"
-	EntryModeFilterBoleto               EntryModeFilter = "BOLETO"
-	EntryModeFilterChip                 EntryModeFilter = "CHIP"
-	EntryModeFilterContactless          EntryModeFilter = "CONTACTLESS"
-	EntryModeFilterContactlessMagstripe EntryModeFilter = "CONTACTLESS_MAGSTRIPE"
-	EntryModeFilterCustomerEntry        EntryModeFilter = "CUSTOMER_ENTRY"
-	EntryModeFilterDirectDebit          EntryModeFilter = "DIRECT_DEBIT"
-	EntryModeFilterEps                  EntryModeFilter = "EPS"
-	EntryModeFilterGiropay              EntryModeFilter = "GIROPAY"
-	EntryModeFilterGooglePay            EntryModeFilter = "GOOGLE_PAY"
-	EntryModeFilterIdeal                EntryModeFilter = "IDEAL"
-	EntryModeFilterMagstripe            EntryModeFilter = "MAGSTRIPE"
-	EntryModeFilterMagstripeFallback    EntryModeFilter = "MAGSTRIPE_FALLBACK"
-	EntryModeFilterManualEntry          EntryModeFilter = "MANUAL_ENTRY"
-	EntryModeFilterMoto                 EntryModeFilter = "MOTO"
-	EntryModeFilterMybank               EntryModeFilter = "MYBANK"
-	EntryModeFilterNA                   EntryModeFilter = "N/A"
-	EntryModeFilterNone                 EntryModeFilter = "NONE"
-	EntryModeFilterP24                  EntryModeFilter = "P24"
-	EntryModeFilterPaypal               EntryModeFilter = "PAYPAL"
-	EntryModeFilterPix                  EntryModeFilter = "PIX"
-	EntryModeFilterQrCodePix            EntryModeFilter = "QR_CODE_PIX"
-	EntryModeFilterSatispay             EntryModeFilter = "SATISPAY"
-	EntryModeFilterSofort               EntryModeFilter = "SOFORT"
-	EntryModeFilterTwint                EntryModeFilter = "TWINT"
-)
-
 // Transaction event details.
 type Event struct {
 	// Amount of the event.
@@ -655,7 +622,7 @@ type TransactionsListParams struct {
 	// *at or after* the specified timestamp (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
 	ChangesSince *time.Time
 	// Filters the returned results by the specified list of entry modes.
-	EntryModes []EntryModeFilter
+	EntryModes []EntryMode
 	// Specifies the maximum number of results per page. Value must be a positive integer and if not specified, will
 	// return 10 results.
 	Limit *int

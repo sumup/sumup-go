@@ -76,21 +76,35 @@ type ReceiptMerchantData struct {
 
 // Merchant profile details displayed on the receipt.
 type ReceiptMerchantDataMerchantProfile struct {
-	Address      *ReceiptMerchantDataMerchantProfileAddress `json:"address,omitempty"`
-	BusinessName *string                                    `json:"business_name,omitempty"`
-	Email        *string                                    `json:"email,omitempty"`
-	MerchantCode *string                                    `json:"merchant_code,omitempty"`
+	Address                   *ReceiptMerchantDataMerchantProfileAddress `json:"address,omitempty"`
+	BusinessName              *string                                    `json:"business_name,omitempty"`
+	CompanyRegistrationNumber *string                                    `json:"company_registration_number,omitempty"`
+	Email                     *string                                    `json:"email,omitempty"`
+	Language                  *string                                    `json:"language,omitempty"`
+	MerchantCode              *string                                    `json:"merchant_code,omitempty"`
+	VATID                     *string                                    `json:"vat_id,omitempty"`
+	Website                   *string                                    `json:"website,omitempty"`
 }
 
 // ReceiptMerchantDataMerchantProfileAddress is a schema definition.
 type ReceiptMerchantDataMerchantProfileAddress struct {
 	AddressLine1      *string `json:"address_line_1,omitempty"`
+	AddressLine2      *string `json:"address_line_2,omitempty"`
 	City              *string `json:"city,omitempty"`
 	Country           *string `json:"country,omitempty"`
 	CountryEnName     *string `json:"country_en_name,omitempty"`
 	CountryNativeName *string `json:"country_native_name,omitempty"`
 	Landline          *string `json:"landline,omitempty"`
 	PostCode          *string `json:"post_code,omitempty"`
+	RegionName        *string `json:"region_name,omitempty"`
+}
+
+// Card reader details displayed on the receipt.
+type ReceiptReader struct {
+	// Reader serial number.
+	Code *string `json:"code,omitempty"`
+	// Reader type.
+	Type *string `json:"type,omitempty"`
 }
 
 // Transaction information.
@@ -99,6 +113,8 @@ type ReceiptTransaction struct {
 	Amount *string `json:"amount,omitempty"`
 	// Payment card details displayed on the receipt.
 	Card *ReceiptCard `json:"card,omitempty"`
+	// Card reader details displayed on the receipt.
+	CardReader *ReceiptReader `json:"card_reader,omitempty"`
 	// Transaction currency.
 	Currency *string `json:"currency,omitempty"`
 	// Transaction entry mode.
@@ -107,8 +123,12 @@ type ReceiptTransaction struct {
 	Events []ReceiptEvent `json:"events,omitempty"`
 	// Number of installments.
 	InstallmentsCount *int `json:"installments_count,omitempty"`
+	// Merchant code.
+	MerchantCode *string `json:"merchant_code,omitempty"`
 	// Transaction type.
 	PaymentType *string `json:"payment_type,omitempty"`
+	// Debit/Credit.
+	ProcessAs *ReceiptTransactionProcessA `json:"process_as,omitempty"`
 	// Products
 	Products []ReceiptTransactionProduct `json:"products,omitempty"`
 	// Receipt number
@@ -121,6 +141,8 @@ type ReceiptTransaction struct {
 	TipAmount *string `json:"tip_amount,omitempty"`
 	// Transaction code.
 	TransactionCode *string `json:"transaction_code,omitempty"`
+	// Unique ID of the transaction.
+	TransactionID *TransactionID `json:"transaction_id,omitempty"`
 	// Transaction VAT amount.
 	VATAmount *string `json:"vat_amount,omitempty"`
 	// Vat rates.
@@ -129,8 +151,18 @@ type ReceiptTransaction struct {
 	VerificationMethod *string `json:"verification_method,omitempty"`
 }
 
+// Debit/Credit.
+type ReceiptTransactionProcessA string
+
+const (
+	ReceiptTransactionProcessACredit ReceiptTransactionProcessA = "CREDIT"
+	ReceiptTransactionProcessADebit  ReceiptTransactionProcessA = "DEBIT"
+)
+
 // ReceiptTransactionProduct is a schema definition.
 type ReceiptTransactionProduct struct {
+	// Product description
+	Description *string `json:"description,omitempty"`
 	// Product name
 	Name *string `json:"name,omitempty"`
 	// Product price
