@@ -107,7 +107,6 @@ import "github.com/sumup/sumup-go"
 - [type Device](<#Device>)
 - [type ElvCardAccount](<#ElvCardAccount>)
 - [type EntryMode](<#EntryMode>)
-- [type EntryModeFilter](<#EntryModeFilter>)
 - [type Error](<#Error>)
   - [func \(e \*Error\) Error\(\) string](<#Error.Error>)
 - [type ErrorExtended](<#ErrorExtended>)
@@ -234,7 +233,9 @@ import "github.com/sumup/sumup-go"
 - [type ReceiptMerchantData](<#ReceiptMerchantData>)
 - [type ReceiptMerchantDataMerchantProfile](<#ReceiptMerchantDataMerchantProfile>)
 - [type ReceiptMerchantDataMerchantProfileAddress](<#ReceiptMerchantDataMerchantProfileAddress>)
+- [type ReceiptReader](<#ReceiptReader>)
 - [type ReceiptTransaction](<#ReceiptTransaction>)
+- [type ReceiptTransactionProcessA](<#ReceiptTransactionProcessA>)
 - [type ReceiptTransactionProduct](<#ReceiptTransactionProduct>)
 - [type ReceiptTransactionVATRate](<#ReceiptTransactionVATRate>)
 - [type ReceiptsClient](<#ReceiptsClient>)
@@ -2068,76 +2069,33 @@ type EntryMode string
 
 ```go
 const (
-    EntryModeApplePay             EntryMode = "apple pay"
-    EntryModeBancontact           EntryMode = "bancontact"
-    EntryModeBlik                 EntryMode = "blik"
-    EntryModeBoleto               EntryMode = "boleto"
-    EntryModeChip                 EntryMode = "chip"
-    EntryModeContactless          EntryMode = "contactless"
-    EntryModeContactlessMagstripe EntryMode = "contactless magstripe"
-    EntryModeCustomerEntry        EntryMode = "customer entry"
-    EntryModeDirectDebit          EntryMode = "direct debit"
-    EntryModeEps                  EntryMode = "eps"
-    EntryModeGiropay              EntryMode = "giropay"
-    EntryModeGooglePay            EntryMode = "google pay"
-    EntryModeIdeal                EntryMode = "ideal"
-    EntryModeMagstripe            EntryMode = "magstripe"
-    EntryModeMagstripeFallback    EntryMode = "magstripe fallback"
-    EntryModeManualEntry          EntryMode = "manual entry"
-    EntryModeMoto                 EntryMode = "moto"
-    EntryModeMybank               EntryMode = "mybank"
-    EntryModeNa                   EntryMode = "na"
-    EntryModeNone                 EntryMode = "none"
-    EntryModeP24                  EntryMode = "p24"
-    EntryModePaypal               EntryMode = "paypal"
-    EntryModePix                  EntryMode = "pix"
-    EntryModeQrCodePix            EntryMode = "qr code pix"
-    EntryModeSatispay             EntryMode = "satispay"
-    EntryModeSofort               EntryMode = "sofort"
-    EntryModeTwint                EntryMode = "twint"
-)
-```
-
-<a name="EntryModeFilter"></a>
-## type [EntryModeFilter](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L56>)
-
-Entry mode value accepted by the \`entry\_modes\[\]\` filter.
-
-```go
-type EntryModeFilter string
-```
-
-<a name="EntryModeFilterApplePay"></a>
-
-```go
-const (
-    EntryModeFilterApplePay             EntryModeFilter = "APPLE_PAY"
-    EntryModeFilterBancontact           EntryModeFilter = "BANCONTACT"
-    EntryModeFilterBlik                 EntryModeFilter = "BLIK"
-    EntryModeFilterBoleto               EntryModeFilter = "BOLETO"
-    EntryModeFilterChip                 EntryModeFilter = "CHIP"
-    EntryModeFilterContactless          EntryModeFilter = "CONTACTLESS"
-    EntryModeFilterContactlessMagstripe EntryModeFilter = "CONTACTLESS_MAGSTRIPE"
-    EntryModeFilterCustomerEntry        EntryModeFilter = "CUSTOMER_ENTRY"
-    EntryModeFilterDirectDebit          EntryModeFilter = "DIRECT_DEBIT"
-    EntryModeFilterEps                  EntryModeFilter = "EPS"
-    EntryModeFilterGiropay              EntryModeFilter = "GIROPAY"
-    EntryModeFilterGooglePay            EntryModeFilter = "GOOGLE_PAY"
-    EntryModeFilterIdeal                EntryModeFilter = "IDEAL"
-    EntryModeFilterMagstripe            EntryModeFilter = "MAGSTRIPE"
-    EntryModeFilterMagstripeFallback    EntryModeFilter = "MAGSTRIPE_FALLBACK"
-    EntryModeFilterManualEntry          EntryModeFilter = "MANUAL_ENTRY"
-    EntryModeFilterMoto                 EntryModeFilter = "MOTO"
-    EntryModeFilterMybank               EntryModeFilter = "MYBANK"
-    EntryModeFilterNA                   EntryModeFilter = "N/A"
-    EntryModeFilterNone                 EntryModeFilter = "NONE"
-    EntryModeFilterP24                  EntryModeFilter = "P24"
-    EntryModeFilterPaypal               EntryModeFilter = "PAYPAL"
-    EntryModeFilterPix                  EntryModeFilter = "PIX"
-    EntryModeFilterQrCodePix            EntryModeFilter = "QR_CODE_PIX"
-    EntryModeFilterSatispay             EntryModeFilter = "SATISPAY"
-    EntryModeFilterSofort               EntryModeFilter = "SOFORT"
-    EntryModeFilterTwint                EntryModeFilter = "TWINT"
+    EntryModeApplePay             EntryMode = "APPLE_PAY"
+    EntryModeBancontact           EntryMode = "BANCONTACT"
+    EntryModeBlik                 EntryMode = "BLIK"
+    EntryModeBoleto               EntryMode = "BOLETO"
+    EntryModeChip                 EntryMode = "CHIP"
+    EntryModeContactless          EntryMode = "CONTACTLESS"
+    EntryModeContactlessMagstripe EntryMode = "CONTACTLESS_MAGSTRIPE"
+    EntryModeCustomerEntry        EntryMode = "CUSTOMER_ENTRY"
+    EntryModeDirectDebit          EntryMode = "DIRECT_DEBIT"
+    EntryModeEps                  EntryMode = "EPS"
+    EntryModeGiropay              EntryMode = "GIROPAY"
+    EntryModeGooglePay            EntryMode = "GOOGLE_PAY"
+    EntryModeIdeal                EntryMode = "IDEAL"
+    EntryModeMagstripe            EntryMode = "MAGSTRIPE"
+    EntryModeMagstripeFallback    EntryMode = "MAGSTRIPE_FALLBACK"
+    EntryModeManualEntry          EntryMode = "MANUAL_ENTRY"
+    EntryModeMoto                 EntryMode = "MOTO"
+    EntryModeMybank               EntryMode = "MYBANK"
+    EntryModeNA                   EntryMode = "N/A"
+    EntryModeNone                 EntryMode = "NONE"
+    EntryModeP24                  EntryMode = "P24"
+    EntryModePaypal               EntryMode = "PAYPAL"
+    EntryModePix                  EntryMode = "PIX"
+    EntryModeQrCodePix            EntryMode = "QR_CODE_PIX"
+    EntryModeSatispay             EntryMode = "SATISPAY"
+    EntryModeSofort               EntryMode = "SOFORT"
+    EntryModeTwint                EntryMode = "TWINT"
 )
 ```
 
@@ -2217,7 +2175,7 @@ func (e *ErrorForbidden) Error() string
 
 
 <a name="Event"></a>
-## type [Event](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L89-L111>)
+## type [Event](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L56-L78>)
 
 Transaction event details.
 
@@ -2367,7 +2325,7 @@ type FinancialPayouts []FinancialPayout
 ```
 
 <a name="HorizontalAccuracy"></a>
-## type [HorizontalAccuracy](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L114>)
+## type [HorizontalAccuracy](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L81>)
 
 Indication of the precision of the geographical position received from the payment terminal.
 
@@ -2390,7 +2348,7 @@ type Invite struct {
 ```
 
 <a name="Lat"></a>
-## type [Lat](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L119>)
+## type [Lat](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L86>)
 
 Latitude value from the coordinates of the payment location \(as received from the payment terminal reader\). Min: 0 Max: 90
 
@@ -2410,7 +2368,7 @@ type LegalType string
 ```
 
 <a name="Link"></a>
-## type [Link](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L122-L134>)
+## type [Link](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L89-L101>)
 
 Details of a link to a related resource.
 
@@ -2442,7 +2400,7 @@ type ListPersonsResponseBody struct {
 ```
 
 <a name="Lon"></a>
-## type [Lon](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L139>)
+## type [Lon](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L106>)
 
 Longitude value from the coordinates of the payment location \(as received from the payment terminal reader\). Min: 0 Max: 180
 
@@ -3674,7 +3632,7 @@ const (
 ```
 
 <a name="Product"></a>
-## type [Product](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L142-L170>)
+## type [Product](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L109-L137>)
 
 Purchase product.
 
@@ -4143,38 +4101,58 @@ type ReceiptMerchantData struct {
 ```
 
 <a name="ReceiptMerchantDataMerchantProfile"></a>
-## type [ReceiptMerchantDataMerchantProfile](<https://github.com/sumup/sumup-go/blob/main/receipts.go#L78-L83>)
+## type [ReceiptMerchantDataMerchantProfile](<https://github.com/sumup/sumup-go/blob/main/receipts.go#L78-L87>)
 
 Merchant profile details displayed on the receipt.
 
 ```go
 type ReceiptMerchantDataMerchantProfile struct {
-    Address      *ReceiptMerchantDataMerchantProfileAddress `json:"address,omitempty"`
-    BusinessName *string                                    `json:"business_name,omitempty"`
-    Email        *string                                    `json:"email,omitempty"`
-    MerchantCode *string                                    `json:"merchant_code,omitempty"`
+    Address                   *ReceiptMerchantDataMerchantProfileAddress `json:"address,omitempty"`
+    BusinessName              *string                                    `json:"business_name,omitempty"`
+    CompanyRegistrationNumber *string                                    `json:"company_registration_number,omitempty"`
+    Email                     *string                                    `json:"email,omitempty"`
+    Language                  *string                                    `json:"language,omitempty"`
+    MerchantCode              *string                                    `json:"merchant_code,omitempty"`
+    VATID                     *string                                    `json:"vat_id,omitempty"`
+    Website                   *string                                    `json:"website,omitempty"`
 }
 ```
 
 <a name="ReceiptMerchantDataMerchantProfileAddress"></a>
-## type [ReceiptMerchantDataMerchantProfileAddress](<https://github.com/sumup/sumup-go/blob/main/receipts.go#L86-L94>)
+## type [ReceiptMerchantDataMerchantProfileAddress](<https://github.com/sumup/sumup-go/blob/main/receipts.go#L90-L100>)
 
 ReceiptMerchantDataMerchantProfileAddress is a schema definition.
 
 ```go
 type ReceiptMerchantDataMerchantProfileAddress struct {
     AddressLine1      *string `json:"address_line_1,omitempty"`
+    AddressLine2      *string `json:"address_line_2,omitempty"`
     City              *string `json:"city,omitempty"`
     Country           *string `json:"country,omitempty"`
     CountryEnName     *string `json:"country_en_name,omitempty"`
     CountryNativeName *string `json:"country_native_name,omitempty"`
     Landline          *string `json:"landline,omitempty"`
     PostCode          *string `json:"post_code,omitempty"`
+    RegionName        *string `json:"region_name,omitempty"`
+}
+```
+
+<a name="ReceiptReader"></a>
+## type [ReceiptReader](<https://github.com/sumup/sumup-go/blob/main/receipts.go#L103-L108>)
+
+Card reader details displayed on the receipt.
+
+```go
+type ReceiptReader struct {
+    // Reader serial number.
+    Code *string `json:"code,omitempty"`
+    // Reader type.
+    Type *string `json:"type,omitempty"`
 }
 ```
 
 <a name="ReceiptTransaction"></a>
-## type [ReceiptTransaction](<https://github.com/sumup/sumup-go/blob/main/receipts.go#L97-L130>)
+## type [ReceiptTransaction](<https://github.com/sumup/sumup-go/blob/main/receipts.go#L111-L152>)
 
 Transaction information.
 
@@ -4184,6 +4162,8 @@ type ReceiptTransaction struct {
     Amount *string `json:"amount,omitempty"`
     // Payment card details displayed on the receipt.
     Card *ReceiptCard `json:"card,omitempty"`
+    // Card reader details displayed on the receipt.
+    CardReader *ReceiptReader `json:"card_reader,omitempty"`
     // Transaction currency.
     Currency *string `json:"currency,omitempty"`
     // Transaction entry mode.
@@ -4192,8 +4172,12 @@ type ReceiptTransaction struct {
     Events []ReceiptEvent `json:"events,omitempty"`
     // Number of installments.
     InstallmentsCount *int `json:"installments_count,omitempty"`
+    // Merchant code.
+    MerchantCode *string `json:"merchant_code,omitempty"`
     // Transaction type.
     PaymentType *string `json:"payment_type,omitempty"`
+    // Debit/Credit.
+    ProcessAs *ReceiptTransactionProcessA `json:"process_as,omitempty"`
     // Products
     Products []ReceiptTransactionProduct `json:"products,omitempty"`
     // Receipt number
@@ -4206,6 +4190,8 @@ type ReceiptTransaction struct {
     TipAmount *string `json:"tip_amount,omitempty"`
     // Transaction code.
     TransactionCode *string `json:"transaction_code,omitempty"`
+    // Unique ID of the transaction.
+    TransactionID *TransactionID `json:"transaction_id,omitempty"`
     // Transaction VAT amount.
     VATAmount *string `json:"vat_amount,omitempty"`
     // Vat rates.
@@ -4215,13 +4201,33 @@ type ReceiptTransaction struct {
 }
 ```
 
+<a name="ReceiptTransactionProcessA"></a>
+## type [ReceiptTransactionProcessA](<https://github.com/sumup/sumup-go/blob/main/receipts.go#L155>)
+
+Debit/Credit.
+
+```go
+type ReceiptTransactionProcessA string
+```
+
+<a name="ReceiptTransactionProcessACredit"></a>
+
+```go
+const (
+    ReceiptTransactionProcessACredit ReceiptTransactionProcessA = "CREDIT"
+    ReceiptTransactionProcessADebit  ReceiptTransactionProcessA = "DEBIT"
+)
+```
+
 <a name="ReceiptTransactionProduct"></a>
-## type [ReceiptTransactionProduct](<https://github.com/sumup/sumup-go/blob/main/receipts.go#L133-L160>)
+## type [ReceiptTransactionProduct](<https://github.com/sumup/sumup-go/blob/main/receipts.go#L163-L192>)
 
 ReceiptTransactionProduct is a schema definition.
 
 ```go
 type ReceiptTransactionProduct struct {
+    // Product description
+    Description *string `json:"description,omitempty"`
     // Product name
     Name *string `json:"name,omitempty"`
     // Product price
@@ -4252,7 +4258,7 @@ type ReceiptTransactionProduct struct {
 ```
 
 <a name="ReceiptTransactionVATRate"></a>
-## type [ReceiptTransactionVATRate](<https://github.com/sumup/sumup-go/blob/main/receipts.go#L163-L172>)
+## type [ReceiptTransactionVATRate](<https://github.com/sumup/sumup-go/blob/main/receipts.go#L195-L204>)
 
 ReceiptTransactionVATRate is a schema definition.
 
@@ -4270,7 +4276,7 @@ type ReceiptTransactionVATRate struct {
 ```
 
 <a name="ReceiptsClient"></a>
-## type [ReceiptsClient](<https://github.com/sumup/sumup-go/blob/main/receipts.go#L195-L197>)
+## type [ReceiptsClient](<https://github.com/sumup/sumup-go/blob/main/receipts.go#L227-L229>)
 
 
 
@@ -4281,7 +4287,7 @@ type ReceiptsClient struct {
 ```
 
 <a name="NewReceiptsClient"></a>
-### func [NewReceiptsClient](<https://github.com/sumup/sumup-go/blob/main/receipts.go#L199>)
+### func [NewReceiptsClient](<https://github.com/sumup/sumup-go/blob/main/receipts.go#L231>)
 
 ```go
 func NewReceiptsClient(c *client.Client) *ReceiptsClient
@@ -4290,7 +4296,7 @@ func NewReceiptsClient(c *client.Client) *ReceiptsClient
 
 
 <a name="ReceiptsClient.Get"></a>
-### func \(\*ReceiptsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/receipts.go#L204>)
+### func \(\*ReceiptsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/receipts.go#L236>)
 
 ```go
 func (c *ReceiptsClient) Get(ctx context.Context, id string, params ReceiptsGetParams) (*Receipt, error)
@@ -4299,7 +4305,7 @@ func (c *ReceiptsClient) Get(ctx context.Context, id string, params ReceiptsGetP
 Retrieves receipt specific data for a transaction.
 
 <a name="ReceiptsGetParams"></a>
-## type [ReceiptsGetParams](<https://github.com/sumup/sumup-go/blob/main/receipts.go#L175-L180>)
+## type [ReceiptsGetParams](<https://github.com/sumup/sumup-go/blob/main/receipts.go#L207-L212>)
 
 ReceiptsGetParams are query parameters for GetReceipt.
 
@@ -4313,7 +4319,7 @@ type ReceiptsGetParams struct {
 ```
 
 <a name="ReceiptsGetParams.QueryValues"></a>
-### func \(\*ReceiptsGetParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/receipts.go#L183>)
+### func \(\*ReceiptsGetParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/receipts.go#L215>)
 
 ```go
 func (p *ReceiptsGetParams) QueryValues() url.Values
@@ -4815,7 +4821,7 @@ type TransactionCheckoutInfo struct {
 ```
 
 <a name="TransactionEvent"></a>
-## type [TransactionEvent](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L173-L194>)
+## type [TransactionEvent](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L140-L161>)
 
 Details of a transaction event.
 
@@ -4845,7 +4851,7 @@ type TransactionEvent struct {
 ```
 
 <a name="TransactionFull"></a>
-## type [TransactionFull](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L197-L295>)
+## type [TransactionFull](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L164-L262>)
 
 Full transaction resource with checkout, payout, and event details.
 
@@ -4952,7 +4958,7 @@ type TransactionFull struct {
 ```
 
 <a name="TransactionFullLocation"></a>
-## type [TransactionFullLocation](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L317-L328>)
+## type [TransactionFullLocation](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L284-L295>)
 
 Details of the payment location as received from the payment terminal.
 
@@ -4972,7 +4978,7 @@ type TransactionFullLocation struct {
 ```
 
 <a name="TransactionFullPayoutPlan"></a>
-## type [TransactionFullPayoutPlan](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L308>)
+## type [TransactionFullPayoutPlan](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L275>)
 
 Payout plan of the registered user at the time when the transaction was made.
 
@@ -4991,7 +4997,7 @@ const (
 ```
 
 <a name="TransactionFullPayoutType"></a>
-## type [TransactionFullPayoutType](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L331>)
+## type [TransactionFullPayoutType](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L298>)
 
 Payout type for the transaction.
 
@@ -5009,7 +5015,7 @@ const (
 ```
 
 <a name="TransactionFullProcessA"></a>
-## type [TransactionFullProcessA](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L339>)
+## type [TransactionFullProcessA](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L306>)
 
 Debit/Credit.
 
@@ -5027,7 +5033,7 @@ const (
 ```
 
 <a name="TransactionFullSimplePaymentType"></a>
-## type [TransactionFullSimplePaymentType](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L347>)
+## type [TransactionFullSimplePaymentType](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L314>)
 
 Simple name of the payment type.
 
@@ -5057,7 +5063,7 @@ const (
 ```
 
 <a name="TransactionFullSimpleStatus"></a>
-## type [TransactionFullSimpleStatus](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L367>)
+## type [TransactionFullSimpleStatus](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L334>)
 
 Status generated from the processing status and the latest transaction state.
 
@@ -5083,7 +5089,7 @@ const (
 ```
 
 <a name="TransactionFullStatus"></a>
-## type [TransactionFullStatus](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L298>)
+## type [TransactionFullStatus](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L265>)
 
 Current status of the transaction.
 
@@ -5103,7 +5109,7 @@ const (
 ```
 
 <a name="TransactionFullVATRate"></a>
-## type [TransactionFullVATRate](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L383-L396>)
+## type [TransactionFullVATRate](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L350-L363>)
 
 TransactionFullVATRate is a schema definition.
 
@@ -5125,7 +5131,7 @@ type TransactionFullVATRate struct {
 ```
 
 <a name="TransactionFullVerificationMethod"></a>
-## type [TransactionFullVerificationMethod](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L399>)
+## type [TransactionFullVerificationMethod](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L366>)
 
 Verification method used for the transaction.
 
@@ -5147,7 +5153,7 @@ const (
 ```
 
 <a name="TransactionHistory"></a>
-## type [TransactionHistory](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L411-L457>)
+## type [TransactionHistory](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L378-L424>)
 
 Transaction entry returned in history listing responses.
 
@@ -5202,7 +5208,7 @@ type TransactionHistory struct {
 ```
 
 <a name="TransactionHistoryPayoutPlan"></a>
-## type [TransactionHistoryPayoutPlan](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L470>)
+## type [TransactionHistoryPayoutPlan](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L437>)
 
 Payout plan of the registered user at the time when the transaction was made.
 
@@ -5221,7 +5227,7 @@ const (
 ```
 
 <a name="TransactionHistoryPayoutType"></a>
-## type [TransactionHistoryPayoutType](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L479>)
+## type [TransactionHistoryPayoutType](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L446>)
 
 Payout type.
 
@@ -5239,7 +5245,7 @@ const (
 ```
 
 <a name="TransactionHistoryStatus"></a>
-## type [TransactionHistoryStatus](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L460>)
+## type [TransactionHistoryStatus](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L427>)
 
 Current status of the transaction.
 
@@ -5259,7 +5265,7 @@ const (
 ```
 
 <a name="TransactionHistoryType"></a>
-## type [TransactionHistoryType](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L487>)
+## type [TransactionHistoryType](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L454>)
 
 Type of the transaction for the registered user specified in the \`user\` property.
 
@@ -5287,7 +5293,7 @@ type TransactionID string
 ```
 
 <a name="TransactionMixinHistory"></a>
-## type [TransactionMixinHistory](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L496-L505>)
+## type [TransactionMixinHistory](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L463-L472>)
 
 Additional transaction fields used by history and detailed views.
 
@@ -5305,7 +5311,7 @@ type TransactionMixinHistory struct {
 ```
 
 <a name="TransactionMixinHistoryPayoutPlan"></a>
-## type [TransactionMixinHistoryPayoutPlan](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L508>)
+## type [TransactionMixinHistoryPayoutPlan](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L475>)
 
 Payout plan of the registered user at the time when the transaction was made.
 
@@ -5324,7 +5330,7 @@ const (
 ```
 
 <a name="TransactionsClient"></a>
-## type [TransactionsClient](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L803-L805>)
+## type [TransactionsClient](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L770-L772>)
 
 
 
@@ -5335,7 +5341,7 @@ type TransactionsClient struct {
 ```
 
 <a name="NewTransactionsClient"></a>
-### func [NewTransactionsClient](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L807>)
+### func [NewTransactionsClient](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L774>)
 
 ```go
 func NewTransactionsClient(c *client.Client) *TransactionsClient
@@ -5344,7 +5350,7 @@ func NewTransactionsClient(c *client.Client) *TransactionsClient
 
 
 <a name="TransactionsClient.Get"></a>
-### func \(\*TransactionsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L940>)
+### func \(\*TransactionsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L907>)
 
 ```go
 func (c *TransactionsClient) Get(ctx context.Context, merchantCode string, params TransactionsGetParams) (*TransactionFull, error)
@@ -5359,7 +5365,7 @@ Retrieves the full details of an identified transaction. The transaction resourc
 - \`client\_transaction\_id\`
 
 <a name="TransactionsClient.GetDeprecated"></a>
-### func \(\*TransactionsClient\) [GetDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L859>)
+### func \(\*TransactionsClient\) [GetDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L826>)
 
 ```go
 func (c *TransactionsClient) GetDeprecated(ctx context.Context, params TransactionsGetDeprecatedParams) (*TransactionFull, error)
@@ -5376,7 +5382,7 @@ Retrieves the full details of an identified transaction. The transaction resourc
 Deprecated: this operation is deprecated
 
 <a name="TransactionsClient.List"></a>
-### func \(\*TransactionsClient\) [List](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L896>)
+### func \(\*TransactionsClient\) [List](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L863>)
 
 ```go
 func (c *TransactionsClient) List(ctx context.Context, merchantCode string, params TransactionsListParams) (*TransactionsListResponse, error)
@@ -5385,7 +5391,7 @@ func (c *TransactionsClient) List(ctx context.Context, merchantCode string, para
 Lists detailed history of all transactions associated with the merchant profile.
 
 <a name="TransactionsClient.ListDeprecated"></a>
-### func \(\*TransactionsClient\) [ListDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L813>)
+### func \(\*TransactionsClient\) [ListDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L780>)
 
 ```go
 func (c *TransactionsClient) ListDeprecated(ctx context.Context, params TransactionsListDeprecatedParams) (*TransactionsListDeprecatedResponse, error)
@@ -5394,7 +5400,7 @@ func (c *TransactionsClient) ListDeprecated(ctx context.Context, params Transact
 Lists detailed history of all transactions associated with the merchant profile. Deprecated: this operation is deprecated
 
 <a name="TransactionsClient.Refund"></a>
-### func \(\*TransactionsClient\) [Refund](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L977>)
+### func \(\*TransactionsClient\) [Refund](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L944>)
 
 ```go
 func (c *TransactionsClient) Refund(ctx context.Context, txnID string, body TransactionsRefundParams) error
@@ -5403,7 +5409,7 @@ func (c *TransactionsClient) Refund(ctx context.Context, txnID string, body Tran
 Refunds an identified transaction either in full or partially.
 
 <a name="TransactionsGetDeprecatedParams"></a>
-## type [TransactionsGetDeprecatedParams](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L623-L631>)
+## type [TransactionsGetDeprecatedParams](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L590-L598>)
 
 TransactionsGetDeprecatedParams are query parameters for GetTransaction.
 
@@ -5420,7 +5426,7 @@ type TransactionsGetDeprecatedParams struct {
 ```
 
 <a name="TransactionsGetDeprecatedParams.QueryValues"></a>
-### func \(\*TransactionsGetDeprecatedParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L634>)
+### func \(\*TransactionsGetDeprecatedParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L601>)
 
 ```go
 func (p *TransactionsGetDeprecatedParams) QueryValues() url.Values
@@ -5429,7 +5435,7 @@ func (p *TransactionsGetDeprecatedParams) QueryValues() url.Values
 QueryValues converts [TransactionsGetDeprecatedParams](<#TransactionsGetDeprecatedParams>) into \[url.Values\].
 
 <a name="TransactionsGetParams"></a>
-## type [TransactionsGetParams](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L750-L762>)
+## type [TransactionsGetParams](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L717-L729>)
 
 TransactionsGetParams are query parameters for GetTransactionV2.1.
 
@@ -5450,7 +5456,7 @@ type TransactionsGetParams struct {
 ```
 
 <a name="TransactionsGetParams.QueryValues"></a>
-### func \(\*TransactionsGetParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L765>)
+### func \(\*TransactionsGetParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L732>)
 
 ```go
 func (p *TransactionsGetParams) QueryValues() url.Values
@@ -5459,7 +5465,7 @@ func (p *TransactionsGetParams) QueryValues() url.Values
 QueryValues converts [TransactionsGetParams](<#TransactionsGetParams>) into \[url.Values\].
 
 <a name="TransactionsHistoryLink"></a>
-## type [TransactionsHistoryLink](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L517-L522>)
+## type [TransactionsHistoryLink](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L484-L489>)
 
 Hypermedia link used for transaction history pagination.
 
@@ -5473,7 +5479,7 @@ type TransactionsHistoryLink struct {
 ```
 
 <a name="TransactionsListDeprecatedParams"></a>
-## type [TransactionsListDeprecatedParams](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L532-L565>)
+## type [TransactionsListDeprecatedParams](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L499-L532>)
 
 TransactionsListDeprecatedParams are query parameters for ListTransactions.
 
@@ -5515,7 +5521,7 @@ type TransactionsListDeprecatedParams struct {
 ```
 
 <a name="TransactionsListDeprecatedParams.QueryValues"></a>
-### func \(\*TransactionsListDeprecatedParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L568>)
+### func \(\*TransactionsListDeprecatedParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L535>)
 
 ```go
 func (p *TransactionsListDeprecatedParams) QueryValues() url.Values
@@ -5524,7 +5530,7 @@ func (p *TransactionsListDeprecatedParams) QueryValues() url.Values
 QueryValues converts [TransactionsListDeprecatedParams](<#TransactionsListDeprecatedParams>) into \[url.Values\].
 
 <a name="TransactionsListDeprecatedResponse"></a>
-## type [TransactionsListDeprecatedResponse](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L792-L795>)
+## type [TransactionsListDeprecatedResponse](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L759-L762>)
 
 TransactionsListDeprecatedResponse is a schema definition.
 
@@ -5536,7 +5542,7 @@ type TransactionsListDeprecatedResponse struct {
 ```
 
 <a name="TransactionsListParams"></a>
-## type [TransactionsListParams](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L653-L688>)
+## type [TransactionsListParams](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L620-L655>)
 
 TransactionsListParams are query parameters for ListTransactionsV2.1.
 
@@ -5546,7 +5552,7 @@ type TransactionsListParams struct {
     // *at or after* the specified timestamp (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
     ChangesSince *time.Time
     // Filters the returned results by the specified list of entry modes.
-    EntryModes []EntryModeFilter
+    EntryModes []EntryMode
     // Specifies the maximum number of results per page. Value must be a positive integer and if not specified, will
     // return 10 results.
     Limit *int
@@ -5580,7 +5586,7 @@ type TransactionsListParams struct {
 ```
 
 <a name="TransactionsListParams.QueryValues"></a>
-### func \(\*TransactionsListParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L691>)
+### func \(\*TransactionsListParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L658>)
 
 ```go
 func (p *TransactionsListParams) QueryValues() url.Values
@@ -5589,7 +5595,7 @@ func (p *TransactionsListParams) QueryValues() url.Values
 QueryValues converts [TransactionsListParams](<#TransactionsListParams>) into \[url.Values\].
 
 <a name="TransactionsListResponse"></a>
-## type [TransactionsListResponse](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L798-L801>)
+## type [TransactionsListResponse](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L765-L768>)
 
 TransactionsListResponse is a schema definition.
 
@@ -5601,7 +5607,7 @@ type TransactionsListResponse struct {
 ```
 
 <a name="TransactionsRefundParams"></a>
-## type [TransactionsRefundParams](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L525-L529>)
+## type [TransactionsRefundParams](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L492-L496>)
 
 Optional amount for partial refunds of transactions.
 
