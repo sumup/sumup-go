@@ -120,12 +120,12 @@ func dereferenceSchema(ref *base.SchemaProxy) *base.SchemaProxy {
 	return ref
 }
 
-func paramToString(name string, param *v3.Parameter) string {
-	if param == nil || param.Schema == nil {
+func schemaToString(name string, schema *base.SchemaProxy) string {
+	if schema == nil {
 		return name
 	}
 
-	schema := dereferenceSchema(param.Schema)
+	schema = dereferenceSchema(schema)
 	if schema == nil {
 		return name
 	}
@@ -140,6 +140,30 @@ func paramToString(name string, param *v3.Parameter) string {
 	}
 
 	schemaValue := schema.Schema()
+	if len(schemaValue.Enum) > 0 {
+		switch {
+		case slices.Contains(schemaValue.Type, "string"):
+			return fmt.Sprintf("string(%s)", name)
+		case slices.Contains(schemaValue.Type, "integer"):
+			switch schemaValue.Format {
+			case "int32":
+				return fmt.Sprintf("strconv.FormatInt(int64(%s), 10)", name)
+			case "int64":
+				return fmt.Sprintf("strconv.FormatInt(int64(%s), 10)", name)
+			default:
+				return fmt.Sprintf("strconv.Itoa(int(%s))", name)
+			}
+		case slices.Contains(schemaValue.Type, "number"):
+			switch schemaValue.Format {
+			case "float":
+				return fmt.Sprintf("strconv.FormatFloat(float64(%s), 'f', -1, 32)", name)
+			default:
+				return fmt.Sprintf("strconv.FormatFloat(float64(%s), 'f', -1, 64)", name)
+			}
+		case slices.Contains(schemaValue.Type, "boolean"):
+			return fmt.Sprintf("strconv.FormatBool(bool(%s))", name)
+		}
+	}
 
 	switch {
 	case slices.Contains(schemaValue.Type, "string"):
@@ -181,9 +205,8 @@ func paramToString(name string, param *v3.Parameter) string {
 			return fmt.Sprintf("strconv.FormatFloat(%s, 'f', -1, 64)", name)
 		}
 	case slices.Contains(schemaValue.Type, "array"):
-		// For array items that are schema references (e.g., enums), we need to convert each item to string
-		if schemaValue.Items != nil && schemaValue.Items.IsA() && schemaValue.Items.A != nil && schemaValue.Items.A.IsReference() {
-			return fmt.Sprintf("string(%s)", name)
+		if schemaValue.Items != nil && schemaValue.Items.IsA() && schemaValue.Items.A != nil {
+			return schemaToString(name, schemaValue.Items.A)
 		}
 		return name
 	default:
@@ -194,6 +217,14 @@ func paramToString(name string, param *v3.Parameter) string {
 		)
 		return name
 	}
+}
+
+func paramToString(name string, param *v3.Parameter) string {
+	if param == nil || param.Schema == nil {
+		return name
+	}
+
+	return schemaToString(name, param.Schema)
 }
 
 type toQueryValues struct {

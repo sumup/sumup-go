@@ -50,13 +50,29 @@ const (
 // List of payout summaries.
 type FinancialPayouts []FinancialPayout
 
+// PayoutsListDeprecatedFormat is a schema definition.
+type PayoutsListDeprecatedFormat string
+
+const (
+	PayoutsListDeprecatedFormatCSV  PayoutsListDeprecatedFormat = "csv"
+	PayoutsListDeprecatedFormatJSON PayoutsListDeprecatedFormat = "json"
+)
+
+// PayoutsListDeprecatedOrder is a schema definition.
+type PayoutsListDeprecatedOrder string
+
+const (
+	PayoutsListDeprecatedOrderASC  PayoutsListDeprecatedOrder = "asc"
+	PayoutsListDeprecatedOrderDESC PayoutsListDeprecatedOrder = "desc"
+)
+
 // PayoutsListDeprecatedParams are query parameters for ListPayouts.
 type PayoutsListDeprecatedParams struct {
 	// End date (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
 	EndDate datetime.Date
-	Format  *string
+	Format  *PayoutsListDeprecatedFormat
 	Limit   *int
-	Order   *string
+	Order   *PayoutsListDeprecatedOrder
 	// Start date (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
 	StartDate datetime.Date
 }
@@ -68,7 +84,7 @@ func (p *PayoutsListDeprecatedParams) QueryValues() url.Values {
 	q.Set("end_date", p.EndDate.String())
 
 	if p.Format != nil {
-		q.Set("format", *p.Format)
+		q.Set("format", string(*p.Format))
 	}
 
 	if p.Limit != nil {
@@ -76,7 +92,7 @@ func (p *PayoutsListDeprecatedParams) QueryValues() url.Values {
 	}
 
 	if p.Order != nil {
-		q.Set("order", *p.Order)
+		q.Set("order", string(*p.Order))
 	}
 
 	q.Set("start_date", p.StartDate.String())
@@ -84,13 +100,29 @@ func (p *PayoutsListDeprecatedParams) QueryValues() url.Values {
 	return q
 }
 
+// PayoutsListFormat is a schema definition.
+type PayoutsListFormat string
+
+const (
+	PayoutsListFormatCSV  PayoutsListFormat = "csv"
+	PayoutsListFormatJSON PayoutsListFormat = "json"
+)
+
+// PayoutsListOrder is a schema definition.
+type PayoutsListOrder string
+
+const (
+	PayoutsListOrderASC  PayoutsListOrder = "asc"
+	PayoutsListOrderDESC PayoutsListOrder = "desc"
+)
+
 // PayoutsListParams are query parameters for ListPayoutsV1.
 type PayoutsListParams struct {
 	// End date (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
 	EndDate datetime.Date
-	Format  *string
+	Format  *PayoutsListFormat
 	Limit   *int
-	Order   *string
+	Order   *PayoutsListOrder
 	// Start date (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
 	StartDate datetime.Date
 }
@@ -102,7 +134,7 @@ func (p *PayoutsListParams) QueryValues() url.Values {
 	q.Set("end_date", p.EndDate.String())
 
 	if p.Format != nil {
-		q.Set("format", *p.Format)
+		q.Set("format", string(*p.Format))
 	}
 
 	if p.Limit != nil {
@@ -110,7 +142,7 @@ func (p *PayoutsListParams) QueryValues() url.Values {
 	}
 
 	if p.Order != nil {
-		q.Set("order", *p.Order)
+		q.Set("order", string(*p.Order))
 	}
 
 	q.Set("start_date", p.StartDate.String())
