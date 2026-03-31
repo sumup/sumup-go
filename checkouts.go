@@ -392,10 +392,14 @@ const (
 
 // Details of the payment instrument for processing the checkout.
 type ProcessCheckout struct {
+	// Raw payment token object received from Apple Pay. Send the Apple Pay response payload as-is.
+	ApplePay *ProcessCheckoutApplePay `json:"apple_pay,omitempty"`
 	// __Required when payment type is `card`.__ Details of the payment card.
 	Card *Card `json:"card,omitempty"`
 	// __Required when `token` is provided.__ Unique ID of the customer.
 	CustomerID *string `json:"customer_id,omitempty"`
+	// Raw `PaymentData` object received from Google Pay. Send the Google Pay response payload as-is.
+	GooglePay *ProcessCheckoutGooglePay `json:"google_pay,omitempty"`
 	// Number of installments for deferred payments. Available only to merchant users in Brazil.
 	// Min: 1
 	// Max: 12
@@ -411,14 +415,24 @@ type ProcessCheckout struct {
 	Token *string `json:"token,omitempty"`
 }
 
+// Raw payment token object received from Apple Pay. Send the Apple Pay response payload as-is.
+type ProcessCheckoutApplePay struct {
+}
+
+// Raw `PaymentData` object received from Google Pay. Send the Google Pay response payload as-is.
+type ProcessCheckoutGooglePay struct {
+}
+
 // Describes the payment method used to attempt processing
 type ProcessCheckoutPaymentType string
 
 const (
+	ProcessCheckoutPaymentTypeApplePay   ProcessCheckoutPaymentType = "apple_pay"
 	ProcessCheckoutPaymentTypeBancontact ProcessCheckoutPaymentType = "bancontact"
 	ProcessCheckoutPaymentTypeBlik       ProcessCheckoutPaymentType = "blik"
 	ProcessCheckoutPaymentTypeBoleto     ProcessCheckoutPaymentType = "boleto"
 	ProcessCheckoutPaymentTypeCard       ProcessCheckoutPaymentType = "card"
+	ProcessCheckoutPaymentTypeGooglePay  ProcessCheckoutPaymentType = "google_pay"
 	ProcessCheckoutPaymentTypeIdeal      ProcessCheckoutPaymentType = "ideal"
 )
 
