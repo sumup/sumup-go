@@ -54,7 +54,7 @@ type FinancialPayouts []FinancialPayout
 type PayoutsListDeprecatedFormat string
 
 const (
-	PayoutsListDeprecatedFormatCsv  PayoutsListDeprecatedFormat = "csv"
+	PayoutsListDeprecatedFormatCSV  PayoutsListDeprecatedFormat = "csv"
 	PayoutsListDeprecatedFormatJSON PayoutsListDeprecatedFormat = "json"
 )
 
@@ -62,8 +62,8 @@ const (
 type PayoutsListDeprecatedOrder string
 
 const (
-	PayoutsListDeprecatedOrderAsc  PayoutsListDeprecatedOrder = "asc"
-	PayoutsListDeprecatedOrderDesc PayoutsListDeprecatedOrder = "desc"
+	PayoutsListDeprecatedOrderASC  PayoutsListDeprecatedOrder = "asc"
+	PayoutsListDeprecatedOrderDESC PayoutsListDeprecatedOrder = "desc"
 )
 
 // PayoutsListDeprecatedParams are query parameters for ListPayouts.
@@ -104,7 +104,7 @@ func (p *PayoutsListDeprecatedParams) QueryValues() url.Values {
 type PayoutsListFormat string
 
 const (
-	PayoutsListFormatCsv  PayoutsListFormat = "csv"
+	PayoutsListFormatCSV  PayoutsListFormat = "csv"
 	PayoutsListFormatJSON PayoutsListFormat = "json"
 )
 
@@ -112,8 +112,8 @@ const (
 type PayoutsListOrder string
 
 const (
-	PayoutsListOrderAsc  PayoutsListOrder = "asc"
-	PayoutsListOrderDesc PayoutsListOrder = "desc"
+	PayoutsListOrderASC  PayoutsListOrder = "asc"
+	PayoutsListOrderDESC PayoutsListOrder = "desc"
 )
 
 // PayoutsListParams are query parameters for ListPayoutsV1.
