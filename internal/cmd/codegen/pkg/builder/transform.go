@@ -377,6 +377,17 @@ func (b *Builder) generateSchemaComponents(name string, schema *base.SchemaProxy
 		types = append(types, typ)
 		errType = typ
 	case slices.Contains(spec.Type, "object"):
+		if isFreeFormObject(spec) {
+			typ := &TypeDeclaration{
+				Comment: schemaGodoc(name, spec),
+				Type:    "json.RawMessage",
+				Name:    name,
+				Schema:  spec,
+			}
+			types = append(types, typ)
+			errType = typ
+			break
+		}
 		object, additionalTypes := b.createObject(spec, name)
 		types = append(types, object)
 		types = append(types, additionalTypes...)
@@ -468,6 +479,9 @@ func (b *Builder) genSchema(schema *base.SchemaProxy, name string) (string, []Wr
 		types = append(types, schemas...)
 		return "[]" + typeName, types
 	case slices.Contains(spec.Type, "object"):
+		if isFreeFormObject(spec) {
+			return "json.RawMessage", nil
+		}
 		object, additionalTypes := b.createObject(spec, name)
 		types = append(types, object)
 		types = append(types, additionalTypes...)
@@ -513,6 +527,19 @@ func isAdditionalPropertiesMap(schema *base.Schema) bool {
 	return schema.AdditionalProperties.IsA() && schema.AdditionalProperties.A != nil
 }
 
+func isFreeFormObject(schema *base.Schema) bool {
+	if schema == nil {
+		return false
+	}
+	if !slices.Contains(schema.Type, "object") {
+		return false
+	}
+	if schema.Properties != nil && schema.Properties.Len() != 0 {
+		return false
+	}
+	return schema.AdditionalProperties == nil
+}
+
 func isArraySchema(schema *base.Schema) bool {
 	if schema == nil {
 		return false
@@ -537,6 +564,15 @@ func shouldUsePointer(optional bool, schema *base.SchemaProxy, typeName string) 
 
 // createObject converts openapi schema into golang object.
 func (b *Builder) createObject(schema *base.Schema, name string) (*TypeDeclaration, []Writable) {
+	if isFreeFormObject(schema) {
+		return &TypeDeclaration{
+			Comment: schemaGodoc(name, schema),
+			Name:    name,
+			Type:    "json.RawMessage",
+			Schema:  schema,
+		}, nil
+	}
+
 	if isAdditionalPropertiesMap(schema) {
 		return &TypeDeclaration{
 			Comment: schemaGodoc(name, schema),
