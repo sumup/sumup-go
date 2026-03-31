@@ -19,7 +19,7 @@ type Receipt struct {
 	// Acquirer-specific metadata related to the card authorization.
 	AcquirerData *ReceiptAcquirerData `json:"acquirer_data,omitempty"`
 	// EMV-specific metadata returned for card-present payments.
-	EmvData *ReceiptEmvData `json:"emv_data,omitempty"`
+	EmvData *json.RawMessage `json:"emv_data,omitempty"`
 	// Receipt merchant data
 	MerchantData *ReceiptMerchantData `json:"merchant_data,omitempty"`
 	// Transaction information.
@@ -32,10 +32,6 @@ type ReceiptAcquirerData struct {
 	LocalTime         *string `json:"local_time,omitempty"`
 	ReturnCode        *string `json:"return_code,omitempty"`
 	Tid               *string `json:"tid,omitempty"`
-}
-
-// EMV-specific metadata returned for card-present payments.
-type ReceiptEmvData struct {
 }
 
 // Payment card details displayed on the receipt.
