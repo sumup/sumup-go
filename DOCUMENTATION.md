@@ -551,7 +551,7 @@ type BasePerson struct {
     Nationality *nullable.Field[string] `json:"nationality,omitempty"`
     Ownership   *Ownership              `json:"ownership,omitempty"`
     // A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
-    // Max length: 64
+    // Max length: 16
     PhoneNumber *PhoneNumber `json:"phone_number,omitempty"`
     // A list of roles the person has in the merchant or towards SumUp. A merchant must have at least one person with
     // the relationship `representative`.
@@ -619,18 +619,18 @@ type BusinessProfile struct {
     // Pattern: ^[a-zA-Z0-9 \-+\'_.]{0,30}$
     DynamicDescriptor *string `json:"dynamic_descriptor,omitempty"`
     // A publicly available email address.
-    // Max length: 256
+    // Max length: 255
     Email *string `json:"email,omitempty"`
     // The customer-facing business name.
     // Min length: 1
-    // Max length: 512
+    // Max length: 150
     Name *string `json:"name,omitempty"`
     // A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
-    // Max length: 64
+    // Max length: 16
     PhoneNumber *PhoneNumber `json:"phone_number,omitempty"`
     // The business's publicly available website.
     // Format: uri
-    // Max length: 512
+    // Max length: 255
     Website *string `json:"website,omitempty"`
 }
 ```
@@ -1496,10 +1496,10 @@ type Company struct {
     MerchantCategoryCode *string `json:"merchant_category_code,omitempty"`
     // The company's legal name.
     // Min length: 1
-    // Max length: 512
+    // Max length: 150
     Name *string `json:"name,omitempty"`
     // A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
-    // Max length: 64
+    // Max length: 16
     PhoneNumber *PhoneNumber `json:"phone_number,omitempty"`
     // An address somewhere in the world. The address fields used depend on the country conventions. For example, in
     // Great Britain, `city` is `post_town`. In the United States, the top-level administrative unit used in addresses
@@ -3487,7 +3487,7 @@ type Person struct {
     Nationality *nullable.Field[string] `json:"nationality,omitempty"`
     Ownership   *Ownership              `json:"ownership,omitempty"`
     // A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
-    // Max length: 64
+    // Max length: 16
     PhoneNumber *PhoneNumber `json:"phone_number,omitempty"`
     // A list of roles the person has in the merchant or towards SumUp. A merchant must have at least one person with
     // the relationship `representative`.
@@ -3549,7 +3549,7 @@ type PersonalIdentifier struct {
 
 A publicly available phone number in \[E.164\]\(https://en.wikipedia.org/wiki/E.164\) format.
 
-Max length: 64
+Max length: 16
 
 ```go
 type PhoneNumber string
