@@ -236,6 +236,9 @@ func (p *ReceiptsGetParams) QueryValues() url.Values {
 	return q
 }
 
+// ReceiptsClient provides access to the Receipts API.
+//
+// The Receipts model obtains receipt-like details for specific transactions.
 type ReceiptsClient struct {
 	c *client.Client
 }

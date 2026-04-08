@@ -565,6 +565,9 @@ func (p *MerchantsGetPersonParams) QueryValues() url.Values {
 	return q
 }
 
+// MerchantsClient provides access to the Merchants API.
+//
+// Merchant account represents a single business entity at SumUp.
 type MerchantsClient struct {
 	c *client.Client
 }

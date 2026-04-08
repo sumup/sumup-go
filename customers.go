@@ -78,6 +78,14 @@ var _ error = (*CustomersCreate400Response)(nil)
 // CustomersListPaymentInstrumentsResponse is a schema definition.
 type CustomersListPaymentInstrumentsResponse []PaymentInstrumentResponse
 
+// CustomersClient provides access to the Customers API.
+//
+// Allow your regular customers to save their information with the Customers model.
+//
+// This will prevent re-entering payment instrument information for recurring payments on your platform.
+//
+// Depending on the needs you can allow, creating, listing or deactivating payment instruments & creating, retrieving
+// and updating customers.
 type CustomersClient struct {
 	c *client.Client
 }

@@ -168,6 +168,12 @@ func (e *PayoutsList400Response) Error() string {
 
 var _ error = (*PayoutsList400Response)(nil)
 
+// PayoutsClient provides access to the Payouts API.
+//
+// The Payouts model will allow you to track funds you’ve received from SumUp.
+//
+// You can receive a detailed payouts list with information like dates, fees, references and statuses, using the
+// `List payouts` endpoint.
 type PayoutsClient struct {
 	c *client.Client
 }

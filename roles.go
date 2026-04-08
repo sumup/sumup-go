@@ -66,6 +66,11 @@ type RolesListResponse struct {
 	Items []Role `json:"items"`
 }
 
+// RolesClient provides access to the Roles API.
+//
+// Endpoints to manage custom roles. Custom roles allow you to tailor roles from individual permissions to
+// match your needs. Once created, you can assign your custom roles to your merchant account members using the
+// memberships.
 type RolesClient struct {
 	c *client.Client
 }

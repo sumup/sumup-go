@@ -115,6 +115,9 @@ func (p *SubaccountsListSubAccountsParams) QueryValues() url.Values {
 // SubaccountsListSubAccountsResponse is a schema definition.
 type SubaccountsListSubAccountsResponse []Operator
 
+// SubaccountsClient provides access to the Subaccounts API.
+//
+// Endpoints for managing merchant sub-accounts (operators).
 type SubaccountsClient struct {
 	c *client.Client
 }
