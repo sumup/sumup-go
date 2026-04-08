@@ -64,6 +64,11 @@ var _ error = (*CreateReaderCheckoutError)(nil)
 
 // Reader Checkout
 type CreateCheckoutRequest struct {
+	// Optional object containing data for transactions from ERP integrators in Greece that comply with the AADE
+	// 1155 protocol.
+	// When such regulatory/business requirements apply, this object must be provided and contains the data needed
+	// to validate the transaction with the AADE signature provider.
+	AADE *CreateCheckoutRequestAADE `json:"aade,omitempty"`
 	// Affiliate metadata for the transaction.
 	// It is a field that allow for integrators to track the source of the transaction.
 	Affiliate *nullable.Field[CreateCheckoutRequestAffiliate] `json:"affiliate,omitempty"`
@@ -104,6 +109,19 @@ type CreateCheckoutRequest struct {
 	//
 	// For example, EUR 1.00 is represented as value 100 with minor unit of 2.
 	TotalAmount CreateCheckoutRequestTotalAmount `json:"total_amount"`
+}
+
+// Optional object containing data for transactions from ERP integrators in Greece that comply with the AADE
+// 1155 protocol.
+// When such regulatory/business requirements apply, this object must be provided and contains the data needed
+// to validate the transaction with the AADE signature provider.
+type CreateCheckoutRequestAADE struct {
+	// The identifier of the AADE signature provider.
+	ProviderID string `json:"provider_id"`
+	// The base64 encoded signature of the transaction data.
+	Signature string `json:"signature"`
+	// The string containing the signed transaction data.
+	SignatureData string `json:"signature_data"`
 }
 
 // Affiliate metadata for the transaction.
