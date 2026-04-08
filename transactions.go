@@ -52,7 +52,7 @@ type ElvCardAccount struct {
 	SortCode *string `json:"sort_code,omitempty"`
 }
 
-// Transaction event details.
+// High-level transaction event details.
 type Event struct {
 	// Amount of the event.
 	Amount *float32 `json:"amount,omitempty"`
@@ -68,6 +68,22 @@ type Event struct {
 	// Consecutive number of the installment.
 	InstallmentNumber *int `json:"installment_number,omitempty"`
 	// Status of the transaction event.
+	//
+	// Not every value is used for every event type.
+	//
+	// - `PENDING`: The event has been created but is not final yet. Used for events that are still being processed and
+	// whose final outcome is not known yet.
+	// - `SCHEDULED`: The event is planned for a future payout cycle but has not been executed yet. This applies to
+	// payout events before money is actually sent out.
+	// - `RECONCILED`: The underlying payment has been matched with settlement data and is ready to continue through
+	// payout processing, but the funds have not been paid out yet. This applies to payout events.
+	// - `PAID_OUT`: The payout event has been completed and the funds were included in a merchant payout.
+	// - `REFUNDED`: A refund event has been accepted and recorded in the refund flow. This is the status returned for
+	// refund events once the transaction amount is being or has been returned to the payer.
+	// - `SUCCESSFUL`: The event completed successfully. Use this as the generic terminal success status for event
+	// types that do not expose a more specific business outcome such as `PAID_OUT` or `REFUNDED`.
+	// - `FAILED`: The event could not be completed. Typical examples are a payout that could not be executed or
+	// an event that was rejected during processing.
 	Status *EventStatus `json:"status,omitempty"`
 	// Date and time of the transaction event.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
@@ -136,7 +152,7 @@ type Product struct {
 	VATRate *float64 `json:"vat_rate,omitempty"`
 }
 
-// Details of a transaction event.
+// Detailed information about a transaction event.
 type TransactionEvent struct {
 	// Amount of the event.
 	// Format: decimal
@@ -155,6 +171,22 @@ type TransactionEvent struct {
 	// Consecutive number of the installment that is paid. Applicable only payout events, i.e. `event_type = PAYOUT`.
 	InstallmentNumber *int `json:"installment_number,omitempty"`
 	// Status of the transaction event.
+	//
+	// Not every value is used for every event type.
+	//
+	// - `PENDING`: The event has been created but is not final yet. Used for events that are still being processed and
+	// whose final outcome is not known yet.
+	// - `SCHEDULED`: The event is planned for a future payout cycle but has not been executed yet. This applies to
+	// payout events before money is actually sent out.
+	// - `RECONCILED`: The underlying payment has been matched with settlement data and is ready to continue through
+	// payout processing, but the funds have not been paid out yet. This applies to payout events.
+	// - `PAID_OUT`: The payout event has been completed and the funds were included in a merchant payout.
+	// - `REFUNDED`: A refund event has been accepted and recorded in the refund flow. This is the status returned for
+	// refund events once the transaction amount is being or has been returned to the payer.
+	// - `SUCCESSFUL`: The event completed successfully. Use this as the generic terminal success status for event
+	// types that do not expose a more specific business outcome such as `PAID_OUT` or `REFUNDED`.
+	// - `FAILED`: The event could not be completed. Typical examples are a payout that could not be executed or
+	// an event that was rejected during processing.
 	Status *EventStatus `json:"status,omitempty"`
 	// Date and time of the transaction event.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
@@ -179,7 +211,7 @@ type TransactionFull struct {
 	ElvAccount *ElvCardAccount `json:"elv_account,omitempty"`
 	// Entry mode of the payment details.
 	EntryMode *EntryMode `json:"entry_mode,omitempty"`
-	// List of events related to the transaction.
+	// Compact list of events related to the transaction.
 	Events []Event `json:"events,omitempty"`
 	// Transaction SumUp total fee amount.
 	// Format: decimal
@@ -236,7 +268,20 @@ type TransactionFull struct {
 	Products []Product `json:"products,omitempty"`
 	// Simple name of the payment type.
 	SimplePaymentType *TransactionFullSimplePaymentType `json:"simple_payment_type,omitempty"`
-	// Status generated from the processing status and the latest transaction state.
+	// High-level status of the transaction from the merchant's perspective.
+	//
+	// - `PENDING`: The payment has been initiated and is still being processed. A final outcome is not available yet.
+	//
+	// - `SUCCESSFUL`: The payment was completed successfully.
+	// - `PAID_OUT`: The payment was completed successfully and the funds have already been included in a payout to
+	// the merchant.
+	// - `FAILED`: The payment did not complete successfully.
+	// - `CANCELLED`: The payment was cancelled or reversed and is no longer payable or payable to the merchant.
+	// - `CANCEL_FAILED`: An attempt to cancel or reverse the payment was not completed successfully.
+	// - `REFUNDED`: The payment was refunded in full or in part.
+	// - `REFUND_FAILED`: An attempt to refund the payment was not completed successfully.
+	// - `CHARGEBACK`: The payment was subject to a chargeback.
+	// - `NON_COLLECTION`: The amount could not be collected from the merchant after a chargeback or related adjustment.
 	SimpleStatus *TransactionFullSimpleStatus `json:"simple_status,omitempty"`
 	// Current status of the transaction.
 	Status *TransactionFullStatus `json:"status,omitempty"`
@@ -248,7 +293,7 @@ type TransactionFull struct {
 	TipAmount *float32 `json:"tip_amount,omitempty"`
 	// Transaction code returned by the acquirer/processing entity after processing the transaction.
 	TransactionCode *string `json:"transaction_code,omitempty"`
-	// List of transaction events related to the transaction.
+	// Detailed list of events related to the transaction.
 	TransactionEvents []TransactionEvent `json:"transaction_events,omitempty"`
 	// Email address of the registered user (merchant) to whom the payment is made.
 	// Format: email
@@ -330,7 +375,20 @@ const (
 	TransactionFullSimplePaymentTypeRecurring           TransactionFullSimplePaymentType = "RECURRING"
 )
 
-// Status generated from the processing status and the latest transaction state.
+// High-level status of the transaction from the merchant's perspective.
+//
+// - `PENDING`: The payment has been initiated and is still being processed. A final outcome is not available yet.
+//
+// - `SUCCESSFUL`: The payment was completed successfully.
+// - `PAID_OUT`: The payment was completed successfully and the funds have already been included in a payout to
+// the merchant.
+// - `FAILED`: The payment did not complete successfully.
+// - `CANCELLED`: The payment was cancelled or reversed and is no longer payable or payable to the merchant.
+// - `CANCEL_FAILED`: An attempt to cancel or reverse the payment was not completed successfully.
+// - `REFUNDED`: The payment was refunded in full or in part.
+// - `REFUND_FAILED`: An attempt to refund the payment was not completed successfully.
+// - `CHARGEBACK`: The payment was subject to a chargeback.
+// - `NON_COLLECTION`: The amount could not be collected from the merchant after a chargeback or related adjustment.
 type TransactionFullSimpleStatus string
 
 const (
@@ -873,13 +931,11 @@ func (c *TransactionsClient) ListDeprecated(ctx context.Context, params Transact
 
 // Retrieves the full details of an identified transaction. The transaction resource is identified by a query
 // parameter and *one* of following parameters is required:
-//
-//   - `id`
-//   - `internal_id`
-//   - `transaction_code`
-//   - `foreign_transaction_id`
-//   - `client_transaction_id`
-//
+// - `id`
+// - `internal_id`
+// - `transaction_code`
+// - `foreign_transaction_id`
+// - `client_transaction_id`
 // Deprecated: this operation is deprecated
 func (c *TransactionsClient) GetDeprecated(ctx context.Context, params TransactionsGetDeprecatedParams) (*TransactionFull, error) {
 	path := fmt.Sprintf("/v0.1/me/transactions")
@@ -956,12 +1012,11 @@ func (c *TransactionsClient) List(ctx context.Context, merchantCode string, para
 
 // Retrieves the full details of an identified transaction. The transaction resource is identified by a query
 // parameter and *one* of following parameters is required:
-//
-//   - `id`
-//   - `internal_id`
-//   - `transaction_code`
-//   - `foreign_transaction_id`
-//   - `client_transaction_id`
+// - `id`
+// - `internal_id`
+// - `transaction_code`
+// - `foreign_transaction_id`
+// - `client_transaction_id`
 func (c *TransactionsClient) Get(ctx context.Context, merchantCode string, params TransactionsGetParams) (*TransactionFull, error) {
 	path := fmt.Sprintf("/v2.1/merchants/%v/transactions", merchantCode)
 

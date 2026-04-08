@@ -176,7 +176,7 @@ func NewPayoutsClient(c *client.Client) *PayoutsClient {
 	return &PayoutsClient{c: c}
 }
 
-// Lists ordered payouts for the merchant profile.
+// Lists ordered payouts for the merchant account.
 // Deprecated: this operation is deprecated
 func (c *PayoutsClient) ListDeprecated(ctx context.Context, params PayoutsListDeprecatedParams) (*FinancialPayouts, error) {
 	path := fmt.Sprintf("/v0.1/me/financials/payouts")
@@ -214,7 +214,7 @@ func (c *PayoutsClient) ListDeprecated(ctx context.Context, params PayoutsListDe
 	}
 }
 
-// Lists ordered payouts for the merchant profile.
+// Lists ordered payouts for the merchant account.
 func (c *PayoutsClient) List(ctx context.Context, merchantCode string, params PayoutsListParams) (*FinancialPayouts, error) {
 	path := fmt.Sprintf("/v1.0/merchants/%v/payouts", merchantCode)
 

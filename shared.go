@@ -168,6 +168,22 @@ var _ error = (*ErrorForbidden)(nil)
 type EventID int64
 
 // Status of the transaction event.
+//
+// Not every value is used for every event type.
+//
+// - `PENDING`: The event has been created but is not final yet. Used for events that are still being processed and
+// whose final outcome is not known yet.
+// - `SCHEDULED`: The event is planned for a future payout cycle but has not been executed yet. This applies to
+// payout events before money is actually sent out.
+// - `RECONCILED`: The underlying payment has been matched with settlement data and is ready to continue through
+// payout processing, but the funds have not been paid out yet. This applies to payout events.
+// - `PAID_OUT`: The payout event has been completed and the funds were included in a merchant payout.
+// - `REFUNDED`: A refund event has been accepted and recorded in the refund flow. This is the status returned for
+// refund events once the transaction amount is being or has been returned to the payer.
+// - `SUCCESSFUL`: The event completed successfully. Use this as the generic terminal success status for event
+// types that do not expose a more specific business outcome such as `PAID_OUT` or `REFUNDED`.
+// - `FAILED`: The event could not be completed. Typical examples are a payout that could not be executed or
+// an event that was rejected during processing.
 type EventStatus string
 
 const (
@@ -198,15 +214,23 @@ type Invite struct {
 	ExpiresAt time.Time `json:"expires_at"`
 }
 
-// Created mandate
+// Details of the mandate linked to the saved payment instrument.
 type MandateResponse struct {
-	// Merchant code which has the mandate
+	// Merchant account for which the mandate is valid.
 	MerchantCode *string `json:"merchant_code,omitempty"`
-	// Mandate status
-	Status *string `json:"status,omitempty"`
-	// Indicates the mandate type
+	// Current lifecycle status of the mandate.
+	Status *MandateResponseStatus `json:"status,omitempty"`
+	// Type of mandate stored for the checkout or payment instrument.
 	Type *string `json:"type,omitempty"`
 }
+
+// Current lifecycle status of the mandate.
+type MandateResponseStatus string
+
+const (
+	MandateResponseStatusActive   MandateResponseStatus = "active"
+	MandateResponseStatusInactive MandateResponseStatus = "inactive"
+)
 
 // The status of the membership.
 type MembershipStatus string

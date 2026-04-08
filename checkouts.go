@@ -65,45 +65,53 @@ const (
 	CardExpiryMonth12 CardExpiryMonth = "12"
 )
 
-// Details of the payment checkout.
+// Core checkout resource returned by the Checkouts API. A checkout is created before payment processing and
+// then updated as payment attempts, redirects, and resulting transactions are attached to it.
 type Checkout struct {
-	// Amount of the payment.
+	// Amount to be charged to the payer, expressed in major units.
 	Amount *float32 `json:"amount,omitempty"`
-	// Unique ID of the payment checkout specified by the client application when creating the checkout resource.
+	// Merchant-defined reference for the checkout. Use it to correlate the SumUp checkout with your own order, cart,
+	// subscription, or payment attempt in your systems.
 	// Max length: 90
 	CheckoutReference *string `json:"checkout_reference,omitempty"`
 	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
 	// currency values are enumerated above.
 	Currency *Currency `json:"currency,omitempty"`
-	// Unique identification of a customer. If specified, the checkout session and payment instrument are associated with
-	// the referenced customer.
+	// Merchant-scoped identifier of the customer associated with the checkout. Use it when storing payment instruments
+	// or reusing saved customer context for recurring and returning-payer flows.
 	CustomerID *string `json:"customer_id,omitempty"`
 	// Date and time of the creation of the payment checkout. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
 	Date *time.Time `json:"date,omitempty"`
-	// Short description of the checkout visible in the SumUp dashboard. The description can contribute to reporting, allowing
-	// easier identification of a checkout.
+	// Short merchant-defined description shown in SumUp tools and reporting. Use it to make the checkout easier to
+	// recognize in dashboards, support workflows, and reconciliation.
 	Description *string `json:"description,omitempty"`
-	// Unique ID of the checkout resource.
+	// Unique SumUp identifier of the checkout resource.
 	// Read only
 	ID *string `json:"id,omitempty"`
-	// Created mandate
+	// Details of the mandate linked to the saved payment instrument.
 	Mandate *MandateResponse `json:"mandate,omitempty"`
-	// Unique identifying code of the merchant profile.
+	// Merchant account that receives the payment.
 	MerchantCode *string `json:"merchant_code,omitempty"`
-	// URL to which the SumUp platform sends the processing status of the payment checkout.
+	// Optional backend callback URL used by SumUp to notify your platform about processing updates for the checkout.
+	//
 	// Format: uri
 	ReturnURL *string `json:"return_url,omitempty"`
-	// Current status of the checkout.
+	// Current high-level state of the checkout. `PENDING` means the checkout exists but is not yet completed, `PAID`
+	// means a payment succeeded, `FAILED` means the latest processing attempt failed, and `EXPIRED` means the checkout
+	// can no longer be processed.
 	Status *CheckoutStatus `json:"status,omitempty"`
-	// List of transactions related to the payment.
+	// Payment attempts and resulting transaction records linked to this checkout. Use the Transactions endpoints when
+	// you need the authoritative payment result and event history.
 	// Unique items only
 	Transactions []CheckoutTransaction `json:"transactions,omitempty"`
-	// Date and time of the checkout expiration before which the client application needs to send a processing request.
-	// If no value is present, the checkout does not have an expiration time.
+	// Optional expiration timestamp. The checkout must be processed before this moment, otherwise it becomes unusable.
+	// If omitted, the checkout does not have an explicit expiry time.
 	ValidUntil *nullable.Field[time.Time] `json:"valid_until,omitempty"`
 }
 
-// Current status of the checkout.
+// Current high-level state of the checkout. `PENDING` means the checkout exists but is not yet completed, `PAID`
+// means a payment succeeded, `FAILED` means the latest processing attempt failed, and `EXPIRED` means the checkout
+// can no longer be processed.
 type CheckoutStatus string
 
 const (
@@ -158,24 +166,25 @@ const (
 	CheckoutTransactionStatusSuccessful CheckoutTransactionStatus = "SUCCESSFUL"
 )
 
-// 3DS Response
+// Response returned when checkout processing requires an additional payer action, such as a 3DS challenge or
+// a redirect to an external payment method page.
 type CheckoutAccepted struct {
-	// Required action processing 3D Secure payments.
+	// Instructions for the next action the payer or client must take.
 	NextStep *CheckoutAcceptedNextStep `json:"next_step,omitempty"`
 }
 
-// Required action processing 3D Secure payments.
+// Instructions for the next action the payer or client must take.
 type CheckoutAcceptedNextStep struct {
-	// Indicates allowed mechanisms for redirecting an end user. If both values are provided to ensure a redirect takes
-	// place in either.
+	// Allowed presentation mechanisms for the next step. `iframe` means the flow can be embedded, while `browser` means
+	// it can be completed through a full-page redirect.
 	Mechanism []CheckoutAcceptedNextStepMechanism `json:"mechanism,omitempty"`
-	// Method used to complete the redirect.
+	// HTTP method to use when following the next step.
 	Method *string `json:"method,omitempty"`
-	// Contains parameters essential for form redirection. Number of object keys and their content can vary.
+	// Parameters required to complete the next step. The exact keys depend on the payment provider and flow type.
 	Payload *CheckoutAcceptedNextStepPayload `json:"payload,omitempty"`
-	// Refers to a url where the end user is redirected once the payment processing completes.
+	// Merchant URL where the payer returns after the external flow finishes.
 	RedirectURL *string `json:"redirect_url,omitempty"`
-	// Where the end user is redirected.
+	// URL to open or submit in order to continue processing.
 	URL *string `json:"url,omitempty"`
 }
 
@@ -187,49 +196,52 @@ const (
 	CheckoutAcceptedNextStepMechanismIframe  CheckoutAcceptedNextStepMechanism = "iframe"
 )
 
-// Contains parameters essential for form redirection. Number of object keys and their content can vary.
+// Parameters required to complete the next step. The exact keys depend on the payment provider and flow type.
 type CheckoutAcceptedNextStepPayload struct {
 	Md      *any `json:"md,omitempty"`
 	PaReq   *any `json:"pa_req,omitempty"`
 	TermURL *any `json:"term_url,omitempty"`
 }
 
-// Details of the payment checkout.
+// Request body for creating a checkout before processing payment. Define the payment amount, currency, merchant,
+// and optional customer or redirect behavior here.
 type CheckoutCreateRequest struct {
-	// Amount of the payment.
+	// Amount to be charged to the payer, expressed in major units.
 	Amount float32 `json:"amount"`
-	// Unique ID of the payment checkout specified by the client application when creating the checkout resource.
+	// Merchant-defined reference for the new checkout. It should be unique enough for you to identify the payment attempt
+	// in your own systems.
 	// Max length: 90
 	CheckoutReference string `json:"checkout_reference"`
 	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
 	// currency values are enumerated above.
 	Currency Currency `json:"currency"`
-	// Unique identification of a customer. If specified, the checkout session and payment instrument are associated with
-	// the referenced customer.
+	// Merchant-scoped customer identifier. Required when setting up recurring payments and useful when the checkout
+	// should be linked to a returning payer.
 	CustomerID *string `json:"customer_id,omitempty"`
-	// Short description of the checkout visible in the SumUp dashboard. The description can contribute to reporting, allowing
-	// easier identification of a checkout.
+	// Short merchant-defined description shown in SumUp tools and reporting for easier identification of the checkout.
 	Description *string `json:"description,omitempty"`
-	// Unique identifying code of the merchant profile.
+	// Merchant account that should receive the payment.
 	MerchantCode string `json:"merchant_code"`
-	// Purpose of the checkout.
+	// Business purpose of the checkout. Use `CHECKOUT` for a standard payment and `SETUP_RECURRING_PAYMENT` when
+	// collecting consent and payment details for future recurring charges.
 	// Default: CHECKOUT
 	Purpose *CheckoutCreateRequestPurpose `json:"purpose,omitempty"`
-	// __Required__ for [APMs](https://developer.sumup.com/online-payments/apm/introduction) and __recommended__ for
-	// card payments. Refers to a url where the end user is redirected once the payment processing completes. If
-	// not specified, the [Payment Widget](https://developer.sumup.com/online-payments/tools/card-widget) renders [3DS
-	// challenge](https://developer.sumup.com/online-payments/features/3ds) within an iframe instead of performing a
-	// full-page redirect.
+	// URL where the payer should be sent after a redirect-based payment or SCA flow completes. This is required for
+	// [APMs](https://developer.sumup.com/online-payments/apm/introduction) and recommended for card checkouts that
+	// may require [3DS](https://developer.sumup.com/online-payments/features/3ds). If it is omitted, the [Payment Widget](https://developer.sumup.com/online-payments/checkouts)
+	// can render the challenge in an iframe instead of using a full-page redirect.
 	RedirectURL *string `json:"redirect_url,omitempty"`
-	// URL to which the SumUp platform sends the processing status of the payment checkout.
+	// Optional backend callback URL used by SumUp to notify your platform about processing updates for the checkout.
+	//
 	// Format: uri
 	ReturnURL *string `json:"return_url,omitempty"`
-	// Date and time of the checkout expiration before which the client application needs to send a processing request.
-	// If no value is present, the checkout does not have an expiration time.
+	// Optional expiration timestamp. The checkout must be processed before this moment, otherwise it becomes unusable.
+	// If omitted, the checkout does not have an explicit expiry time.
 	ValidUntil *nullable.Field[time.Time] `json:"valid_until,omitempty"`
 }
 
-// Purpose of the checkout.
+// Business purpose of the checkout. Use `CHECKOUT` for a standard payment and `SETUP_RECURRING_PAYMENT` when
+// collecting consent and payment details for future recurring charges.
 // Default: CHECKOUT
 type CheckoutCreateRequestPurpose string
 
@@ -238,41 +250,46 @@ const (
 	CheckoutCreateRequestPurposeSetupRecurringPayment CheckoutCreateRequestPurpose = "SETUP_RECURRING_PAYMENT"
 )
 
-// Checkout response returned after a successful processing attempt.
+// Checkout resource returned after a synchronous processing attempt. In addition to the base checkout fields, it
+// can include the resulting transaction identifiers and any newly created payment instrument token.
 type CheckoutSuccess struct {
-	// Amount of the payment.
+	// Amount to be charged to the payer, expressed in major units.
 	Amount *float32 `json:"amount,omitempty"`
-	// Unique ID of the payment checkout specified by the client application when creating the checkout resource.
+	// Merchant-defined reference for the checkout. Use it to correlate the SumUp checkout with your own order, cart,
+	// subscription, or payment attempt in your systems.
 	// Max length: 90
 	CheckoutReference *string `json:"checkout_reference,omitempty"`
 	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
 	// currency values are enumerated above.
 	Currency *Currency `json:"currency,omitempty"`
-	// Unique identification of a customer. If specified, the checkout session and payment instrument are associated with
-	// the referenced customer.
+	// Merchant-scoped identifier of the customer associated with the checkout. Use it when storing payment instruments
+	// or reusing saved customer context for recurring and returning-payer flows.
 	CustomerID *string `json:"customer_id,omitempty"`
 	// Date and time of the creation of the payment checkout. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
 	Date *time.Time `json:"date,omitempty"`
-	// Short description of the checkout visible in the SumUp dashboard. The description can contribute to reporting, allowing
-	// easier identification of a checkout.
+	// Short merchant-defined description shown in SumUp tools and reporting. Use it to make the checkout easier to
+	// recognize in dashboards, support workflows, and reconciliation.
 	Description *string `json:"description,omitempty"`
-	// Unique ID of the checkout resource.
+	// Unique SumUp identifier of the checkout resource.
 	// Read only
 	ID *string `json:"id,omitempty"`
-	// Created mandate
+	// Details of the mandate linked to the saved payment instrument.
 	Mandate *MandateResponse `json:"mandate,omitempty"`
-	// Unique identifying code of the merchant profile.
+	// Merchant account that receives the payment.
 	MerchantCode *string `json:"merchant_code,omitempty"`
 	// Name of the merchant
 	MerchantName *string `json:"merchant_name,omitempty"`
-	// Object containing token information for the specified payment instrument
+	// Details of the saved payment instrument created or reused during checkout processing.
 	PaymentInstrument *CheckoutSuccessPaymentInstrument `json:"payment_instrument,omitempty"`
-	// Refers to a url where the end user is redirected once the payment processing completes.
+	// URL where the payer is redirected after a redirect-based payment or SCA flow completes.
 	RedirectURL *string `json:"redirect_url,omitempty"`
-	// URL to which the SumUp platform sends the processing status of the payment checkout.
+	// Optional backend callback URL used by SumUp to notify your platform about processing updates for the checkout.
+	//
 	// Format: uri
 	ReturnURL *string `json:"return_url,omitempty"`
-	// Current status of the checkout.
+	// Current high-level state of the checkout. `PENDING` means the checkout exists but is not yet completed, `PAID`
+	// means a payment succeeded, `FAILED` means the latest processing attempt failed, and `EXPIRED` means the checkout
+	// can no longer be processed.
 	Status *CheckoutSuccessStatus `json:"status,omitempty"`
 	// Transaction code of the successful transaction with which the payment for the checkout is completed.
 	// Read only
@@ -280,15 +297,18 @@ type CheckoutSuccess struct {
 	// Transaction ID of the successful transaction with which the payment for the checkout is completed.
 	// Read only
 	TransactionID *string `json:"transaction_id,omitempty"`
-	// List of transactions related to the payment.
+	// Payment attempts and resulting transaction records linked to this checkout. Use the Transactions endpoints when
+	// you need the authoritative payment result and event history.
 	// Unique items only
 	Transactions []CheckoutSuccessTransaction `json:"transactions,omitempty"`
-	// Date and time of the checkout expiration before which the client application needs to send a processing request.
-	// If no value is present, the checkout does not have an expiration time.
+	// Optional expiration timestamp. The checkout must be processed before this moment, otherwise it becomes unusable.
+	// If omitted, the checkout does not have an explicit expiry time.
 	ValidUntil *nullable.Field[time.Time] `json:"valid_until,omitempty"`
 }
 
-// Current status of the checkout.
+// Current high-level state of the checkout. `PENDING` means the checkout exists but is not yet completed, `PAID`
+// means a payment succeeded, `FAILED` means the latest processing attempt failed, and `EXPIRED` means the checkout
+// can no longer be processed.
 type CheckoutSuccessStatus string
 
 const (
@@ -343,7 +363,7 @@ const (
 	CheckoutSuccessTransactionStatusSuccessful CheckoutSuccessTransactionStatus = "SUCCESSFUL"
 )
 
-// Object containing token information for the specified payment instrument
+// Details of the saved payment instrument created or reused during checkout processing.
 type CheckoutSuccessPaymentInstrument struct {
 	// Token value
 	Token *string `json:"token,omitempty"`
@@ -373,30 +393,32 @@ func (e *DetailsError) Error() string {
 
 var _ error = (*DetailsError)(nil)
 
-// Mandate is passed when a card is to be tokenized
+// Mandate details used when a checkout should create a reusable card token for future recurring or merchant-initiated payments.
 type MandatePayload struct {
-	// Indicates the mandate type
+	// Type of mandate to create for the saved payment instrument.
 	Type MandatePayloadType `json:"type"`
-	// Operating system and web client used by the end-user
+	// Browser or client user agent observed when consent was collected.
 	UserAgent string `json:"user_agent"`
-	// IP address of the end user. Supports IPv4 and IPv6
+	// IP address of the payer when the mandate was accepted.
 	UserIP *string `json:"user_ip,omitempty"`
 }
 
-// Indicates the mandate type
+// Type of mandate to create for the saved payment instrument.
 type MandatePayloadType string
 
 const (
 	MandatePayloadTypeRecurrent MandatePayloadType = "recurrent"
 )
 
-// Details of the payment instrument for processing the checkout.
+// Request body for attempting payment on an existing checkout. The required companion fields depend on the
+// selected `payment_type`, for example card details, saved-card data, or payer information required by a
+// specific payment method.
 type ProcessCheckout struct {
 	// Raw payment token object received from Apple Pay. Send the Apple Pay response payload as-is.
 	ApplePay *json.RawMessage `json:"apple_pay,omitempty"`
 	// __Required when payment type is `card`.__ Details of the payment card.
 	Card *Card `json:"card,omitempty"`
-	// __Required when `token` is provided.__ Unique ID of the customer.
+	// Customer identifier associated with the saved payment instrument. Required when `token` is provided.
 	CustomerID *string `json:"customer_id,omitempty"`
 	// Raw `PaymentData` object received from Google Pay. Send the Google Pay response payload as-is.
 	GooglePay *json.RawMessage `json:"google_pay,omitempty"`
@@ -404,18 +426,17 @@ type ProcessCheckout struct {
 	// Min: 1
 	// Max: 12
 	Installments *int `json:"installments,omitempty"`
-	// Mandate is passed when a card is to be tokenized
+	// Mandate details used when a checkout should create a reusable card token for future recurring or merchant-initiated payments.
 	Mandate *MandatePayload `json:"mandate,omitempty"`
-	// Describes the payment method used to attempt processing
+	// Payment method used for this processing attempt. It determines which additional request fields are required.
 	PaymentType ProcessCheckoutPaymentType `json:"payment_type"`
 	// Personal details for the customer.
 	PersonalDetails *PersonalDetails `json:"personal_details,omitempty"`
-	// __Required when using a tokenized card to process a checkout.__ Unique token identifying the saved payment card
-	// for a customer.
+	// Saved-card token to use instead of raw card details when processing with a previously stored payment instrument.
 	Token *string `json:"token,omitempty"`
 }
 
-// Describes the payment method used to attempt processing
+// Payment method used for this processing attempt. It determines which additional request fields are required.
 type ProcessCheckoutPaymentType string
 
 const (

@@ -31,7 +31,7 @@ type PaymentInstrumentResponse struct {
 	Card *PaymentInstrumentResponseCard `json:"card,omitempty"`
 	// Creation date of payment instrument. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
 	CreatedAt *time.Time `json:"created_at,omitempty"`
-	// Created mandate
+	// Details of the mandate linked to the saved payment instrument.
 	Mandate *MandateResponse `json:"mandate,omitempty"`
 	// Unique token identifying the saved payment card for a customer.
 	// Read only
