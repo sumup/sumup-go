@@ -69,7 +69,7 @@ import "github.com/sumup/sumup-go"
 - [type CompanyIdentifiers](<#CompanyIdentifiers>)
 - [type CountryCode](<#CountryCode>)
 - [type CreateCheckoutRequest](<#CreateCheckoutRequest>)
-- [type CreateCheckoutRequestAade](<#CreateCheckoutRequestAade>)
+- [type CreateCheckoutRequestAADE](<#CreateCheckoutRequestAADE>)
 - [type CreateCheckoutRequestAffiliate](<#CreateCheckoutRequestAffiliate>)
 - [type CreateCheckoutRequestAffiliateTags](<#CreateCheckoutRequestAffiliateTags>)
 - [type CreateCheckoutRequestCardType](<#CreateCheckoutRequestCardType>)
@@ -1569,7 +1569,7 @@ type CreateCheckoutRequest struct {
     // 1155 protocol.
     // When such regulatory/business requirements apply, this object must be provided and contains the data needed
     // to validate the transaction with the AADE signature provider.
-    Aade *CreateCheckoutRequestAade `json:"aade,omitempty"`
+    AADE *CreateCheckoutRequestAADE `json:"aade,omitempty"`
     // Affiliate metadata for the transaction.
     // It is a field that allow for integrators to track the source of the transaction.
     Affiliate *nullable.Field[CreateCheckoutRequestAffiliate] `json:"affiliate,omitempty"`
@@ -1613,13 +1613,13 @@ type CreateCheckoutRequest struct {
 }
 ```
 
-<a name="CreateCheckoutRequestAade"></a>
-## type [CreateCheckoutRequestAade](<https://github.com/sumup/sumup-go/blob/main/readers.go#L118-L125>)
+<a name="CreateCheckoutRequestAADE"></a>
+## type [CreateCheckoutRequestAADE](<https://github.com/sumup/sumup-go/blob/main/readers.go#L118-L125>)
 
 Optional object containing data for transactions from ERP integrators in Greece that comply with the AADE 1155 protocol. When such regulatory/business requirements apply, this object must be provided and contains the data needed to validate the transaction with the AADE signature provider.
 
 ```go
-type CreateCheckoutRequestAade struct {
+type CreateCheckoutRequestAADE struct {
     // The identifier of the AADE signature provider.
     ProviderID string `json:"provider_id"`
     // The base64 encoded signature of the transaction data.

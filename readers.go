@@ -68,7 +68,7 @@ type CreateCheckoutRequest struct {
 	// 1155 protocol.
 	// When such regulatory/business requirements apply, this object must be provided and contains the data needed
 	// to validate the transaction with the AADE signature provider.
-	Aade *CreateCheckoutRequestAade `json:"aade,omitempty"`
+	AADE *CreateCheckoutRequestAADE `json:"aade,omitempty"`
 	// Affiliate metadata for the transaction.
 	// It is a field that allow for integrators to track the source of the transaction.
 	Affiliate *nullable.Field[CreateCheckoutRequestAffiliate] `json:"affiliate,omitempty"`
@@ -115,7 +115,7 @@ type CreateCheckoutRequest struct {
 // 1155 protocol.
 // When such regulatory/business requirements apply, this object must be provided and contains the data needed
 // to validate the transaction with the AADE signature provider.
-type CreateCheckoutRequestAade struct {
+type CreateCheckoutRequestAADE struct {
 	// The identifier of the AADE signature provider.
 	ProviderID string `json:"provider_id"`
 	// The base64 encoded signature of the transaction data.

@@ -203,6 +203,7 @@ var commonInitialisms = map[string]struct{}{
 	"USD": {},
 
 	// Other common initialisms.
+	"AADE":  {},
 	"ACL":   {},
 	"AML":   {},
 	"API":   {},
@@ -210,9 +211,9 @@ var commonInitialisms = map[string]struct{}{
 	"ASCII": {},
 	"BIC":   {},
 	"CPU":   {},
+	"CSS":   {},
 	"CSV":   {},
 	"DESC":  {},
-	"CSS":   {},
 	"DNS":   {},
 	"EOF":   {},
 	"GUID":  {},
