@@ -174,6 +174,7 @@ const (
 	EventStatusFailed     EventStatus = "FAILED"
 	EventStatusPaidOut    EventStatus = "PAID_OUT"
 	EventStatusPending    EventStatus = "PENDING"
+	EventStatusReconciled EventStatus = "RECONCILED"
 	EventStatusRefunded   EventStatus = "REFUNDED"
 	EventStatusScheduled  EventStatus = "SCHEDULED"
 	EventStatusSuccessful EventStatus = "SUCCESSFUL"
