@@ -25,6 +25,7 @@ type templateData struct {
 	Aliases     []Alias
 	Types       []Writable
 	Service     string
+	ServiceDoc  string
 	Methods     []*Method
 }
 
@@ -75,6 +76,7 @@ func (b *Builder) generateResource(tagName string, paths *v3.Paths) error {
 		Types:       types,
 		Methods:     methods,
 		Service:     strcase.ToCamel(tag.Name),
+		ServiceDoc:  clientGodoc(strcase.ToCamel(tag.Name)+"Client", tag),
 	}); err != nil {
 		return err
 	}

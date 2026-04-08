@@ -31,7 +31,7 @@ type PaymentInstrumentResponse struct {
 	Card *PaymentInstrumentResponseCard `json:"card,omitempty"`
 	// Creation date of payment instrument. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
 	CreatedAt *time.Time `json:"created_at,omitempty"`
-	// Created mandate
+	// Details of the mandate linked to the saved payment instrument.
 	Mandate *MandateResponse `json:"mandate,omitempty"`
 	// Unique token identifying the saved payment card for a customer.
 	// Read only
@@ -78,6 +78,14 @@ var _ error = (*CustomersCreate400Response)(nil)
 // CustomersListPaymentInstrumentsResponse is a schema definition.
 type CustomersListPaymentInstrumentsResponse []PaymentInstrumentResponse
 
+// CustomersClient provides access to the Customers API.
+//
+// Allow your regular customers to save their information with the Customers model.
+//
+// This will prevent re-entering payment instrument information for recurring payments on your platform.
+//
+// Depending on the needs you can allow, creating, listing or deactivating payment instruments & creating, retrieving
+// and updating customers.
 type CustomersClient struct {
 	c *client.Client
 }

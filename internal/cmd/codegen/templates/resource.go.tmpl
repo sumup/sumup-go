@@ -32,6 +32,9 @@ import (
 {{- end }}
 
 {{ if ne (len .Methods) 0 }}
+{{- with .ServiceDoc}}
+// {{.}}
+{{- end }}
 type {{.Service}}Client struct {
 	c *client.Client
 }

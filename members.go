@@ -183,6 +183,9 @@ type MembersListResponse struct {
 	TotalCount *int     `json:"total_count,omitempty"`
 }
 
+// MembersClient provides access to the Members API.
+//
+// Endpoints to manage account members. Members are users that have membership within merchant accounts.
 type MembersClient struct {
 	c *client.Client
 }

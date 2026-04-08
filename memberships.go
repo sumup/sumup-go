@@ -160,6 +160,10 @@ type MembershipsListResponse struct {
 	TotalCount int          `json:"total_count"`
 }
 
+// MembershipsClient provides access to the Memberships API.
+//
+// Endpoints to manage user's memberships. Memberships are used to connect the user to merchant accounts and
+// to grant them access to the merchant's resources via roles.
 type MembershipsClient struct {
 	c *client.Client
 }

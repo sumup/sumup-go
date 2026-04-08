@@ -45,6 +45,19 @@ func operationParamsGodoc(name string, operation *v3.Operation) string {
 	return formatGodoc(fmt.Sprintf("%s are query parameters for %s.", name, operation.OperationId))
 }
 
+// clientGodoc creates godoc for a generated client from the OpenAPI tag description.
+func clientGodoc(name string, tag *base.Tag) string {
+	out := new(strings.Builder)
+
+	fmt.Fprintf(out, "%s provides access to the %s API.", name, cmp.Or(tag.Name, "tag"))
+
+	if tag != nil && strings.TrimSpace(tag.Description) != "" {
+		fmt.Fprintf(out, "\n\n%s", strings.TrimSpace(tag.Description))
+	}
+
+	return formatGodoc(out.String())
+}
+
 // schemaGodoc creates godoc for a schema.
 func schemaGodoc(name string, schema *base.Schema) string {
 	out := new(strings.Builder)
