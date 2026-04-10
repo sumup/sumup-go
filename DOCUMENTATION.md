@@ -507,7 +507,7 @@ const (
 
 Base schema for a person associated with a merchant. This can be a legal representative, business owner \(ultimate beneficial owner\), or an officer. A legal representative is the person who registered the merchant with SumUp. They should always have a \`user\_id\`.
 
-Person documentation: https://developer.sumup.com/tools/models/merchant#persons
+Person documentation: https://developer.sumup.com/tools/glossary/merchant#persons
 
 ```go
 type BasePerson struct {
@@ -1498,7 +1498,7 @@ NewClient creates new SumUp API client. The client is by default configured envi
 
 Information about the company or business. This is legal information that is used for verification.
 
-Company documentation: https://developer.sumup.com/tools/models/merchant#company
+Company documentation: https://developer.sumup.com/tools/glossary/merchant#company
 
 ```go
 type Company struct {
@@ -1518,7 +1518,7 @@ type Company struct {
     // descriptions.
     // Min length: 4
     // Max length: 64
-    // The country SDK documentation for legal types.: https://developer.sumup.com/tools/models/merchant#legal-types
+    // The country SDK documentation for legal types.: https://developer.sumup.com/tools/glossary/merchant#legal-types
     LegalType *LegalType `json:"legal_type,omitempty"`
     // The merchant category code for the account as specified by [ISO18245](https://www.iso.org/standard/33365.html). MCCs
     // are used to classify businesses based on the goods or services they provide.
@@ -1548,7 +1548,7 @@ type Company struct {
 <a name="CompanyIdentifier"></a>
 ## type [CompanyIdentifier](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L283-L289>)
 
-CompanyIdentifier is a schema definition. Company identifier documentation: https://developer.sumup.com/tools/models/merchant#company-identifiers
+CompanyIdentifier is a schema definition. Company identifier documentation: https://developer.sumup.com/tools/glossary/merchant#company-identifiers
 
 ```go
 type CompanyIdentifier struct {
@@ -2444,7 +2444,7 @@ type Lat float32
 
 The unique legal type reference as defined in the country SDK. We do not rely on IDs as used by other services. Consumers of this API are expected to use the country SDK to map to any other IDs, translation keys, or descriptions.
 
-Min length: 4 Max length: 64 The country SDK documentation for legal types.: https://developer.sumup.com/tools/models/merchant#legal-types
+Min length: 4 Max length: 64 The country SDK documentation for legal types.: https://developer.sumup.com/tools/glossary/merchant#legal-types
 
 ```go
 type LegalType string
@@ -2994,7 +2994,7 @@ type MembershipsListResponse struct {
 <a name="Merchant"></a>
 ## type [Merchant](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L318-L392>)
 
-Merchant is a schema definition. Merchant documentation: https://developer.sumup.com/tools/models/merchant
+Merchant is a schema definition. Merchant documentation: https://developer.sumup.com/tools/glossary/merchant
 
 ```go
 type Merchant struct {
@@ -3024,7 +3024,7 @@ type Merchant struct {
     ChangeStatus *ChangeStatus               `json:"change_status,omitempty"`
     Classic      *ClassicMerchantIdentifiers `json:"classic,omitempty"`
     // Information about the company or business. This is legal information that is used for verification.
-    // Company documentation: https://developer.sumup.com/tools/models/merchant#company
+    // Company documentation: https://developer.sumup.com/tools/glossary/merchant#company
     Company *Company `json:"company,omitempty"`
     // An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
     // country code. This definition users `oneOf` with a two-character string
