@@ -91,7 +91,7 @@ type Address struct {
 // beneficial owner), or an officer. A legal representative is the person who registered the merchant with SumUp.
 // They should always have a `user_id`.
 //
-// Person documentation: https://developer.sumup.com/tools/models/merchant#persons
+// Person documentation: https://developer.sumup.com/tools/glossary/merchant#persons
 type BasePerson struct {
 	// An address somewhere in the world. The address fields used depend on the country conventions. For example, in
 	// Great Britain, `city` is `post_town`. In the United States, the top-level administrative unit used in addresses
@@ -234,7 +234,7 @@ type ClassicMerchantIdentifiers struct {
 
 // Information about the company or business. This is legal information that is used for verification.
 //
-// Company documentation: https://developer.sumup.com/tools/models/merchant#company
+// Company documentation: https://developer.sumup.com/tools/glossary/merchant#company
 type Company struct {
 	// An address somewhere in the world. The address fields used depend on the country conventions. For example, in
 	// Great Britain, `city` is `post_town`. In the United States, the top-level administrative unit used in addresses
@@ -252,7 +252,7 @@ type Company struct {
 	// descriptions.
 	// Min length: 4
 	// Max length: 64
-	// The country SDK documentation for legal types.: https://developer.sumup.com/tools/models/merchant#legal-types
+	// The country SDK documentation for legal types.: https://developer.sumup.com/tools/glossary/merchant#legal-types
 	LegalType *LegalType `json:"legal_type,omitempty"`
 	// The merchant category code for the account as specified by [ISO18245](https://www.iso.org/standard/33365.html). MCCs
 	// are used to classify businesses based on the goods or services they provide.
@@ -279,7 +279,7 @@ type Company struct {
 }
 
 // CompanyIdentifier is a schema definition.
-// Company identifier documentation: https://developer.sumup.com/tools/models/merchant#company-identifiers
+// Company identifier documentation: https://developer.sumup.com/tools/glossary/merchant#company-identifiers
 type CompanyIdentifier struct {
 	// The unique reference for the company identifier type as defined in the country SDK.
 	Ref string `json:"ref"`
@@ -305,7 +305,7 @@ type CountryCode string
 //
 // Min length: 4
 // Max length: 64
-// The country SDK documentation for legal types.: https://developer.sumup.com/tools/models/merchant#legal-types
+// The country SDK documentation for legal types.: https://developer.sumup.com/tools/glossary/merchant#legal-types
 type LegalType string
 
 // ListPersonsResponseBody is a schema definition.
@@ -314,7 +314,7 @@ type ListPersonsResponseBody struct {
 }
 
 // Merchant is a schema definition.
-// Merchant documentation: https://developer.sumup.com/tools/models/merchant
+// Merchant documentation: https://developer.sumup.com/tools/glossary/merchant
 type Merchant struct {
 	// A user-facing name of the merchant account for use in dashboards and other user-facing applications. For
 	// customer-facing business name see `merchant.business_profile`.
@@ -342,7 +342,7 @@ type Merchant struct {
 	ChangeStatus *ChangeStatus               `json:"change_status,omitempty"`
 	Classic      *ClassicMerchantIdentifiers `json:"classic,omitempty"`
 	// Information about the company or business. This is legal information that is used for verification.
-	// Company documentation: https://developer.sumup.com/tools/models/merchant#company
+	// Company documentation: https://developer.sumup.com/tools/glossary/merchant#company
 	Company *Company `json:"company,omitempty"`
 	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
 	// country code. This definition users `oneOf` with a two-character string
