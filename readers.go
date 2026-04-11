@@ -502,9 +502,11 @@ func (c *ReadersClient) List(ctx context.Context, merchantCode string) (*Readers
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodGet, path, err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	switch resp.StatusCode {
 	case http.StatusOK:
@@ -532,9 +534,11 @@ func (c *ReadersClient) Create(ctx context.Context, merchantCode string, body Re
 
 	resp, err := c.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
 	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodPost, path, err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	switch resp.StatusCode {
 	case http.StatusCreated:
@@ -589,9 +593,11 @@ func (c *ReadersClient) TerminateCheckout(ctx context.Context, merchantCode stri
 
 	resp, err := c.c.Call(ctx, http.MethodPost, path)
 	if err != nil {
-		return fmt.Errorf("error building request: %v", err)
+		return fmt.Errorf("call %s %s: %w", http.MethodPost, path, err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	switch resp.StatusCode {
 	case http.StatusAccepted:
@@ -654,9 +660,11 @@ func (c *ReadersClient) GetStatus(ctx context.Context, merchantCode string, read
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodGet, path, err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	switch resp.StatusCode {
 	case http.StatusOK:
@@ -707,9 +715,11 @@ func (c *ReadersClient) CreateCheckout(ctx context.Context, merchantCode string,
 
 	resp, err := c.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
 	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodPost, path, err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	switch resp.StatusCode {
 	case http.StatusCreated:
@@ -758,9 +768,11 @@ func (c *ReadersClient) Delete(ctx context.Context, merchantCode string, id Read
 
 	resp, err := c.c.Call(ctx, http.MethodDelete, path)
 	if err != nil {
-		return fmt.Errorf("error building request: %v", err)
+		return fmt.Errorf("call %s %s: %w", http.MethodDelete, path, err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	switch resp.StatusCode {
 	case http.StatusOK:
@@ -783,9 +795,11 @@ func (c *ReadersClient) Get(ctx context.Context, merchantCode string, id ReaderI
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodGet, path, err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	switch resp.StatusCode {
 	case http.StatusOK:
@@ -813,9 +827,11 @@ func (c *ReadersClient) Update(ctx context.Context, merchantCode string, id Read
 
 	resp, err := c.c.Call(ctx, http.MethodPatch, path, client.WithJSONBody(body))
 	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodPatch, path, err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	switch resp.StatusCode {
 	case http.StatusOK:

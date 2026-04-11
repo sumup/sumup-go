@@ -583,9 +583,11 @@ func (c *MerchantsClient) ListPersons(ctx context.Context, merchantCode string, 
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodGet, path, err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	switch resp.StatusCode {
 	case http.StatusOK:
@@ -621,9 +623,11 @@ func (c *MerchantsClient) Get(ctx context.Context, merchantCode string, params M
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodGet, path, err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	switch resp.StatusCode {
 	case http.StatusOK:
@@ -652,9 +656,11 @@ func (c *MerchantsClient) GetPerson(ctx context.Context, merchantCode string, pe
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodGet, path, err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	switch resp.StatusCode {
 	case http.StatusOK:

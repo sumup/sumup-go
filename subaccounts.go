@@ -133,9 +133,11 @@ func (c *SubaccountsClient) ListSubAccounts(ctx context.Context, params Subaccou
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodGet, path, err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	switch resp.StatusCode {
 	case http.StatusOK:
@@ -165,9 +167,11 @@ func (c *SubaccountsClient) CreateSubAccount(ctx context.Context, body Subaccoun
 
 	resp, err := c.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
 	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodPost, path, err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	switch resp.StatusCode {
 	case http.StatusOK:
@@ -197,9 +201,11 @@ func (c *SubaccountsClient) CompatGetOperator(ctx context.Context, operatorID in
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodGet, path, err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	switch resp.StatusCode {
 	case http.StatusOK:
@@ -229,9 +235,11 @@ func (c *SubaccountsClient) UpdateSubAccount(ctx context.Context, operatorID int
 
 	resp, err := c.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))
 	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodPut, path, err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	switch resp.StatusCode {
 	case http.StatusOK:

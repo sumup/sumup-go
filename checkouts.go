@@ -570,9 +570,11 @@ func (c *CheckoutsClient) List(ctx context.Context, params CheckoutsListParams) 
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodGet, path, err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	switch resp.StatusCode {
 	case http.StatusOK:
@@ -605,9 +607,11 @@ func (c *CheckoutsClient) Create(ctx context.Context, body CheckoutsCreateParams
 
 	resp, err := c.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
 	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodPost, path, err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	switch resp.StatusCode {
 	case http.StatusCreated:
@@ -656,9 +660,11 @@ func (c *CheckoutsClient) ListAvailablePaymentMethods(ctx context.Context, merch
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodGet, path, err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	switch resp.StatusCode {
 	case http.StatusOK:
@@ -686,9 +692,11 @@ func (c *CheckoutsClient) Deactivate(ctx context.Context, id string) (*Checkout,
 
 	resp, err := c.c.Call(ctx, http.MethodDelete, path)
 	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodDelete, path, err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	switch resp.StatusCode {
 	case http.StatusOK:
@@ -731,9 +739,11 @@ func (c *CheckoutsClient) Get(ctx context.Context, id string) (*CheckoutSuccess,
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodGet, path, err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	switch resp.StatusCode {
 	case http.StatusOK:
@@ -771,9 +781,11 @@ func (c *CheckoutsClient) Process(ctx context.Context, id string, body Checkouts
 
 	resp, err := c.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))
 	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodPut, path, err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	switch resp.StatusCode {
 	case http.StatusOK:
