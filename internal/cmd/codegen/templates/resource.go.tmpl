@@ -51,14 +51,16 @@ func New{{.Service}}Client(c *client.Client) *{{.Service}}Client {
 func (c *{{$.Service}}Client) {{.FunctionName}}({{.ParamsString}}) {{with .ResponseType}}(*{{.Type}}, error){{else}}error{{end}} {
 	path := {{.Path}}
 
-    resp, err := c.c.Call(ctx, {{.HTTPMethod}}, path
+	resp, err := c.c.Call(ctx, {{.HTTPMethod}}, path
 	{{- if .HasBody }}, client.WithJSONBody(body){{ end -}}
 	{{- if .QueryParams }}, client.WithQueryValues(params.QueryValues()){{ end -}}
 	)
 	if err != nil {
-		return {{with $responseType}}nil, {{end}}fmt.Errorf("error building request: %v", err)
+		return {{with $responseType}}nil, {{end}}fmt.Errorf("call %s %s: %w", {{.HTTPMethod}}, path, err)
 	}
-    defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	switch resp.StatusCode {
 	{{- range $resp := .Responses }}

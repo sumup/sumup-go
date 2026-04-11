@@ -100,9 +100,11 @@ func (c *CustomersClient) Create(ctx context.Context, body CustomersCreateParams
 
 	resp, err := c.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
 	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodPost, path, err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	switch resp.StatusCode {
 	case http.StatusCreated:
@@ -151,9 +153,11 @@ func (c *CustomersClient) ListPaymentInstruments(ctx context.Context, customerID
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodGet, path, err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	switch resp.StatusCode {
 	case http.StatusOK:
@@ -196,9 +200,11 @@ func (c *CustomersClient) Get(ctx context.Context, customerID string) (*Customer
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodGet, path, err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	switch resp.StatusCode {
 	case http.StatusOK:
@@ -243,9 +249,11 @@ func (c *CustomersClient) Update(ctx context.Context, customerID string, body Cu
 
 	resp, err := c.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))
 	if err != nil {
-		return nil, fmt.Errorf("error building request: %v", err)
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodPut, path, err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	switch resp.StatusCode {
 	case http.StatusOK:
@@ -287,9 +295,11 @@ func (c *CustomersClient) DeactivatePaymentInstrument(ctx context.Context, custo
 
 	resp, err := c.c.Call(ctx, http.MethodDelete, path)
 	if err != nil {
-		return fmt.Errorf("error building request: %v", err)
+		return fmt.Errorf("call %s %s: %w", http.MethodDelete, path, err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	switch resp.StatusCode {
 	case http.StatusNoContent:
