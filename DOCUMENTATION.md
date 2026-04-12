@@ -8,7 +8,9 @@ import "github.com/sumup/sumup-go"
 
 ## Index
 
+- [Constants](<#constants>)
 - [Variables](<#variables>)
+- [func VerifyEventSignature\(secret string, payload \[\]byte, signature string\) error](<#VerifyEventSignature>)
 - [type Address](<#Address>)
 - [type AddressLegacy](<#AddressLegacy>)
 - [type Affiliate](<#Affiliate>)
@@ -75,6 +77,9 @@ import "github.com/sumup/sumup-go"
 - [type ClassicMerchantIdentifiers](<#ClassicMerchantIdentifiers>)
 - [type Client](<#Client>)
   - [func NewClient\(opts ...client.ClientOption\) \*Client](<#NewClient>)
+  - [func \(c \*Client\) EventsHandler\(secret string, fallback EventCallback\) \(\*EventsHandler, error\)](<#Client.EventsHandler>)
+  - [func \(c \*Client\) ParseEventNotification\(secret string, payload \[\]byte, signature string\) \(EventNotification, error\)](<#Client.ParseEventNotification>)
+  - [func \(c \*Client\) ParseEventNotificationWithoutVerification\(payload \[\]byte\) \(EventNotification, error\)](<#Client.ParseEventNotificationWithoutVerification>)
 - [type Company](<#Company>)
 - [type CompanyIdentifier](<#CompanyIdentifier>)
 - [type CompanyIdentifiers](<#CompanyIdentifiers>)
@@ -126,6 +131,23 @@ import "github.com/sumup/sumup-go"
 - [type ErrorForbidden](<#ErrorForbidden>)
   - [func \(e \*ErrorForbidden\) Error\(\) string](<#ErrorForbidden.Error>)
 - [type Event](<#Event>)
+- [type EventCallback](<#EventCallback>)
+- [type EventCallbackError](<#EventCallbackError>)
+  - [func \(e \*EventCallbackError\) Error\(\) string](<#EventCallbackError.Error>)
+  - [func \(e \*EventCallbackError\) Unwrap\(\) error](<#EventCallbackError.Unwrap>)
+- [type EventNotification](<#EventNotification>)
+- [type EventObject](<#EventObject>)
+- [type EventsHandler](<#EventsHandler>)
+  - [func NewEventsHandler\(client \*Client, secret string, fallback EventCallback\) \(\*EventsHandler, error\)](<#NewEventsHandler>)
+  - [func \(h \*EventsHandler\) GoString\(\) string](<#EventsHandler.GoString>)
+  - [func \(h \*EventsHandler\) Handle\(ctx context.Context, payload \[\]byte, signature string\) error](<#EventsHandler.Handle>)
+  - [func \(h \*EventsHandler\) OnMemberCreated\(callback func\(context.Context, \*MemberCreatedEvent\) error\) error](<#EventsHandler.OnMemberCreated>)
+  - [func \(h \*EventsHandler\) OnMemberDeleted\(callback func\(context.Context, \*MemberDeletedEvent\) error\) error](<#EventsHandler.OnMemberDeleted>)
+  - [func \(h \*EventsHandler\) OnMemberUpdated\(callback func\(context.Context, \*MemberUpdatedEvent\) error\) error](<#EventsHandler.OnMemberUpdated>)
+  - [func \(h \*EventsHandler\) OnReaderCreated\(callback func\(context.Context, \*ReaderCreatedEvent\) error\) error](<#EventsHandler.OnReaderCreated>)
+  - [func \(h \*EventsHandler\) OnReaderDeleted\(callback func\(context.Context, \*ReaderDeletedEvent\) error\) error](<#EventsHandler.OnReaderDeleted>)
+  - [func \(h \*EventsHandler\) Parse\(payload \[\]byte, signature string\) \(EventNotification, error\)](<#EventsHandler.Parse>)
+  - [func \(h \*EventsHandler\) String\(\) string](<#EventsHandler.String>)
 - [type FinancialPayout](<#FinancialPayout>)
 - [type FinancialPayoutStatus](<#FinancialPayoutStatus>)
 - [type FinancialPayoutType](<#FinancialPayoutType>)
@@ -149,6 +171,9 @@ import "github.com/sumup/sumup-go"
 - [type MandateResponse](<#MandateResponse>)
 - [type MandateResponseStatus](<#MandateResponseStatus>)
 - [type Member](<#Member>)
+- [type MemberCreatedEvent](<#MemberCreatedEvent>)
+- [type MemberDeletedEvent](<#MemberDeletedEvent>)
+- [type MemberUpdatedEvent](<#MemberUpdatedEvent>)
 - [type MembersClient](<#MembersClient>)
   - [func NewMembersClient\(c \*client.Client\) \*MembersClient](<#NewMembersClient>)
   - [func \(c \*MembersClient\) Create\(ctx context.Context, merchantCode string, body MembersCreateParams\) \(\*Member, error\)](<#MembersClient.Create>)
@@ -212,6 +237,8 @@ import "github.com/sumup/sumup-go"
 - [type ProcessCheckoutPaymentType](<#ProcessCheckoutPaymentType>)
 - [type Product](<#Product>)
 - [type Reader](<#Reader>)
+- [type ReaderCreatedEvent](<#ReaderCreatedEvent>)
+- [type ReaderDeletedEvent](<#ReaderDeletedEvent>)
 - [type ReaderDevice](<#ReaderDevice>)
 - [type ReaderDeviceModel](<#ReaderDeviceModel>)
 - [type ReaderID](<#ReaderID>)
@@ -327,15 +354,82 @@ import "github.com/sumup/sumup-go"
 - [type TransactionsListTypesItem](<#TransactionsListTypesItem>)
 - [type TransactionsRefundParams](<#TransactionsRefundParams>)
 - [type TransactionsRefundResponse](<#TransactionsRefundResponse>)
+- [type TypedEvent](<#TypedEvent>)
+  - [func \(e TypedEvent\[T\]\) EventID\(\) string](<#TypedEvent[T].EventID>)
+  - [func \(e TypedEvent\[T\]\) EventType\(\) string](<#TypedEvent[T].EventType>)
+  - [func \(e TypedEvent\[T\]\) FetchObject\(ctx context.Context\) \(\*T, error\)](<#TypedEvent[T].FetchObject>)
 - [type Unauthorized](<#Unauthorized>)
   - [func \(e \*Unauthorized\) Error\(\) string](<#Unauthorized.Error>)
 - [type UnauthorizedErrors](<#UnauthorizedErrors>)
 - [type UnauthorizedErrorsType](<#UnauthorizedErrorsType>)
+- [type UnknownEvent](<#UnknownEvent>)
 - [type UserType](<#UserType>)
 - [type Version](<#Version>)
 
 
+## Constants
+
+<a name="EventSignatureHeader"></a>
+
+```go
+const (
+    // EventSignatureHeader carries t=<unix timestamp>,v1=<hex HMAC>.
+    EventSignatureHeader = "X-SumUp-Webhook-Signature"
+    // EventSignatureVersion is the accepted signature scheme.
+    EventSignatureVersion = "v1"
+)
+```
+
+<a name="EventTypeMemberCreated"></a>EventTypeMemberCreated identifies a members.created notification.
+
+```go
+const EventTypeMemberCreated = "members.created"
+```
+
+<a name="EventTypeMemberDeleted"></a>EventTypeMemberDeleted identifies a members.deleted notification.
+
+```go
+const EventTypeMemberDeleted = "members.deleted"
+```
+
+<a name="EventTypeMemberUpdated"></a>EventTypeMemberUpdated identifies a members.updated notification.
+
+```go
+const EventTypeMemberUpdated = "members.updated"
+```
+
+<a name="EventTypeReaderCreated"></a>EventTypeReaderCreated identifies a readers.created notification.
+
+```go
+const EventTypeReaderCreated = "readers.created"
+```
+
+<a name="EventTypeReaderDeleted"></a>EventTypeReaderDeleted identifies a readers.deleted notification.
+
+```go
+const EventTypeReaderDeleted = "readers.deleted"
+```
+
 ## Variables
+
+<a name="ErrEventSecretMissing"></a>
+
+```go
+var (
+    // ErrEventSecretMissing indicates an empty signing secret.
+    ErrEventSecretMissing = errors.New("missing event signing secret")
+    // ErrEventTimestampInvalid indicates a missing or malformed timestamp.
+    ErrEventTimestampInvalid = errors.New("invalid event timestamp")
+    // ErrEventSignatureInvalid indicates a missing, malformed, or mismatched signature.
+    ErrEventSignatureInvalid = errors.New("invalid event signature")
+    // ErrEventSignatureExpired indicates a timestamp outside the allowed clock skew.
+    ErrEventSignatureExpired = errors.New("event timestamp outside allowed tolerance")
+    // ErrEventPayloadInvalid indicates an invalid notification envelope.
+    ErrEventPayloadInvalid = errors.New("invalid event payload")
+    // ErrEventAlreadyRegistered indicates a duplicate typed callback registration.
+    ErrEventAlreadyRegistered = errors.New("event callback already registered")
+)
+```
 
 <a name="OAuth2Endpoint"></a>OAuth2Endpoint is SumUp's OAuth 2.0 endpoint.
 
@@ -345,6 +439,15 @@ var OAuth2Endpoint = oauth2.Endpoint{
     TokenURL: "https://api.sumup.com/token",
 }
 ```
+
+<a name="VerifyEventSignature"></a>
+## func [VerifyEventSignature](<https://github.com/sumup/sumup-go/blob/main/events_handler.go#L153>)
+
+```go
+func VerifyEventSignature(secret string, payload []byte, signature string) error
+```
+
+VerifyEventSignature verifies HMAC\-SHA256 over v1:timestamp:body using the signing secret and a fixed five\-minute tolerance. Verification uses the exact body bytes and constant\-time digest comparison. Pass the complete signature header in t=\<unix timestamp\>,v1=\<hex HMAC\> format. An empty secret is always rejected.
 
 <a name="Address"></a>
 ## type [Address](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L23-L87>)
@@ -1709,6 +1812,111 @@ func NewClient(opts ...client.ClientOption) *Client
 
 NewClient creates new SumUp API client. The client is by default configured environment variables \(\`SUMUP\_API\_KEY\`\). To override the default configuration use \[ClientOption\]s.
 
+<a name="Client.EventsHandler"></a>
+### func \(\*Client\) [EventsHandler](<https://github.com/sumup/sumup-go/blob/main/events_handler.go#L94>)
+
+```go
+func (c *Client) EventsHandler(secret string, fallback EventCallback) (*EventsHandler, error)
+```
+
+EventsHandler creates a verified event receiver bound to this API client.
+
+<details><summary>Example</summary>
+<p>
+
+
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"os"
+
+	"github.com/sumup/sumup-go"
+)
+
+func main() {
+	c := sumup.NewClient()
+	h, err := c.EventsHandler(os.Getenv("SUMUP_EVENT_SECRET"), func(_ context.Context, event sumup.EventNotification) error {
+		log.Printf("unhandled event: %s", event.EventType())
+		return nil
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := h.OnMemberUpdated(func(ctx context.Context, event *sumup.MemberUpdatedEvent) error {
+		member, err := event.FetchObject(ctx)
+		if err != nil {
+			return err
+		}
+		log.Printf("member updated: %s", member.ID)
+		return nil
+	}); err != nil {
+		log.Fatal(err)
+	}
+	// In an HTTP receiver, limit and read the raw body, then call
+	// h.Handle(r.Context(), body, r.Header.Get(sumup.EventSignatureHeader)).
+	// Acknowledge only on success.
+}
+```
+
+</p>
+</details>
+
+<a name="Client.ParseEventNotification"></a>
+### func \(\*Client\) [ParseEventNotification](<https://github.com/sumup/sumup-go/blob/main/events.go#L110>)
+
+```go
+func (c *Client) ParseEventNotification(secret string, payload []byte, signature string) (EventNotification, error)
+```
+
+ParseEventNotification verifies the signature and timestamp before parsing the exact raw body. Prefer [Client.EventsHandler](<#Client.EventsHandler>) when using callback dispatch.
+
+<a name="Client.ParseEventNotificationWithoutVerification"></a>
+### func \(\*Client\) [ParseEventNotificationWithoutVerification](<https://github.com/sumup/sumup-go/blob/main/events.go#L120>)
+
+```go
+func (c *Client) ParseEventNotificationWithoutVerification(payload []byte) (EventNotification, error)
+```
+
+ParseEventNotificationWithoutVerification skips signature verification. Use this for fixtures or payloads verified before being queued for later processing. Prefer [Client.ParseEventNotification](<#Client.ParseEventNotification>) for incoming requests.
+
+<details><summary>Example</summary>
+<p>
+
+
+
+```go
+package main
+
+import (
+	"fmt"
+	"log"
+
+	"github.com/sumup/sumup-go"
+)
+
+func main() {
+	c := sumup.NewClient()
+	event, err := c.ParseEventNotificationWithoutVerification([]byte(`{"id":"evt_123","type":"members.updated","created_at":"2026-04-11T10:00:00Z","object":{"id":"member_123","type":"member","url":"https://api.sumup.com/v0.1/merchants/MCODE/members/member_123"}}`))
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(event.EventID(), event.EventType())
+}
+```
+
+#### Output
+
+```
+evt_123 members.updated
+```
+
+</p>
+</details>
+
 <a name="Company"></a>
 ## type [Company](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L245-L287>)
 
@@ -2506,6 +2714,174 @@ type Event struct {
 }
 ```
 
+<a name="EventCallback"></a>
+## type [EventCallback](<https://github.com/sumup/sumup-go/blob/main/events_handler.go#L46>)
+
+EventCallback handles notifications without a dedicated typed callback. The context is the caller's context. Events retain the handler's client for fetching resources. Callbacks may run concurrently and should return errors to allow delivery retries.
+
+```go
+type EventCallback func(context.Context, EventNotification) error
+```
+
+<a name="EventCallbackError"></a>
+## type [EventCallbackError](<https://github.com/sumup/sumup-go/blob/main/events_handler.go#L50>)
+
+EventCallbackError distinguishes callback failures from invalid requests. HTTP receivers should return a 5xx response so failed processing can be retried.
+
+```go
+type EventCallbackError struct{ Err error }
+```
+
+<a name="EventCallbackError.Error"></a>
+### func \(\*EventCallbackError\) [Error](<https://github.com/sumup/sumup-go/blob/main/events_handler.go#L52>)
+
+```go
+func (e *EventCallbackError) Error() string
+```
+
+
+
+<a name="EventCallbackError.Unwrap"></a>
+### func \(\*EventCallbackError\) [Unwrap](<https://github.com/sumup/sumup-go/blob/main/events_handler.go#L53>)
+
+```go
+func (e *EventCallbackError) Unwrap() error
+```
+
+
+
+<a name="EventNotification"></a>
+## type [EventNotification](<https://github.com/sumup/sumup-go/blob/main/events.go#L16-L21>)
+
+EventNotification is a known or unknown SumUp notification. Use a type switch to access a specific event, or register typed callbacks with [EventsHandler](<#EventsHandler>).
+
+```go
+type EventNotification interface {
+    EventID() string
+    EventType() string
+    // contains filtered or unexported methods
+}
+```
+
+<a name="EventObject"></a>
+## type [EventObject](<https://github.com/sumup/sumup-go/blob/main/events.go#L47-L54>)
+
+EventObject references the API resource affected by a notification.
+
+```go
+type EventObject struct {
+    // ID identifies the referenced resource.
+    ID  string `json:"id"`
+    // Type is the resource kind, such as member or reader.
+    Type string `json:"type"`
+    // URL is the absolute API URL for fetching the resource.
+    URL string `json:"url"`
+}
+```
+
+<a name="EventsHandler"></a>
+## type [EventsHandler](<https://github.com/sumup/sumup-go/blob/main/events_handler.go#L62-L68>)
+
+EventsHandler verifies, parses, and dispatches notifications. Register typed callbacks using the generated On methods. Known events without a callback and unknown event types go to the required fallback callback.
+
+Handling and registration are safe concurrently. Callbacks run synchronously without the registration lock held; they must synchronize their own shared state. An EventsHandler must not be copied after first use.
+
+```go
+type EventsHandler struct {
+    // contains filtered or unexported fields
+}
+```
+
+<a name="NewEventsHandler"></a>
+### func [NewEventsHandler](<https://github.com/sumup/sumup-go/blob/main/events_handler.go#L80>)
+
+```go
+func NewEventsHandler(client *Client, secret string, fallback EventCallback) (*EventsHandler, error)
+```
+
+NewEventsHandler creates a verified event receiver. Client, signing secret, and fallback are required. No environment variables are read implicitly.
+
+<a name="EventsHandler.GoString"></a>
+### func \(\*EventsHandler\) [GoString](<https://github.com/sumup/sumup-go/blob/main/events_handler.go#L76>)
+
+```go
+func (h *EventsHandler) GoString() string
+```
+
+GoString also masks secrets when the handler is formatted with %\#v.
+
+<a name="EventsHandler.Handle"></a>
+### func \(\*EventsHandler\) [Handle](<https://github.com/sumup/sumup-go/blob/main/events_handler.go#L124>)
+
+```go
+func (h *EventsHandler) Handle(ctx context.Context, payload []byte, signature string) error
+```
+
+Handle verifies and dispatches an exact raw body. Never reserialize the body before calling this method. The caller owns reading and limiting the request body. Context cancellation propagates to the callback.
+
+<a name="EventsHandler.OnMemberCreated"></a>
+### func \(\*EventsHandler\) [OnMemberCreated](<https://github.com/sumup/sumup-go/blob/main/events_generated.go#L20>)
+
+```go
+func (h *EventsHandler) OnMemberCreated(callback func(context.Context, *MemberCreatedEvent) error) error
+```
+
+OnMemberCreated registers a callback for members.created notifications. It rejects nil callbacks and duplicate registrations. Registration is safe during handling.
+
+<a name="EventsHandler.OnMemberDeleted"></a>
+### func \(\*EventsHandler\) [OnMemberDeleted](<https://github.com/sumup/sumup-go/blob/main/events_generated.go#L34>)
+
+```go
+func (h *EventsHandler) OnMemberDeleted(callback func(context.Context, *MemberDeletedEvent) error) error
+```
+
+OnMemberDeleted registers a callback for members.deleted notifications. It rejects nil callbacks and duplicate registrations. Registration is safe during handling.
+
+<a name="EventsHandler.OnMemberUpdated"></a>
+### func \(\*EventsHandler\) [OnMemberUpdated](<https://github.com/sumup/sumup-go/blob/main/events_generated.go#L48>)
+
+```go
+func (h *EventsHandler) OnMemberUpdated(callback func(context.Context, *MemberUpdatedEvent) error) error
+```
+
+OnMemberUpdated registers a callback for members.updated notifications. It rejects nil callbacks and duplicate registrations. Registration is safe during handling.
+
+<a name="EventsHandler.OnReaderCreated"></a>
+### func \(\*EventsHandler\) [OnReaderCreated](<https://github.com/sumup/sumup-go/blob/main/events_generated.go#L62>)
+
+```go
+func (h *EventsHandler) OnReaderCreated(callback func(context.Context, *ReaderCreatedEvent) error) error
+```
+
+OnReaderCreated registers a callback for readers.created notifications. It rejects nil callbacks and duplicate registrations. Registration is safe during handling.
+
+<a name="EventsHandler.OnReaderDeleted"></a>
+### func \(\*EventsHandler\) [OnReaderDeleted](<https://github.com/sumup/sumup-go/blob/main/events_generated.go#L76>)
+
+```go
+func (h *EventsHandler) OnReaderDeleted(callback func(context.Context, *ReaderDeletedEvent) error) error
+```
+
+OnReaderDeleted registers a callback for readers.deleted notifications. It rejects nil callbacks and duplicate registrations. Registration is safe during handling.
+
+<a name="EventsHandler.Parse"></a>
+### func \(\*EventsHandler\) [Parse](<https://github.com/sumup/sumup-go/blob/main/events_handler.go#L145>)
+
+```go
+func (h *EventsHandler) Parse(payload []byte, signature string) (EventNotification, error)
+```
+
+Parse verifies and parses an event without invoking callbacks.
+
+<a name="EventsHandler.String"></a>
+### func \(\*EventsHandler\) [String](<https://github.com/sumup/sumup-go/blob/main/events_handler.go#L71>)
+
+```go
+func (h *EventsHandler) String() string
+```
+
+String describes registered callbacks without exposing the signing secret.
+
 <a name="FinancialPayout"></a>
 ## type [FinancialPayout](<https://github.com/sumup/sumup-go/blob/main/payouts.go#L22-L43>)
 
@@ -2914,6 +3290,39 @@ type Member struct {
     UpdatedAt time.Time `json:"updated_at"`
     // Information about the user associated with the membership.
     User *MembershipUser `json:"user,omitempty"`
+}
+```
+
+<a name="MemberCreatedEvent"></a>
+## type [MemberCreatedEvent](<https://github.com/sumup/sumup-go/blob/main/events_generated.go#L14>)
+
+MemberCreatedEvent is a members.created notification. FetchObject retrieves the latest Member.
+
+```go
+type MemberCreatedEvent struct {
+    // contains filtered or unexported fields
+}
+```
+
+<a name="MemberDeletedEvent"></a>
+## type [MemberDeletedEvent](<https://github.com/sumup/sumup-go/blob/main/events_generated.go#L28>)
+
+MemberDeletedEvent is a members.deleted notification. FetchObject retrieves the latest Member.
+
+```go
+type MemberDeletedEvent struct {
+    // contains filtered or unexported fields
+}
+```
+
+<a name="MemberUpdatedEvent"></a>
+## type [MemberUpdatedEvent](<https://github.com/sumup/sumup-go/blob/main/events_generated.go#L42>)
+
+MemberUpdatedEvent is a members.updated notification. FetchObject retrieves the latest Member.
+
+```go
+type MemberUpdatedEvent struct {
+    // contains filtered or unexported fields
 }
 ```
 
@@ -4091,6 +4500,28 @@ type Reader struct {
     Status ReaderStatus `json:"status"`
     // The timestamp of when the reader was last updated.
     UpdatedAt time.Time `json:"updated_at"`
+}
+```
+
+<a name="ReaderCreatedEvent"></a>
+## type [ReaderCreatedEvent](<https://github.com/sumup/sumup-go/blob/main/events_generated.go#L56>)
+
+ReaderCreatedEvent is a readers.created notification. FetchObject retrieves the latest Reader.
+
+```go
+type ReaderCreatedEvent struct {
+    // contains filtered or unexported fields
+}
+```
+
+<a name="ReaderDeletedEvent"></a>
+## type [ReaderDeletedEvent](<https://github.com/sumup/sumup-go/blob/main/events_generated.go#L70>)
+
+ReaderDeletedEvent is a readers.deleted notification. FetchObject retrieves the latest Reader.
+
+```go
+type ReaderDeletedEvent struct {
+    // contains filtered or unexported fields
 }
 ```
 
@@ -6115,6 +6546,55 @@ TransactionsRefundResponse is a schema definition.
 type TransactionsRefundResponse = json.RawMessage
 ```
 
+<a name="TypedEvent"></a>
+## type [TypedEvent](<https://github.com/sumup/sumup-go/blob/main/events.go#L27-L38>)
+
+TypedEvent contains common notification fields and fetches its resource as T. Concrete event types are generated from the OpenAPI webhooks. Notifications may be retried or arrive out of order: make processing idempotent and fetch the latest resource when reconciling local state.
+
+```go
+type TypedEvent[T any] struct {
+
+    // ID identifies this notification, including across retries.
+    ID  string `json:"id"`
+    // Type is the wire event name, such as members.updated.
+    Type string `json:"type"`
+    // CreatedAt is the time when the event was created.
+    CreatedAt time.Time `json:"created_at"`
+    // Object references the affected API resource.
+    Object EventObject `json:"object"`
+    // contains filtered or unexported fields
+}
+```
+
+<a name="TypedEvent[T].EventID"></a>
+### func \(TypedEvent\[T\]\) [EventID](<https://github.com/sumup/sumup-go/blob/main/events.go#L41>)
+
+```go
+func (e TypedEvent[T]) EventID() string
+```
+
+EventID returns the notification identifier.
+
+<a name="TypedEvent[T].EventType"></a>
+### func \(TypedEvent\[T\]\) [EventType](<https://github.com/sumup/sumup-go/blob/main/events.go#L44>)
+
+```go
+func (e TypedEvent[T]) EventType() string
+```
+
+EventType returns the wire event name.
+
+<a name="TypedEvent[T].FetchObject"></a>
+### func \(TypedEvent\[T\]\) [FetchObject](<https://github.com/sumup/sumup-go/blob/main/events.go#L69>)
+
+```go
+func (e TypedEvent[T]) FetchObject(ctx context.Context) (*T, error)
+```
+
+FetchObject retrieves the latest resource using the client that parsed the notification.
+
+The URL must have the SumUp API origin. Its path and query are resolved against the client's configured base URL; URL credentials and fragments are ignored. Requests use the client's authentication and redirect policy. Deleted resources may return a \*Problem API error.
+
 <a name="Unauthorized"></a>
 ## type [Unauthorized](<https://github.com/sumup/sumup-go/blob/main/readers.go#L520-L522>)
 
@@ -6166,6 +6646,17 @@ const (
     UnauthorizedErrorsTypeInvalidAccessToken UnauthorizedErrorsType = "INVALID_ACCESS_TOKEN"
     UnauthorizedErrorsTypeInvalidPassword    UnauthorizedErrorsType = "INVALID_PASSWORD"
 )
+```
+
+<a name="UnknownEvent"></a>
+## type [UnknownEvent](<https://github.com/sumup/sumup-go/blob/main/events.go#L58>)
+
+UnknownEvent preserves notifications not yet recognized by this SDK. FetchObject returns the resource as raw JSON.
+
+```go
+type UnknownEvent struct {
+    // contains filtered or unexported fields
+}
 ```
 
 <a name="UserType"></a>
@@ -6743,6 +7234,26 @@ func (s Secret) Value() string
 ```
 
 Value returns the underlying secret value as a string.
+
+# events
+
+```go
+import "github.com/sumup/sumup-go/example/events"
+```
+
+Receive signed SumUp events with typed callbacks.
+
+Set SUMUP\_EVENT\_SECRET and SUMUP\_API\_KEY, then run:
+
+```
+go run ./example/events
+```
+
+Send notifications to POST /events. Deploy behind HTTPS in production.
+
+## Index
+
+
 
 # full
 
