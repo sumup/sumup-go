@@ -8,7 +8,10 @@ import "github.com/sumup/sumup-go"
 
 ## Index
 
+- [Constants](<#constants>)
 - [Variables](<#variables>)
+- [func VerifyWebhook\(header http.Header, body \[\]byte, secret string, opts ...WebhookOption\) error](<#VerifyWebhook>)
+- [func VerifyWebhookWithTolerance\(header http.Header, body \[\]byte, secret string, maxSkew time.Duration\) error](<#VerifyWebhookWithTolerance>)
 - [type Address](<#Address>)
 - [type AddressLegacy](<#AddressLegacy>)
 - [type Attributes](<#Attributes>)
@@ -31,12 +34,16 @@ import "github.com/sumup/sumup-go"
 - [type CheckoutAcceptedNextStepPayload](<#CheckoutAcceptedNextStepPayload>)
 - [type CheckoutCreateRequest](<#CheckoutCreateRequest>)
 - [type CheckoutCreateRequestPurpose](<#CheckoutCreateRequestPurpose>)
+- [type CheckoutCreatedWebhookEvent](<#CheckoutCreatedWebhookEvent>)
+- [type CheckoutFailedWebhookEvent](<#CheckoutFailedWebhookEvent>)
+- [type CheckoutProcessedWebhookEvent](<#CheckoutProcessedWebhookEvent>)
 - [type CheckoutStatus](<#CheckoutStatus>)
 - [type CheckoutSuccess](<#CheckoutSuccess>)
 - [type CheckoutSuccessPaymentInstrument](<#CheckoutSuccessPaymentInstrument>)
 - [type CheckoutSuccessStatus](<#CheckoutSuccessStatus>)
 - [type CheckoutSuccessTransaction](<#CheckoutSuccessTransaction>)
 - [type CheckoutSuccessTransactionStatus](<#CheckoutSuccessTransactionStatus>)
+- [type CheckoutTerminatedWebhookEvent](<#CheckoutTerminatedWebhookEvent>)
 - [type CheckoutTransaction](<#CheckoutTransaction>)
 - [type CheckoutTransactionStatus](<#CheckoutTransactionStatus>)
 - [type CheckoutsClient](<#CheckoutsClient>)
@@ -64,6 +71,7 @@ import "github.com/sumup/sumup-go"
 - [type ClassicMerchantIdentifiers](<#ClassicMerchantIdentifiers>)
 - [type Client](<#Client>)
   - [func NewClient\(opts ...client.ClientOption\) \*Client](<#NewClient>)
+  - [func \(c \*Client\) ParseWebhookEvent\(payload \[\]byte\) \(webhookEvent, error\)](<#Client.ParseWebhookEvent>)
 - [type Company](<#Company>)
 - [type CompanyIdentifier](<#CompanyIdentifier>)
 - [type CompanyIdentifiers](<#CompanyIdentifiers>)
@@ -134,6 +142,8 @@ import "github.com/sumup/sumup-go"
 - [type MandateResponse](<#MandateResponse>)
 - [type MandateResponseStatus](<#MandateResponseStatus>)
 - [type Member](<#Member>)
+- [type MemberCreatedWebhookEvent](<#MemberCreatedWebhookEvent>)
+- [type MemberRemovedWebhookEvent](<#MemberRemovedWebhookEvent>)
 - [type MembersClient](<#MembersClient>)
   - [func NewMembersClient\(c \*client.Client\) \*MembersClient](<#NewMembersClient>)
   - [func \(c \*MembersClient\) Create\(ctx context.Context, merchantCode string, body MembersCreateParams\) \(\*Member, error\)](<#MembersClient.Create>)
@@ -175,6 +185,7 @@ import "github.com/sumup/sumup-go"
 - [type NotFound](<#NotFound>)
   - [func \(e \*NotFound\) Error\(\) string](<#NotFound.Error>)
 - [type NotFoundErrors](<#NotFoundErrors>)
+- [type Object](<#Object>)
 - [type Operator](<#Operator>)
 - [type OperatorAccountType](<#OperatorAccountType>)
 - [type Ownership](<#Ownership>)
@@ -330,10 +341,52 @@ import "github.com/sumup/sumup-go"
   - [func \(e \*Unauthorized\) Error\(\) string](<#Unauthorized.Error>)
 - [type UnauthorizedErrors](<#UnauthorizedErrors>)
 - [type UnauthorizedErrorsType](<#UnauthorizedErrorsType>)
+- [type UnknownEventNotification](<#UnknownEventNotification>)
 - [type Version](<#Version>)
+- [type WebhookEvent](<#WebhookEvent>)
+  - [func \(we \*WebhookEvent\[T\]\) FetchRelatedObject\(ctx context.Context\) \(\*T, error\)](<#WebhookEvent[T].FetchRelatedObject>)
+- [type WebhookEventType](<#WebhookEventType>)
+- [type WebhookHeaders](<#WebhookHeaders>)
+  - [func ParseWebhookHeaders\(header http.Header\) \(WebhookHeaders, error\)](<#ParseWebhookHeaders>)
+  - [func \(h WebhookHeaders\) Verify\(body \[\]byte, secret string, maxSkew time.Duration\) error](<#WebhookHeaders.Verify>)
+- [type WebhookOption](<#WebhookOption>)
 
+
+## Constants
+
+<a name="WebhookSignatureHeader"></a>
+
+```go
+const (
+    // WebhookSignatureHeader is the header carrying the versioned webhook signature.
+    WebhookSignatureHeader = "Webhook-Signature"
+    // WebhookTimestampHeader is the header carrying the Unix timestamp used for signing.
+    WebhookTimestampHeader = "Webhook-Timestamp"
+    // WebhookSignatureVersion is the current webhook signature scheme version.
+    WebhookSignatureVersion = "v1"
+    // DefaultWebhookTolerance is the default maximum allowed clock skew for webhook verification.
+    DefaultWebhookTolerance = 5 * time.Minute
+)
+```
 
 ## Variables
+
+<a name="ErrWebhookSignatureMissing"></a>
+
+```go
+var (
+    // ErrWebhookSignatureMissing indicates that the webhook signature header is missing.
+    ErrWebhookSignatureMissing = errors.New("missing webhook signature header")
+    // ErrWebhookTimestampMissing indicates that the webhook timestamp header is missing.
+    ErrWebhookTimestampMissing = errors.New("missing webhook timestamp header")
+    // ErrWebhookTimestampInvalid indicates that the webhook timestamp header cannot be parsed.
+    ErrWebhookTimestampInvalid = errors.New("invalid webhook timestamp")
+    // ErrWebhookSignatureInvalid indicates that the webhook signature is malformed or does not match the payload.
+    ErrWebhookSignatureInvalid = errors.New("invalid webhook signature")
+    // ErrWebhookSignatureExpired indicates that the webhook timestamp is outside the allowed tolerance window.
+    ErrWebhookSignatureExpired = errors.New("webhook timestamp outside allowed tolerance")
+)
+```
 
 <a name="OAuth2Endpoint"></a>OAuth2Endpoint is SumUp's OAuth 2.0 endpoint.
 
@@ -343,6 +396,24 @@ var OAuth2Endpoint = oauth2.Endpoint{
     TokenURL: "https://api.sumup.com/token",
 }
 ```
+
+<a name="VerifyWebhook"></a>
+## func [VerifyWebhook](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L76>)
+
+```go
+func VerifyWebhook(header http.Header, body []byte, secret string, opts ...WebhookOption) error
+```
+
+VerifyWebhook verifies a webhook request using the default replay tolerance.
+
+<a name="VerifyWebhookWithTolerance"></a>
+## func [VerifyWebhookWithTolerance](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L81>)
+
+```go
+func VerifyWebhookWithTolerance(header http.Header, body []byte, secret string, maxSkew time.Duration) error
+```
+
+VerifyWebhookWithTolerance verifies a webhook request against a specific reference time and tolerance.
 
 <a name="Address"></a>
 ## type [Address](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L24-L88>)
@@ -951,6 +1022,39 @@ const (
 )
 ```
 
+<a name="CheckoutCreatedWebhookEvent"></a>
+## type [CheckoutCreatedWebhookEvent](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L195-L197>)
+
+CheckoutCreatedWebhookEvent represents a \`checkout.created\` webhook event.
+
+```go
+type CheckoutCreatedWebhookEvent struct {
+    // contains filtered or unexported fields
+}
+```
+
+<a name="CheckoutFailedWebhookEvent"></a>
+## type [CheckoutFailedWebhookEvent](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L209-L211>)
+
+CheckoutFailedWebhookEvent represents a \`checkout.failed\` webhook event.
+
+```go
+type CheckoutFailedWebhookEvent struct {
+    // contains filtered or unexported fields
+}
+```
+
+<a name="CheckoutProcessedWebhookEvent"></a>
+## type [CheckoutProcessedWebhookEvent](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L202-L204>)
+
+CheckoutProcessedWebhookEvent represents a \`checkout.processed\` webhook event.
+
+```go
+type CheckoutProcessedWebhookEvent struct {
+    // contains filtered or unexported fields
+}
+```
+
 <a name="CheckoutStatus"></a>
 ## type [CheckoutStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L115>)
 
@@ -1125,6 +1229,17 @@ const (
 )
 ```
 
+<a name="CheckoutTerminatedWebhookEvent"></a>
+## type [CheckoutTerminatedWebhookEvent](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L216-L218>)
+
+CheckoutTerminatedWebhookEvent represents a \`checkout.terminated\` webhook event.
+
+```go
+type CheckoutTerminatedWebhookEvent struct {
+    // contains filtered or unexported fields
+}
+```
+
 <a name="CheckoutTransaction"></a>
 ## type [CheckoutTransaction](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L125-L157>)
 
@@ -1215,7 +1330,7 @@ func NewCheckoutsClient(c *client.Client) *CheckoutsClient
 
 
 <a name="CheckoutsClient.Create"></a>
-### func \(\*CheckoutsClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L603>)
+### func \(\*CheckoutsClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L605>)
 
 ```go
 func (c *CheckoutsClient) Create(ctx context.Context, body CheckoutsCreateParams) (*Checkout, error)
@@ -1228,7 +1343,7 @@ For 3DS checkouts, add the \`redirect\_url\` parameter to your request body sche
 Follow by processing a checkout to charge the provided payment instrument.
 
 <a name="CheckoutsClient.Deactivate"></a>
-### func \(\*CheckoutsClient\) [Deactivate](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L684>)
+### func \(\*CheckoutsClient\) [Deactivate](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L690>)
 
 ```go
 func (c *CheckoutsClient) Deactivate(ctx context.Context, id string) (*Checkout, error)
@@ -1237,7 +1352,7 @@ func (c *CheckoutsClient) Deactivate(ctx context.Context, id string) (*Checkout,
 Deactivates an identified checkout resource. If the checkout has already been processed it can not be deactivated.
 
 <a name="CheckoutsClient.Get"></a>
-### func \(\*CheckoutsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L729>)
+### func \(\*CheckoutsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L737>)
 
 ```go
 func (c *CheckoutsClient) Get(ctx context.Context, id string) (*CheckoutSuccess, error)
@@ -1255,7 +1370,7 @@ func (c *CheckoutsClient) List(ctx context.Context, params CheckoutsListParams) 
 Lists created checkout resources according to the applied \`checkout\_reference\`.
 
 <a name="CheckoutsClient.ListAvailablePaymentMethods"></a>
-### func \(\*CheckoutsClient\) [ListAvailablePaymentMethods](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L654>)
+### func \(\*CheckoutsClient\) [ListAvailablePaymentMethods](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L658>)
 
 ```go
 func (c *CheckoutsClient) ListAvailablePaymentMethods(ctx context.Context, merchantCode string, params CheckoutsListAvailablePaymentMethodsParams) (*CheckoutsListAvailablePaymentMethodsResponse, error)
@@ -1264,7 +1379,7 @@ func (c *CheckoutsClient) ListAvailablePaymentMethods(ctx context.Context, merch
 Get payment methods available for the given merchant to use with a checkout.
 
 <a name="CheckoutsClient.Process"></a>
-### func \(\*CheckoutsClient\) [Process](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L769>)
+### func \(\*CheckoutsClient\) [Process](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L779>)
 
 ```go
 func (c *CheckoutsClient) Process(ctx context.Context, id string, body CheckoutsProcessParams) (*CheckoutsProcessResponse, error)
@@ -1492,6 +1607,15 @@ func NewClient(opts ...client.ClientOption) *Client
 ```
 
 NewClient creates new SumUp API client. The client is by default configured environment variables \(\`SUMUP\_API\_KEY\`\). To override the default configuration use \[ClientOption\]s.
+
+<a name="Client.ParseWebhookEvent"></a>
+### func \(\*Client\) [ParseWebhookEvent](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L237>)
+
+```go
+func (c *Client) ParseWebhookEvent(payload []byte) (webhookEvent, error)
+```
+
+ParseWebhookEvent parses a webhook payload into the most specific known event type.
 
 <a name="Company"></a>
 ## type [Company](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L238-L279>)
@@ -1956,7 +2080,7 @@ func (c *CustomersClient) Create(ctx context.Context, body CustomersCreateParams
 Creates a new saved customer resource which you can later manipulate and save payment instruments to.
 
 <a name="CustomersClient.DeactivatePaymentInstrument"></a>
-### func \(\*CustomersClient\) [DeactivatePaymentInstrument](<https://github.com/sumup/sumup-go/blob/main/customers.go#L285>)
+### func \(\*CustomersClient\) [DeactivatePaymentInstrument](<https://github.com/sumup/sumup-go/blob/main/customers.go#L293>)
 
 ```go
 func (c *CustomersClient) DeactivatePaymentInstrument(ctx context.Context, customerID string, token string) error
@@ -1965,7 +2089,7 @@ func (c *CustomersClient) DeactivatePaymentInstrument(ctx context.Context, custo
 Deactivates an identified card payment instrument resource for a customer.
 
 <a name="CustomersClient.Get"></a>
-### func \(\*CustomersClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/customers.go#L194>)
+### func \(\*CustomersClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/customers.go#L198>)
 
 ```go
 func (c *CustomersClient) Get(ctx context.Context, customerID string) (*Customer, error)
@@ -1974,7 +2098,7 @@ func (c *CustomersClient) Get(ctx context.Context, customerID string) (*Customer
 Retrieves an identified saved customer resource through the unique \`customer\_id\` parameter, generated upon customer creation.
 
 <a name="CustomersClient.ListPaymentInstruments"></a>
-### func \(\*CustomersClient\) [ListPaymentInstruments](<https://github.com/sumup/sumup-go/blob/main/customers.go#L149>)
+### func \(\*CustomersClient\) [ListPaymentInstruments](<https://github.com/sumup/sumup-go/blob/main/customers.go#L151>)
 
 ```go
 func (c *CustomersClient) ListPaymentInstruments(ctx context.Context, customerID string) (*CustomersListPaymentInstrumentsResponse, error)
@@ -1983,7 +2107,7 @@ func (c *CustomersClient) ListPaymentInstruments(ctx context.Context, customerID
 Lists all payment instrument resources that are saved for an identified customer.
 
 <a name="CustomersClient.Update"></a>
-### func \(\*CustomersClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/customers.go#L241>)
+### func \(\*CustomersClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/customers.go#L247>)
 
 ```go
 func (c *CustomersClient) Update(ctx context.Context, customerID string, body CustomersUpdateParams) (*Customer, error)
@@ -2592,6 +2716,28 @@ type Member struct {
 }
 ```
 
+<a name="MemberCreatedWebhookEvent"></a>
+## type [MemberCreatedWebhookEvent](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L223-L225>)
+
+MemberCreatedWebhookEvent represents a \`member.created\` webhook event.
+
+```go
+type MemberCreatedWebhookEvent struct {
+    // contains filtered or unexported fields
+}
+```
+
+<a name="MemberRemovedWebhookEvent"></a>
+## type [MemberRemovedWebhookEvent](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L230-L232>)
+
+MemberRemovedWebhookEvent represents a \`member.removed\` webhook event.
+
+```go
+type MemberRemovedWebhookEvent struct {
+    // contains filtered or unexported fields
+}
+```
+
 <a name="MembersClient"></a>
 ## type [MembersClient](<https://github.com/sumup/sumup-go/blob/main/members.go#L189-L191>)
 
@@ -2615,7 +2761,7 @@ func NewMembersClient(c *client.Client) *MembersClient
 
 
 <a name="MembersClient.Create"></a>
-### func \(\*MembersClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/members.go#L228>)
+### func \(\*MembersClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/members.go#L230>)
 
 ```go
 func (c *MembersClient) Create(ctx context.Context, merchantCode string, body MembersCreateParams) (*Member, error)
@@ -2624,7 +2770,7 @@ func (c *MembersClient) Create(ctx context.Context, merchantCode string, body Me
 Create a merchant member.
 
 <a name="MembersClient.Delete"></a>
-### func \(\*MembersClient\) [Delete](<https://github.com/sumup/sumup-go/blob/main/members.go#L272>)
+### func \(\*MembersClient\) [Delete](<https://github.com/sumup/sumup-go/blob/main/members.go#L276>)
 
 ```go
 func (c *MembersClient) Delete(ctx context.Context, merchantCode string, memberID string) error
@@ -2633,7 +2779,7 @@ func (c *MembersClient) Delete(ctx context.Context, merchantCode string, memberI
 Deletes a merchant member.
 
 <a name="MembersClient.Get"></a>
-### func \(\*MembersClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/members.go#L297>)
+### func \(\*MembersClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/members.go#L303>)
 
 ```go
 func (c *MembersClient) Get(ctx context.Context, merchantCode string, memberID string) (*Member, error)
@@ -2651,7 +2797,7 @@ func (c *MembersClient) List(ctx context.Context, merchantCode string, params Me
 Lists merchant members.
 
 <a name="MembersClient.Update"></a>
-### func \(\*MembersClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/members.go#L327>)
+### func \(\*MembersClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/members.go#L335>)
 
 ```go
 func (c *MembersClient) Update(ctx context.Context, merchantCode string, memberID string, body MembersUpdateParams) (*Member, error)
@@ -3097,7 +3243,7 @@ func NewMerchantsClient(c *client.Client) *MerchantsClient
 
 
 <a name="MerchantsClient.Get"></a>
-### func \(\*MerchantsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L619>)
+### func \(\*MerchantsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L621>)
 
 ```go
 func (c *MerchantsClient) Get(ctx context.Context, merchantCode string, params MerchantsGetParams) (*Merchant, error)
@@ -3106,7 +3252,7 @@ func (c *MerchantsClient) Get(ctx context.Context, merchantCode string, params M
 Retrieve a merchant. Merchant documentation: https://developer.sumup.com/tools/models/merchant
 
 <a name="MerchantsClient.GetPerson"></a>
-### func \(\*MerchantsClient\) [GetPerson](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L650>)
+### func \(\*MerchantsClient\) [GetPerson](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L654>)
 
 ```go
 func (c *MerchantsClient) GetPerson(ctx context.Context, merchantCode string, personID string, params MerchantsGetPersonParams) (*Person, error)
@@ -3244,6 +3390,22 @@ NotFoundErrors is a schema definition.
 type NotFoundErrors struct {
     // Fuller message giving context to error
     Detail string `json:"detail"`
+}
+```
+
+<a name="Object"></a>
+## type [Object](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L176-L183>)
+
+Object describes the resource referenced by a webhook event.
+
+```go
+type Object struct {
+    // ID is the identifier of the related resource.
+    ID  string `json:"id"`
+    // Type is the type name of the related resource.
+    Type string `json:"type"`
+    // URL is the canonical API URL for the related resource.
+    URL string `json:"url"`
 }
 ```
 
@@ -3415,7 +3577,7 @@ func NewPayoutsClient(c *client.Client) *PayoutsClient
 
 
 <a name="PayoutsClient.List"></a>
-### func \(\*PayoutsClient\) [List](<https://github.com/sumup/sumup-go/blob/main/payouts.go#L224>)
+### func \(\*PayoutsClient\) [List](<https://github.com/sumup/sumup-go/blob/main/payouts.go#L226>)
 
 ```go
 func (c *PayoutsClient) List(ctx context.Context, merchantCode string, params PayoutsListParams) (*FinancialPayouts, error)
@@ -4011,7 +4173,7 @@ func NewReadersClient(c *client.Client) *ReadersClient
 
 
 <a name="ReadersClient.Create"></a>
-### func \(\*ReadersClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/readers.go#L530>)
+### func \(\*ReadersClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/readers.go#L532>)
 
 ```go
 func (c *ReadersClient) Create(ctx context.Context, merchantCode string, body ReadersCreateParams) (*Reader, error)
@@ -4020,7 +4182,7 @@ func (c *ReadersClient) Create(ctx context.Context, merchantCode string, body Re
 Create a new Reader for the merchant account.
 
 <a name="ReadersClient.CreateCheckout"></a>
-### func \(\*ReadersClient\) [CreateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers.go#L705>)
+### func \(\*ReadersClient\) [CreateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers.go#L713>)
 
 ```go
 func (c *ReadersClient) CreateCheckout(ctx context.Context, merchantCode string, readerID string, body ReadersCreateCheckoutParams) (*CreateReaderCheckoutResponse, error)
@@ -4035,7 +4197,7 @@ There are some caveats when using this endpoint: \* The target device must be on
 \*\*Note\*\*: If the target device is a Solo, it must be in version 3.3.24.3 or higher.
 
 <a name="ReadersClient.Delete"></a>
-### func \(\*ReadersClient\) [Delete](<https://github.com/sumup/sumup-go/blob/main/readers.go#L756>)
+### func \(\*ReadersClient\) [Delete](<https://github.com/sumup/sumup-go/blob/main/readers.go#L766>)
 
 ```go
 func (c *ReadersClient) Delete(ctx context.Context, merchantCode string, id ReaderID) error
@@ -4044,7 +4206,7 @@ func (c *ReadersClient) Delete(ctx context.Context, merchantCode string, id Read
 Delete a reader.
 
 <a name="ReadersClient.Get"></a>
-### func \(\*ReadersClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/readers.go#L781>)
+### func \(\*ReadersClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/readers.go#L793>)
 
 ```go
 func (c *ReadersClient) Get(ctx context.Context, merchantCode string, id ReaderID, params ReadersGetParams) (*Reader, error)
@@ -4053,7 +4215,7 @@ func (c *ReadersClient) Get(ctx context.Context, merchantCode string, id ReaderI
 Retrieve a Reader.
 
 <a name="ReadersClient.GetStatus"></a>
-### func \(\*ReadersClient\) [GetStatus](<https://github.com/sumup/sumup-go/blob/main/readers.go#L652>)
+### func \(\*ReadersClient\) [GetStatus](<https://github.com/sumup/sumup-go/blob/main/readers.go#L658>)
 
 ```go
 func (c *ReadersClient) GetStatus(ctx context.Context, merchantCode string, readerID string) (*StatusResponse, error)
@@ -4083,7 +4245,7 @@ func (c *ReadersClient) List(ctx context.Context, merchantCode string) (*Readers
 List all readers of the merchant.
 
 <a name="ReadersClient.TerminateCheckout"></a>
-### func \(\*ReadersClient\) [TerminateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers.go#L587>)
+### func \(\*ReadersClient\) [TerminateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers.go#L591>)
 
 ```go
 func (c *ReadersClient) TerminateCheckout(ctx context.Context, merchantCode string, readerID string) error
@@ -4100,7 +4262,7 @@ If a transaction is successfully terminated and \`return\_url\` was provided on 
 \*\*Note\*\*: If the target device is a Solo, it must be in version 3.3.28.0 or higher.
 
 <a name="ReadersClient.Update"></a>
-### func \(\*ReadersClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/readers.go#L811>)
+### func \(\*ReadersClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/readers.go#L825>)
 
 ```go
 func (c *ReadersClient) Update(ctx context.Context, merchantCode string, id ReaderID, body ReadersUpdateParams) (*Reader, error)
@@ -4586,7 +4748,7 @@ func NewRolesClient(c *client.Client) *RolesClient
 
 
 <a name="RolesClient.Create"></a>
-### func \(\*RolesClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/roles.go#L114>)
+### func \(\*RolesClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/roles.go#L116>)
 
 ```go
 func (c *RolesClient) Create(ctx context.Context, merchantCode string, body RolesCreateParams) (*Role, error)
@@ -4595,7 +4757,7 @@ func (c *RolesClient) Create(ctx context.Context, merchantCode string, body Role
 Create a custom role for the merchant. Roles are defined by the set of permissions that they grant to the members that they are assigned to.
 
 <a name="RolesClient.Delete"></a>
-### func \(\*RolesClient\) [Delete](<https://github.com/sumup/sumup-go/blob/main/roles.go#L151>)
+### func \(\*RolesClient\) [Delete](<https://github.com/sumup/sumup-go/blob/main/roles.go#L155>)
 
 ```go
 func (c *RolesClient) Delete(ctx context.Context, merchantCode string, roleID string) error
@@ -4604,7 +4766,7 @@ func (c *RolesClient) Delete(ctx context.Context, merchantCode string, roleID st
 Delete a custom role.
 
 <a name="RolesClient.Get"></a>
-### func \(\*RolesClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/roles.go#L183>)
+### func \(\*RolesClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/roles.go#L189>)
 
 ```go
 func (c *RolesClient) Get(ctx context.Context, merchantCode string, roleID string) (*Role, error)
@@ -4622,7 +4784,7 @@ func (c *RolesClient) List(ctx context.Context, merchantCode string) (*RolesList
 List merchant's custom roles.
 
 <a name="RolesClient.Update"></a>
-### func \(\*RolesClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/roles.go#L213>)
+### func \(\*RolesClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/roles.go#L221>)
 
 ```go
 func (c *RolesClient) Update(ctx context.Context, merchantCode string, roleID string, body RolesUpdateParams) (*Role, error)
@@ -4802,7 +4964,7 @@ func NewSubaccountsClient(c *client.Client) *SubaccountsClient
 
 
 <a name="SubaccountsClient.CompatGetOperator"></a>
-### func \(\*SubaccountsClient\) [CompatGetOperator](<https://github.com/sumup/sumup-go/blob/main/subaccounts.go#L195>)
+### func \(\*SubaccountsClient\) [CompatGetOperator](<https://github.com/sumup/sumup-go/blob/main/subaccounts.go#L199>)
 
 ```go
 func (c *SubaccountsClient) CompatGetOperator(ctx context.Context, operatorID int32) (*Operator, error)
@@ -4811,7 +4973,7 @@ func (c *SubaccountsClient) CompatGetOperator(ctx context.Context, operatorID in
 Returns specific operator. Deprecated: Subaccounts API is deprecated, to get a user that's a member of your merchant account please use \[Get member\]\(https://developer.sumup.com/api/members/get\) instead.
 
 <a name="SubaccountsClient.CreateSubAccount"></a>
-### func \(\*SubaccountsClient\) [CreateSubAccount](<https://github.com/sumup/sumup-go/blob/main/subaccounts.go#L163>)
+### func \(\*SubaccountsClient\) [CreateSubAccount](<https://github.com/sumup/sumup-go/blob/main/subaccounts.go#L165>)
 
 ```go
 func (c *SubaccountsClient) CreateSubAccount(ctx context.Context, body SubaccountsCreateSubAccountParams) (*Operator, error)
@@ -4829,7 +4991,7 @@ func (c *SubaccountsClient) ListSubAccounts(ctx context.Context, params Subaccou
 Returns list of operators for currently authorized user's merchant. Deprecated: Subaccounts API is deprecated, to list users in your merchant account please use \[List members\]\(https://developer.sumup.com/api/members/list\) instead.
 
 <a name="SubaccountsClient.UpdateSubAccount"></a>
-### func \(\*SubaccountsClient\) [UpdateSubAccount](<https://github.com/sumup/sumup-go/blob/main/subaccounts.go#L227>)
+### func \(\*SubaccountsClient\) [UpdateSubAccount](<https://github.com/sumup/sumup-go/blob/main/subaccounts.go#L233>)
 
 ```go
 func (c *SubaccountsClient) UpdateSubAccount(ctx context.Context, operatorID int32, body SubaccountsUpdateSubAccountParams) (*Operator, error)
@@ -5593,7 +5755,7 @@ func NewTransactionsClient(c *client.Client) *TransactionsClient
 
 
 <a name="TransactionsClient.Get"></a>
-### func \(\*TransactionsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L1045>)
+### func \(\*TransactionsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L1051>)
 
 ```go
 func (c *TransactionsClient) Get(ctx context.Context, merchantCode string, params TransactionsGetParams) (*TransactionFull, error)
@@ -5602,7 +5764,7 @@ func (c *TransactionsClient) Get(ctx context.Context, merchantCode string, param
 Retrieves the full details of an identified transaction. The transaction resource is identified by a query parameter and \*one\* of following parameters is required: \- \`id\` \- \`internal\_id\` \- \`transaction\_code\` \- \`foreign\_transaction\_id\` \- \`client\_transaction\_id\`
 
 <a name="TransactionsClient.GetDeprecated"></a>
-### func \(\*TransactionsClient\) [GetDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L965>)
+### func \(\*TransactionsClient\) [GetDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L967>)
 
 ```go
 func (c *TransactionsClient) GetDeprecated(ctx context.Context, params TransactionsGetDeprecatedParams) (*TransactionFull, error)
@@ -5611,7 +5773,7 @@ func (c *TransactionsClient) GetDeprecated(ctx context.Context, params Transacti
 Retrieves the full details of an identified transaction. The transaction resource is identified by a query parameter and \*one\* of following parameters is required: \- \`id\` \- \`internal\_id\` \- \`transaction\_code\` \- \`foreign\_transaction\_id\` \- \`client\_transaction\_id\` Deprecated: this operation is deprecated
 
 <a name="TransactionsClient.List"></a>
-### func \(\*TransactionsClient\) [List](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L1002>)
+### func \(\*TransactionsClient\) [List](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L1006>)
 
 ```go
 func (c *TransactionsClient) List(ctx context.Context, merchantCode string, params TransactionsListParams) (*TransactionsListResponse, error)
@@ -5629,7 +5791,7 @@ func (c *TransactionsClient) ListDeprecated(ctx context.Context, params Transact
 Lists detailed history of all transactions associated with the merchant profile. Deprecated: this operation is deprecated
 
 <a name="TransactionsClient.Refund"></a>
-### func \(\*TransactionsClient\) [Refund](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L1082>)
+### func \(\*TransactionsClient\) [Refund](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L1090>)
 
 ```go
 func (c *TransactionsClient) Refund(ctx context.Context, txnID string, body TransactionsRefundParams) error
@@ -6017,6 +6179,15 @@ const (
 )
 ```
 
+<a name="UnknownEventNotification"></a>
+## type [UnknownEventNotification](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L190>)
+
+UnknownEventNotification represents a webhook event whose type is not recognized by the SDK.
+
+```go
+type UnknownEventNotification WebhookEvent[any]
+```
+
 <a name="Version"></a>
 ## type [Version](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L506>)
 
@@ -6024,6 +6195,103 @@ The version of the resource. The version reflects a specific change submitted to
 
 ```go
 type Version string
+```
+
+<a name="WebhookEvent"></a>
+## type [WebhookEvent](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L149-L160>)
+
+WebhookEvent is the generic envelope for a SumUp webhook payload.
+
+```go
+type WebhookEvent[T any] struct {
+    // ID is the unique identifier of the webhook event.
+    ID  string `json:"id"`
+    // Type is the event type string.
+    Type string `json:"type"`
+    // CreatedAt is the UTC timestamp when the event was created.
+    CreatedAt time.Time `json:"created_at"`
+    // Object references the related SumUp resource.
+    Object Object `json:"object"`
+    // contains filtered or unexported fields
+}
+```
+
+<a name="WebhookEvent[T].FetchRelatedObject"></a>
+### func \(\*WebhookEvent\[T\]\) [FetchRelatedObject](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L163>)
+
+```go
+func (we *WebhookEvent[T]) FetchRelatedObject(ctx context.Context) (*T, error)
+```
+
+FetchRelatedObject retrieves the resource referenced by the webhook event object URL.
+
+<a name="WebhookEventType"></a>
+## type [WebhookEventType](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L131>)
+
+
+
+```go
+type WebhookEventType string
+```
+
+<a name="WebhookEventTypeCheckoutCreate"></a>
+
+```go
+const (
+    // WebhookEventTypeCheckoutCreate identifies a `checkout.created` webhook event.
+    WebhookEventTypeCheckoutCreate WebhookEventType = "checkout.created"
+    // WebhookEventTypeCheckoutProcessed identifies a `checkout.processed` webhook event.
+    WebhookEventTypeCheckoutProcessed WebhookEventType = "checkout.processed"
+    // WebhookEventTypeCheckoutFailed identifies a `checkout.failed` webhook event.
+    WebhookEventTypeCheckoutFailed WebhookEventType = "checkout.failed"
+    // WebhookEventTypeCheckoutTerminated identifies a `checkout.terminated` webhook event.
+    WebhookEventTypeCheckoutTerminated WebhookEventType = "checkout.terminated"
+    // WebhookEventTypeMemberCreate identifies a `member.created` webhook event.
+    WebhookEventTypeMemberCreate WebhookEventType = "member.created"
+    // WebhookEventTypeMemberRemoved identifies a `member.removed` webhook event.
+    WebhookEventTypeMemberRemoved WebhookEventType = "member.removed"
+)
+```
+
+<a name="WebhookHeaders"></a>
+## type [WebhookHeaders](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L42-L47>)
+
+WebhookHeaders stores the parsed verification headers from an incoming webhook.
+
+```go
+type WebhookHeaders struct {
+    // Signature is the raw versioned webhook signature value.
+    Signature string
+    // Timestamp is the parsed UTC timestamp used when computing the signature.
+    Timestamp time.Time
+}
+```
+
+<a name="ParseWebhookHeaders"></a>
+### func [ParseWebhookHeaders](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L50>)
+
+```go
+func ParseWebhookHeaders(header http.Header) (WebhookHeaders, error)
+```
+
+ParseWebhookHeaders extracts the SumUp webhook verification headers from an HTTP request.
+
+<a name="WebhookHeaders.Verify"></a>
+### func \(WebhookHeaders\) [Verify](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L91>)
+
+```go
+func (h WebhookHeaders) Verify(body []byte, secret string, maxSkew time.Duration) error
+```
+
+Verify verifies the webhook body against the parsed headers.
+
+<a name="WebhookOption"></a>
+## type [WebhookOption](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L73>)
+
+WebhookOption configures webhook verification behavior.
+
+```go
+type WebhookOption func()
 ```
 
 # client
