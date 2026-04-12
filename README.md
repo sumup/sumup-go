@@ -92,6 +92,12 @@ go run example/full/main.go
 ```
 and visit http://localhost:8080
 
+**[events](./example/events)** - Minimal HTTP server showing how to receive events, verify their signature, and parse the event payload.
+```sh
+SUMUP_EVENT_SECRET=whsec_test go run example/events/main.go
+```
+Then send `POST` requests to http://localhost:8080/events
+
 ## Support
 
 Our APIs and their public offering is limited and under heavy development. If you have any questions or inquiries reach out to our support team via the [Contact Form](https://developer.sumup.com/contact/).
