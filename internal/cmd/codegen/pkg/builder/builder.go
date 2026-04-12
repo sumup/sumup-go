@@ -129,6 +129,9 @@ func (b *Builder) Build() error {
 	if err := b.writeAPIVersionFile(); err != nil {
 		return err
 	}
+	if err := b.writeEventsFile(); err != nil {
+		return err
+	}
 
 	took := time.Since(b.start)
 	slog.Info("sdk generated", slog.Duration("took", took))

@@ -8,7 +8,9 @@ import (
 )
 
 func TestGetJSONMediaType(t *testing.T) {
+	t.Parallel()
 	t.Run("prefers application/problem+json", func(t *testing.T) {
+		t.Parallel()
 		content := orderedmap.New[string, *v3.MediaType]()
 		jsonMT := &v3.MediaType{}
 		problemMT := &v3.MediaType{}
@@ -25,6 +27,7 @@ func TestGetJSONMediaType(t *testing.T) {
 	})
 
 	t.Run("supports application/problem+json", func(t *testing.T) {
+		t.Parallel()
 		content := orderedmap.New[string, *v3.MediaType]()
 		problemMT := &v3.MediaType{}
 		content.Set("application/problem+json", problemMT)
@@ -39,6 +42,7 @@ func TestGetJSONMediaType(t *testing.T) {
 	})
 
 	t.Run("returns false when no matching content type exists", func(t *testing.T) {
+		t.Parallel()
 		content := orderedmap.New[string, *v3.MediaType]()
 		content.Set("text/plain", &v3.MediaType{})
 
