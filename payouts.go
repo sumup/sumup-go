@@ -70,9 +70,12 @@ const (
 type PayoutsListDeprecatedParams struct {
 	// End date (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
 	EndDate datetime.Date
-	Format  *PayoutsListDeprecatedFormat
-	Limit   *int
-	Order   *PayoutsListDeprecatedOrder
+	// Response format for the payout list.
+	Format *PayoutsListDeprecatedFormat
+	// Maximum number of payout records to return.
+	Limit *int
+	// Sort direction for the returned payouts.
+	Order *PayoutsListDeprecatedOrder
 	// Start date (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
 	StartDate datetime.Date
 }
@@ -120,9 +123,12 @@ const (
 type PayoutsListParams struct {
 	// End date (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
 	EndDate datetime.Date
-	Format  *PayoutsListFormat
-	Limit   *int
-	Order   *PayoutsListOrder
+	// Response format for the payout list.
+	Format *PayoutsListFormat
+	// Maximum number of payout records to return.
+	Limit *int
+	// Sort direction for the returned payouts.
+	Order *PayoutsListOrder
 	// Start date (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
 	StartDate datetime.Date
 }
