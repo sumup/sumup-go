@@ -181,7 +181,7 @@ type CheckoutAcceptedNextStep struct {
 	// HTTP method to use when following the next step.
 	Method *string `json:"method,omitempty"`
 	// Parameters required to complete the next step. The exact keys depend on the payment provider and flow type.
-	Payload *CheckoutAcceptedNextStepPayload `json:"payload,omitempty"`
+	Payload CheckoutAcceptedNextStepPayload `json:"payload,omitempty"`
 	// Merchant URL where the payer returns after the external flow finishes.
 	RedirectURL *string `json:"redirect_url,omitempty"`
 	// URL to open or submit in order to continue processing.
@@ -197,11 +197,7 @@ const (
 )
 
 // Parameters required to complete the next step. The exact keys depend on the payment provider and flow type.
-type CheckoutAcceptedNextStepPayload struct {
-	Md      *any `json:"md,omitempty"`
-	PaReq   *any `json:"pa_req,omitempty"`
-	TermURL *any `json:"term_url,omitempty"`
-}
+type CheckoutAcceptedNextStepPayload map[string]any
 
 // Request body for creating a checkout before processing payment. Define the payment amount, currency, merchant,
 // and optional customer or redirect behavior here.
