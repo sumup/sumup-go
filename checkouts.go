@@ -451,6 +451,16 @@ const (
 
 type CheckoutsCreateParams = CheckoutCreateRequest
 
+// CheckoutsCreateApplePaySessionParams is a schema definition.
+type CheckoutsCreateApplePaySessionParams struct {
+	// the context to create this apple pay session.
+	// Format: hostname
+	Context string `json:"context"`
+	// The target url to create this apple pay session.
+	// Format: uri
+	Target string `json:"target"`
+}
+
 type CheckoutsProcessParams = ProcessCheckout
 
 // CheckoutsListParams are query parameters for ListCheckouts.
@@ -495,6 +505,18 @@ func (p *CheckoutsListAvailablePaymentMethodsParams) QueryValues() url.Values {
 
 // CheckoutsListResponse is a schema definition.
 type CheckoutsListResponse []CheckoutSuccess
+
+// CheckoutsCreateApplePaySessionResponse is a schema definition.
+type CheckoutsCreateApplePaySessionResponse json.RawMessage
+
+// CheckoutsCreateApplePaySession400Response is a schema definition.
+type CheckoutsCreateApplePaySession400Response json.RawMessage
+
+func (e *CheckoutsCreateApplePaySession400Response) Error() string {
+	return "CheckoutsCreateApplePaySession400Response"
+}
+
+var _ error = (*CheckoutsCreateApplePaySession400Response)(nil)
 
 // CheckoutsListAvailablePaymentMethodsResponse is a schema definition.
 type CheckoutsListAvailablePaymentMethodsResponse struct {
@@ -643,6 +665,50 @@ func (c *CheckoutsClient) Create(ctx context.Context, body CheckoutsCreateParams
 
 		return nil, &apiErr
 	case http.StatusConflict:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
+}
+
+// Creates an Apple Pay merchant session for the specified checkout.
+//
+// Use this endpoint after the customer selects Apple Pay and before calling
+// `ApplePaySession.completeMerchantValidation(...)` in the browser.
+// SumUp validates the merchant session request and returns the Apple Pay
+// session object that your frontend should pass to Apple's JavaScript API.
+func (c *CheckoutsClient) CreateApplePaySession(ctx context.Context, id string, body CheckoutsCreateApplePaySessionParams) (*CheckoutsCreateApplePaySessionResponse, error) {
+	path := fmt.Sprintf("/v0.2/checkouts/%v/apple-pay-session", id)
+
+	resp, err := c.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))
+	if err != nil {
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodPut, path, err)
+	}
+	defer func() {
+		_ = resp.Body.Close()
+	}()
+
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v CheckoutsCreateApplePaySessionResponse
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
+
+		return &v, nil
+	case http.StatusBadRequest:
+		var apiErr CheckoutsCreateApplePaySession400Response
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	case http.StatusNotFound:
 		var apiErr Error
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
