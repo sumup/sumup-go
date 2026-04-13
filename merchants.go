@@ -604,13 +604,6 @@ func (c *MerchantsClient) ListPersons(ctx context.Context, merchantCode string, 
 		}
 
 		return nil, &apiErr
-	case http.StatusInternalServerError:
-		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
 	default:
 		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
@@ -671,13 +664,6 @@ func (c *MerchantsClient) GetPerson(ctx context.Context, merchantCode string, pe
 
 		return &v, nil
 	case http.StatusNotFound:
-		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	case http.StatusInternalServerError:
 		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())

@@ -8,10 +8,7 @@ import "github.com/sumup/sumup-go"
 
 ## Index
 
-- [Constants](<#constants>)
 - [Variables](<#variables>)
-- [func VerifyWebhook\(header http.Header, body \[\]byte, secret string, opts ...WebhookOption\) error](<#VerifyWebhook>)
-- [func VerifyWebhookWithTolerance\(header http.Header, body \[\]byte, secret string, maxSkew time.Duration\) error](<#VerifyWebhookWithTolerance>)
 - [type Address](<#Address>)
 - [type AddressLegacy](<#AddressLegacy>)
 - [type Attributes](<#Attributes>)
@@ -34,26 +31,27 @@ import "github.com/sumup/sumup-go"
 - [type CheckoutAcceptedNextStepPayload](<#CheckoutAcceptedNextStepPayload>)
 - [type CheckoutCreateRequest](<#CheckoutCreateRequest>)
 - [type CheckoutCreateRequestPurpose](<#CheckoutCreateRequestPurpose>)
-- [type CheckoutCreatedWebhookEvent](<#CheckoutCreatedWebhookEvent>)
-- [type CheckoutFailedWebhookEvent](<#CheckoutFailedWebhookEvent>)
-- [type CheckoutProcessedWebhookEvent](<#CheckoutProcessedWebhookEvent>)
 - [type CheckoutStatus](<#CheckoutStatus>)
 - [type CheckoutSuccess](<#CheckoutSuccess>)
 - [type CheckoutSuccessPaymentInstrument](<#CheckoutSuccessPaymentInstrument>)
 - [type CheckoutSuccessStatus](<#CheckoutSuccessStatus>)
 - [type CheckoutSuccessTransaction](<#CheckoutSuccessTransaction>)
 - [type CheckoutSuccessTransactionStatus](<#CheckoutSuccessTransactionStatus>)
-- [type CheckoutTerminatedWebhookEvent](<#CheckoutTerminatedWebhookEvent>)
 - [type CheckoutTransaction](<#CheckoutTransaction>)
 - [type CheckoutTransactionStatus](<#CheckoutTransactionStatus>)
 - [type CheckoutsClient](<#CheckoutsClient>)
   - [func NewCheckoutsClient\(c \*client.Client\) \*CheckoutsClient](<#NewCheckoutsClient>)
   - [func \(c \*CheckoutsClient\) Create\(ctx context.Context, body CheckoutsCreateParams\) \(\*Checkout, error\)](<#CheckoutsClient.Create>)
+  - [func \(c \*CheckoutsClient\) CreateApplePaySession\(ctx context.Context, id string, body CheckoutsCreateApplePaySessionParams\) \(\*CheckoutsCreateApplePaySessionResponse, error\)](<#CheckoutsClient.CreateApplePaySession>)
   - [func \(c \*CheckoutsClient\) Deactivate\(ctx context.Context, id string\) \(\*Checkout, error\)](<#CheckoutsClient.Deactivate>)
   - [func \(c \*CheckoutsClient\) Get\(ctx context.Context, id string\) \(\*CheckoutSuccess, error\)](<#CheckoutsClient.Get>)
   - [func \(c \*CheckoutsClient\) List\(ctx context.Context, params CheckoutsListParams\) \(\*CheckoutsListResponse, error\)](<#CheckoutsClient.List>)
   - [func \(c \*CheckoutsClient\) ListAvailablePaymentMethods\(ctx context.Context, merchantCode string, params CheckoutsListAvailablePaymentMethodsParams\) \(\*CheckoutsListAvailablePaymentMethodsResponse, error\)](<#CheckoutsClient.ListAvailablePaymentMethods>)
   - [func \(c \*CheckoutsClient\) Process\(ctx context.Context, id string, body CheckoutsProcessParams\) \(\*CheckoutsProcessResponse, error\)](<#CheckoutsClient.Process>)
+- [type CheckoutsCreateApplePaySession400Response](<#CheckoutsCreateApplePaySession400Response>)
+  - [func \(e \*CheckoutsCreateApplePaySession400Response\) Error\(\) string](<#CheckoutsCreateApplePaySession400Response.Error>)
+- [type CheckoutsCreateApplePaySessionParams](<#CheckoutsCreateApplePaySessionParams>)
+- [type CheckoutsCreateApplePaySessionResponse](<#CheckoutsCreateApplePaySessionResponse>)
 - [type CheckoutsCreateParams](<#CheckoutsCreateParams>)
 - [type CheckoutsListAvailablePaymentMethodsParams](<#CheckoutsListAvailablePaymentMethodsParams>)
   - [func \(p \*CheckoutsListAvailablePaymentMethodsParams\) QueryValues\(\) url.Values](<#CheckoutsListAvailablePaymentMethodsParams.QueryValues>)
@@ -71,7 +69,6 @@ import "github.com/sumup/sumup-go"
 - [type ClassicMerchantIdentifiers](<#ClassicMerchantIdentifiers>)
 - [type Client](<#Client>)
   - [func NewClient\(opts ...client.ClientOption\) \*Client](<#NewClient>)
-  - [func \(c \*Client\) ParseWebhookEvent\(payload \[\]byte\) \(webhookEvent, error\)](<#Client.ParseWebhookEvent>)
 - [type Company](<#Company>)
 - [type CompanyIdentifier](<#CompanyIdentifier>)
 - [type CompanyIdentifiers](<#CompanyIdentifiers>)
@@ -142,8 +139,6 @@ import "github.com/sumup/sumup-go"
 - [type MandateResponse](<#MandateResponse>)
 - [type MandateResponseStatus](<#MandateResponseStatus>)
 - [type Member](<#Member>)
-- [type MemberCreatedWebhookEvent](<#MemberCreatedWebhookEvent>)
-- [type MemberRemovedWebhookEvent](<#MemberRemovedWebhookEvent>)
 - [type MembersClient](<#MembersClient>)
   - [func NewMembersClient\(c \*client.Client\) \*MembersClient](<#NewMembersClient>)
   - [func \(c \*MembersClient\) Create\(ctx context.Context, merchantCode string, body MembersCreateParams\) \(\*Member, error\)](<#MembersClient.Create>)
@@ -185,7 +180,6 @@ import "github.com/sumup/sumup-go"
 - [type NotFound](<#NotFound>)
   - [func \(e \*NotFound\) Error\(\) string](<#NotFound.Error>)
 - [type NotFoundErrors](<#NotFoundErrors>)
-- [type Object](<#Object>)
 - [type Operator](<#Operator>)
 - [type OperatorAccountType](<#OperatorAccountType>)
 - [type Ownership](<#Ownership>)
@@ -341,52 +335,10 @@ import "github.com/sumup/sumup-go"
   - [func \(e \*Unauthorized\) Error\(\) string](<#Unauthorized.Error>)
 - [type UnauthorizedErrors](<#UnauthorizedErrors>)
 - [type UnauthorizedErrorsType](<#UnauthorizedErrorsType>)
-- [type UnknownEventNotification](<#UnknownEventNotification>)
 - [type Version](<#Version>)
-- [type WebhookEvent](<#WebhookEvent>)
-  - [func \(we \*WebhookEvent\[T\]\) FetchRelatedObject\(ctx context.Context\) \(\*T, error\)](<#WebhookEvent[T].FetchRelatedObject>)
-- [type WebhookEventType](<#WebhookEventType>)
-- [type WebhookHeaders](<#WebhookHeaders>)
-  - [func ParseWebhookHeaders\(header http.Header\) \(WebhookHeaders, error\)](<#ParseWebhookHeaders>)
-  - [func \(h WebhookHeaders\) Verify\(body \[\]byte, secret string, maxSkew time.Duration\) error](<#WebhookHeaders.Verify>)
-- [type WebhookOption](<#WebhookOption>)
 
-
-## Constants
-
-<a name="WebhookSignatureHeader"></a>
-
-```go
-const (
-    // WebhookSignatureHeader is the header carrying the versioned webhook signature.
-    WebhookSignatureHeader = "Webhook-Signature"
-    // WebhookTimestampHeader is the header carrying the Unix timestamp used for signing.
-    WebhookTimestampHeader = "Webhook-Timestamp"
-    // WebhookSignatureVersion is the current webhook signature scheme version.
-    WebhookSignatureVersion = "v1"
-    // DefaultWebhookTolerance is the default maximum allowed clock skew for webhook verification.
-    DefaultWebhookTolerance = 5 * time.Minute
-)
-```
 
 ## Variables
-
-<a name="ErrWebhookSignatureMissing"></a>
-
-```go
-var (
-    // ErrWebhookSignatureMissing indicates that the webhook signature header is missing.
-    ErrWebhookSignatureMissing = errors.New("missing webhook signature header")
-    // ErrWebhookTimestampMissing indicates that the webhook timestamp header is missing.
-    ErrWebhookTimestampMissing = errors.New("missing webhook timestamp header")
-    // ErrWebhookTimestampInvalid indicates that the webhook timestamp header cannot be parsed.
-    ErrWebhookTimestampInvalid = errors.New("invalid webhook timestamp")
-    // ErrWebhookSignatureInvalid indicates that the webhook signature is malformed or does not match the payload.
-    ErrWebhookSignatureInvalid = errors.New("invalid webhook signature")
-    // ErrWebhookSignatureExpired indicates that the webhook timestamp is outside the allowed tolerance window.
-    ErrWebhookSignatureExpired = errors.New("webhook timestamp outside allowed tolerance")
-)
-```
 
 <a name="OAuth2Endpoint"></a>OAuth2Endpoint is SumUp's OAuth 2.0 endpoint.
 
@@ -396,24 +348,6 @@ var OAuth2Endpoint = oauth2.Endpoint{
     TokenURL: "https://api.sumup.com/token",
 }
 ```
-
-<a name="VerifyWebhook"></a>
-## func [VerifyWebhook](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L76>)
-
-```go
-func VerifyWebhook(header http.Header, body []byte, secret string, opts ...WebhookOption) error
-```
-
-VerifyWebhook verifies a webhook request using the default replay tolerance.
-
-<a name="VerifyWebhookWithTolerance"></a>
-## func [VerifyWebhookWithTolerance](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L81>)
-
-```go
-func VerifyWebhookWithTolerance(header http.Header, body []byte, secret string, maxSkew time.Duration) error
-```
-
-VerifyWebhookWithTolerance verifies a webhook request against a specific reference time and tolerance.
 
 <a name="Address"></a>
 ## type [Address](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L24-L88>)
@@ -1022,39 +956,6 @@ const (
 )
 ```
 
-<a name="CheckoutCreatedWebhookEvent"></a>
-## type [CheckoutCreatedWebhookEvent](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L195-L197>)
-
-CheckoutCreatedWebhookEvent represents a \`checkout.created\` webhook event.
-
-```go
-type CheckoutCreatedWebhookEvent struct {
-    // contains filtered or unexported fields
-}
-```
-
-<a name="CheckoutFailedWebhookEvent"></a>
-## type [CheckoutFailedWebhookEvent](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L209-L211>)
-
-CheckoutFailedWebhookEvent represents a \`checkout.failed\` webhook event.
-
-```go
-type CheckoutFailedWebhookEvent struct {
-    // contains filtered or unexported fields
-}
-```
-
-<a name="CheckoutProcessedWebhookEvent"></a>
-## type [CheckoutProcessedWebhookEvent](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L202-L204>)
-
-CheckoutProcessedWebhookEvent represents a \`checkout.processed\` webhook event.
-
-```go
-type CheckoutProcessedWebhookEvent struct {
-    // contains filtered or unexported fields
-}
-```
-
 <a name="CheckoutStatus"></a>
 ## type [CheckoutStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L115>)
 
@@ -1229,17 +1130,6 @@ const (
 )
 ```
 
-<a name="CheckoutTerminatedWebhookEvent"></a>
-## type [CheckoutTerminatedWebhookEvent](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L216-L218>)
-
-CheckoutTerminatedWebhookEvent represents a \`checkout.terminated\` webhook event.
-
-```go
-type CheckoutTerminatedWebhookEvent struct {
-    // contains filtered or unexported fields
-}
-```
-
 <a name="CheckoutTransaction"></a>
 ## type [CheckoutTransaction](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L125-L157>)
 
@@ -1302,7 +1192,7 @@ const (
 ```
 
 <a name="CheckoutsClient"></a>
-## type [CheckoutsClient](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L559-L561>)
+## type [CheckoutsClient](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L581-L583>)
 
 CheckoutsClient provides access to the Checkouts API.
 
@@ -1321,7 +1211,7 @@ type CheckoutsClient struct {
 ```
 
 <a name="NewCheckoutsClient"></a>
-### func [NewCheckoutsClient](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L563>)
+### func [NewCheckoutsClient](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L585>)
 
 ```go
 func NewCheckoutsClient(c *client.Client) *CheckoutsClient
@@ -1330,7 +1220,7 @@ func NewCheckoutsClient(c *client.Client) *CheckoutsClient
 
 
 <a name="CheckoutsClient.Create"></a>
-### func \(\*CheckoutsClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L605>)
+### func \(\*CheckoutsClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L627>)
 
 ```go
 func (c *CheckoutsClient) Create(ctx context.Context, body CheckoutsCreateParams) (*Checkout, error)
@@ -1342,8 +1232,19 @@ For 3DS checkouts, add the \`redirect\_url\` parameter to your request body sche
 
 Follow by processing a checkout to charge the provided payment instrument.
 
+<a name="CheckoutsClient.CreateApplePaySession"></a>
+### func \(\*CheckoutsClient\) [CreateApplePaySession](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L685>)
+
+```go
+func (c *CheckoutsClient) CreateApplePaySession(ctx context.Context, id string, body CheckoutsCreateApplePaySessionParams) (*CheckoutsCreateApplePaySessionResponse, error)
+```
+
+Creates an Apple Pay merchant session for the specified checkout.
+
+Use this endpoint after the customer selects Apple Pay and before calling \`ApplePaySession.completeMerchantValidation\(...\)\` in the browser. SumUp validates the merchant session request and returns the Apple Pay session object that your frontend should pass to Apple's JavaScript API.
+
 <a name="CheckoutsClient.Deactivate"></a>
-### func \(\*CheckoutsClient\) [Deactivate](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L690>)
+### func \(\*CheckoutsClient\) [Deactivate](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L756>)
 
 ```go
 func (c *CheckoutsClient) Deactivate(ctx context.Context, id string) (*Checkout, error)
@@ -1352,7 +1253,7 @@ func (c *CheckoutsClient) Deactivate(ctx context.Context, id string) (*Checkout,
 Deactivates an identified checkout resource. If the checkout has already been processed it can not be deactivated.
 
 <a name="CheckoutsClient.Get"></a>
-### func \(\*CheckoutsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L737>)
+### func \(\*CheckoutsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L803>)
 
 ```go
 func (c *CheckoutsClient) Get(ctx context.Context, id string) (*CheckoutSuccess, error)
@@ -1361,7 +1262,7 @@ func (c *CheckoutsClient) Get(ctx context.Context, id string) (*CheckoutSuccess,
 Retrieves an identified checkout resource. Use this request after processing a checkout to confirm its status and inform the end user respectively.
 
 <a name="CheckoutsClient.List"></a>
-### func \(\*CheckoutsClient\) [List](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L568>)
+### func \(\*CheckoutsClient\) [List](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L590>)
 
 ```go
 func (c *CheckoutsClient) List(ctx context.Context, params CheckoutsListParams) (*CheckoutsListResponse, error)
@@ -1370,7 +1271,7 @@ func (c *CheckoutsClient) List(ctx context.Context, params CheckoutsListParams) 
 Lists created checkout resources according to the applied \`checkout\_reference\`.
 
 <a name="CheckoutsClient.ListAvailablePaymentMethods"></a>
-### func \(\*CheckoutsClient\) [ListAvailablePaymentMethods](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L658>)
+### func \(\*CheckoutsClient\) [ListAvailablePaymentMethods](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L724>)
 
 ```go
 func (c *CheckoutsClient) ListAvailablePaymentMethods(ctx context.Context, merchantCode string, params CheckoutsListAvailablePaymentMethodsParams) (*CheckoutsListAvailablePaymentMethodsResponse, error)
@@ -1379,7 +1280,7 @@ func (c *CheckoutsClient) ListAvailablePaymentMethods(ctx context.Context, merch
 Get payment methods available for the given merchant to use with a checkout.
 
 <a name="CheckoutsClient.Process"></a>
-### func \(\*CheckoutsClient\) [Process](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L779>)
+### func \(\*CheckoutsClient\) [Process](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L845>)
 
 ```go
 func (c *CheckoutsClient) Process(ctx context.Context, id string, body CheckoutsProcessParams) (*CheckoutsProcessResponse, error)
@@ -1388,6 +1289,49 @@ func (c *CheckoutsClient) Process(ctx context.Context, id string, body Checkouts
 Processing a checkout will attempt to charge the provided payment instrument for the amount of the specified checkout resource initiated in the \`Create a checkout\` endpoint.
 
 Follow this request with \`Retrieve a checkout\` to confirm its status.
+
+<a name="CheckoutsCreateApplePaySession400Response"></a>
+## type [CheckoutsCreateApplePaySession400Response](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L513>)
+
+CheckoutsCreateApplePaySession400Response is a schema definition.
+
+```go
+type CheckoutsCreateApplePaySession400Response json.RawMessage
+```
+
+<a name="CheckoutsCreateApplePaySession400Response.Error"></a>
+### func \(\*CheckoutsCreateApplePaySession400Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L515>)
+
+```go
+func (e *CheckoutsCreateApplePaySession400Response) Error() string
+```
+
+
+
+<a name="CheckoutsCreateApplePaySessionParams"></a>
+## type [CheckoutsCreateApplePaySessionParams](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L455-L462>)
+
+CheckoutsCreateApplePaySessionParams is a schema definition.
+
+```go
+type CheckoutsCreateApplePaySessionParams struct {
+    // the context to create this apple pay session.
+    // Format: hostname
+    Context string `json:"context"`
+    // The target url to create this apple pay session.
+    // Format: uri
+    Target string `json:"target"`
+}
+```
+
+<a name="CheckoutsCreateApplePaySessionResponse"></a>
+## type [CheckoutsCreateApplePaySessionResponse](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L510>)
+
+CheckoutsCreateApplePaySessionResponse is a schema definition.
+
+```go
+type CheckoutsCreateApplePaySessionResponse json.RawMessage
+```
 
 <a name="CheckoutsCreateParams"></a>
 ## type [CheckoutsCreateParams](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L452>)
@@ -1399,7 +1343,7 @@ type CheckoutsCreateParams = CheckoutCreateRequest
 ```
 
 <a name="CheckoutsListAvailablePaymentMethodsParams"></a>
-## type [CheckoutsListAvailablePaymentMethodsParams](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L474-L479>)
+## type [CheckoutsListAvailablePaymentMethodsParams](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L484-L489>)
 
 CheckoutsListAvailablePaymentMethodsParams are query parameters for GetPaymentMethods.
 
@@ -1413,7 +1357,7 @@ type CheckoutsListAvailablePaymentMethodsParams struct {
 ```
 
 <a name="CheckoutsListAvailablePaymentMethodsParams.QueryValues"></a>
-### func \(\*CheckoutsListAvailablePaymentMethodsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L482>)
+### func \(\*CheckoutsListAvailablePaymentMethodsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L492>)
 
 ```go
 func (p *CheckoutsListAvailablePaymentMethodsParams) QueryValues() url.Values
@@ -1422,7 +1366,7 @@ func (p *CheckoutsListAvailablePaymentMethodsParams) QueryValues() url.Values
 QueryValues converts [CheckoutsListAvailablePaymentMethodsParams](<#CheckoutsListAvailablePaymentMethodsParams>) into \[url.Values\].
 
 <a name="CheckoutsListAvailablePaymentMethodsResponse"></a>
-## type [CheckoutsListAvailablePaymentMethodsResponse](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L500-L502>)
+## type [CheckoutsListAvailablePaymentMethodsResponse](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L522-L524>)
 
 CheckoutsListAvailablePaymentMethodsResponse is a schema definition.
 
@@ -1433,7 +1377,7 @@ type CheckoutsListAvailablePaymentMethodsResponse struct {
 ```
 
 <a name="CheckoutsListAvailablePaymentMethodsResponseAvailablePaymentMethod"></a>
-## type [CheckoutsListAvailablePaymentMethodsResponseAvailablePaymentMethod](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L505-L508>)
+## type [CheckoutsListAvailablePaymentMethodsResponseAvailablePaymentMethod](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L527-L530>)
 
 CheckoutsListAvailablePaymentMethodsResponseAvailablePaymentMethod is a schema definition.
 
@@ -1445,7 +1389,7 @@ type CheckoutsListAvailablePaymentMethodsResponseAvailablePaymentMethod struct {
 ```
 
 <a name="CheckoutsListParams"></a>
-## type [CheckoutsListParams](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L457-L460>)
+## type [CheckoutsListParams](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L467-L470>)
 
 CheckoutsListParams are query parameters for ListCheckouts.
 
@@ -1457,7 +1401,7 @@ type CheckoutsListParams struct {
 ```
 
 <a name="CheckoutsListParams.QueryValues"></a>
-### func \(\*CheckoutsListParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L463>)
+### func \(\*CheckoutsListParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L473>)
 
 ```go
 func (p *CheckoutsListParams) QueryValues() url.Values
@@ -1466,7 +1410,7 @@ func (p *CheckoutsListParams) QueryValues() url.Values
 QueryValues converts [CheckoutsListParams](<#CheckoutsListParams>) into \[url.Values\].
 
 <a name="CheckoutsListResponse"></a>
-## type [CheckoutsListResponse](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L497>)
+## type [CheckoutsListResponse](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L507>)
 
 CheckoutsListResponse is a schema definition.
 
@@ -1475,7 +1419,7 @@ type CheckoutsListResponse []CheckoutSuccess
 ```
 
 <a name="CheckoutsProcess400Response"></a>
-## type [CheckoutsProcess400Response](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L511>)
+## type [CheckoutsProcess400Response](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L533>)
 
 CheckoutsProcess400Response is a schema definition.
 
@@ -1484,7 +1428,7 @@ type CheckoutsProcess400Response json.RawMessage
 ```
 
 <a name="CheckoutsProcess400Response.Error"></a>
-### func \(\*CheckoutsProcess400Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L513>)
+### func \(\*CheckoutsProcess400Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L535>)
 
 ```go
 func (e *CheckoutsProcess400Response) Error() string
@@ -1493,7 +1437,7 @@ func (e *CheckoutsProcess400Response) Error() string
 
 
 <a name="CheckoutsProcessParams"></a>
-## type [CheckoutsProcessParams](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L454>)
+## type [CheckoutsProcessParams](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L464>)
 
 
 
@@ -1502,7 +1446,7 @@ type CheckoutsProcessParams = ProcessCheckout
 ```
 
 <a name="CheckoutsProcessResponse"></a>
-## type [CheckoutsProcessResponse](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L519-L522>)
+## type [CheckoutsProcessResponse](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L541-L544>)
 
 
 
@@ -1514,7 +1458,7 @@ type CheckoutsProcessResponse struct {
 ```
 
 <a name="CheckoutsProcessResponse.AsCheckoutAccepted"></a>
-### func \(\*CheckoutsProcessResponse\) [AsCheckoutAccepted](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L532>)
+### func \(\*CheckoutsProcessResponse\) [AsCheckoutAccepted](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L554>)
 
 ```go
 func (r *CheckoutsProcessResponse) AsCheckoutAccepted() (*CheckoutAccepted, bool)
@@ -1523,7 +1467,7 @@ func (r *CheckoutsProcessResponse) AsCheckoutAccepted() (*CheckoutAccepted, bool
 
 
 <a name="CheckoutsProcessResponse.AsCheckoutSuccess"></a>
-### func \(\*CheckoutsProcessResponse\) [AsCheckoutSuccess](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L524>)
+### func \(\*CheckoutsProcessResponse\) [AsCheckoutSuccess](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L546>)
 
 ```go
 func (r *CheckoutsProcessResponse) AsCheckoutSuccess() (*CheckoutSuccess, bool)
@@ -1607,15 +1551,6 @@ func NewClient(opts ...client.ClientOption) *Client
 ```
 
 NewClient creates new SumUp API client. The client is by default configured environment variables \(\`SUMUP\_API\_KEY\`\). To override the default configuration use \[ClientOption\]s.
-
-<a name="Client.ParseWebhookEvent"></a>
-### func \(\*Client\) [ParseWebhookEvent](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L237>)
-
-```go
-func (c *Client) ParseWebhookEvent(payload []byte) (webhookEvent, error)
-```
-
-ParseWebhookEvent parses a webhook payload into the most specific known event type.
 
 <a name="Company"></a>
 ## type [Company](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L238-L279>)
@@ -2716,28 +2651,6 @@ type Member struct {
 }
 ```
 
-<a name="MemberCreatedWebhookEvent"></a>
-## type [MemberCreatedWebhookEvent](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L223-L225>)
-
-MemberCreatedWebhookEvent represents a \`member.created\` webhook event.
-
-```go
-type MemberCreatedWebhookEvent struct {
-    // contains filtered or unexported fields
-}
-```
-
-<a name="MemberRemovedWebhookEvent"></a>
-## type [MemberRemovedWebhookEvent](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L230-L232>)
-
-MemberRemovedWebhookEvent represents a \`member.removed\` webhook event.
-
-```go
-type MemberRemovedWebhookEvent struct {
-    // contains filtered or unexported fields
-}
-```
-
 <a name="MembersClient"></a>
 ## type [MembersClient](<https://github.com/sumup/sumup-go/blob/main/members.go#L189-L191>)
 
@@ -3243,7 +3156,7 @@ func NewMerchantsClient(c *client.Client) *MerchantsClient
 
 
 <a name="MerchantsClient.Get"></a>
-### func \(\*MerchantsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L621>)
+### func \(\*MerchantsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L614>)
 
 ```go
 func (c *MerchantsClient) Get(ctx context.Context, merchantCode string, params MerchantsGetParams) (*Merchant, error)
@@ -3252,7 +3165,7 @@ func (c *MerchantsClient) Get(ctx context.Context, merchantCode string, params M
 Retrieve a merchant. Merchant documentation: https://developer.sumup.com/tools/models/merchant
 
 <a name="MerchantsClient.GetPerson"></a>
-### func \(\*MerchantsClient\) [GetPerson](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L654>)
+### func \(\*MerchantsClient\) [GetPerson](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L647>)
 
 ```go
 func (c *MerchantsClient) GetPerson(ctx context.Context, merchantCode string, personID string, params MerchantsGetPersonParams) (*Person, error)
@@ -3390,22 +3303,6 @@ NotFoundErrors is a schema definition.
 type NotFoundErrors struct {
     // Fuller message giving context to error
     Detail string `json:"detail"`
-}
-```
-
-<a name="Object"></a>
-## type [Object](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L176-L183>)
-
-Object describes the resource referenced by a webhook event.
-
-```go
-type Object struct {
-    // ID is the identifier of the related resource.
-    ID  string `json:"id"`
-    // Type is the type name of the related resource.
-    Type string `json:"type"`
-    // URL is the canonical API URL for the related resource.
-    URL string `json:"url"`
 }
 ```
 
@@ -6179,15 +6076,6 @@ const (
 )
 ```
 
-<a name="UnknownEventNotification"></a>
-## type [UnknownEventNotification](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L190>)
-
-UnknownEventNotification represents a webhook event whose type is not recognized by the SDK.
-
-```go
-type UnknownEventNotification WebhookEvent[any]
-```
-
 <a name="Version"></a>
 ## type [Version](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L506>)
 
@@ -6195,103 +6083,6 @@ The version of the resource. The version reflects a specific change submitted to
 
 ```go
 type Version string
-```
-
-<a name="WebhookEvent"></a>
-## type [WebhookEvent](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L149-L160>)
-
-WebhookEvent is the generic envelope for a SumUp webhook payload.
-
-```go
-type WebhookEvent[T any] struct {
-    // ID is the unique identifier of the webhook event.
-    ID  string `json:"id"`
-    // Type is the event type string.
-    Type string `json:"type"`
-    // CreatedAt is the UTC timestamp when the event was created.
-    CreatedAt time.Time `json:"created_at"`
-    // Object references the related SumUp resource.
-    Object Object `json:"object"`
-    // contains filtered or unexported fields
-}
-```
-
-<a name="WebhookEvent[T].FetchRelatedObject"></a>
-### func \(\*WebhookEvent\[T\]\) [FetchRelatedObject](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L163>)
-
-```go
-func (we *WebhookEvent[T]) FetchRelatedObject(ctx context.Context) (*T, error)
-```
-
-FetchRelatedObject retrieves the resource referenced by the webhook event object URL.
-
-<a name="WebhookEventType"></a>
-## type [WebhookEventType](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L131>)
-
-
-
-```go
-type WebhookEventType string
-```
-
-<a name="WebhookEventTypeCheckoutCreate"></a>
-
-```go
-const (
-    // WebhookEventTypeCheckoutCreate identifies a `checkout.created` webhook event.
-    WebhookEventTypeCheckoutCreate WebhookEventType = "checkout.created"
-    // WebhookEventTypeCheckoutProcessed identifies a `checkout.processed` webhook event.
-    WebhookEventTypeCheckoutProcessed WebhookEventType = "checkout.processed"
-    // WebhookEventTypeCheckoutFailed identifies a `checkout.failed` webhook event.
-    WebhookEventTypeCheckoutFailed WebhookEventType = "checkout.failed"
-    // WebhookEventTypeCheckoutTerminated identifies a `checkout.terminated` webhook event.
-    WebhookEventTypeCheckoutTerminated WebhookEventType = "checkout.terminated"
-    // WebhookEventTypeMemberCreate identifies a `member.created` webhook event.
-    WebhookEventTypeMemberCreate WebhookEventType = "member.created"
-    // WebhookEventTypeMemberRemoved identifies a `member.removed` webhook event.
-    WebhookEventTypeMemberRemoved WebhookEventType = "member.removed"
-)
-```
-
-<a name="WebhookHeaders"></a>
-## type [WebhookHeaders](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L42-L47>)
-
-WebhookHeaders stores the parsed verification headers from an incoming webhook.
-
-```go
-type WebhookHeaders struct {
-    // Signature is the raw versioned webhook signature value.
-    Signature string
-    // Timestamp is the parsed UTC timestamp used when computing the signature.
-    Timestamp time.Time
-}
-```
-
-<a name="ParseWebhookHeaders"></a>
-### func [ParseWebhookHeaders](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L50>)
-
-```go
-func ParseWebhookHeaders(header http.Header) (WebhookHeaders, error)
-```
-
-ParseWebhookHeaders extracts the SumUp webhook verification headers from an HTTP request.
-
-<a name="WebhookHeaders.Verify"></a>
-### func \(WebhookHeaders\) [Verify](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L91>)
-
-```go
-func (h WebhookHeaders) Verify(body []byte, secret string, maxSkew time.Duration) error
-```
-
-Verify verifies the webhook body against the parsed headers.
-
-<a name="WebhookOption"></a>
-## type [WebhookOption](<https://github.com/sumup/sumup-go/blob/main/webhooks.go#L73>)
-
-WebhookOption configures webhook verification behavior.
-
-```go
-type WebhookOption func()
 ```
 
 # client
