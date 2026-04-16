@@ -225,9 +225,6 @@ type TransactionFull struct {
 	// Current number of the installment for deferred payments.
 	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
-	// Internal unique ID of the transaction on the SumUp platform.
-	// Format: int64
-	InternalID *int64 `json:"internal_id,omitempty"`
 	// Latitude value from the coordinates of the payment location (as received from the payment terminal reader).
 	// Min: 0
 	// Max: 90
@@ -677,9 +674,6 @@ func (p *TransactionsListDeprecatedParams) QueryValues() url.Values {
 type TransactionsGetDeprecatedParams struct {
 	// Retrieves the transaction resource with the specified transaction ID (the `id` parameter in the transaction resource).
 	ID *string
-	// Retrieves the transaction resource with the specified internal transaction ID (the `internal_id` parameter in
-	// the transaction resource).
-	InternalID *string
 	// Retrieves the transaction resource with the specified transaction code.
 	TransactionCode *string
 }
@@ -690,10 +684,6 @@ func (p *TransactionsGetDeprecatedParams) QueryValues() url.Values {
 
 	if p.ID != nil {
 		q.Set("id", *p.ID)
-	}
-
-	if p.InternalID != nil {
-		q.Set("internal_id", *p.InternalID)
 	}
 
 	if p.TransactionCode != nil {
@@ -837,9 +827,6 @@ type TransactionsGetParams struct {
 	ForeignTransactionID *string
 	// Retrieves the transaction resource with the specified transaction ID (the `id` parameter in the transaction resource).
 	ID *string
-	// Retrieves the transaction resource with the specified internal transaction ID (the `internal_id` parameter in
-	// the transaction resource).
-	InternalID *string
 	// Retrieves the transaction resource with the specified transaction code.
 	TransactionCode *string
 }
@@ -858,10 +845,6 @@ func (p *TransactionsGetParams) QueryValues() url.Values {
 
 	if p.ID != nil {
 		q.Set("id", *p.ID)
-	}
-
-	if p.InternalID != nil {
-		q.Set("internal_id", *p.InternalID)
 	}
 
 	if p.TransactionCode != nil {
@@ -959,7 +942,6 @@ func (c *TransactionsClient) ListDeprecated(ctx context.Context, params Transact
 // Retrieves the full details of an identified transaction. The transaction resource is identified by a query
 // parameter and *one* of following parameters is required:
 // - `id`
-// - `internal_id`
 // - `transaction_code`
 // - `foreign_transaction_id`
 // - `client_transaction_id`
@@ -1044,7 +1026,6 @@ func (c *TransactionsClient) List(ctx context.Context, merchantCode string, para
 // Retrieves the full details of an identified transaction. The transaction resource is identified by a query
 // parameter and *one* of following parameters is required:
 // - `id`
-// - `internal_id`
 // - `transaction_code`
 // - `foreign_transaction_id`
 // - `client_transaction_id`
