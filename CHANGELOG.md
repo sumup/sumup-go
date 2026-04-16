@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.16.0](https://github.com/sumup/sumup-go/compare/v0.15.2...v0.16.0) (2026-04-16)
+
+
+### Features
+
+* **ci/cd:** tighten permissions ([#240](https://github.com/sumup/sumup-go/issues/240)) ([3f6e626](https://github.com/sumup/sumup-go/commit/3f6e626ba2b92aa24d1cbb454148bf9343c39bd6))
+* **sdk:** improve call errors ([#241](https://github.com/sumup/sumup-go/issues/241)) ([5dbb270](https://github.com/sumup/sumup-go/commit/5dbb270576f0d3138d205f4062dbee3214291eb0))
+
+
+### Chores
+
+* **deps:** bump github.com/pb33f/libopenapi from 0.34.4 to 0.35.1 in /internal/cmd/codegen ([#244](https://github.com/sumup/sumup-go/issues/244)) ([8bae7bf](https://github.com/sumup/sumup-go/commit/8bae7bf7090e530b481496871652f8f71f8bfb1a))
+* **deps:** bump reviewdog/action-actionlint from 1.71.0 to 1.72.0 ([#243](https://github.com/sumup/sumup-go/issues/243)) ([898324c](https://github.com/sumup/sumup-go/commit/898324c19952d4a16add9f3fa425a1584c067e24))
+* synced file(s) with sumup/apis ([#237](https://github.com/sumup/sumup-go/issues/237)) ([036eb58](https://github.com/sumup/sumup-go/commit/036eb583fdf30d42345f042a3b369c39a8aa0d36))
+* synced file(s) with sumup/apis ([#239](https://github.com/sumup/sumup-go/issues/239)) ([32b7c16](https://github.com/sumup/sumup-go/commit/32b7c164f4b710217a38af34770b1314b154f4c9))
+* synced file(s) with sumup/apis ([#245](https://github.com/sumup/sumup-go/issues/245)) ([867c241](https://github.com/sumup/sumup-go/commit/867c241ae8974411f558e7cf83cf3e5372c09048))
+* synced file(s) with sumup/apis ([#246](https://github.com/sumup/sumup-go/issues/246)) ([c6d1196](https://github.com/sumup/sumup-go/commit/c6d11967f86ed7ca9f61f4b251d8fb47c01e4232))
+* synced file(s) with sumup/apis ([#247](https://github.com/sumup/sumup-go/issues/247)) ([f3d19e6](https://github.com/sumup/sumup-go/commit/f3d19e67193d85fce2a4382c8925dbfadecd369c))
+
 ## [0.15.2](https://github.com/sumup/sumup-go/compare/v0.15.1...v0.15.2) (2026-04-08)
 
 
