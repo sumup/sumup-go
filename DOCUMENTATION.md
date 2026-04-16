@@ -833,7 +833,7 @@ type Checkout struct {
 ```
 
 <a name="CheckoutAccepted"></a>
-## type [CheckoutAccepted](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L171-L174>)
+## type [CheckoutAccepted](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L168-L171>)
 
 Response returned when checkout processing requires an additional payer action, such as a 3DS challenge or a redirect to an external payment method page.
 
@@ -845,7 +845,7 @@ type CheckoutAccepted struct {
 ```
 
 <a name="CheckoutAcceptedNextStep"></a>
-## type [CheckoutAcceptedNextStep](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L177-L189>)
+## type [CheckoutAcceptedNextStep](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L174-L186>)
 
 Instructions for the next action the payer or client must take.
 
@@ -866,7 +866,7 @@ type CheckoutAcceptedNextStep struct {
 ```
 
 <a name="CheckoutAcceptedNextStepMechanism"></a>
-## type [CheckoutAcceptedNextStepMechanism](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L192>)
+## type [CheckoutAcceptedNextStepMechanism](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L189>)
 
 CheckoutAcceptedNextStepMechanism is a schema definition.
 
@@ -884,7 +884,7 @@ const (
 ```
 
 <a name="CheckoutAcceptedNextStepPayload"></a>
-## type [CheckoutAcceptedNextStepPayload](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L200>)
+## type [CheckoutAcceptedNextStepPayload](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L197>)
 
 Parameters required to complete the next step. The exact keys depend on the payment provider and flow type.
 
@@ -893,7 +893,7 @@ type CheckoutAcceptedNextStepPayload map[string]any
 ```
 
 <a name="CheckoutCreateRequest"></a>
-## type [CheckoutCreateRequest](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L204-L237>)
+## type [CheckoutCreateRequest](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L201-L234>)
 
 Request body for creating a checkout before processing payment. Define the payment amount, currency, merchant, and optional customer or redirect behavior here.
 
@@ -935,7 +935,7 @@ type CheckoutCreateRequest struct {
 ```
 
 <a name="CheckoutCreateRequestPurpose"></a>
-## type [CheckoutCreateRequestPurpose](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L242>)
+## type [CheckoutCreateRequestPurpose](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L239>)
 
 Business purpose of the checkout. Use \`CHECKOUT\` for a standard payment and \`SETUP\_RECURRING\_PAYMENT\` when collecting consent and payment details for future recurring charges. Default: CHECKOUT
 
@@ -973,7 +973,7 @@ const (
 ```
 
 <a name="CheckoutSuccess"></a>
-## type [CheckoutSuccess](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L251-L303>)
+## type [CheckoutSuccess](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L248-L300>)
 
 Checkout resource returned after a synchronous processing attempt. In addition to the base checkout fields, it can include the resulting transaction identifiers and any newly created payment instrument token.
 
@@ -1034,7 +1034,7 @@ type CheckoutSuccess struct {
 ```
 
 <a name="CheckoutSuccessPaymentInstrument"></a>
-## type [CheckoutSuccessPaymentInstrument](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L363-L366>)
+## type [CheckoutSuccessPaymentInstrument](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L357-L360>)
 
 Details of the saved payment instrument created or reused during checkout processing.
 
@@ -1046,7 +1046,7 @@ type CheckoutSuccessPaymentInstrument struct {
 ```
 
 <a name="CheckoutSuccessStatus"></a>
-## type [CheckoutSuccessStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L308>)
+## type [CheckoutSuccessStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L305>)
 
 Current high\-level state of the checkout. \`PENDING\` means the checkout exists but is not yet completed, \`PAID\` means a payment succeeded, \`FAILED\` means the latest processing attempt failed, and \`EXPIRED\` means the checkout can no longer be processed.
 
@@ -1066,7 +1066,7 @@ const (
 ```
 
 <a name="CheckoutSuccessTransaction"></a>
-## type [CheckoutSuccessTransaction](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L318-L350>)
+## type [CheckoutSuccessTransaction](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L315-L344>)
 
 CheckoutSuccessTransaction is a schema definition.
 
@@ -1086,9 +1086,6 @@ type CheckoutSuccessTransaction struct {
     // Current number of the installment for deferred payments.
     // Min: 1
     InstallmentsCount *int `json:"installments_count,omitempty"`
-    // Internal unique ID of the transaction on the SumUp platform.
-    // Format: int64
-    InternalID *int64 `json:"internal_id,omitempty"`
     // Unique code of the registered merchant to whom the payment is made.
     MerchantCode *string `json:"merchant_code,omitempty"`
     // Payment type used for the transaction.
@@ -1107,7 +1104,7 @@ type CheckoutSuccessTransaction struct {
 ```
 
 <a name="CheckoutSuccessTransactionStatus"></a>
-## type [CheckoutSuccessTransactionStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L353>)
+## type [CheckoutSuccessTransactionStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L347>)
 
 Current status of the transaction.
 
@@ -1127,7 +1124,7 @@ const (
 ```
 
 <a name="CheckoutTransaction"></a>
-## type [CheckoutTransaction](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L125-L157>)
+## type [CheckoutTransaction](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L125-L154>)
 
 CheckoutTransaction is a schema definition.
 
@@ -1147,9 +1144,6 @@ type CheckoutTransaction struct {
     // Current number of the installment for deferred payments.
     // Min: 1
     InstallmentsCount *int `json:"installments_count,omitempty"`
-    // Internal unique ID of the transaction on the SumUp platform.
-    // Format: int64
-    InternalID *int64 `json:"internal_id,omitempty"`
     // Unique code of the registered merchant to whom the payment is made.
     MerchantCode *string `json:"merchant_code,omitempty"`
     // Payment type used for the transaction.
@@ -1168,7 +1162,7 @@ type CheckoutTransaction struct {
 ```
 
 <a name="CheckoutTransactionStatus"></a>
-## type [CheckoutTransactionStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L160>)
+## type [CheckoutTransactionStatus](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L157>)
 
 Current status of the transaction.
 
@@ -1188,7 +1182,7 @@ const (
 ```
 
 <a name="CheckoutsClient"></a>
-## type [CheckoutsClient](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L577-L579>)
+## type [CheckoutsClient](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L571-L573>)
 
 CheckoutsClient provides access to the Checkouts API.
 
@@ -1207,7 +1201,7 @@ type CheckoutsClient struct {
 ```
 
 <a name="NewCheckoutsClient"></a>
-### func [NewCheckoutsClient](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L581>)
+### func [NewCheckoutsClient](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L575>)
 
 ```go
 func NewCheckoutsClient(c *client.Client) *CheckoutsClient
@@ -1216,7 +1210,7 @@ func NewCheckoutsClient(c *client.Client) *CheckoutsClient
 
 
 <a name="CheckoutsClient.Create"></a>
-### func \(\*CheckoutsClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L623>)
+### func \(\*CheckoutsClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L617>)
 
 ```go
 func (c *CheckoutsClient) Create(ctx context.Context, body CheckoutsCreateParams) (*Checkout, error)
@@ -1229,7 +1223,7 @@ For 3DS checkouts, add the \`redirect\_url\` parameter to your request body sche
 Follow by processing a checkout to charge the provided payment instrument.
 
 <a name="CheckoutsClient.CreateApplePaySession"></a>
-### func \(\*CheckoutsClient\) [CreateApplePaySession](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L681>)
+### func \(\*CheckoutsClient\) [CreateApplePaySession](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L675>)
 
 ```go
 func (c *CheckoutsClient) CreateApplePaySession(ctx context.Context, id string, body CheckoutsCreateApplePaySessionParams) (*CheckoutsCreateApplePaySessionResponse, error)
@@ -1240,7 +1234,7 @@ Creates an Apple Pay merchant session for the specified checkout.
 Use this endpoint after the customer selects Apple Pay and before calling \`ApplePaySession.completeMerchantValidation\(...\)\` in the browser. SumUp validates the merchant session request and returns the Apple Pay session object that your frontend should pass to Apple's JavaScript API.
 
 <a name="CheckoutsClient.Deactivate"></a>
-### func \(\*CheckoutsClient\) [Deactivate](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L752>)
+### func \(\*CheckoutsClient\) [Deactivate](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L746>)
 
 ```go
 func (c *CheckoutsClient) Deactivate(ctx context.Context, id string) (*Checkout, error)
@@ -1249,7 +1243,7 @@ func (c *CheckoutsClient) Deactivate(ctx context.Context, id string) (*Checkout,
 Deactivates an identified checkout resource. If the checkout has already been processed it can not be deactivated.
 
 <a name="CheckoutsClient.Get"></a>
-### func \(\*CheckoutsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L799>)
+### func \(\*CheckoutsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L793>)
 
 ```go
 func (c *CheckoutsClient) Get(ctx context.Context, id string) (*CheckoutSuccess, error)
@@ -1258,7 +1252,7 @@ func (c *CheckoutsClient) Get(ctx context.Context, id string) (*CheckoutSuccess,
 Retrieves an identified checkout resource. Use this request after processing a checkout to confirm its status and inform the end user respectively.
 
 <a name="CheckoutsClient.List"></a>
-### func \(\*CheckoutsClient\) [List](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L586>)
+### func \(\*CheckoutsClient\) [List](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L580>)
 
 ```go
 func (c *CheckoutsClient) List(ctx context.Context, params CheckoutsListParams) (*CheckoutsListResponse, error)
@@ -1267,7 +1261,7 @@ func (c *CheckoutsClient) List(ctx context.Context, params CheckoutsListParams) 
 Lists created checkout resources according to the applied \`checkout\_reference\`.
 
 <a name="CheckoutsClient.ListAvailablePaymentMethods"></a>
-### func \(\*CheckoutsClient\) [ListAvailablePaymentMethods](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L720>)
+### func \(\*CheckoutsClient\) [ListAvailablePaymentMethods](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L714>)
 
 ```go
 func (c *CheckoutsClient) ListAvailablePaymentMethods(ctx context.Context, merchantCode string, params CheckoutsListAvailablePaymentMethodsParams) (*CheckoutsListAvailablePaymentMethodsResponse, error)
@@ -1276,7 +1270,7 @@ func (c *CheckoutsClient) ListAvailablePaymentMethods(ctx context.Context, merch
 Get payment methods available for the given merchant to use with a checkout.
 
 <a name="CheckoutsClient.Process"></a>
-### func \(\*CheckoutsClient\) [Process](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L841>)
+### func \(\*CheckoutsClient\) [Process](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L835>)
 
 ```go
 func (c *CheckoutsClient) Process(ctx context.Context, id string, body CheckoutsProcessParams) (*CheckoutsProcessResponse, error)
@@ -1287,7 +1281,7 @@ Processing a checkout will attempt to charge the provided payment instrument for
 Follow this request with \`Retrieve a checkout\` to confirm its status.
 
 <a name="CheckoutsCreateApplePaySession400Response"></a>
-## type [CheckoutsCreateApplePaySession400Response](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L509>)
+## type [CheckoutsCreateApplePaySession400Response](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L503>)
 
 CheckoutsCreateApplePaySession400Response is a schema definition.
 
@@ -1296,7 +1290,7 @@ type CheckoutsCreateApplePaySession400Response json.RawMessage
 ```
 
 <a name="CheckoutsCreateApplePaySession400Response.Error"></a>
-### func \(\*CheckoutsCreateApplePaySession400Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L511>)
+### func \(\*CheckoutsCreateApplePaySession400Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L505>)
 
 ```go
 func (e *CheckoutsCreateApplePaySession400Response) Error() string
@@ -1305,7 +1299,7 @@ func (e *CheckoutsCreateApplePaySession400Response) Error() string
 
 
 <a name="CheckoutsCreateApplePaySessionParams"></a>
-## type [CheckoutsCreateApplePaySessionParams](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L451-L458>)
+## type [CheckoutsCreateApplePaySessionParams](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L445-L452>)
 
 CheckoutsCreateApplePaySessionParams is a schema definition.
 
@@ -1321,7 +1315,7 @@ type CheckoutsCreateApplePaySessionParams struct {
 ```
 
 <a name="CheckoutsCreateApplePaySessionResponse"></a>
-## type [CheckoutsCreateApplePaySessionResponse](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L506>)
+## type [CheckoutsCreateApplePaySessionResponse](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L500>)
 
 CheckoutsCreateApplePaySessionResponse is a schema definition.
 
@@ -1330,7 +1324,7 @@ type CheckoutsCreateApplePaySessionResponse json.RawMessage
 ```
 
 <a name="CheckoutsCreateParams"></a>
-## type [CheckoutsCreateParams](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L448>)
+## type [CheckoutsCreateParams](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L442>)
 
 
 
@@ -1339,7 +1333,7 @@ type CheckoutsCreateParams = CheckoutCreateRequest
 ```
 
 <a name="CheckoutsListAvailablePaymentMethodsParams"></a>
-## type [CheckoutsListAvailablePaymentMethodsParams](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L480-L485>)
+## type [CheckoutsListAvailablePaymentMethodsParams](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L474-L479>)
 
 CheckoutsListAvailablePaymentMethodsParams are query parameters for GetPaymentMethods.
 
@@ -1353,7 +1347,7 @@ type CheckoutsListAvailablePaymentMethodsParams struct {
 ```
 
 <a name="CheckoutsListAvailablePaymentMethodsParams.QueryValues"></a>
-### func \(\*CheckoutsListAvailablePaymentMethodsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L488>)
+### func \(\*CheckoutsListAvailablePaymentMethodsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L482>)
 
 ```go
 func (p *CheckoutsListAvailablePaymentMethodsParams) QueryValues() url.Values
@@ -1362,7 +1356,7 @@ func (p *CheckoutsListAvailablePaymentMethodsParams) QueryValues() url.Values
 QueryValues converts [CheckoutsListAvailablePaymentMethodsParams](<#CheckoutsListAvailablePaymentMethodsParams>) into \[url.Values\].
 
 <a name="CheckoutsListAvailablePaymentMethodsResponse"></a>
-## type [CheckoutsListAvailablePaymentMethodsResponse](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L518-L520>)
+## type [CheckoutsListAvailablePaymentMethodsResponse](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L512-L514>)
 
 CheckoutsListAvailablePaymentMethodsResponse is a schema definition.
 
@@ -1373,7 +1367,7 @@ type CheckoutsListAvailablePaymentMethodsResponse struct {
 ```
 
 <a name="CheckoutsListAvailablePaymentMethodsResponseAvailablePaymentMethod"></a>
-## type [CheckoutsListAvailablePaymentMethodsResponseAvailablePaymentMethod](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L523-L526>)
+## type [CheckoutsListAvailablePaymentMethodsResponseAvailablePaymentMethod](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L517-L520>)
 
 CheckoutsListAvailablePaymentMethodsResponseAvailablePaymentMethod is a schema definition.
 
@@ -1385,7 +1379,7 @@ type CheckoutsListAvailablePaymentMethodsResponseAvailablePaymentMethod struct {
 ```
 
 <a name="CheckoutsListParams"></a>
-## type [CheckoutsListParams](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L463-L466>)
+## type [CheckoutsListParams](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L457-L460>)
 
 CheckoutsListParams are query parameters for ListCheckouts.
 
@@ -1397,7 +1391,7 @@ type CheckoutsListParams struct {
 ```
 
 <a name="CheckoutsListParams.QueryValues"></a>
-### func \(\*CheckoutsListParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L469>)
+### func \(\*CheckoutsListParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L463>)
 
 ```go
 func (p *CheckoutsListParams) QueryValues() url.Values
@@ -1406,7 +1400,7 @@ func (p *CheckoutsListParams) QueryValues() url.Values
 QueryValues converts [CheckoutsListParams](<#CheckoutsListParams>) into \[url.Values\].
 
 <a name="CheckoutsListResponse"></a>
-## type [CheckoutsListResponse](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L503>)
+## type [CheckoutsListResponse](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L497>)
 
 CheckoutsListResponse is a schema definition.
 
@@ -1415,7 +1409,7 @@ type CheckoutsListResponse []CheckoutSuccess
 ```
 
 <a name="CheckoutsProcess400Response"></a>
-## type [CheckoutsProcess400Response](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L529>)
+## type [CheckoutsProcess400Response](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L523>)
 
 CheckoutsProcess400Response is a schema definition.
 
@@ -1424,7 +1418,7 @@ type CheckoutsProcess400Response json.RawMessage
 ```
 
 <a name="CheckoutsProcess400Response.Error"></a>
-### func \(\*CheckoutsProcess400Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L531>)
+### func \(\*CheckoutsProcess400Response\) [Error](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L525>)
 
 ```go
 func (e *CheckoutsProcess400Response) Error() string
@@ -1433,7 +1427,7 @@ func (e *CheckoutsProcess400Response) Error() string
 
 
 <a name="CheckoutsProcessParams"></a>
-## type [CheckoutsProcessParams](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L460>)
+## type [CheckoutsProcessParams](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L454>)
 
 
 
@@ -1442,7 +1436,7 @@ type CheckoutsProcessParams = ProcessCheckout
 ```
 
 <a name="CheckoutsProcessResponse"></a>
-## type [CheckoutsProcessResponse](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L537-L540>)
+## type [CheckoutsProcessResponse](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L531-L534>)
 
 
 
@@ -1454,7 +1448,7 @@ type CheckoutsProcessResponse struct {
 ```
 
 <a name="CheckoutsProcessResponse.AsCheckoutAccepted"></a>
-### func \(\*CheckoutsProcessResponse\) [AsCheckoutAccepted](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L550>)
+### func \(\*CheckoutsProcessResponse\) [AsCheckoutAccepted](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L544>)
 
 ```go
 func (r *CheckoutsProcessResponse) AsCheckoutAccepted() (*CheckoutAccepted, bool)
@@ -1463,7 +1457,7 @@ func (r *CheckoutsProcessResponse) AsCheckoutAccepted() (*CheckoutAccepted, bool
 
 
 <a name="CheckoutsProcessResponse.AsCheckoutSuccess"></a>
-### func \(\*CheckoutsProcessResponse\) [AsCheckoutSuccess](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L542>)
+### func \(\*CheckoutsProcessResponse\) [AsCheckoutSuccess](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L536>)
 
 ```go
 func (r *CheckoutsProcessResponse) AsCheckoutSuccess() (*CheckoutSuccess, bool)
@@ -2097,7 +2091,7 @@ type CustomersUpdateParams struct {
 ```
 
 <a name="DetailsError"></a>
-## type [DetailsError](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L369-L378>)
+## type [DetailsError](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L363-L372>)
 
 Error message structure.
 
@@ -2115,7 +2109,7 @@ type DetailsError struct {
 ```
 
 <a name="DetailsError.Error"></a>
-### func \(\*DetailsError\) [Error](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L386>)
+### func \(\*DetailsError\) [Error](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L380>)
 
 ```go
 func (e *DetailsError) Error() string
@@ -2124,7 +2118,7 @@ func (e *DetailsError) Error() string
 
 
 <a name="DetailsErrorFailedConstraint"></a>
-## type [DetailsErrorFailedConstraint](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L381-L384>)
+## type [DetailsErrorFailedConstraint](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L375-L378>)
 
 DetailsErrorFailedConstraint is a schema definition.
 
@@ -2547,7 +2541,7 @@ type Lon float32
 ```
 
 <a name="MandatePayload"></a>
-## type [MandatePayload](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L393-L400>)
+## type [MandatePayload](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L387-L394>)
 
 Mandate details used when a checkout should create a reusable card token for future recurring or merchant\-initiated payments.
 
@@ -2563,7 +2557,7 @@ type MandatePayload struct {
 ```
 
 <a name="MandatePayloadType"></a>
-## type [MandatePayloadType](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L403>)
+## type [MandatePayloadType](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L397>)
 
 Type of mandate to create for the saved payment instrument.
 
@@ -3828,7 +3822,7 @@ func (e *Problem) Error() string
 
 
 <a name="ProcessCheckout"></a>
-## type [ProcessCheckout](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L412-L433>)
+## type [ProcessCheckout](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L406-L427>)
 
 Request body for attempting payment on an existing checkout. The required companion fields depend on the selected \`payment\_type\`, for example card details, saved\-card data, or payer information required by a specific payment method.
 
@@ -3858,7 +3852,7 @@ type ProcessCheckout struct {
 ```
 
 <a name="ProcessCheckoutPaymentType"></a>
-## type [ProcessCheckoutPaymentType](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L436>)
+## type [ProcessCheckoutPaymentType](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L430>)
 
 Payment method used for this processing attempt. It determines which additional request fields are required.
 
@@ -5061,7 +5055,7 @@ const (
 ```
 
 <a name="TransactionCheckoutInfo"></a>
-## type [TransactionCheckoutInfo](<https://github.com/sumup/sumup-go/blob/main/shared.go#L345-L359>)
+## type [TransactionCheckoutInfo](<https://github.com/sumup/sumup-go/blob/main/shared.go#L345-L356>)
 
 Checkout\-specific fields associated with a transaction.
 
@@ -5071,9 +5065,6 @@ type TransactionCheckoutInfo struct {
     AuthCode *string `json:"auth_code,omitempty"`
     // Entry mode of the payment details.
     EntryMode *EntryMode `json:"entry_mode,omitempty"`
-    // Internal unique ID of the transaction on the SumUp platform.
-    // Format: int64
-    InternalID *int64 `json:"internal_id,omitempty"`
     // Unique code of the registered merchant to whom the payment is made.
     MerchantCode *string `json:"merchant_code,omitempty"`
     // Amount of the tip (out of the total transaction amount).
@@ -5130,7 +5121,7 @@ type TransactionEvent struct {
 ```
 
 <a name="TransactionFull"></a>
-## type [TransactionFull](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L196-L307>)
+## type [TransactionFull](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L196-L304>)
 
 Full transaction resource with checkout, payout, and event details.
 
@@ -5167,9 +5158,6 @@ type TransactionFull struct {
     // Current number of the installment for deferred payments.
     // Min: 1
     InstallmentsCount *int `json:"installments_count,omitempty"`
-    // Internal unique ID of the transaction on the SumUp platform.
-    // Format: int64
-    InternalID *int64 `json:"internal_id,omitempty"`
     // Latitude value from the coordinates of the payment location (as received from the payment terminal reader).
     // Min: 0
     // Max: 90
@@ -5250,7 +5238,7 @@ type TransactionFull struct {
 ```
 
 <a name="TransactionFullLocation"></a>
-## type [TransactionFullLocation](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L329-L340>)
+## type [TransactionFullLocation](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L326-L337>)
 
 Details of the payment location as received from the payment terminal.
 
@@ -5270,7 +5258,7 @@ type TransactionFullLocation struct {
 ```
 
 <a name="TransactionFullPayoutPlan"></a>
-## type [TransactionFullPayoutPlan](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L320>)
+## type [TransactionFullPayoutPlan](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L317>)
 
 Payout plan of the registered user at the time when the transaction was made.
 
@@ -5289,7 +5277,7 @@ const (
 ```
 
 <a name="TransactionFullPayoutType"></a>
-## type [TransactionFullPayoutType](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L343>)
+## type [TransactionFullPayoutType](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L340>)
 
 Payout type for the transaction.
 
@@ -5307,7 +5295,7 @@ const (
 ```
 
 <a name="TransactionFullProcessA"></a>
-## type [TransactionFullProcessA](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L351>)
+## type [TransactionFullProcessA](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L348>)
 
 Debit/Credit.
 
@@ -5325,7 +5313,7 @@ const (
 ```
 
 <a name="TransactionFullSimplePaymentType"></a>
-## type [TransactionFullSimplePaymentType](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L359>)
+## type [TransactionFullSimplePaymentType](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L356>)
 
 Simple name of the payment type.
 
@@ -5355,7 +5343,7 @@ const (
 ```
 
 <a name="TransactionFullSimpleStatus"></a>
-## type [TransactionFullSimpleStatus](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L392>)
+## type [TransactionFullSimpleStatus](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L389>)
 
 High\-level status of the transaction from the merchant's perspective.
 
@@ -5385,7 +5373,7 @@ const (
 ```
 
 <a name="TransactionFullStatus"></a>
-## type [TransactionFullStatus](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L310>)
+## type [TransactionFullStatus](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L307>)
 
 Current status of the transaction.
 
@@ -5405,7 +5393,7 @@ const (
 ```
 
 <a name="TransactionFullVATRate"></a>
-## type [TransactionFullVATRate](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L408-L421>)
+## type [TransactionFullVATRate](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L405-L418>)
 
 TransactionFullVATRate is a schema definition.
 
@@ -5427,7 +5415,7 @@ type TransactionFullVATRate struct {
 ```
 
 <a name="TransactionFullVerificationMethod"></a>
-## type [TransactionFullVerificationMethod](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L424>)
+## type [TransactionFullVerificationMethod](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L421>)
 
 Verification method used for the transaction.
 
@@ -5449,7 +5437,7 @@ const (
 ```
 
 <a name="TransactionHistory"></a>
-## type [TransactionHistory](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L436-L482>)
+## type [TransactionHistory](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L433-L479>)
 
 Transaction entry returned in history listing responses.
 
@@ -5504,7 +5492,7 @@ type TransactionHistory struct {
 ```
 
 <a name="TransactionHistoryPayoutPlan"></a>
-## type [TransactionHistoryPayoutPlan](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L495>)
+## type [TransactionHistoryPayoutPlan](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L492>)
 
 Payout plan of the registered user at the time when the transaction was made.
 
@@ -5523,7 +5511,7 @@ const (
 ```
 
 <a name="TransactionHistoryPayoutType"></a>
-## type [TransactionHistoryPayoutType](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L504>)
+## type [TransactionHistoryPayoutType](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L501>)
 
 Payout type.
 
@@ -5541,7 +5529,7 @@ const (
 ```
 
 <a name="TransactionHistoryStatus"></a>
-## type [TransactionHistoryStatus](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L485>)
+## type [TransactionHistoryStatus](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L482>)
 
 Current status of the transaction.
 
@@ -5561,7 +5549,7 @@ const (
 ```
 
 <a name="TransactionHistoryType"></a>
-## type [TransactionHistoryType](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L512>)
+## type [TransactionHistoryType](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L509>)
 
 Type of the transaction for the registered user specified in the \`user\` property.
 
@@ -5580,7 +5568,7 @@ const (
 ```
 
 <a name="TransactionID"></a>
-## type [TransactionID](<https://github.com/sumup/sumup-go/blob/main/shared.go#L362>)
+## type [TransactionID](<https://github.com/sumup/sumup-go/blob/main/shared.go#L359>)
 
 Unique ID of the transaction.
 
@@ -5589,7 +5577,7 @@ type TransactionID string
 ```
 
 <a name="TransactionMixinHistory"></a>
-## type [TransactionMixinHistory](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L521-L530>)
+## type [TransactionMixinHistory](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L518-L527>)
 
 Additional transaction fields used by history and detailed views.
 
@@ -5607,7 +5595,7 @@ type TransactionMixinHistory struct {
 ```
 
 <a name="TransactionMixinHistoryPayoutPlan"></a>
-## type [TransactionMixinHistoryPayoutPlan](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L533>)
+## type [TransactionMixinHistoryPayoutPlan](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L530>)
 
 Payout plan of the registered user at the time when the transaction was made.
 
@@ -5626,7 +5614,7 @@ const (
 ```
 
 <a name="TransactionsClient"></a>
-## type [TransactionsClient](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L911-L913>)
+## type [TransactionsClient](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L894-L896>)
 
 TransactionsClient provides access to the Transactions API.
 
@@ -5645,7 +5633,7 @@ type TransactionsClient struct {
 ```
 
 <a name="NewTransactionsClient"></a>
-### func [NewTransactionsClient](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L915>)
+### func [NewTransactionsClient](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L898>)
 
 ```go
 func NewTransactionsClient(c *client.Client) *TransactionsClient
@@ -5654,25 +5642,25 @@ func NewTransactionsClient(c *client.Client) *TransactionsClient
 
 
 <a name="TransactionsClient.Get"></a>
-### func \(\*TransactionsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L1051>)
+### func \(\*TransactionsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L1032>)
 
 ```go
 func (c *TransactionsClient) Get(ctx context.Context, merchantCode string, params TransactionsGetParams) (*TransactionFull, error)
 ```
 
-Retrieves the full details of an identified transaction. The transaction resource is identified by a query parameter and \*one\* of following parameters is required: \- \`id\` \- \`internal\_id\` \- \`transaction\_code\` \- \`foreign\_transaction\_id\` \- \`client\_transaction\_id\`
+Retrieves the full details of an identified transaction. The transaction resource is identified by a query parameter and \*one\* of following parameters is required: \- \`id\` \- \`transaction\_code\` \- \`foreign\_transaction\_id\` \- \`client\_transaction\_id\`
 
 <a name="TransactionsClient.GetDeprecated"></a>
-### func \(\*TransactionsClient\) [GetDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L967>)
+### func \(\*TransactionsClient\) [GetDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L949>)
 
 ```go
 func (c *TransactionsClient) GetDeprecated(ctx context.Context, params TransactionsGetDeprecatedParams) (*TransactionFull, error)
 ```
 
-Retrieves the full details of an identified transaction. The transaction resource is identified by a query parameter and \*one\* of following parameters is required: \- \`id\` \- \`internal\_id\` \- \`transaction\_code\` \- \`foreign\_transaction\_id\` \- \`client\_transaction\_id\` Deprecated: this operation is deprecated
+Retrieves the full details of an identified transaction. The transaction resource is identified by a query parameter and \*one\* of following parameters is required: \- \`id\` \- \`transaction\_code\` \- \`foreign\_transaction\_id\` \- \`client\_transaction\_id\` Deprecated: this operation is deprecated
 
 <a name="TransactionsClient.List"></a>
-### func \(\*TransactionsClient\) [List](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L1006>)
+### func \(\*TransactionsClient\) [List](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L988>)
 
 ```go
 func (c *TransactionsClient) List(ctx context.Context, merchantCode string, params TransactionsListParams) (*TransactionsListResponse, error)
@@ -5681,7 +5669,7 @@ func (c *TransactionsClient) List(ctx context.Context, merchantCode string, para
 Lists detailed history of all transactions associated with the merchant profile.
 
 <a name="TransactionsClient.ListDeprecated"></a>
-### func \(\*TransactionsClient\) [ListDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L921>)
+### func \(\*TransactionsClient\) [ListDeprecated](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L904>)
 
 ```go
 func (c *TransactionsClient) ListDeprecated(ctx context.Context, params TransactionsListDeprecatedParams) (*TransactionsListDeprecatedResponse, error)
@@ -5690,7 +5678,7 @@ func (c *TransactionsClient) ListDeprecated(ctx context.Context, params Transact
 Lists detailed history of all transactions associated with the merchant profile. Deprecated: this operation is deprecated
 
 <a name="TransactionsClient.Refund"></a>
-### func \(\*TransactionsClient\) [Refund](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L1090>)
+### func \(\*TransactionsClient\) [Refund](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L1071>)
 
 ```go
 func (c *TransactionsClient) Refund(ctx context.Context, txnID string, body TransactionsRefundParams) error
@@ -5699,7 +5687,7 @@ func (c *TransactionsClient) Refund(ctx context.Context, txnID string, body Tran
 Refunds an identified transaction either in full or partially.
 
 <a name="TransactionsGetDeprecatedParams"></a>
-## type [TransactionsGetDeprecatedParams](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L677-L685>)
+## type [TransactionsGetDeprecatedParams](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L674-L679>)
 
 TransactionsGetDeprecatedParams are query parameters for GetTransaction.
 
@@ -5707,16 +5695,13 @@ TransactionsGetDeprecatedParams are query parameters for GetTransaction.
 type TransactionsGetDeprecatedParams struct {
     // Retrieves the transaction resource with the specified transaction ID (the `id` parameter in the transaction resource).
     ID  *string
-    // Retrieves the transaction resource with the specified internal transaction ID (the `internal_id` parameter in
-    // the transaction resource).
-    InternalID *string
     // Retrieves the transaction resource with the specified transaction code.
     TransactionCode *string
 }
 ```
 
 <a name="TransactionsGetDeprecatedParams.QueryValues"></a>
-### func \(\*TransactionsGetDeprecatedParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L688>)
+### func \(\*TransactionsGetDeprecatedParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L682>)
 
 ```go
 func (p *TransactionsGetDeprecatedParams) QueryValues() url.Values
@@ -5725,7 +5710,7 @@ func (p *TransactionsGetDeprecatedParams) QueryValues() url.Values
 QueryValues converts [TransactionsGetDeprecatedParams](<#TransactionsGetDeprecatedParams>) into \[url.Values\].
 
 <a name="TransactionsGetParams"></a>
-## type [TransactionsGetParams](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L833-L845>)
+## type [TransactionsGetParams](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L823-L832>)
 
 TransactionsGetParams are query parameters for GetTransactionV2.1.
 
@@ -5737,16 +5722,13 @@ type TransactionsGetParams struct {
     ForeignTransactionID *string
     // Retrieves the transaction resource with the specified transaction ID (the `id` parameter in the transaction resource).
     ID  *string
-    // Retrieves the transaction resource with the specified internal transaction ID (the `internal_id` parameter in
-    // the transaction resource).
-    InternalID *string
     // Retrieves the transaction resource with the specified transaction code.
     TransactionCode *string
 }
 ```
 
 <a name="TransactionsGetParams.QueryValues"></a>
-### func \(\*TransactionsGetParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L848>)
+### func \(\*TransactionsGetParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L835>)
 
 ```go
 func (p *TransactionsGetParams) QueryValues() url.Values
@@ -5755,7 +5737,7 @@ func (p *TransactionsGetParams) QueryValues() url.Values
 QueryValues converts [TransactionsGetParams](<#TransactionsGetParams>) into \[url.Values\].
 
 <a name="TransactionsHistoryLink"></a>
-## type [TransactionsHistoryLink](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L542-L547>)
+## type [TransactionsHistoryLink](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L539-L544>)
 
 Hypermedia link used for transaction history pagination.
 
@@ -5769,7 +5751,7 @@ type TransactionsHistoryLink struct {
 ```
 
 <a name="TransactionsListDeprecatedOrder"></a>
-## type [TransactionsListDeprecatedOrder](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L558>)
+## type [TransactionsListDeprecatedOrder](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L555>)
 
 TransactionsListDeprecatedOrder is a schema definition. Default: ascending
 
@@ -5787,7 +5769,7 @@ const (
 ```
 
 <a name="TransactionsListDeprecatedParams"></a>
-## type [TransactionsListDeprecatedParams](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L586-L619>)
+## type [TransactionsListDeprecatedParams](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L583-L616>)
 
 TransactionsListDeprecatedParams are query parameters for ListTransactions.
 
@@ -5829,7 +5811,7 @@ type TransactionsListDeprecatedParams struct {
 ```
 
 <a name="TransactionsListDeprecatedParams.QueryValues"></a>
-### func \(\*TransactionsListDeprecatedParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L622>)
+### func \(\*TransactionsListDeprecatedParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L619>)
 
 ```go
 func (p *TransactionsListDeprecatedParams) QueryValues() url.Values
@@ -5838,7 +5820,7 @@ func (p *TransactionsListDeprecatedParams) QueryValues() url.Values
 QueryValues converts [TransactionsListDeprecatedParams](<#TransactionsListDeprecatedParams>) into \[url.Values\].
 
 <a name="TransactionsListDeprecatedResponse"></a>
-## type [TransactionsListDeprecatedResponse](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L875-L878>)
+## type [TransactionsListDeprecatedResponse](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L858-L861>)
 
 TransactionsListDeprecatedResponse is a schema definition.
 
@@ -5850,7 +5832,7 @@ type TransactionsListDeprecatedResponse struct {
 ```
 
 <a name="TransactionsListDeprecatedStatusesItem"></a>
-## type [TransactionsListDeprecatedStatusesItem](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L566>)
+## type [TransactionsListDeprecatedStatusesItem](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L563>)
 
 TransactionsListDeprecatedStatusesItem is a schema definition.
 
@@ -5871,7 +5853,7 @@ const (
 ```
 
 <a name="TransactionsListDeprecatedTypesItem"></a>
-## type [TransactionsListDeprecatedTypesItem](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L577>)
+## type [TransactionsListDeprecatedTypesItem](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L574>)
 
 TransactionsListDeprecatedTypesItem is a schema definition.
 
@@ -5890,7 +5872,7 @@ const (
 ```
 
 <a name="TransactionsListOrder"></a>
-## type [TransactionsListOrder](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L708>)
+## type [TransactionsListOrder](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L698>)
 
 TransactionsListOrder is a schema definition. Default: ascending
 
@@ -5908,7 +5890,7 @@ const (
 ```
 
 <a name="TransactionsListParams"></a>
-## type [TransactionsListParams](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L736-L771>)
+## type [TransactionsListParams](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L726-L761>)
 
 TransactionsListParams are query parameters for ListTransactionsV2.1.
 
@@ -5952,7 +5934,7 @@ type TransactionsListParams struct {
 ```
 
 <a name="TransactionsListParams.QueryValues"></a>
-### func \(\*TransactionsListParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L774>)
+### func \(\*TransactionsListParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L764>)
 
 ```go
 func (p *TransactionsListParams) QueryValues() url.Values
@@ -5961,7 +5943,7 @@ func (p *TransactionsListParams) QueryValues() url.Values
 QueryValues converts [TransactionsListParams](<#TransactionsListParams>) into \[url.Values\].
 
 <a name="TransactionsListResponse"></a>
-## type [TransactionsListResponse](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L881-L884>)
+## type [TransactionsListResponse](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L864-L867>)
 
 TransactionsListResponse is a schema definition.
 
@@ -5973,7 +5955,7 @@ type TransactionsListResponse struct {
 ```
 
 <a name="TransactionsListStatusesItem"></a>
-## type [TransactionsListStatusesItem](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L716>)
+## type [TransactionsListStatusesItem](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L706>)
 
 TransactionsListStatusesItem is a schema definition.
 
@@ -5994,7 +5976,7 @@ const (
 ```
 
 <a name="TransactionsListTypesItem"></a>
-## type [TransactionsListTypesItem](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L727>)
+## type [TransactionsListTypesItem](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L717>)
 
 TransactionsListTypesItem is a schema definition.
 
@@ -6013,7 +5995,7 @@ const (
 ```
 
 <a name="TransactionsRefundParams"></a>
-## type [TransactionsRefundParams](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L550-L554>)
+## type [TransactionsRefundParams](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L547-L551>)
 
 Optional amount for partial refunds of transactions.
 

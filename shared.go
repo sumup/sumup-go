@@ -347,9 +347,6 @@ type TransactionCheckoutInfo struct {
 	AuthCode *string `json:"auth_code,omitempty"`
 	// Entry mode of the payment details.
 	EntryMode *EntryMode `json:"entry_mode,omitempty"`
-	// Internal unique ID of the transaction on the SumUp platform.
-	// Format: int64
-	InternalID *int64 `json:"internal_id,omitempty"`
 	// Unique code of the registered merchant to whom the payment is made.
 	MerchantCode *string `json:"merchant_code,omitempty"`
 	// Amount of the tip (out of the total transaction amount).

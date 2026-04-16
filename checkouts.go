@@ -137,9 +137,6 @@ type CheckoutTransaction struct {
 	// Current number of the installment for deferred payments.
 	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
-	// Internal unique ID of the transaction on the SumUp platform.
-	// Format: int64
-	InternalID *int64 `json:"internal_id,omitempty"`
 	// Unique code of the registered merchant to whom the payment is made.
 	MerchantCode *string `json:"merchant_code,omitempty"`
 	// Payment type used for the transaction.
@@ -330,9 +327,6 @@ type CheckoutSuccessTransaction struct {
 	// Current number of the installment for deferred payments.
 	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
-	// Internal unique ID of the transaction on the SumUp platform.
-	// Format: int64
-	InternalID *int64 `json:"internal_id,omitempty"`
 	// Unique code of the registered merchant to whom the payment is made.
 	MerchantCode *string `json:"merchant_code,omitempty"`
 	// Payment type used for the transaction.
