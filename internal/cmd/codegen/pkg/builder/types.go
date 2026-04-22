@@ -60,23 +60,7 @@ func (f *StructField) String() string {
 	if f.Comment != "" {
 		fmt.Fprintf(buf, "// %s\n", f.Comment)
 	}
-	name := f.Name
-
-	// TODO: extract into helper
-	if strings.HasPrefix(name, "+") {
-		name = strings.Replace(name, "+", "Plus", 1)
-	}
-	if strings.HasPrefix(name, "-") {
-		name = strings.Replace(name, "-", "Minus", 1)
-	}
-	if strings.HasPrefix(name, "@") {
-		name = strings.Replace(name, "@", "At", 1)
-	}
-	if strings.HasPrefix(name, "$") {
-		name = strings.Replace(name, "$", "", 1)
-	}
-
-	name = strcase.ToCamel(name)
+	name := structFieldName(f.Name)
 	if f.Pointer {
 		fmt.Fprintf(buf, "\t%s *%s", name, f.Type)
 	} else {
@@ -91,6 +75,23 @@ func (f *StructField) String() string {
 	}
 
 	return buf.String()
+}
+
+func structFieldName(name string) string {
+	if strings.HasPrefix(name, "+") {
+		name = strings.Replace(name, "+", "Plus", 1)
+	}
+	if strings.HasPrefix(name, "-") {
+		name = strings.Replace(name, "-", "Minus", 1)
+	}
+	if strings.HasPrefix(name, "@") {
+		name = strings.Replace(name, "@", "At", 1)
+	}
+	if strings.HasPrefix(name, "$") {
+		name = strings.Replace(name, "$", "", 1)
+	}
+
+	return strcase.ToCamel(name)
 }
 
 func (et *EnumDeclaration[E]) String() string {

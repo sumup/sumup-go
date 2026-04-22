@@ -28,6 +28,7 @@ func App() *cli.App {
 		},
 		Commands: []*cli.Command{
 			Generate(),
+			Samples(),
 		},
 	}
 }

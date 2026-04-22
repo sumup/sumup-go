@@ -38,6 +38,12 @@ generate: ## Generate latest SDK
 	cd internal/cmd/codegen && go run ./... generate --out ../../.. ../../../openapi.json
 	gomarkdoc --repository.url https://github.com/sumup/sumup-go --repository.default-branch main --exclude-dirs ./internal/cmd/codegen/... --output DOCUMENTATION.md ./...
 
+CODESAMPLES_OUT ?= code-samples.json
+
+.PHONY: generate-codesamples
+generate-codesamples: ## Generate Go code samples
+	cd internal/cmd/codegen && go run ./... samples --sdk-version-file ../../../internal/version.go --out "$(abspath $(CODESAMPLES_OUT))" ../../../openapi.json
+
 .PHONY: install-tools
 install-tools: # Install development dependencies
 	cd internal/cmd/codegen && go install ./cmd/go-sdk-gen
