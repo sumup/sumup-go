@@ -6,10 +6,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/pb33f/libopenapi"
 	"github.com/urfave/cli/v2"
-
-	"github.com/sumup/sumup-go/internal/cmd/codegen/pkg/builder"
 )
 
 func Generate() *cli.Command {
@@ -23,33 +20,13 @@ func Generate() *cli.Command {
 				return fmt.Errorf("empty argument, path to openapi specs expected")
 			}
 
-			specs := c.Args().First()
-
 			if err := os.MkdirAll(out, os.ModePerm); err != nil {
 				return fmt.Errorf("create output directory %q: %w", out, err)
 			}
 
-			spec, err := os.ReadFile(specs)
+			builder, err := loadBuilder(c.Args().First(), out)
 			if err != nil {
-				return fmt.Errorf("read specs: %w", err)
-			}
-
-			doc, err := libopenapi.NewDocument(spec)
-			if err != nil {
-				return fmt.Errorf("load openapi document: %w", err)
-			}
-
-			model, err := doc.BuildV3Model()
-			if err != nil {
-				return fmt.Errorf("build openapi v3 model: %w", err)
-			}
-
-			builder := builder.New(builder.Config{
-				Out: out,
-			})
-
-			if err := builder.Load(&model.Model); err != nil {
-				return fmt.Errorf("load spec: %w", err)
+				return err
 			}
 
 			if err := builder.Build(); err != nil {
