@@ -9,6 +9,11 @@ import (
 // Date represents a date without time using RFC3339 date format (YYYY-MM-DD).
 type Date struct{ time.Time }
 
+// NewDate constructs a [Date] from a calendar date in UTC.
+func NewDate(year int, month time.Month, day int) Date {
+	return Date{time.Date(year, month, day, 0, 0, 0, 0, time.UTC)}
+}
+
 // String returns the date formatted as YYYY-MM-DD.
 func (d Date) String() string {
 	return d.Format(time.DateOnly)
@@ -37,6 +42,11 @@ func (d Date) MarshalJSON() ([]byte, error) {
 
 // Time represents a time of day using RFC3339 time format (HH:MM:SS).
 type Time struct{ time.Time }
+
+// NewTime constructs a [Time] from a clock time in UTC.
+func NewTime(hour, min, sec int) Time {
+	return Time{time.Date(0, 0, 0, hour, min, sec, 0, time.UTC)}
+}
 
 // String returns the time formatted as HH:MM:SS.
 func (t Time) String() string {
