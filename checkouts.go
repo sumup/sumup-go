@@ -85,6 +85,11 @@ type Checkout struct {
 	// Short merchant-defined description shown in SumUp tools and reporting. Use it to make the checkout easier to
 	// recognize in dashboards, support workflows, and reconciliation.
 	Description *string `json:"description,omitempty"`
+	// URL of the SumUp-hosted payment page that handles the payment flow. Returned when Hosted Checkout is enabled
+	// for the checkout.
+	// Read only
+	// Format: uri
+	HostedCheckoutURL *string `json:"hosted_checkout_url,omitempty"`
 	// Unique SumUp identifier of the checkout resource.
 	// Read only
 	ID *string `json:"id,omitempty"`
@@ -213,6 +218,8 @@ type CheckoutCreateRequest struct {
 	CustomerID *string `json:"customer_id,omitempty"`
 	// Short merchant-defined description shown in SumUp tools and reporting for easier identification of the checkout.
 	Description *string `json:"description,omitempty"`
+	// Hosted Checkout configuration. Enable it to receive a SumUp-hosted payment page URL in the checkout response.
+	HostedCheckout *HostedCheckout `json:"hosted_checkout,omitempty"`
 	// Merchant account that should receive the payment.
 	MerchantCode string `json:"merchant_code"`
 	// Business purpose of the checkout. Use `CHECKOUT` for a standard payment and `SETUP_RECURRING_PAYMENT` when
@@ -263,6 +270,11 @@ type CheckoutSuccess struct {
 	// Short merchant-defined description shown in SumUp tools and reporting. Use it to make the checkout easier to
 	// recognize in dashboards, support workflows, and reconciliation.
 	Description *string `json:"description,omitempty"`
+	// URL of the SumUp-hosted payment page that handles the payment flow. Returned when Hosted Checkout is enabled
+	// for the checkout.
+	// Read only
+	// Format: uri
+	HostedCheckoutURL *string `json:"hosted_checkout_url,omitempty"`
 	// Unique SumUp identifier of the checkout resource.
 	// Read only
 	ID *string `json:"id,omitempty"`
@@ -382,6 +394,12 @@ func (e *DetailsError) Error() string {
 }
 
 var _ error = (*DetailsError)(nil)
+
+// Hosted Checkout configuration. Enable it to receive a SumUp-hosted payment page URL in the checkout response.
+type HostedCheckout struct {
+	// Whether the checkout should include a SumUp-hosted payment page.
+	Enabled bool `json:"enabled"`
+}
 
 // Mandate details used when a checkout should create a reusable card token for future recurring or merchant-initiated payments.
 type MandatePayload struct {
@@ -612,6 +630,8 @@ func (c *CheckoutsClient) List(ctx context.Context, params CheckoutsListParams) 
 // for further manipulation of the checkout.
 //
 // For 3DS checkouts, add the `redirect_url` parameter to your request body schema.
+// To use the [Hosted Checkout](https://developer.sumup.com/online-payments/checkouts/hosted-checkout/) page,
+// set the `hosted_checkout.enabled` to `true`.
 //
 // Follow by processing a checkout to charge the provided payment instrument.
 func (c *CheckoutsClient) Create(ctx context.Context, body CheckoutsCreateParams) (*Checkout, error) {
