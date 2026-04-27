@@ -15,7 +15,6 @@ type Client struct {
 	Readers      *ReadersClient
 	Receipts     *ReceiptsClient
 	Roles        *RolesClient
-	Subaccounts  *SubaccountsClient
 	Transactions *TransactionsClient
 }
 
@@ -35,7 +34,6 @@ func NewClient(opts ...client.ClientOption) *Client {
 	c.Readers = NewReadersClient(client)
 	c.Receipts = NewReceiptsClient(client)
 	c.Roles = NewRolesClient(client)
-	c.Subaccounts = NewSubaccountsClient(client)
 	c.Transactions = NewTransactionsClient(client)
 
 	return c

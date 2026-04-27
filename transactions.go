@@ -550,149 +550,6 @@ type TransactionsRefundParams struct {
 	Amount *float32 `json:"amount,omitempty"`
 }
 
-// TransactionsListDeprecatedOrder is a schema definition.
-// Default: ascending
-type TransactionsListDeprecatedOrder string
-
-const (
-	TransactionsListDeprecatedOrderAscending  TransactionsListDeprecatedOrder = "ascending"
-	TransactionsListDeprecatedOrderDescending TransactionsListDeprecatedOrder = "descending"
-)
-
-// TransactionsListDeprecatedStatusesItem is a schema definition.
-type TransactionsListDeprecatedStatusesItem string
-
-const (
-	TransactionsListDeprecatedStatusesItemCancelled  TransactionsListDeprecatedStatusesItem = "CANCELLED"
-	TransactionsListDeprecatedStatusesItemChargeBack TransactionsListDeprecatedStatusesItem = "CHARGE_BACK"
-	TransactionsListDeprecatedStatusesItemFailed     TransactionsListDeprecatedStatusesItem = "FAILED"
-	TransactionsListDeprecatedStatusesItemRefunded   TransactionsListDeprecatedStatusesItem = "REFUNDED"
-	TransactionsListDeprecatedStatusesItemSuccessful TransactionsListDeprecatedStatusesItem = "SUCCESSFUL"
-)
-
-// TransactionsListDeprecatedTypesItem is a schema definition.
-type TransactionsListDeprecatedTypesItem string
-
-const (
-	TransactionsListDeprecatedTypesItemChargeBack TransactionsListDeprecatedTypesItem = "CHARGE_BACK"
-	TransactionsListDeprecatedTypesItemPayment    TransactionsListDeprecatedTypesItem = "PAYMENT"
-	TransactionsListDeprecatedTypesItemRefund     TransactionsListDeprecatedTypesItem = "REFUND"
-)
-
-// TransactionsListDeprecatedParams are query parameters for ListTransactions.
-type TransactionsListDeprecatedParams struct {
-	// Filters the results by the latest modification time of resources and returns only transactions that are modified
-	// *at or after* the specified timestamp (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
-	ChangesSince *time.Time
-	// Specifies the maximum number of results per page. Value must be a positive integer and if not specified, will
-	// return 10 results.
-	Limit *int
-	// Filters the results by the reference ID of transaction events and returns only transactions with events whose
-	// IDs are *smaller* than the specified value. This parameters supersedes the `newest_time` parameter (if both
-	// are provided in the request).
-	NewestRef *string
-	// Filters the results by the creation time of resources and returns only transactions that are created *before*
-	// the specified timestamp (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
-	NewestTime *time.Time
-	// Filters the results by the reference ID of transaction events and returns only transactions with events whose
-	// IDs are *greater* than the specified value. This parameters supersedes the `oldest_time` parameter (if both
-	// are provided in the request).
-	OldestRef *string
-	// Filters the results by the creation time of resources and returns only transactions that are created *at
-	// or after* the specified timestamp (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
-	OldestTime *time.Time
-	// Specifies the order in which the returned results are displayed.
-	Order *TransactionsListDeprecatedOrder
-	// Filters the returned results by the specified list of payment types used for the transactions.
-	PaymentTypes []PaymentType
-	// Filters the returned results by the specified list of final statuses of the transactions.
-	Statuses []TransactionsListDeprecatedStatusesItem
-	// Retrieves the transaction resource with the specified transaction code.
-	TransactionCode *string
-	// Filters the returned results by the specified list of transaction types.
-	Types []TransactionsListDeprecatedTypesItem
-	// Filters the returned results by user email.
-	Users []string
-}
-
-// QueryValues converts [TransactionsListDeprecatedParams] into [url.Values].
-func (p *TransactionsListDeprecatedParams) QueryValues() url.Values {
-	q := make(url.Values)
-
-	if p.ChangesSince != nil {
-		q.Set("changes_since", p.ChangesSince.Format(time.RFC3339))
-	}
-
-	if p.Limit != nil {
-		q.Set("limit", strconv.Itoa(*p.Limit))
-	}
-
-	if p.NewestRef != nil {
-		q.Set("newest_ref", *p.NewestRef)
-	}
-
-	if p.NewestTime != nil {
-		q.Set("newest_time", p.NewestTime.Format(time.RFC3339))
-	}
-
-	if p.OldestRef != nil {
-		q.Set("oldest_ref", *p.OldestRef)
-	}
-
-	if p.OldestTime != nil {
-		q.Set("oldest_time", p.OldestTime.Format(time.RFC3339))
-	}
-
-	if p.Order != nil {
-		q.Set("order", string(*p.Order))
-	}
-
-	for _, v := range p.PaymentTypes {
-		q.Add("payment_types", string(v))
-	}
-
-	for _, v := range p.Statuses {
-		q.Add("statuses[]", string(v))
-	}
-
-	if p.TransactionCode != nil {
-		q.Set("transaction_code", *p.TransactionCode)
-	}
-
-	for _, v := range p.Types {
-		q.Add("types", string(v))
-	}
-
-	for _, v := range p.Users {
-		q.Add("users", v)
-	}
-
-	return q
-}
-
-// TransactionsGetDeprecatedParams are query parameters for GetTransaction.
-type TransactionsGetDeprecatedParams struct {
-	// Retrieves the transaction resource with the specified transaction ID (the `id` parameter in the transaction resource).
-	ID *string
-	// Retrieves the transaction resource with the specified transaction code.
-	TransactionCode *string
-}
-
-// QueryValues converts [TransactionsGetDeprecatedParams] into [url.Values].
-func (p *TransactionsGetDeprecatedParams) QueryValues() url.Values {
-	q := make(url.Values)
-
-	if p.ID != nil {
-		q.Set("id", *p.ID)
-	}
-
-	if p.TransactionCode != nil {
-		q.Set("transaction_code", *p.TransactionCode)
-	}
-
-	return q
-}
-
 // TransactionsListOrder is a schema definition.
 // Default: ascending
 type TransactionsListOrder string
@@ -854,12 +711,6 @@ func (p *TransactionsGetParams) QueryValues() url.Values {
 	return q
 }
 
-// TransactionsListDeprecatedResponse is a schema definition.
-type TransactionsListDeprecatedResponse struct {
-	Items []TransactionHistory      `json:"items,omitempty"`
-	Links []TransactionsHistoryLink `json:"links,omitempty"`
-}
-
 // TransactionsListResponse is a schema definition.
 type TransactionsListResponse struct {
 	Items []TransactionHistory      `json:"items,omitempty"`
@@ -897,91 +748,6 @@ type TransactionsClient struct {
 
 func NewTransactionsClient(c *client.Client) *TransactionsClient {
 	return &TransactionsClient{c: c}
-}
-
-// Lists detailed history of all transactions associated with the merchant profile.
-// Deprecated: this operation is deprecated
-func (c *TransactionsClient) ListDeprecated(ctx context.Context, params TransactionsListDeprecatedParams) (*TransactionsListDeprecatedResponse, error) {
-	path := fmt.Sprintf("/v0.1/me/transactions/history")
-
-	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
-	if err != nil {
-		return nil, fmt.Errorf("call %s %s: %w", http.MethodGet, path, err)
-	}
-	defer func() {
-		_ = resp.Body.Close()
-	}()
-
-	switch resp.StatusCode {
-	case http.StatusOK:
-		var v TransactionsListDeprecatedResponse
-		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-			return nil, fmt.Errorf("decode response: %s", err.Error())
-		}
-
-		return &v, nil
-	case http.StatusBadRequest:
-		var apiErr Error
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	case http.StatusUnauthorized:
-		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
-}
-
-// Retrieves the full details of an identified transaction. The transaction resource is identified by a query
-// parameter and *one* of following parameters is required:
-// - `id`
-// - `transaction_code`
-// - `foreign_transaction_id`
-// - `client_transaction_id`
-// Deprecated: this operation is deprecated
-func (c *TransactionsClient) GetDeprecated(ctx context.Context, params TransactionsGetDeprecatedParams) (*TransactionFull, error) {
-	path := fmt.Sprintf("/v0.1/me/transactions")
-
-	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
-	if err != nil {
-		return nil, fmt.Errorf("call %s %s: %w", http.MethodGet, path, err)
-	}
-	defer func() {
-		_ = resp.Body.Close()
-	}()
-
-	switch resp.StatusCode {
-	case http.StatusOK:
-		var v TransactionFull
-		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-			return nil, fmt.Errorf("decode response: %s", err.Error())
-		}
-
-		return &v, nil
-	case http.StatusUnauthorized:
-		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	case http.StatusNotFound:
-		var apiErr Error
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
 }
 
 // Lists detailed history of all transactions associated with the merchant profile.
@@ -1068,8 +834,8 @@ func (c *TransactionsClient) Get(ctx context.Context, merchantCode string, param
 }
 
 // Refunds an identified transaction either in full or partially.
-func (c *TransactionsClient) Refund(ctx context.Context, txnID string, body TransactionsRefundParams) error {
-	path := fmt.Sprintf("/v0.1/me/refund/%v", txnID)
+func (c *TransactionsClient) Refund(ctx context.Context, merchantCode string, id string, body TransactionsRefundParams) error {
+	path := fmt.Sprintf("/v1.0/merchants/%v/payments/%v/refunds", merchantCode, id)
 
 	resp, err := c.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
 	if err != nil {
