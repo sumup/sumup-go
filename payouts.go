@@ -14,21 +14,34 @@ import (
 	"github.com/sumup/sumup-go/datetime"
 )
 
-// FinancialPayout is a schema definition.
+// A single payout-related record.
+//
+// A record can represent either:
+// - an actual payout sent to the merchant (`type = PAYOUT`)
+// - a deduction applied against merchant funds for a refund, chargeback, direct debit return, or balance adjustment
 type FinancialPayout struct {
-	Amount   *float32 `json:"amount,omitempty"`
-	Currency *string  `json:"currency,omitempty"`
+	// Amount of the payout or deduction in major units.
+	Amount float32 `json:"amount"`
+	// Three-letter ISO 4217 currency code of the payout.
+	Currency string `json:"currency"`
+	// Payout date associated with the record, in `YYYY-MM-DD` format.
 	// Format: date
-	Date            *datetime.Date         `json:"date,omitempty"`
-	Fee             *float32               `json:"fee,omitempty"`
-	ID              *int                   `json:"id,omitempty"`
-	Reference       *string                `json:"reference,omitempty"`
-	Status          *FinancialPayoutStatus `json:"status,omitempty"`
-	TransactionCode *string                `json:"transaction_code,omitempty"`
-	Type            *FinancialPayoutType   `json:"type,omitempty"`
+	Date datetime.Date `json:"date"`
+	// Fee amount associated with the payout record, in major units.
+	Fee float32 `json:"fee"`
+	// Unique identifier of the payout-related record.
+	ID int `json:"id"`
+	// Processor or payout reference associated with the record.
+	Reference string `json:"reference"`
+	// Merchant-facing outcome of the payout record.
+	Status FinancialPayoutStatus `json:"status"`
+	// Transaction code of the original sale associated with the payout or deduction.
+	TransactionCode string `json:"transaction_code"`
+	// High-level payout record category.
+	Type FinancialPayoutType `json:"type"`
 }
 
-// FinancialPayoutStatus is a schema definition.
+// Merchant-facing outcome of the payout record.
 type FinancialPayoutStatus string
 
 const (
@@ -36,7 +49,7 @@ const (
 	FinancialPayoutStatusSuccessful FinancialPayoutStatus = "SUCCESSFUL"
 )
 
-// FinancialPayoutType is a schema definition.
+// High-level payout record category.
 type FinancialPayoutType string
 
 const (
@@ -47,63 +60,11 @@ const (
 	FinancialPayoutTypeRefundDeduction     FinancialPayoutType = "REFUND_DEDUCTION"
 )
 
-// List of payout summaries.
+// Ordered list of payout and payout-deduction records.
 type FinancialPayouts []FinancialPayout
 
-// PayoutsListDeprecatedFormat is a schema definition.
-type PayoutsListDeprecatedFormat string
-
-const (
-	PayoutsListDeprecatedFormatCSV  PayoutsListDeprecatedFormat = "csv"
-	PayoutsListDeprecatedFormatJSON PayoutsListDeprecatedFormat = "json"
-)
-
-// PayoutsListDeprecatedOrder is a schema definition.
-type PayoutsListDeprecatedOrder string
-
-const (
-	PayoutsListDeprecatedOrderASC  PayoutsListDeprecatedOrder = "asc"
-	PayoutsListDeprecatedOrderDESC PayoutsListDeprecatedOrder = "desc"
-)
-
-// PayoutsListDeprecatedParams are query parameters for ListPayouts.
-type PayoutsListDeprecatedParams struct {
-	// End date (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
-	EndDate datetime.Date
-	// Response format for the payout list.
-	Format *PayoutsListDeprecatedFormat
-	// Maximum number of payout records to return.
-	Limit *int
-	// Sort direction for the returned payouts.
-	Order *PayoutsListDeprecatedOrder
-	// Start date (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
-	StartDate datetime.Date
-}
-
-// QueryValues converts [PayoutsListDeprecatedParams] into [url.Values].
-func (p *PayoutsListDeprecatedParams) QueryValues() url.Values {
-	q := make(url.Values)
-
-	q.Set("end_date", p.EndDate.String())
-
-	if p.Format != nil {
-		q.Set("format", string(*p.Format))
-	}
-
-	if p.Limit != nil {
-		q.Set("limit", strconv.Itoa(*p.Limit))
-	}
-
-	if p.Order != nil {
-		q.Set("order", string(*p.Order))
-	}
-
-	q.Set("start_date", p.StartDate.String())
-
-	return q
-}
-
 // PayoutsListFormat is a schema definition.
+// Default: json
 type PayoutsListFormat string
 
 const (
@@ -112,6 +73,7 @@ const (
 )
 
 // PayoutsListOrder is a schema definition.
+// Default: asc
 type PayoutsListOrder string
 
 const (
@@ -121,7 +83,8 @@ const (
 
 // PayoutsListParams are query parameters for ListPayoutsV1.
 type PayoutsListParams struct {
-	// End date (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
+	// End date of the payout period filter, inclusive, in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) `date`
+	// format (`YYYY-MM-DD`). Must be greater than or equal to `start_date`.
 	EndDate datetime.Date
 	// Response format for the payout list.
 	Format *PayoutsListFormat
@@ -129,7 +92,8 @@ type PayoutsListParams struct {
 	Limit *int
 	// Sort direction for the returned payouts.
 	Order *PayoutsListOrder
-	// Start date (in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format).
+	// Start date of the payout period filter, inclusive, in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) `date`
+	// format (`YYYY-MM-DD`).
 	StartDate datetime.Date
 }
 
@@ -156,15 +120,6 @@ func (p *PayoutsListParams) QueryValues() url.Values {
 	return q
 }
 
-// PayoutsListDeprecated400Response is a schema definition.
-type PayoutsListDeprecated400Response []ErrorExtended
-
-func (e *PayoutsListDeprecated400Response) Error() string {
-	return "PayoutsListDeprecated400Response"
-}
-
-var _ error = (*PayoutsListDeprecated400Response)(nil)
-
 // PayoutsList400Response is a schema definition.
 type PayoutsList400Response []ErrorExtended
 
@@ -188,47 +143,13 @@ func NewPayoutsClient(c *client.Client) *PayoutsClient {
 	return &PayoutsClient{c: c}
 }
 
-// Lists ordered payouts for the merchant account.
-// Deprecated: this operation is deprecated
-func (c *PayoutsClient) ListDeprecated(ctx context.Context, params PayoutsListDeprecatedParams) (*FinancialPayouts, error) {
-	path := fmt.Sprintf("/v0.1/me/financials/payouts")
-
-	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
-	if err != nil {
-		return nil, fmt.Errorf("call %s %s: %w", http.MethodGet, path, err)
-	}
-	defer func() {
-		_ = resp.Body.Close()
-	}()
-
-	switch resp.StatusCode {
-	case http.StatusOK:
-		var v FinancialPayouts
-		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-			return nil, fmt.Errorf("decode response: %s", err.Error())
-		}
-
-		return &v, nil
-	case http.StatusBadRequest:
-		var apiErr PayoutsListDeprecated400Response
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	case http.StatusUnauthorized:
-		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
-}
-
-// Lists ordered payouts for the merchant account.
+// Lists payout and payout-deduction records for the specified merchant account within the requested date range.
+//
+// The response can include:
+// - regular payouts (`type = PAYOUT`)
+// - deduction records for refunds, chargebacks, direct debit returns, or balance adjustments
+//
+// Results are sorted by payout date in the requested `order`.
 func (c *PayoutsClient) List(ctx context.Context, merchantCode string, params PayoutsListParams) (*FinancialPayouts, error) {
 	path := fmt.Sprintf("/v1.0/merchants/%v/payouts", merchantCode)
 
