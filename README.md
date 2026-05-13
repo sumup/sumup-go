@@ -92,6 +92,12 @@ go run example/full/main.go
 ```
 and visit http://localhost:8080
 
+**[webhooks](./example/webhooks)** - Minimal HTTP server showing how to receive a webhook, verify its signature, and parse the event payload.
+```sh
+SUMUP_WEBHOOK_SECRET=whsec_test go run example/webhooks/main.go
+```
+Then send `POST` requests to http://localhost:8080/webhooks
+
 ## Support
 
 Our APIs and their public offering is limited and under heavy development. If you have any questions or inquiries reach out to our support team via the [Contact Form](https://developer.sumup.com/contact/).
