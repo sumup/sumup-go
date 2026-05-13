@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.16.1](https://github.com/sumup/sumup-go/compare/v0.16.0...v0.16.1) (2026-05-13)
+
+
+### Chores
+
+* **deps:** bump github.com/pb33f/libopenapi from 0.36.0 to 0.36.1 in /internal/cmd/codegen ([#256](https://github.com/sumup/sumup-go/issues/256)) ([0fced92](https://github.com/sumup/sumup-go/commit/0fced92b29c99ab08f665fb3b6904c26b058a95c))
+* **deps:** bump github.com/pb33f/libopenapi from 0.36.1 to 0.36.3 in /internal/cmd/codegen ([#261](https://github.com/sumup/sumup-go/issues/261)) ([be136cc](https://github.com/sumup/sumup-go/commit/be136cc03a3d4f4b9f6d49566ef00940bcc97f79))
+* **deps:** bump github/codeql-action from 4.35.1 to 4.35.2 ([#255](https://github.com/sumup/sumup-go/issues/255)) ([22c29ee](https://github.com/sumup/sumup-go/commit/22c29eeae4e6ae2623e6bf5de8c684ebb316e932))
+* **deps:** bump github/codeql-action from 4.35.2 to 4.35.3 ([#260](https://github.com/sumup/sumup-go/issues/260)) ([5c4e056](https://github.com/sumup/sumup-go/commit/5c4e05608c56f25417435f08a18c414afb771435))
+* **deps:** bump googleapis/release-please-action from 4.4.1 to 5.0.0 ([#259](https://github.com/sumup/sumup-go/issues/259)) ([26f2272](https://github.com/sumup/sumup-go/commit/26f2272934bc2c51193ddb4cc4372c3985ef6be8))
+* synced file(s) with sumup/apis ([#257](https://github.com/sumup/sumup-go/issues/257)) ([113455f](https://github.com/sumup/sumup-go/commit/113455f23d7fbc98a66e14a1bbdd58bbd658e040))
+
 ## [0.16.0](https://github.com/sumup/sumup-go/compare/v0.15.2...v0.16.0) (2026-04-24)
 
 
