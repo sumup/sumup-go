@@ -147,7 +147,13 @@ type CheckoutTransaction struct {
 	// Payment type used for the transaction.
 	PaymentType *PaymentType `json:"payment_type,omitempty"`
 	// Current status of the transaction.
-	Status *CheckoutTransactionStatus `json:"status,omitempty"`
+	//
+	// - `PENDING`: The transaction has been created but its final outcome is not known yet.
+	// - `SUCCESSFUL`: The transaction completed successfully.
+	// - `CANCELLED`: The transaction was cancelled or otherwise reversed before completion.
+	// - `FAILED`: The transaction attempt did not complete successfully.
+	// - `REFUNDED`: The transaction was refunded in full or in part.
+	Status *TransactionStatus `json:"status,omitempty"`
 	// Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
 	// Amount of the tip (out of the total transaction amount).
@@ -157,16 +163,6 @@ type CheckoutTransaction struct {
 	// Amount of the applicable VAT (out of the total transaction amount).
 	VATAmount *float32 `json:"vat_amount,omitempty"`
 }
-
-// Current status of the transaction.
-type CheckoutTransactionStatus string
-
-const (
-	CheckoutTransactionStatusCancelled  CheckoutTransactionStatus = "CANCELLED"
-	CheckoutTransactionStatusFailed     CheckoutTransactionStatus = "FAILED"
-	CheckoutTransactionStatusPending    CheckoutTransactionStatus = "PENDING"
-	CheckoutTransactionStatusSuccessful CheckoutTransactionStatus = "SUCCESSFUL"
-)
 
 // Response returned when checkout processing requires an additional payer action, such as a 3DS challenge or
 // a redirect to an external payment method page.
@@ -344,7 +340,13 @@ type CheckoutSuccessTransaction struct {
 	// Payment type used for the transaction.
 	PaymentType *PaymentType `json:"payment_type,omitempty"`
 	// Current status of the transaction.
-	Status *CheckoutSuccessTransactionStatus `json:"status,omitempty"`
+	//
+	// - `PENDING`: The transaction has been created but its final outcome is not known yet.
+	// - `SUCCESSFUL`: The transaction completed successfully.
+	// - `CANCELLED`: The transaction was cancelled or otherwise reversed before completion.
+	// - `FAILED`: The transaction attempt did not complete successfully.
+	// - `REFUNDED`: The transaction was refunded in full or in part.
+	Status *TransactionStatus `json:"status,omitempty"`
 	// Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
 	// Amount of the tip (out of the total transaction amount).
@@ -354,16 +356,6 @@ type CheckoutSuccessTransaction struct {
 	// Amount of the applicable VAT (out of the total transaction amount).
 	VATAmount *float32 `json:"vat_amount,omitempty"`
 }
-
-// Current status of the transaction.
-type CheckoutSuccessTransactionStatus string
-
-const (
-	CheckoutSuccessTransactionStatusCancelled  CheckoutSuccessTransactionStatus = "CANCELLED"
-	CheckoutSuccessTransactionStatusFailed     CheckoutSuccessTransactionStatus = "FAILED"
-	CheckoutSuccessTransactionStatusPending    CheckoutSuccessTransactionStatus = "PENDING"
-	CheckoutSuccessTransactionStatusSuccessful CheckoutSuccessTransactionStatus = "SUCCESSFUL"
-)
 
 // Details of the saved payment instrument created or reused during checkout processing.
 type CheckoutSuccessPaymentInstrument struct {
