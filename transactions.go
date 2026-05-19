@@ -281,7 +281,13 @@ type TransactionFull struct {
 	// - `NON_COLLECTION`: The amount could not be collected from the merchant after a chargeback or related adjustment.
 	SimpleStatus *TransactionFullSimpleStatus `json:"simple_status,omitempty"`
 	// Current status of the transaction.
-	Status *TransactionFullStatus `json:"status,omitempty"`
+	//
+	// - `PENDING`: The transaction has been created but its final outcome is not known yet.
+	// - `SUCCESSFUL`: The transaction completed successfully.
+	// - `CANCELLED`: The transaction was cancelled or otherwise reversed before completion.
+	// - `FAILED`: The transaction attempt did not complete successfully.
+	// - `REFUNDED`: The transaction was refunded in full or in part.
+	Status *TransactionStatus `json:"status,omitempty"`
 	// Indicates whether tax deduction is enabled for the transaction.
 	TaxEnabled *bool `json:"tax_enabled,omitempty"`
 	// Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
@@ -302,16 +308,6 @@ type TransactionFull struct {
 	// Verification method used for the transaction.
 	VerificationMethod *TransactionFullVerificationMethod `json:"verification_method,omitempty"`
 }
-
-// Current status of the transaction.
-type TransactionFullStatus string
-
-const (
-	TransactionFullStatusCancelled  TransactionFullStatus = "CANCELLED"
-	TransactionFullStatusFailed     TransactionFullStatus = "FAILED"
-	TransactionFullStatusPending    TransactionFullStatus = "PENDING"
-	TransactionFullStatusSuccessful TransactionFullStatus = "SUCCESSFUL"
-)
 
 // Payout plan of the registered user at the time when the transaction was made.
 type TransactionFullPayoutPlan string
@@ -464,7 +460,13 @@ type TransactionHistory struct {
 	// Format: decimal
 	RefundedAmount *float64 `json:"refunded_amount,omitempty"`
 	// Current status of the transaction.
-	Status *TransactionHistoryStatus `json:"status,omitempty"`
+	//
+	// - `PENDING`: The transaction has been created but its final outcome is not known yet.
+	// - `SUCCESSFUL`: The transaction completed successfully.
+	// - `CANCELLED`: The transaction was cancelled or otherwise reversed before completion.
+	// - `FAILED`: The transaction attempt did not complete successfully.
+	// - `REFUNDED`: The transaction was refunded in full or in part.
+	Status *TransactionStatus `json:"status,omitempty"`
 	// Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
 	// Transaction code returned by the acquirer/processing entity after processing the transaction.
@@ -477,16 +479,6 @@ type TransactionHistory struct {
 	// Format: email
 	User *string `json:"user,omitempty"`
 }
-
-// Current status of the transaction.
-type TransactionHistoryStatus string
-
-const (
-	TransactionHistoryStatusCancelled  TransactionHistoryStatus = "CANCELLED"
-	TransactionHistoryStatusFailed     TransactionHistoryStatus = "FAILED"
-	TransactionHistoryStatusPending    TransactionHistoryStatus = "PENDING"
-	TransactionHistoryStatusSuccessful TransactionHistoryStatus = "SUCCESSFUL"
-)
 
 // Payout plan of the registered user at the time when the transaction was made.
 type TransactionHistoryPayoutPlan string

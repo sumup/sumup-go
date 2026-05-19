@@ -324,22 +324,18 @@ type TransactionBase struct {
 	// Payment type used for the transaction.
 	PaymentType *PaymentType `json:"payment_type,omitempty"`
 	// Current status of the transaction.
-	Status *TransactionBaseStatus `json:"status,omitempty"`
+	//
+	// - `PENDING`: The transaction has been created but its final outcome is not known yet.
+	// - `SUCCESSFUL`: The transaction completed successfully.
+	// - `CANCELLED`: The transaction was cancelled or otherwise reversed before completion.
+	// - `FAILED`: The transaction attempt did not complete successfully.
+	// - `REFUNDED`: The transaction was refunded in full or in part.
+	Status *TransactionStatus `json:"status,omitempty"`
 	// Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
 	// Transaction code returned by the acquirer/processing entity after processing the transaction.
 	TransactionCode *string `json:"transaction_code,omitempty"`
 }
-
-// Current status of the transaction.
-type TransactionBaseStatus string
-
-const (
-	TransactionBaseStatusCancelled  TransactionBaseStatus = "CANCELLED"
-	TransactionBaseStatusFailed     TransactionBaseStatus = "FAILED"
-	TransactionBaseStatusPending    TransactionBaseStatus = "PENDING"
-	TransactionBaseStatusSuccessful TransactionBaseStatus = "SUCCESSFUL"
-)
 
 // Checkout-specific fields associated with a transaction.
 type TransactionCheckoutInfo struct {
@@ -357,3 +353,20 @@ type TransactionCheckoutInfo struct {
 
 // Unique ID of the transaction.
 type TransactionID string
+
+// Current status of the transaction.
+//
+// - `PENDING`: The transaction has been created but its final outcome is not known yet.
+// - `SUCCESSFUL`: The transaction completed successfully.
+// - `CANCELLED`: The transaction was cancelled or otherwise reversed before completion.
+// - `FAILED`: The transaction attempt did not complete successfully.
+// - `REFUNDED`: The transaction was refunded in full or in part.
+type TransactionStatus string
+
+const (
+	TransactionStatusCancelled  TransactionStatus = "CANCELLED"
+	TransactionStatusFailed     TransactionStatus = "FAILED"
+	TransactionStatusPending    TransactionStatus = "PENDING"
+	TransactionStatusRefunded   TransactionStatus = "REFUNDED"
+	TransactionStatusSuccessful TransactionStatus = "SUCCESSFUL"
+)
