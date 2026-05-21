@@ -684,8 +684,8 @@ func (c *CheckoutsClient) Create(ctx context.Context, body CheckoutsCreateParams
 // `ApplePaySession.completeMerchantValidation(...)` in the browser.
 // SumUp validates the merchant session request and returns the Apple Pay
 // session object that your frontend should pass to Apple's JavaScript API.
-func (c *CheckoutsClient) CreateApplePaySession(ctx context.Context, id string, body CheckoutsCreateApplePaySessionParams) (*CheckoutsCreateApplePaySessionResponse, error) {
-	path := fmt.Sprintf("/v0.2/checkouts/%v/apple-pay-session", id)
+func (c *CheckoutsClient) CreateApplePaySession(ctx context.Context, checkoutID string, body CheckoutsCreateApplePaySessionParams) (*CheckoutsCreateApplePaySessionResponse, error) {
+	path := fmt.Sprintf("/v0.2/checkouts/%v/apple-pay-session", checkoutID)
 
 	resp, err := c.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))
 	if err != nil {
@@ -755,8 +755,8 @@ func (c *CheckoutsClient) ListAvailablePaymentMethods(ctx context.Context, merch
 }
 
 // Deactivates an identified checkout resource. If the checkout has already been processed it can not be deactivated.
-func (c *CheckoutsClient) Deactivate(ctx context.Context, id string) (*Checkout, error) {
-	path := fmt.Sprintf("/v0.1/checkouts/%v", id)
+func (c *CheckoutsClient) Deactivate(ctx context.Context, checkoutID string) (*Checkout, error) {
+	path := fmt.Sprintf("/v0.1/checkouts/%v", checkoutID)
 
 	resp, err := c.c.Call(ctx, http.MethodDelete, path)
 	if err != nil {
@@ -802,8 +802,8 @@ func (c *CheckoutsClient) Deactivate(ctx context.Context, id string) (*Checkout,
 
 // Retrieves an identified checkout resource. Use this request after processing a checkout to confirm its status
 // and inform the end user respectively.
-func (c *CheckoutsClient) Get(ctx context.Context, id string) (*CheckoutSuccess, error) {
-	path := fmt.Sprintf("/v0.1/checkouts/%v", id)
+func (c *CheckoutsClient) Get(ctx context.Context, checkoutID string) (*CheckoutSuccess, error) {
+	path := fmt.Sprintf("/v0.1/checkouts/%v", checkoutID)
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
@@ -844,8 +844,8 @@ func (c *CheckoutsClient) Get(ctx context.Context, id string) (*CheckoutSuccess,
 // resource initiated in the `Create a checkout` endpoint.
 //
 // Follow this request with `Retrieve a checkout` to confirm its status.
-func (c *CheckoutsClient) Process(ctx context.Context, id string, body CheckoutsProcessParams) (*CheckoutsProcessResponse, error) {
-	path := fmt.Sprintf("/v0.1/checkouts/%v", id)
+func (c *CheckoutsClient) Process(ctx context.Context, checkoutID string, body CheckoutsProcessParams) (*CheckoutsProcessResponse, error) {
+	path := fmt.Sprintf("/v0.1/checkouts/%v", checkoutID)
 
 	resp, err := c.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))
 	if err != nil {

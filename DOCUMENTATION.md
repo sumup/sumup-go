@@ -40,12 +40,12 @@ import "github.com/sumup/sumup-go"
 - [type CheckoutsClient](<#CheckoutsClient>)
   - [func NewCheckoutsClient\(c \*client.Client\) \*CheckoutsClient](<#NewCheckoutsClient>)
   - [func \(c \*CheckoutsClient\) Create\(ctx context.Context, body CheckoutsCreateParams\) \(\*Checkout, error\)](<#CheckoutsClient.Create>)
-  - [func \(c \*CheckoutsClient\) CreateApplePaySession\(ctx context.Context, id string, body CheckoutsCreateApplePaySessionParams\) \(\*CheckoutsCreateApplePaySessionResponse, error\)](<#CheckoutsClient.CreateApplePaySession>)
-  - [func \(c \*CheckoutsClient\) Deactivate\(ctx context.Context, id string\) \(\*Checkout, error\)](<#CheckoutsClient.Deactivate>)
-  - [func \(c \*CheckoutsClient\) Get\(ctx context.Context, id string\) \(\*CheckoutSuccess, error\)](<#CheckoutsClient.Get>)
+  - [func \(c \*CheckoutsClient\) CreateApplePaySession\(ctx context.Context, checkoutID string, body CheckoutsCreateApplePaySessionParams\) \(\*CheckoutsCreateApplePaySessionResponse, error\)](<#CheckoutsClient.CreateApplePaySession>)
+  - [func \(c \*CheckoutsClient\) Deactivate\(ctx context.Context, checkoutID string\) \(\*Checkout, error\)](<#CheckoutsClient.Deactivate>)
+  - [func \(c \*CheckoutsClient\) Get\(ctx context.Context, checkoutID string\) \(\*CheckoutSuccess, error\)](<#CheckoutsClient.Get>)
   - [func \(c \*CheckoutsClient\) List\(ctx context.Context, params CheckoutsListParams\) \(\*CheckoutsListResponse, error\)](<#CheckoutsClient.List>)
   - [func \(c \*CheckoutsClient\) ListAvailablePaymentMethods\(ctx context.Context, merchantCode string, params CheckoutsListAvailablePaymentMethodsParams\) \(\*CheckoutsListAvailablePaymentMethodsResponse, error\)](<#CheckoutsClient.ListAvailablePaymentMethods>)
-  - [func \(c \*CheckoutsClient\) Process\(ctx context.Context, id string, body CheckoutsProcessParams\) \(\*CheckoutsProcessResponse, error\)](<#CheckoutsClient.Process>)
+  - [func \(c \*CheckoutsClient\) Process\(ctx context.Context, checkoutID string, body CheckoutsProcessParams\) \(\*CheckoutsProcessResponse, error\)](<#CheckoutsClient.Process>)
 - [type CheckoutsCreateApplePaySession400Response](<#CheckoutsCreateApplePaySession400Response>)
   - [func \(e \*CheckoutsCreateApplePaySession400Response\) Error\(\) string](<#CheckoutsCreateApplePaySession400Response.Error>)
 - [type CheckoutsCreateApplePaySessionParams](<#CheckoutsCreateApplePaySessionParams>)
@@ -216,12 +216,12 @@ import "github.com/sumup/sumup-go"
   - [func NewReadersClient\(c \*client.Client\) \*ReadersClient](<#NewReadersClient>)
   - [func \(c \*ReadersClient\) Create\(ctx context.Context, merchantCode string, body ReadersCreateParams\) \(\*Reader, error\)](<#ReadersClient.Create>)
   - [func \(c \*ReadersClient\) CreateCheckout\(ctx context.Context, merchantCode string, readerID string, body ReadersCreateCheckoutParams\) \(\*CreateReaderCheckoutResponse, error\)](<#ReadersClient.CreateCheckout>)
-  - [func \(c \*ReadersClient\) Delete\(ctx context.Context, merchantCode string, id ReaderID\) error](<#ReadersClient.Delete>)
-  - [func \(c \*ReadersClient\) Get\(ctx context.Context, merchantCode string, id ReaderID, params ReadersGetParams\) \(\*Reader, error\)](<#ReadersClient.Get>)
+  - [func \(c \*ReadersClient\) Delete\(ctx context.Context, merchantCode string, readerID ReaderID\) error](<#ReadersClient.Delete>)
+  - [func \(c \*ReadersClient\) Get\(ctx context.Context, merchantCode string, readerID ReaderID, params ReadersGetParams\) \(\*Reader, error\)](<#ReadersClient.Get>)
   - [func \(c \*ReadersClient\) GetStatus\(ctx context.Context, merchantCode string, readerID string\) \(\*StatusResponse, error\)](<#ReadersClient.GetStatus>)
   - [func \(c \*ReadersClient\) List\(ctx context.Context, merchantCode string\) \(\*ReadersListResponse, error\)](<#ReadersClient.List>)
   - [func \(c \*ReadersClient\) TerminateCheckout\(ctx context.Context, merchantCode string, readerID string\) error](<#ReadersClient.TerminateCheckout>)
-  - [func \(c \*ReadersClient\) Update\(ctx context.Context, merchantCode string, id ReaderID, body ReadersUpdateParams\) \(\*Reader, error\)](<#ReadersClient.Update>)
+  - [func \(c \*ReadersClient\) Update\(ctx context.Context, merchantCode string, readerID ReaderID, body ReadersUpdateParams\) \(\*Reader, error\)](<#ReadersClient.Update>)
 - [type ReadersCreateCheckoutParams](<#ReadersCreateCheckoutParams>)
 - [type ReadersCreateParams](<#ReadersCreateParams>)
 - [type ReadersGetParams](<#ReadersGetParams>)
@@ -242,7 +242,7 @@ import "github.com/sumup/sumup-go"
 - [type ReceiptTransactionVATRate](<#ReceiptTransactionVATRate>)
 - [type ReceiptsClient](<#ReceiptsClient>)
   - [func NewReceiptsClient\(c \*client.Client\) \*ReceiptsClient](<#NewReceiptsClient>)
-  - [func \(c \*ReceiptsClient\) Get\(ctx context.Context, id string, params ReceiptsGetParams\) \(\*Receipt, error\)](<#ReceiptsClient.Get>)
+  - [func \(c \*ReceiptsClient\) Get\(ctx context.Context, transactionID string, params ReceiptsGetParams\) \(\*Receipt, error\)](<#ReceiptsClient.Get>)
 - [type ReceiptsGetParams](<#ReceiptsGetParams>)
   - [func \(p \*ReceiptsGetParams\) QueryValues\(\) url.Values](<#ReceiptsGetParams.QueryValues>)
 - [type ResourceType](<#ResourceType>)
@@ -300,7 +300,7 @@ import "github.com/sumup/sumup-go"
   - [func NewTransactionsClient\(c \*client.Client\) \*TransactionsClient](<#NewTransactionsClient>)
   - [func \(c \*TransactionsClient\) Get\(ctx context.Context, merchantCode string, params TransactionsGetParams\) \(\*TransactionFull, error\)](<#TransactionsClient.Get>)
   - [func \(c \*TransactionsClient\) List\(ctx context.Context, merchantCode string, params TransactionsListParams\) \(\*TransactionsListResponse, error\)](<#TransactionsClient.List>)
-  - [func \(c \*TransactionsClient\) Refund\(ctx context.Context, merchantCode string, id string, body TransactionsRefundParams\) error](<#TransactionsClient.Refund>)
+  - [func \(c \*TransactionsClient\) Refund\(ctx context.Context, merchantCode string, transactionID string, body TransactionsRefundParams\) error](<#TransactionsClient.Refund>)
 - [type TransactionsGetParams](<#TransactionsGetParams>)
   - [func \(p \*TransactionsGetParams\) QueryValues\(\) url.Values](<#TransactionsGetParams.QueryValues>)
 - [type TransactionsHistoryLink](<#TransactionsHistoryLink>)
@@ -1187,7 +1187,7 @@ Follow by processing a checkout to charge the provided payment instrument.
 ### func \(\*CheckoutsClient\) [CreateApplePaySession](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L687>)
 
 ```go
-func (c *CheckoutsClient) CreateApplePaySession(ctx context.Context, id string, body CheckoutsCreateApplePaySessionParams) (*CheckoutsCreateApplePaySessionResponse, error)
+func (c *CheckoutsClient) CreateApplePaySession(ctx context.Context, checkoutID string, body CheckoutsCreateApplePaySessionParams) (*CheckoutsCreateApplePaySessionResponse, error)
 ```
 
 Creates an Apple Pay merchant session for the specified checkout.
@@ -1198,7 +1198,7 @@ Use this endpoint after the customer selects Apple Pay and before calling \`Appl
 ### func \(\*CheckoutsClient\) [Deactivate](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L758>)
 
 ```go
-func (c *CheckoutsClient) Deactivate(ctx context.Context, id string) (*Checkout, error)
+func (c *CheckoutsClient) Deactivate(ctx context.Context, checkoutID string) (*Checkout, error)
 ```
 
 Deactivates an identified checkout resource. If the checkout has already been processed it can not be deactivated.
@@ -1207,7 +1207,7 @@ Deactivates an identified checkout resource. If the checkout has already been pr
 ### func \(\*CheckoutsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L805>)
 
 ```go
-func (c *CheckoutsClient) Get(ctx context.Context, id string) (*CheckoutSuccess, error)
+func (c *CheckoutsClient) Get(ctx context.Context, checkoutID string) (*CheckoutSuccess, error)
 ```
 
 Retrieves an identified checkout resource. Use this request after processing a checkout to confirm its status and inform the end user respectively.
@@ -1234,7 +1234,7 @@ Get payment methods available for the given merchant to use with a checkout.
 ### func \(\*CheckoutsClient\) [Process](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L847>)
 
 ```go
-func (c *CheckoutsClient) Process(ctx context.Context, id string, body CheckoutsProcessParams) (*CheckoutsProcessResponse, error)
+func (c *CheckoutsClient) Process(ctx context.Context, checkoutID string, body CheckoutsProcessParams) (*CheckoutsProcessResponse, error)
 ```
 
 Processing a checkout will attempt to charge the provided payment instrument for the amount of the specified checkout resource initiated in the \`Create a checkout\` endpoint.
@@ -3987,7 +3987,7 @@ There are some caveats when using this endpoint: \* The target device must be on
 ### func \(\*ReadersClient\) [Delete](<https://github.com/sumup/sumup-go/blob/main/readers.go#L766>)
 
 ```go
-func (c *ReadersClient) Delete(ctx context.Context, merchantCode string, id ReaderID) error
+func (c *ReadersClient) Delete(ctx context.Context, merchantCode string, readerID ReaderID) error
 ```
 
 Delete a reader.
@@ -3996,7 +3996,7 @@ Delete a reader.
 ### func \(\*ReadersClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/readers.go#L793>)
 
 ```go
-func (c *ReadersClient) Get(ctx context.Context, merchantCode string, id ReaderID, params ReadersGetParams) (*Reader, error)
+func (c *ReadersClient) Get(ctx context.Context, merchantCode string, readerID ReaderID, params ReadersGetParams) (*Reader, error)
 ```
 
 Retrieve a Reader.
@@ -4052,7 +4052,7 @@ If a transaction is successfully terminated and \`return\_url\` was provided on 
 ### func \(\*ReadersClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/readers.go#L825>)
 
 ```go
-func (c *ReadersClient) Update(ctx context.Context, merchantCode string, id ReaderID, body ReadersUpdateParams) (*Reader, error)
+func (c *ReadersClient) Update(ctx context.Context, merchantCode string, readerID ReaderID, body ReadersUpdateParams) (*Reader, error)
 ```
 
 Update a Reader.
@@ -4446,7 +4446,7 @@ func NewReceiptsClient(c *client.Client) *ReceiptsClient
 ### func \(\*ReceiptsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/receipts.go#L251>)
 
 ```go
-func (c *ReceiptsClient) Get(ctx context.Context, id string, params ReceiptsGetParams) (*Receipt, error)
+func (c *ReceiptsClient) Get(ctx context.Context, transactionID string, params ReceiptsGetParams) (*Receipt, error)
 ```
 
 Retrieves receipt specific data for a transaction.
@@ -5538,7 +5538,7 @@ Lists detailed history of all transactions associated with the merchant profile.
 ### func \(\*TransactionsClient\) [Refund](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L829>)
 
 ```go
-func (c *TransactionsClient) Refund(ctx context.Context, merchantCode string, id string, body TransactionsRefundParams) error
+func (c *TransactionsClient) Refund(ctx context.Context, merchantCode string, transactionID string, body TransactionsRefundParams) error
 ```
 
 Refunds an identified transaction either in full or partially.
@@ -6082,7 +6082,7 @@ const APIVersion = "1.0.0"
 <a name="Version"></a>
 
 ```go
-const Version = "0.16.0" // x-release-please-version
+const Version = "0.17.0" // x-release-please-version
 ```
 
 # nullable

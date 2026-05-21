@@ -248,8 +248,8 @@ func NewReceiptsClient(c *client.Client) *ReceiptsClient {
 }
 
 // Retrieves receipt specific data for a transaction.
-func (c *ReceiptsClient) Get(ctx context.Context, id string, params ReceiptsGetParams) (*Receipt, error) {
-	path := fmt.Sprintf("/v1.1/receipts/%v", id)
+func (c *ReceiptsClient) Get(ctx context.Context, transactionID string, params ReceiptsGetParams) (*Receipt, error) {
+	path := fmt.Sprintf("/v1.1/receipts/%v", transactionID)
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {

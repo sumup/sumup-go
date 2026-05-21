@@ -763,8 +763,8 @@ func (c *ReadersClient) CreateCheckout(ctx context.Context, merchantCode string,
 }
 
 // Delete a reader.
-func (c *ReadersClient) Delete(ctx context.Context, merchantCode string, id ReaderID) error {
-	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, id)
+func (c *ReadersClient) Delete(ctx context.Context, merchantCode string, readerID ReaderID) error {
+	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, readerID)
 
 	resp, err := c.c.Call(ctx, http.MethodDelete, path)
 	if err != nil {
@@ -790,8 +790,8 @@ func (c *ReadersClient) Delete(ctx context.Context, merchantCode string, id Read
 }
 
 // Retrieve a Reader.
-func (c *ReadersClient) Get(ctx context.Context, merchantCode string, id ReaderID, params ReadersGetParams) (*Reader, error) {
-	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, id)
+func (c *ReadersClient) Get(ctx context.Context, merchantCode string, readerID ReaderID, params ReadersGetParams) (*Reader, error) {
+	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, readerID)
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
@@ -822,8 +822,8 @@ func (c *ReadersClient) Get(ctx context.Context, merchantCode string, id ReaderI
 }
 
 // Update a Reader.
-func (c *ReadersClient) Update(ctx context.Context, merchantCode string, id ReaderID, body ReadersUpdateParams) (*Reader, error) {
-	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, id)
+func (c *ReadersClient) Update(ctx context.Context, merchantCode string, readerID ReaderID, body ReadersUpdateParams) (*Reader, error) {
+	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, readerID)
 
 	resp, err := c.c.Call(ctx, http.MethodPatch, path, client.WithJSONBody(body))
 	if err != nil {

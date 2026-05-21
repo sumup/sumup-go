@@ -826,8 +826,8 @@ func (c *TransactionsClient) Get(ctx context.Context, merchantCode string, param
 }
 
 // Refunds an identified transaction either in full or partially.
-func (c *TransactionsClient) Refund(ctx context.Context, merchantCode string, id string, body TransactionsRefundParams) error {
-	path := fmt.Sprintf("/v1.0/merchants/%v/payments/%v/refunds", merchantCode, id)
+func (c *TransactionsClient) Refund(ctx context.Context, merchantCode string, transactionID string, body TransactionsRefundParams) error {
+	path := fmt.Sprintf("/v1.0/merchants/%v/payments/%v/refunds", merchantCode, transactionID)
 
 	resp, err := c.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
 	if err != nil {
