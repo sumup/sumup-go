@@ -130,7 +130,7 @@ type BasePerson struct {
 	ID string `json:"id"`
 	// A list of country-specific personal identifiers.
 	// Max items: 5
-	Identifiers []PersonalIdentifier `json:"identifiers,omitempty"`
+	Identifiers PersonalIdentifiers `json:"identifiers,omitempty"`
 	// Middle name(s) of the End-User. Note that in some cultures, people can have multiple middle names; all can
 	// be present, with the names being separated by space characters. Also note that in some cultures, middle names
 	// are not used.
@@ -207,7 +207,6 @@ type BusinessProfile struct {
 	// Max length: 16
 	PhoneNumber *PhoneNumber `json:"phone_number,omitempty"`
 	// The business's publicly available website.
-	// Format: uri
 	// Max length: 255
 	Website *string `json:"website,omitempty"`
 }
@@ -270,9 +269,8 @@ type Company struct {
 	// Address documentation: https://developer.sumup.com/tools/glossary/merchant#addresses
 	TradingAddress *Address `json:"trading_address,omitempty"`
 	// HTTP(S) URL of the company's website.
-	// Format: uri
 	// Max length: 255
-	Website *nullable.Field[string] `json:"website,omitempty"`
+	Website *string `json:"website,omitempty"`
 }
 
 // CompanyIdentifier is a schema definition.
@@ -442,7 +440,7 @@ type Person struct {
 	ID string `json:"id"`
 	// A list of country-specific personal identifiers.
 	// Max items: 5
-	Identifiers []PersonalIdentifier `json:"identifiers,omitempty"`
+	Identifiers PersonalIdentifiers `json:"identifiers,omitempty"`
 	// Middle name(s) of the End-User. Note that in some cultures, people can have multiple middle names; all can
 	// be present, with the names being separated by space characters. Also note that in some cultures, middle names
 	// are not used.
@@ -471,10 +469,15 @@ type Person struct {
 type PersonalIdentifier struct {
 	// The unique reference for the personal identifier type as defined in the country SDK.
 	Ref string `json:"ref"`
-	// The company identifier value.
+	// The value of the personal identifier.
 	// Max length: 30
 	Value string `json:"value"`
 }
+
+// A list of country-specific personal identifiers.
+//
+// Max items: 5
+type PersonalIdentifiers []PersonalIdentifier
 
 // A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
 //

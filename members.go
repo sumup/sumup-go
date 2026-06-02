@@ -57,7 +57,7 @@ type MembershipUser struct {
 	ID string `json:"id"`
 	// True if the user has enabled MFA on login.
 	MfaOnLoginEnabled bool `json:"mfa_on_login_enabled"`
-	// User's preferred name. Used for display purposes only.
+	// User's nickname. Used for display purposes only.
 	Nickname *string `json:"nickname,omitempty"`
 	// URL of the End-User's profile picture. This URL refers to an image file (for example, a PNG, JPEG, or GIF
 	// image file), rather than to a Web page containing an image.
@@ -116,7 +116,7 @@ type MembersUpdateParams struct {
 
 // Allows you to update user data of managed users.
 type MembersUpdateParamsUser struct {
-	// User's preferred name. Used for display purposes only.
+	// User's nickname. Used for display purposes only.
 	Nickname *string `json:"nickname,omitempty"`
 	// Password of the member to add. Only used if `is_managed_user` is true.
 	// Format: password
