@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.17.1](https://github.com/sumup/sumup-go/compare/v0.17.0...v0.17.1) (2026-06-08)
+
+
+### Chores
+
+* **deps:** bump actions/create-github-app-token from 3.1.1 to 3.2.0 ([#268](https://github.com/sumup/sumup-go/issues/268)) ([c3b27d0](https://github.com/sumup/sumup-go/commit/c3b27d0468726c8dd3ddf130751e7e4fd90e49f1))
+* **deps:** bump github.com/pb33f/libopenapi from 0.36.3 to 0.36.6 in /internal/cmd/codegen ([#273](https://github.com/sumup/sumup-go/issues/273)) ([9b56607](https://github.com/sumup/sumup-go/commit/9b566077a6fcb4565dcc3fd3fa03061f129cc05b))
+* **deps:** bump github.com/pb33f/libopenapi from 0.36.6 to 0.37.2 in /internal/cmd/codegen ([#274](https://github.com/sumup/sumup-go/issues/274)) ([b2efd4c](https://github.com/sumup/sumup-go/commit/b2efd4c65b2696e477daf367a596243b8be4f02f))
+* **deps:** bump github/codeql-action from 4.35.4 to 4.36.0 ([#272](https://github.com/sumup/sumup-go/issues/272)) ([49bc22e](https://github.com/sumup/sumup-go/commit/49bc22ec513ed3ea5538ffe69492424581e2543e))
+* **deps:** bump golangci/golangci-lint-action from 9.2.0 to 9.2.1 ([#271](https://github.com/sumup/sumup-go/issues/271)) ([1875ea0](https://github.com/sumup/sumup-go/commit/1875ea013a1862ba4939e23b7ad9c78335319491))
+* synced file(s) with sumup/apis ([#265](https://github.com/sumup/sumup-go/issues/265)) ([98435f9](https://github.com/sumup/sumup-go/commit/98435f97c9b3427c5a13db3c2b9bd69298e29e17))
+* synced file(s) with sumup/apis ([#270](https://github.com/sumup/sumup-go/issues/270)) ([f2d8fcf](https://github.com/sumup/sumup-go/commit/f2d8fcf1ee53b0d663364c281b926e984ed3409d))
+
 ## [0.17.0](https://github.com/sumup/sumup-go/compare/v0.16.0...v0.17.0) (2026-05-21)
 
 
