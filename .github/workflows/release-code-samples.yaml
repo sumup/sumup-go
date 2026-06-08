@@ -1,0 +1,119 @@
+name: Release Code Samples
+
+on:
+  release:
+    types:
+      - published
+
+concurrency:
+  group: release-code-samples-${{ github.event.release.tag_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  sync-go-code-samples:
+    name: Sync Go code samples
+    runs-on: ubuntu-latest
+    env:
+      TARGET_REPOSITORY: sumup/sumup-developer
+      TARGET_BRANCH: automation/go-code-samples
+      TARGET_FILE: src/codesamples/go.json
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: refs/tags/${{ github.event.release.tag_name }}
+          persist-credentials: false
+
+      - name: Install Go
+        uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6.4.0
+        with:
+          go-version-file: internal/cmd/codegen/go.mod
+
+      - name: Create GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3.1.1
+        with:
+          app-id: ${{ secrets.SUMUP_BOT_APP_ID }}
+          private-key: ${{ secrets.SUMUP_BOT_PRIVATE_KEY }}
+          owner: sumup
+          repositories: sumup-developer
+
+      - name: Checkout target repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          repository: ${{ env.TARGET_REPOSITORY }}
+          ref: main
+          token: ${{ steps.app-token.outputs.token }}
+          path: sumup-developer
+          persist-credentials: true
+
+      - name: Get GitHub App User ID
+        id: get-user-id
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: echo "user-id=$(gh api "/users/${{ steps.app-token.outputs.app-slug }}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
+
+      - name: Configure git
+        run: |
+          git config --global user.name '${{ steps.app-token.outputs.app-slug }}[bot]'
+          git config --global user.email '${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com'
+
+      - name: Prepare target branch
+        working-directory: sumup-developer
+        run: git checkout -B "${{ env.TARGET_BRANCH }}" origin/main
+
+      - name: Generate Go code samples
+        working-directory: internal/cmd/codegen
+        run: |
+          mkdir -p "../../../sumup-developer/$(dirname "${{ env.TARGET_FILE }}")"
+          go run . samples ../../../openapi.json > "../../../sumup-developer/${{ env.TARGET_FILE }}"
+
+      - name: Commit generated samples
+        id: commit
+        working-directory: sumup-developer
+        run: |
+          git add "${{ env.TARGET_FILE }}"
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          git commit -m "chore: update Go code samples for ${{ github.event.release.tag_name }}"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Push branch
+        if: steps.commit.outputs.changed == 'true'
+        working-directory: sumup-developer
+        run: git push --force-with-lease origin "${{ env.TARGET_BRANCH }}"
+
+      - name: Create or update pull request
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          head_ref="sumup:${{ env.TARGET_BRANCH }}"
+          pr_url="$(gh pr list \
+            --repo "${{ env.TARGET_REPOSITORY }}" \
+            --head "$head_ref" \
+            --base main \
+            --state open \
+            --json url \
+            --jq '.[0].url')"
+
+          if [ -n "$pr_url" ]; then
+            gh pr edit "$pr_url" \
+              --repo "${{ env.TARGET_REPOSITORY }}" \
+              --title "chore: update Go code samples" \
+              --body "Updates \`${{ env.TARGET_FILE }}\` from \`${{ github.repository }}\` release \`${{ github.event.release.tag_name }}\`."
+            exit 0
+          fi
+
+          gh pr create \
+            --repo "${{ env.TARGET_REPOSITORY }}" \
+            --base main \
+            --head "${{ env.TARGET_BRANCH }}" \
+            --title "chore: update Go code samples" \
+            --body "Updates \`${{ env.TARGET_FILE }}\` from \`${{ github.repository }}\` release \`${{ github.event.release.tag_name }}\`."
