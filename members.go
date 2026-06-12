@@ -72,8 +72,9 @@ type MembershipUser struct {
 // Classic identifiers of the user.
 // Deprecated: this operation is deprecated
 type MembershipUserClassic struct {
-	// Format: int32
-	UserID int32 `json:"user_id"`
+	// Min: 0
+	// Max: 2.147483647e+09
+	UserID int `json:"user_id"`
 }
 
 // MembersCreateParams is a schema definition.

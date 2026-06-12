@@ -2206,7 +2206,7 @@
             }
           },
           {
-            "name": "users",
+            "name": "users[]",
             "in": "query",
             "description": "Filters the returned results by user email.",
             "required": false,
@@ -2244,7 +2244,7 @@
             }
           },
           {
-            "name": "payment_types",
+            "name": "payment_types[]",
             "in": "query",
             "description": "Filters the returned results by the specified list of payment types used for the transactions.",
             "required": false,
@@ -2268,7 +2268,7 @@
             }
           },
           {
-            "name": "types",
+            "name": "types[]",
             "in": "query",
             "description": "Filters the returned results by the specified list of transaction types.",
             "required": false,
@@ -5482,7 +5482,7 @@
         }
       },
       "PaymentTypesFilter": {
-        "name": "payment_types",
+        "name": "payment_types[]",
         "in": "query",
         "description": "Filters the returned results by the specified list of payment types used for the transactions.",
         "required": false,
@@ -5540,7 +5540,7 @@
         }
       },
       "TypesFilter": {
-        "name": "types",
+        "name": "types[]",
         "in": "query",
         "description": "Filters the returned results by the specified list of transaction types.",
         "required": false,
@@ -5557,7 +5557,7 @@
         }
       },
       "UsersFilter": {
-        "name": "users",
+        "name": "users[]",
         "in": "query",
         "description": "Filters the returned results by user email.",
         "required": false,
@@ -8044,7 +8044,8 @@
         "properties": {
           "user_id": {
             "type": "integer",
-            "format": "int32"
+            "maximum": 2147483647,
+            "minimum": 0
           }
         },
         "deprecated": true,
