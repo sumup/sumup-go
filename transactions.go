@@ -646,7 +646,7 @@ func (p *TransactionsListParams) QueryValues() url.Values {
 	}
 
 	for _, v := range p.PaymentTypes {
-		q.Add("payment_types", string(v))
+		q.Add("payment_types[]", string(v))
 	}
 
 	for _, v := range p.Statuses {
@@ -658,11 +658,11 @@ func (p *TransactionsListParams) QueryValues() url.Values {
 	}
 
 	for _, v := range p.Types {
-		q.Add("types", string(v))
+		q.Add("types[]", string(v))
 	}
 
 	for _, v := range p.Users {
-		q.Add("users", v)
+		q.Add("users[]", v)
 	}
 
 	return q
