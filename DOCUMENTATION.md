@@ -316,6 +316,7 @@ import "github.com/sumup/sumup-go"
   - [func \(e \*Unauthorized\) Error\(\) string](<#Unauthorized.Error>)
 - [type UnauthorizedErrors](<#UnauthorizedErrors>)
 - [type UnauthorizedErrorsType](<#UnauthorizedErrorsType>)
+- [type UserType](<#UserType>)
 - [type Version](<#Version>)
 
 
@@ -331,9 +332,9 @@ var OAuth2Endpoint = oauth2.Endpoint{
 ```
 
 <a name="Address"></a>
-## type [Address](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L24-L87>)
+## type [Address](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L24-L88>)
 
-An address somewhere in the world. The address fields used depend on the country conventions. For example, in Great Britain, \`city\` is \`post\_town\`. In the United States, the top\-level administrative unit used in addresses is \`state\`, whereas in Chile it's \`region\`. Whether an address is valid or not depends on whether the locally required fields are present. Fields not supported in a country will be ignored. Address documentation: https://developer.sumup.com/tools/glossary/merchant#addresses
+An address somewhere in the world. The address fields used depend on the country conventions. For example, in Great Britain, \`city\` is \`post\_town\`. In the United States, the top\-level administrative unit used in addresses is \`state\`, whereas in Chile it's \`region\`. Whether an address is valid or not depends on whether the locally required fields are present. Fields not supported in a country will be ignored. Address documentation: https://developer.sumup.com/tools/glossary/address
 
 ```go
 type Address struct {
@@ -347,10 +348,12 @@ type Address struct {
     // the common interest. Used in countries such as Chile.
     // Max length: 60
     Commune *string `json:"commune,omitempty"`
-    // An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code. This definition users
-    // `oneOf` with a two-character string type to allow for support of future countries in client code.
+    // An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+    // country code. This definition users `oneOf` with a two-character string
+    // type to allow for support of future countries in client code.
     // Min length: 2
     // Max length: 2
+    // Pattern: ^[A-Z]{2}$
     Country CountryCode `json:"country"`
     // A county is a geographic region of a country used for administrative or other purposes in some nations. Used
     // in countries such as Ireland, Romania, etc.
@@ -393,7 +396,6 @@ type Address struct {
     // and Brazil.
     // Max length: 60
     State *string `json:"state,omitempty"`
-    // Min items: 1
     // Max items: 2
     StreetAddress []string `json:"street_address,omitempty"`
     // A US system of postal codes used by the United States Postal Service (USPS).
@@ -488,7 +490,7 @@ const (
 ```
 
 <a name="BasePerson"></a>
-## type [BasePerson](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L94-L156>)
+## type [BasePerson](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L95-L159>)
 
 Base schema for a person associated with a merchant. This can be a legal representative, business owner \(ultimate beneficial owner\), or an officer. A legal representative is the person who registered the merchant with SumUp. They should always have a \`user\_id\`.
 
@@ -501,7 +503,7 @@ type BasePerson struct {
     // is `state`, whereas in Chile it's `region`.
     // Whether an address is valid or not depends on whether the locally required fields are present. Fields not
     // supported in a country will be ignored.
-    // Address documentation: https://developer.sumup.com/tools/glossary/merchant#addresses
+    // Address documentation: https://developer.sumup.com/tools/glossary/address
     Address *Address `json:"address,omitempty"`
     // The date of birth of the individual, represented as an ISO 8601:2004 [ISO8601‑2004] YYYY-MM-DD format.
     // Format: date
@@ -513,10 +515,12 @@ type BasePerson struct {
     // provided.
     // Read only
     ChangeStatus *ChangeStatus `json:"change_status,omitempty"`
-    // An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code. This definition users
-    // `oneOf` with a two-character string type to allow for support of future countries in client code.
+    // An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+    // country code. This definition users `oneOf` with a two-character string
+    // type to allow for support of future countries in client code.
     // Min length: 2
     // Max length: 2
+    // Pattern: ^[A-Z]{2}$
     Citizenship *CountryCode `json:"citizenship,omitempty"`
     // An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code representing the country
     // where the person resides.
@@ -533,7 +537,7 @@ type BasePerson struct {
     // Read only
     ID  string `json:"id"`
     // A list of country-specific personal identifiers.
-    // Max items: 5
+    // Max items: 32
     Identifiers PersonalIdentifiers `json:"identifiers,omitempty"`
     // Middle name(s) of the End-User. Note that in some cultures, people can have multiple middle names; all can
     // be present, with the names being separated by space characters. Also note that in some cultures, middle names
@@ -561,7 +565,7 @@ type BasePerson struct {
 ```
 
 <a name="Branding"></a>
-## type [Branding](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L159-L180>)
+## type [Branding](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L162-L183>)
 
 Settings used to apply the Merchant's branding to email receipts, invoices, checkouts, and other products.
 
@@ -591,7 +595,7 @@ type Branding struct {
 ```
 
 <a name="BusinessProfile"></a>
-## type [BusinessProfile](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L183-L212>)
+## type [BusinessProfile](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L186-L215>)
 
 Business information about the merchant. This information will be visible to the merchant's customers.
 
@@ -602,7 +606,7 @@ type BusinessProfile struct {
     // is `state`, whereas in Chile it's `region`.
     // Whether an address is valid or not depends on whether the locally required fields are present. Fields not
     // supported in a country will be ignored.
-    // Address documentation: https://developer.sumup.com/tools/glossary/merchant#addresses
+    // Address documentation: https://developer.sumup.com/tools/glossary/address
     Address *Address `json:"address,omitempty"`
     // Settings used to apply the Merchant's branding to email receipts, invoices, checkouts, and other products.
     Branding *Branding `json:"branding,omitempty"`
@@ -750,7 +754,7 @@ const (
 ```
 
 <a name="ChangeStatus"></a>
-## type [ChangeStatus](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L221>)
+## type [ChangeStatus](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L224>)
 
 Reflects the status of changes submitted through the \`PATCH\` endpoints for the merchant or persons. If some changes have not been applied yet, the status will be \`pending\`. If all changes have been applied, the status \`done\`. The status is only returned after write operations or on read endpoints when the \`version\` query parameter is provided.
 
@@ -1427,7 +1431,7 @@ func (r *CheckoutsProcessResponse) AsCheckoutSuccess() (*CheckoutSuccess, bool)
 
 
 <a name="ClassicMerchantIdentifiers"></a>
-## type [ClassicMerchantIdentifiers](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L224-L229>)
+## type [ClassicMerchantIdentifiers](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L227-L232>)
 
 ClassicMerchantIdentifiers is a schema definition.
 
@@ -1503,7 +1507,7 @@ func NewClient(opts ...client.ClientOption) *Client
 NewClient creates new SumUp API client. The client is by default configured environment variables \(\`SUMUP\_API\_KEY\`\). To override the default configuration use \[ClientOption\]s.
 
 <a name="Company"></a>
-## type [Company](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L234-L274>)
+## type [Company](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L237-L277>)
 
 Information about the company or business. This is legal information that is used for verification.
 
@@ -1516,7 +1520,7 @@ type Company struct {
     // is `state`, whereas in Chile it's `region`.
     // Whether an address is valid or not depends on whether the locally required fields are present. Fields not
     // supported in a country will be ignored.
-    // Address documentation: https://developer.sumup.com/tools/glossary/merchant#addresses
+    // Address documentation: https://developer.sumup.com/tools/glossary/address
     Address *Address `json:"address,omitempty"`
     // Object attributes that are modifiable only by SumUp applications.
     Attributes Attributes `json:"attributes,omitempty"`
@@ -1545,7 +1549,7 @@ type Company struct {
     // is `state`, whereas in Chile it's `region`.
     // Whether an address is valid or not depends on whether the locally required fields are present. Fields not
     // supported in a country will be ignored.
-    // Address documentation: https://developer.sumup.com/tools/glossary/merchant#addresses
+    // Address documentation: https://developer.sumup.com/tools/glossary/address
     TradingAddress *Address `json:"trading_address,omitempty"`
     // HTTP(S) URL of the company's website.
     // Max length: 255
@@ -1554,7 +1558,7 @@ type Company struct {
 ```
 
 <a name="CompanyIdentifier"></a>
-## type [CompanyIdentifier](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L278-L284>)
+## type [CompanyIdentifier](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L281-L287>)
 
 CompanyIdentifier is a schema definition. Company identifier documentation: https://developer.sumup.com/tools/glossary/merchant#company-identifiers
 
@@ -1569,7 +1573,7 @@ type CompanyIdentifier struct {
 ```
 
 <a name="CompanyIdentifiers"></a>
-## type [CompanyIdentifiers](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L287>)
+## type [CompanyIdentifiers](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L290>)
 
 A list of country\-specific company identifiers.
 
@@ -1578,11 +1582,9 @@ type CompanyIdentifiers []CompanyIdentifier
 ```
 
 <a name="CountryCode"></a>
-## type [CountryCode](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L294>)
+## type [CountryCode](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L298>)
 
-An \[ISO3166\-1 alpha\-2\]\(https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2\) country code. This definition users \`oneOf\` with a two\-character string type to allow for support of future countries in client code.
-
-Min length: 2 Max length: 2
+An \[ISO3166\-1 alpha\-2\]\(https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2\) country code. This definition users \`oneOf\` with a two\-character string type to allow for support of future countries in client code. Min length: 2 Max length: 2 Pattern: ^\[A\-Z\]\{2\}$
 
 ```go
 type CountryCode string
@@ -2473,7 +2475,7 @@ type Lat float32
 ```
 
 <a name="LegalType"></a>
-## type [LegalType](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L303>)
+## type [LegalType](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L307>)
 
 The unique legal type reference as defined in the country SDK. We do not rely on IDs as used by other services. Consumers of this API are expected to use the country SDK to map to any other IDs, translation keys, or descriptions.
 
@@ -2505,7 +2507,7 @@ type Link struct {
 ```
 
 <a name="ListPersonsResponseBody"></a>
-## type [ListPersonsResponseBody](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L306-L308>)
+## type [ListPersonsResponseBody](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L310-L312>)
 
 ListPersonsResponseBody is a schema definition.
 
@@ -2626,7 +2628,7 @@ type Member struct {
 ```
 
 <a name="MembersClient"></a>
-## type [MembersClient](<https://github.com/sumup/sumup-go/blob/main/members.go#L189-L191>)
+## type [MembersClient](<https://github.com/sumup/sumup-go/blob/main/members.go#L204-L206>)
 
 MembersClient provides access to the Members API.
 
@@ -2639,7 +2641,7 @@ type MembersClient struct {
 ```
 
 <a name="NewMembersClient"></a>
-### func [NewMembersClient](<https://github.com/sumup/sumup-go/blob/main/members.go#L193>)
+### func [NewMembersClient](<https://github.com/sumup/sumup-go/blob/main/members.go#L208>)
 
 ```go
 func NewMembersClient(c *client.Client) *MembersClient
@@ -2648,7 +2650,7 @@ func NewMembersClient(c *client.Client) *MembersClient
 
 
 <a name="MembersClient.Create"></a>
-### func \(\*MembersClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/members.go#L230>)
+### func \(\*MembersClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/members.go#L245>)
 
 ```go
 func (c *MembersClient) Create(ctx context.Context, merchantCode string, body MembersCreateParams) (*Member, error)
@@ -2657,7 +2659,7 @@ func (c *MembersClient) Create(ctx context.Context, merchantCode string, body Me
 Create a merchant member.
 
 <a name="MembersClient.Delete"></a>
-### func \(\*MembersClient\) [Delete](<https://github.com/sumup/sumup-go/blob/main/members.go#L276>)
+### func \(\*MembersClient\) [Delete](<https://github.com/sumup/sumup-go/blob/main/members.go#L291>)
 
 ```go
 func (c *MembersClient) Delete(ctx context.Context, merchantCode string, memberID string) error
@@ -2666,7 +2668,7 @@ func (c *MembersClient) Delete(ctx context.Context, merchantCode string, memberI
 Deletes a merchant member.
 
 <a name="MembersClient.Get"></a>
-### func \(\*MembersClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/members.go#L303>)
+### func \(\*MembersClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/members.go#L325>)
 
 ```go
 func (c *MembersClient) Get(ctx context.Context, merchantCode string, memberID string) (*Member, error)
@@ -2675,7 +2677,7 @@ func (c *MembersClient) Get(ctx context.Context, merchantCode string, memberID s
 Retrieve a merchant member.
 
 <a name="MembersClient.List"></a>
-### func \(\*MembersClient\) [List](<https://github.com/sumup/sumup-go/blob/main/members.go#L198>)
+### func \(\*MembersClient\) [List](<https://github.com/sumup/sumup-go/blob/main/members.go#L213>)
 
 ```go
 func (c *MembersClient) List(ctx context.Context, merchantCode string, params MembersListParams) (*MembersListResponse, error)
@@ -2684,7 +2686,7 @@ func (c *MembersClient) List(ctx context.Context, merchantCode string, params Me
 Lists merchant members.
 
 <a name="MembersClient.Update"></a>
-### func \(\*MembersClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/members.go#L335>)
+### func \(\*MembersClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/members.go#L357>)
 
 ```go
 func (c *MembersClient) Update(ctx context.Context, merchantCode string, memberID string, body MembersUpdateParams) (*Member, error)
@@ -2693,7 +2695,7 @@ func (c *MembersClient) Update(ctx context.Context, merchantCode string, memberI
 Update the merchant member.
 
 <a name="MembersCreateParams"></a>
-## type [MembersCreateParams](<https://github.com/sumup/sumup-go/blob/main/members.go#L80-L102>)
+## type [MembersCreateParams](<https://github.com/sumup/sumup-go/blob/main/members.go#L95-L117>)
 
 MembersCreateParams is a schema definition.
 
@@ -2724,7 +2726,7 @@ type MembersCreateParams struct {
 ```
 
 <a name="MembersListParams"></a>
-## type [MembersListParams](<https://github.com/sumup/sumup-go/blob/main/members.go#L128-L143>)
+## type [MembersListParams](<https://github.com/sumup/sumup-go/blob/main/members.go#L143-L158>)
 
 MembersListParams are query parameters for ListMerchantMembers.
 
@@ -2748,7 +2750,7 @@ type MembersListParams struct {
 ```
 
 <a name="MembersListParams.QueryValues"></a>
-### func \(\*MembersListParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/members.go#L146>)
+### func \(\*MembersListParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/members.go#L161>)
 
 ```go
 func (p *MembersListParams) QueryValues() url.Values
@@ -2757,7 +2759,7 @@ func (p *MembersListParams) QueryValues() url.Values
 QueryValues converts [MembersListParams](<#MembersListParams>) into \[url.Values\].
 
 <a name="MembersListResponse"></a>
-## type [MembersListResponse](<https://github.com/sumup/sumup-go/blob/main/members.go#L181-L184>)
+## type [MembersListResponse](<https://github.com/sumup/sumup-go/blob/main/members.go#L196-L199>)
 
 MembersListResponse is a schema definition.
 
@@ -2769,7 +2771,7 @@ type MembersListResponse struct {
 ```
 
 <a name="MembersUpdateParams"></a>
-## type [MembersUpdateParams](<https://github.com/sumup/sumup-go/blob/main/members.go#L105-L115>)
+## type [MembersUpdateParams](<https://github.com/sumup/sumup-go/blob/main/members.go#L120-L130>)
 
 MembersUpdateParams is a schema definition.
 
@@ -2788,7 +2790,7 @@ type MembersUpdateParams struct {
 ```
 
 <a name="MembersUpdateParamsUser"></a>
-## type [MembersUpdateParamsUser](<https://github.com/sumup/sumup-go/blob/main/members.go#L118-L125>)
+## type [MembersUpdateParamsUser](<https://github.com/sumup/sumup-go/blob/main/members.go#L133-L140>)
 
 Allows you to update user data of managed users.
 
@@ -2895,7 +2897,7 @@ const (
 ```
 
 <a name="MembershipUser"></a>
-## type [MembershipUser](<https://github.com/sumup/sumup-go/blob/main/members.go#L47-L70>)
+## type [MembershipUser](<https://github.com/sumup/sumup-go/blob/main/members.go#L47-L74>)
 
 Information about the user associated with the membership.
 
@@ -2920,21 +2922,26 @@ type MembershipUser struct {
     // Format: uri
     Picture *string `json:"picture,omitempty"`
     // True if the user is a service account.
+    // Deprecated: Rely on `type` instead.
     ServiceAccountUser bool `json:"service_account_user"`
+    // Type of the user account.
+    Type UserType `json:"type"`
     // True if the user is a virtual user (operator).
+    // Deprecated: Rely on `type` instead.
     VirtualUser bool `json:"virtual_user"`
 }
 ```
 
 <a name="MembershipUserClassic"></a>
-## type [MembershipUserClassic](<https://github.com/sumup/sumup-go/blob/main/members.go#L74-L77>)
+## type [MembershipUserClassic](<https://github.com/sumup/sumup-go/blob/main/members.go#L78-L82>)
 
 Classic identifiers of the user. Deprecated: this operation is deprecated
 
 ```go
 type MembershipUserClassic struct {
-    // Format: int32
-    UserID int32 `json:"user_id"`
+    // Min: 0
+    // Max: 2.147483647e+09
+    UserID int `json:"user_id"`
 }
 ```
 
@@ -3025,7 +3032,7 @@ type MembershipsListResponse struct {
 ```
 
 <a name="Merchant"></a>
-## type [Merchant](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L312-L384>)
+## type [Merchant](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L316-L390>)
 
 Merchant is a schema definition. Merchant documentation: https://developer.sumup.com/tools/glossary/merchant
 
@@ -3059,10 +3066,12 @@ type Merchant struct {
     // Information about the company or business. This is legal information that is used for verification.
     // Company documentation: https://developer.sumup.com/tools/glossary/merchant#company
     Company *Company `json:"company,omitempty"`
-    // An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code. This definition users
-    // `oneOf` with a two-character string type to allow for support of future countries in client code.
+    // An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+    // country code. This definition users `oneOf` with a two-character string
+    // type to allow for support of future countries in client code.
     // Min length: 2
     // Max length: 2
+    // Pattern: ^[A-Z]{2}$
     Country CountryCode `json:"country"`
     // The date and time when the resource was created. This is a string as defined in [RFC 3339, section 5.6](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6).
     // Read only
@@ -3106,7 +3115,7 @@ type Merchant struct {
 ```
 
 <a name="MerchantsClient"></a>
-## type [MerchantsClient](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L565-L567>)
+## type [MerchantsClient](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L573-L575>)
 
 MerchantsClient provides access to the Merchants API.
 
@@ -3119,7 +3128,7 @@ type MerchantsClient struct {
 ```
 
 <a name="NewMerchantsClient"></a>
-### func [NewMerchantsClient](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L569>)
+### func [NewMerchantsClient](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L577>)
 
 ```go
 func NewMerchantsClient(c *client.Client) *MerchantsClient
@@ -3128,7 +3137,7 @@ func NewMerchantsClient(c *client.Client) *MerchantsClient
 
 
 <a name="MerchantsClient.Get"></a>
-### func \(\*MerchantsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L608>)
+### func \(\*MerchantsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L616>)
 
 ```go
 func (c *MerchantsClient) Get(ctx context.Context, merchantCode string, params MerchantsGetParams) (*Merchant, error)
@@ -3137,7 +3146,7 @@ func (c *MerchantsClient) Get(ctx context.Context, merchantCode string, params M
 Retrieve a merchant. Merchant documentation: https://developer.sumup.com/tools/models/merchant
 
 <a name="MerchantsClient.GetPerson"></a>
-### func \(\*MerchantsClient\) [GetPerson](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L641>)
+### func \(\*MerchantsClient\) [GetPerson](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L649>)
 
 ```go
 func (c *MerchantsClient) GetPerson(ctx context.Context, merchantCode string, personID string, params MerchantsGetPersonParams) (*Person, error)
@@ -3146,7 +3155,7 @@ func (c *MerchantsClient) GetPerson(ctx context.Context, merchantCode string, pe
 Returns a single person related to the merchant. Persons documentation: https://developer.sumup.com/tools/models/merchant#persons
 
 <a name="MerchantsClient.ListPersons"></a>
-### func \(\*MerchantsClient\) [ListPersons](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L575>)
+### func \(\*MerchantsClient\) [ListPersons](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L583>)
 
 ```go
 func (c *MerchantsClient) ListPersons(ctx context.Context, merchantCode string, params MerchantsListPersonsParams) (*ListPersonsResponseBody, error)
@@ -3155,7 +3164,7 @@ func (c *MerchantsClient) ListPersons(ctx context.Context, merchantCode string, 
 Returns a list of persons related to the merchant. Persons documentation: https://developer.sumup.com/tools/models/merchant#persons
 
 <a name="MerchantsGetParams"></a>
-## type [MerchantsGetParams](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L523-L529>)
+## type [MerchantsGetParams](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L531-L537>)
 
 MerchantsGetParams are query parameters for GetMerchant.
 
@@ -3170,7 +3179,7 @@ type MerchantsGetParams struct {
 ```
 
 <a name="MerchantsGetParams.QueryValues"></a>
-### func \(\*MerchantsGetParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L532>)
+### func \(\*MerchantsGetParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L540>)
 
 ```go
 func (p *MerchantsGetParams) QueryValues() url.Values
@@ -3179,7 +3188,7 @@ func (p *MerchantsGetParams) QueryValues() url.Values
 QueryValues converts [MerchantsGetParams](<#MerchantsGetParams>) into \[url.Values\].
 
 <a name="MerchantsGetPersonParams"></a>
-## type [MerchantsGetPersonParams](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L543-L549>)
+## type [MerchantsGetPersonParams](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L551-L557>)
 
 MerchantsGetPersonParams are query parameters for GetPerson.
 
@@ -3194,7 +3203,7 @@ type MerchantsGetPersonParams struct {
 ```
 
 <a name="MerchantsGetPersonParams.QueryValues"></a>
-### func \(\*MerchantsGetPersonParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L552>)
+### func \(\*MerchantsGetPersonParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L560>)
 
 ```go
 func (p *MerchantsGetPersonParams) QueryValues() url.Values
@@ -3203,7 +3212,7 @@ func (p *MerchantsGetPersonParams) QueryValues() url.Values
 QueryValues converts [MerchantsGetPersonParams](<#MerchantsGetPersonParams>) into \[url.Values\].
 
 <a name="MerchantsListPersonsParams"></a>
-## type [MerchantsListPersonsParams](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L503-L509>)
+## type [MerchantsListPersonsParams](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L511-L517>)
 
 MerchantsListPersonsParams are query parameters for ListPersons.
 
@@ -3218,7 +3227,7 @@ type MerchantsListPersonsParams struct {
 ```
 
 <a name="MerchantsListPersonsParams.QueryValues"></a>
-### func \(\*MerchantsListPersonsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L512>)
+### func \(\*MerchantsListPersonsParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L520>)
 
 ```go
 func (p *MerchantsListPersonsParams) QueryValues() url.Values
@@ -3227,7 +3236,7 @@ func (p *MerchantsListPersonsParams) QueryValues() url.Values
 QueryValues converts [MerchantsListPersonsParams](<#MerchantsListPersonsParams>) into \[url.Values\].
 
 <a name="Meta"></a>
-## type [Meta](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L391>)
+## type [Meta](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L397>)
 
 A set of key\-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
 
@@ -3319,7 +3328,7 @@ const (
 ```
 
 <a name="Ownership"></a>
-## type [Ownership](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L394-L401>)
+## type [Ownership](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L400-L407>)
 
 Ownership is a schema definition.
 
@@ -3559,7 +3568,7 @@ type Permissions struct {
 ```
 
 <a name="Person"></a>
-## type [Person](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L404-L466>)
+## type [Person](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L410-L474>)
 
 Person is a schema definition.
 
@@ -3570,7 +3579,7 @@ type Person struct {
     // is `state`, whereas in Chile it's `region`.
     // Whether an address is valid or not depends on whether the locally required fields are present. Fields not
     // supported in a country will be ignored.
-    // Address documentation: https://developer.sumup.com/tools/glossary/merchant#addresses
+    // Address documentation: https://developer.sumup.com/tools/glossary/address
     Address *Address `json:"address,omitempty"`
     // The date of birth of the individual, represented as an ISO 8601:2004 [ISO8601‑2004] YYYY-MM-DD format.
     // Format: date
@@ -3582,10 +3591,12 @@ type Person struct {
     // provided.
     // Read only
     ChangeStatus *ChangeStatus `json:"change_status,omitempty"`
-    // An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code. This definition users
-    // `oneOf` with a two-character string type to allow for support of future countries in client code.
+    // An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+    // country code. This definition users `oneOf` with a two-character string
+    // type to allow for support of future countries in client code.
     // Min length: 2
     // Max length: 2
+    // Pattern: ^[A-Z]{2}$
     Citizenship *CountryCode `json:"citizenship,omitempty"`
     // An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code representing the country
     // where the person resides.
@@ -3602,7 +3613,7 @@ type Person struct {
     // Read only
     ID  string `json:"id"`
     // A list of country-specific personal identifiers.
-    // Max items: 5
+    // Max items: 32
     Identifiers PersonalIdentifiers `json:"identifiers,omitempty"`
     // Middle name(s) of the End-User. Note that in some cultures, people can have multiple middle names; all can
     // be present, with the names being separated by space characters. Also note that in some cultures, middle names
@@ -3656,33 +3667,32 @@ type PersonalDetails struct {
 ```
 
 <a name="PersonalIdentifier"></a>
-## type [PersonalIdentifier](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L469-L475>)
+## type [PersonalIdentifier](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L477-L484>)
 
 PersonalIdentifier is a schema definition.
 
 ```go
 type PersonalIdentifier struct {
-    // The unique reference for the personal identifier type as defined in the country SDK.
+    // The unique reference for the personal identifier type.
+    // Max length: 32
     Ref string `json:"ref"`
-    // The value of the personal identifier.
-    // Max length: 30
+    // The company identifier value.
+    // Max length: 128
     Value string `json:"value"`
 }
 ```
 
 <a name="PersonalIdentifiers"></a>
-## type [PersonalIdentifiers](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L480>)
+## type [PersonalIdentifiers](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L488>)
 
-A list of country\-specific personal identifiers.
-
-Max items: 5
+A list of country\-specific personal identifiers. Max items: 32
 
 ```go
 type PersonalIdentifiers []PersonalIdentifier
 ```
 
 <a name="PhoneNumber"></a>
-## type [PhoneNumber](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L485>)
+## type [PhoneNumber](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L493>)
 
 A publicly available phone number in \[E.164\]\(https://en.wikipedia.org/wiki/E.164\) format.
 
@@ -4894,7 +4904,7 @@ type SubaccountsUpdateSubAccountParamsPermissions struct {
 ```
 
 <a name="Timestamps"></a>
-## type [Timestamps](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L488-L496>)
+## type [Timestamps](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L496-L504>)
 
 Timestamps is a schema definition.
 
@@ -5783,8 +5793,28 @@ const (
 )
 ```
 
+<a name="UserType"></a>
+## type [UserType](<https://github.com/sumup/sumup-go/blob/main/members.go#L85>)
+
+Type of the user account.
+
+```go
+type UserType string
+```
+
+<a name="UserTypeManagedUser"></a>
+
+```go
+const (
+    UserTypeManagedUser    UserType = "managed_user"
+    UserTypeServiceAccount UserType = "service_account"
+    UserTypeSystemAccount  UserType = "system_account"
+    UserTypeUser           UserType = "user"
+)
+```
+
 <a name="Version"></a>
-## type [Version](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L500>)
+## type [Version](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L508>)
 
 The version of the resource. The version reflects a specific change submitted to the API via one of the \`PATCH\` endpoints.
 

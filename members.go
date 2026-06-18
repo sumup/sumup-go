@@ -64,17 +64,32 @@ type MembershipUser struct {
 	// Format: uri
 	Picture *string `json:"picture,omitempty"`
 	// True if the user is a service account.
+	// Deprecated: Rely on `type` instead.
 	ServiceAccountUser bool `json:"service_account_user"`
+	// Type of the user account.
+	Type UserType `json:"type"`
 	// True if the user is a virtual user (operator).
+	// Deprecated: Rely on `type` instead.
 	VirtualUser bool `json:"virtual_user"`
 }
 
 // Classic identifiers of the user.
 // Deprecated: this operation is deprecated
 type MembershipUserClassic struct {
-	// Format: int32
-	UserID int32 `json:"user_id"`
+	// Min: 0
+	// Max: 2.147483647e+09
+	UserID int `json:"user_id"`
 }
+
+// Type of the user account.
+type UserType string
+
+const (
+	UserTypeManagedUser    UserType = "managed_user"
+	UserTypeServiceAccount UserType = "service_account"
+	UserTypeSystemAccount  UserType = "system_account"
+	UserTypeUser           UserType = "user"
+)
 
 // MembersCreateParams is a schema definition.
 type MembersCreateParams struct {
@@ -287,6 +302,13 @@ func (c *MembersClient) Delete(ctx context.Context, merchantCode string, memberI
 	switch resp.StatusCode {
 	case http.StatusOK:
 		return nil
+	case http.StatusForbidden:
+		var apiErr Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return &apiErr
 	case http.StatusNotFound:
 		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
