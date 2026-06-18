@@ -20,7 +20,7 @@ import (
 // is `state`, whereas in Chile it's `region`.
 // Whether an address is valid or not depends on whether the locally required fields are present. Fields not
 // supported in a country will be ignored.
-// Address documentation: https://developer.sumup.com/tools/glossary/merchant#addresses
+// Address documentation: https://developer.sumup.com/tools/glossary/address
 type Address struct {
 	// In Spain, an autonomous community is the first sub-national level of political and administrative division.
 	// Max length: 60
@@ -32,10 +32,12 @@ type Address struct {
 	// the common interest. Used in countries such as Chile.
 	// Max length: 60
 	Commune *string `json:"commune,omitempty"`
-	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code. This definition users
-	// `oneOf` with a two-character string type to allow for support of future countries in client code.
+	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+	// country code. This definition users `oneOf` with a two-character string
+	// type to allow for support of future countries in client code.
 	// Min length: 2
 	// Max length: 2
+	// Pattern: ^[A-Z]{2}$
 	Country CountryCode `json:"country"`
 	// A county is a geographic region of a country used for administrative or other purposes in some nations. Used
 	// in countries such as Ireland, Romania, etc.
@@ -78,7 +80,6 @@ type Address struct {
 	// and Brazil.
 	// Max length: 60
 	State *string `json:"state,omitempty"`
-	// Min items: 1
 	// Max items: 2
 	StreetAddress []string `json:"street_address,omitempty"`
 	// A US system of postal codes used by the United States Postal Service (USPS).
@@ -97,7 +98,7 @@ type BasePerson struct {
 	// is `state`, whereas in Chile it's `region`.
 	// Whether an address is valid or not depends on whether the locally required fields are present. Fields not
 	// supported in a country will be ignored.
-	// Address documentation: https://developer.sumup.com/tools/glossary/merchant#addresses
+	// Address documentation: https://developer.sumup.com/tools/glossary/address
 	Address *Address `json:"address,omitempty"`
 	// The date of birth of the individual, represented as an ISO 8601:2004 [ISO8601‑2004] YYYY-MM-DD format.
 	// Format: date
@@ -109,10 +110,12 @@ type BasePerson struct {
 	// provided.
 	// Read only
 	ChangeStatus *ChangeStatus `json:"change_status,omitempty"`
-	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code. This definition users
-	// `oneOf` with a two-character string type to allow for support of future countries in client code.
+	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+	// country code. This definition users `oneOf` with a two-character string
+	// type to allow for support of future countries in client code.
 	// Min length: 2
 	// Max length: 2
+	// Pattern: ^[A-Z]{2}$
 	Citizenship *CountryCode `json:"citizenship,omitempty"`
 	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code representing the country
 	// where the person resides.
@@ -129,7 +132,7 @@ type BasePerson struct {
 	// Read only
 	ID string `json:"id"`
 	// A list of country-specific personal identifiers.
-	// Max items: 5
+	// Max items: 32
 	Identifiers PersonalIdentifiers `json:"identifiers,omitempty"`
 	// Middle name(s) of the End-User. Note that in some cultures, people can have multiple middle names; all can
 	// be present, with the names being separated by space characters. Also note that in some cultures, middle names
@@ -186,7 +189,7 @@ type BusinessProfile struct {
 	// is `state`, whereas in Chile it's `region`.
 	// Whether an address is valid or not depends on whether the locally required fields are present. Fields not
 	// supported in a country will be ignored.
-	// Address documentation: https://developer.sumup.com/tools/glossary/merchant#addresses
+	// Address documentation: https://developer.sumup.com/tools/glossary/address
 	Address *Address `json:"address,omitempty"`
 	// Settings used to apply the Merchant's branding to email receipts, invoices, checkouts, and other products.
 	Branding *Branding `json:"branding,omitempty"`
@@ -237,7 +240,7 @@ type Company struct {
 	// is `state`, whereas in Chile it's `region`.
 	// Whether an address is valid or not depends on whether the locally required fields are present. Fields not
 	// supported in a country will be ignored.
-	// Address documentation: https://developer.sumup.com/tools/glossary/merchant#addresses
+	// Address documentation: https://developer.sumup.com/tools/glossary/address
 	Address *Address `json:"address,omitempty"`
 	// Object attributes that are modifiable only by SumUp applications.
 	Attributes Attributes `json:"attributes,omitempty"`
@@ -266,7 +269,7 @@ type Company struct {
 	// is `state`, whereas in Chile it's `region`.
 	// Whether an address is valid or not depends on whether the locally required fields are present. Fields not
 	// supported in a country will be ignored.
-	// Address documentation: https://developer.sumup.com/tools/glossary/merchant#addresses
+	// Address documentation: https://developer.sumup.com/tools/glossary/address
 	TradingAddress *Address `json:"trading_address,omitempty"`
 	// HTTP(S) URL of the company's website.
 	// Max length: 255
@@ -286,11 +289,12 @@ type CompanyIdentifier struct {
 // A list of country-specific company identifiers.
 type CompanyIdentifiers []CompanyIdentifier
 
-// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code. This definition users
-// `oneOf` with a two-character string type to allow for support of future countries in client code.
-//
+// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+// country code. This definition users `oneOf` with a two-character string
+// type to allow for support of future countries in client code.
 // Min length: 2
 // Max length: 2
+// Pattern: ^[A-Z]{2}$
 type CountryCode string
 
 // The unique legal type reference as defined in the country SDK. We do not rely on IDs as used by other services.
@@ -338,10 +342,12 @@ type Merchant struct {
 	// Information about the company or business. This is legal information that is used for verification.
 	// Company documentation: https://developer.sumup.com/tools/glossary/merchant#company
 	Company *Company `json:"company,omitempty"`
-	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code. This definition users
-	// `oneOf` with a two-character string type to allow for support of future countries in client code.
+	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+	// country code. This definition users `oneOf` with a two-character string
+	// type to allow for support of future countries in client code.
 	// Min length: 2
 	// Max length: 2
+	// Pattern: ^[A-Z]{2}$
 	Country CountryCode `json:"country"`
 	// The date and time when the resource was created. This is a string as defined in [RFC 3339, section 5.6](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6).
 	// Read only
@@ -407,7 +413,7 @@ type Person struct {
 	// is `state`, whereas in Chile it's `region`.
 	// Whether an address is valid or not depends on whether the locally required fields are present. Fields not
 	// supported in a country will be ignored.
-	// Address documentation: https://developer.sumup.com/tools/glossary/merchant#addresses
+	// Address documentation: https://developer.sumup.com/tools/glossary/address
 	Address *Address `json:"address,omitempty"`
 	// The date of birth of the individual, represented as an ISO 8601:2004 [ISO8601‑2004] YYYY-MM-DD format.
 	// Format: date
@@ -419,10 +425,12 @@ type Person struct {
 	// provided.
 	// Read only
 	ChangeStatus *ChangeStatus `json:"change_status,omitempty"`
-	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code. This definition users
-	// `oneOf` with a two-character string type to allow for support of future countries in client code.
+	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+	// country code. This definition users `oneOf` with a two-character string
+	// type to allow for support of future countries in client code.
 	// Min length: 2
 	// Max length: 2
+	// Pattern: ^[A-Z]{2}$
 	Citizenship *CountryCode `json:"citizenship,omitempty"`
 	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code representing the country
 	// where the person resides.
@@ -439,7 +447,7 @@ type Person struct {
 	// Read only
 	ID string `json:"id"`
 	// A list of country-specific personal identifiers.
-	// Max items: 5
+	// Max items: 32
 	Identifiers PersonalIdentifiers `json:"identifiers,omitempty"`
 	// Middle name(s) of the End-User. Note that in some cultures, people can have multiple middle names; all can
 	// be present, with the names being separated by space characters. Also note that in some cultures, middle names
@@ -467,16 +475,16 @@ type Person struct {
 
 // PersonalIdentifier is a schema definition.
 type PersonalIdentifier struct {
-	// The unique reference for the personal identifier type as defined in the country SDK.
+	// The unique reference for the personal identifier type.
+	// Max length: 32
 	Ref string `json:"ref"`
-	// The value of the personal identifier.
-	// Max length: 30
+	// The company identifier value.
+	// Max length: 128
 	Value string `json:"value"`
 }
 
 // A list of country-specific personal identifiers.
-//
-// Max items: 5
+// Max items: 32
 type PersonalIdentifiers []PersonalIdentifier
 
 // A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
