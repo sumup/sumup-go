@@ -6,7 +6,7 @@ require (
 	github.com/lmittmann/tint v1.1.3
 	github.com/pb33f/libopenapi v0.37.3
 	github.com/urfave/cli/v2 v2.27.7
-	go.yaml.in/yaml/v4 v4.0.0-rc.4
+	go.yaml.in/yaml/v4 v4.0.0-rc.5
 )
 
 require (
