@@ -87,8 +87,8 @@ type Address struct {
 	ZipCode *string `json:"zip_code,omitempty"`
 }
 
-// Base schema for a person associated with a merchant. This can be a legal representative, business owner (ultimate
-// beneficial owner), or an officer. A legal representative is the person who registered the merchant with SumUp.
+// Base schema for a Person associated with a Merchant. This can be a legal representative, business owner (ultimate
+// beneficial owner), or an officer. A legal representative is the Person who registered the Merchant with SumUp.
 // They should always have a `user_id`.
 //
 // Person documentation: https://developer.sumup.com/tools/glossary/merchant#persons
@@ -103,7 +103,7 @@ type BasePerson struct {
 	// The date of birth of the individual, represented as an ISO 8601:2004 [ISO8601‑2004] YYYY-MM-DD format.
 	// Format: date
 	Birthdate *datetime.Date `json:"birthdate,omitempty"`
-	// Reflects the status of changes submitted through the `PATCH` endpoints for the merchant or persons. If some
+	// Reflects the status of changes submitted through the `PATCH` endpoints for the Merchant or Persons. If some
 	// changes have not been applied yet, the status will be `pending`. If all changes have been applied, the status
 	// `done`.
 	// The status is only returned after write operations or on read endpoints when the `version` query parameter is
@@ -118,7 +118,7 @@ type BasePerson struct {
 	// Pattern: ^[A-Z]{2}$
 	Citizenship *CountryCode `json:"citizenship,omitempty"`
 	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code representing the country
-	// where the person resides.
+	// where the Person resides.
 	// Min length: 2
 	// Max length: 2
 	CountryOfResidence *nullable.Field[string] `json:"country_of_residence,omitempty"`
@@ -128,7 +128,7 @@ type BasePerson struct {
 	// The first name(s) of the individual.
 	// Max length: 60
 	GivenName *string `json:"given_name,omitempty"`
-	// The unique identifier for the person. This is a [typeid](https://github.com/sumup/typeid).
+	// The unique identifier for the Person. This is a [typeid](https://github.com/sumup/typeid).
 	// Read only
 	ID string `json:"id"`
 	// A list of country-specific personal identifiers.
@@ -139,19 +139,19 @@ type BasePerson struct {
 	// are not used.
 	// Max length: 60
 	MiddleName *string `json:"middle_name,omitempty"`
-	// The persons nationality. May be an [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country
+	// The Person's nationality. May be an [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country
 	// code, but legacy data may not conform to this standard.
 	Nationality *nullable.Field[string] `json:"nationality,omitempty"`
 	Ownership   *Ownership              `json:"ownership,omitempty"`
 	// A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
 	// Max length: 16
 	PhoneNumber *PhoneNumber `json:"phone_number,omitempty"`
-	// A list of roles the person has in the merchant or towards SumUp. A merchant must have at least one person with
+	// A list of roles the Person has in the Merchant or towards SumUp. A Merchant must have at least one Person with
 	// the relationship `representative`.
 	// Min items: 1
 	// Max items: 1
 	Relationships []string `json:"relationships,omitempty"`
-	// A corresponding identity user ID for the person, if they have a user account.
+	// A corresponding identity user ID for the Person, if they have a user account.
 	UserID *string `json:"user_id,omitempty"`
 	// The version of the resource. The version reflects a specific change submitted to the API via one of the `PATCH`
 	// endpoints.
@@ -162,6 +162,10 @@ type BasePerson struct {
 type Branding struct {
 	// A hex color value representing the preferred background color of this merchant.
 	BackgroundColor *string `json:"background_color,omitempty"`
+	// Footer text rendered on receipts and other customer-facing products.
+	// Min length: 1
+	// Max length: 500
+	FooterText *string `json:"footer_text,omitempty"`
 	// Data-URL encoded hero image for the merchant business.
 	// Format: uri
 	Hero *string `json:"hero,omitempty"`
@@ -214,7 +218,7 @@ type BusinessProfile struct {
 	Website *string `json:"website,omitempty"`
 }
 
-// Reflects the status of changes submitted through the `PATCH` endpoints for the merchant or persons. If some
+// Reflects the status of changes submitted through the `PATCH` endpoints for the Merchant or Persons. If some
 // changes have not been applied yet, the status will be `pending`. If all changes have been applied, the status
 // `done`.
 // The status is only returned after write operations or on read endpoints when the `version` query parameter is
@@ -331,7 +335,7 @@ type Merchant struct {
 	// * `non_profit`: The business is run as a nonprofit organization that operates for public or social benefit
 	// * `government_entity`: The business is state owned and operated
 	BusinessType *string `json:"business_type,omitempty"`
-	// Reflects the status of changes submitted through the `PATCH` endpoints for the merchant or persons. If some
+	// Reflects the status of changes submitted through the `PATCH` endpoints for the Merchant or Persons. If some
 	// changes have not been applied yet, the status will be `pending`. If all changes have been applied, the status
 	// `done`.
 	// The status is only returned after write operations or on read endpoints when the `version` query parameter is
@@ -398,7 +402,7 @@ type Meta map[string]any
 
 // Ownership is a schema definition.
 type Ownership struct {
-	// The percent of ownership shares held by the person expressed in percent mille (1/100000). Only persons with
+	// The percent of ownership shares held by the Person expressed in percent mille (1/100000). Only Persons with
 	// the relationship `owner` can have ownership.
 	// Format: int32
 	// Min: 25000
@@ -418,7 +422,7 @@ type Person struct {
 	// The date of birth of the individual, represented as an ISO 8601:2004 [ISO8601‑2004] YYYY-MM-DD format.
 	// Format: date
 	Birthdate *datetime.Date `json:"birthdate,omitempty"`
-	// Reflects the status of changes submitted through the `PATCH` endpoints for the merchant or persons. If some
+	// Reflects the status of changes submitted through the `PATCH` endpoints for the Merchant or Persons. If some
 	// changes have not been applied yet, the status will be `pending`. If all changes have been applied, the status
 	// `done`.
 	// The status is only returned after write operations or on read endpoints when the `version` query parameter is
@@ -433,7 +437,7 @@ type Person struct {
 	// Pattern: ^[A-Z]{2}$
 	Citizenship *CountryCode `json:"citizenship,omitempty"`
 	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code representing the country
-	// where the person resides.
+	// where the Person resides.
 	// Min length: 2
 	// Max length: 2
 	CountryOfResidence *nullable.Field[string] `json:"country_of_residence,omitempty"`
@@ -443,7 +447,7 @@ type Person struct {
 	// The first name(s) of the individual.
 	// Max length: 60
 	GivenName *string `json:"given_name,omitempty"`
-	// The unique identifier for the person. This is a [typeid](https://github.com/sumup/typeid).
+	// The unique identifier for the Person. This is a [typeid](https://github.com/sumup/typeid).
 	// Read only
 	ID string `json:"id"`
 	// A list of country-specific personal identifiers.
@@ -454,19 +458,19 @@ type Person struct {
 	// are not used.
 	// Max length: 60
 	MiddleName *string `json:"middle_name,omitempty"`
-	// The persons nationality. May be an [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country
+	// The Person's nationality. May be an [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country
 	// code, but legacy data may not conform to this standard.
 	Nationality *nullable.Field[string] `json:"nationality,omitempty"`
 	Ownership   *Ownership              `json:"ownership,omitempty"`
 	// A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
 	// Max length: 16
 	PhoneNumber *PhoneNumber `json:"phone_number,omitempty"`
-	// A list of roles the person has in the merchant or towards SumUp. A merchant must have at least one person with
+	// A list of roles the Person has in the Merchant or towards SumUp. A Merchant must have at least one Person with
 	// the relationship `representative`.
 	// Min items: 1
 	// Max items: 1
 	Relationships []string `json:"relationships,omitempty"`
-	// A corresponding identity user ID for the person, if they have a user account.
+	// A corresponding identity user ID for the Person, if they have a user account.
 	UserID *string `json:"user_id,omitempty"`
 	// The version of the resource. The version reflects a specific change submitted to the API via one of the `PATCH`
 	// endpoints.
@@ -569,7 +573,7 @@ func (p *MerchantsGetPersonParams) QueryValues() url.Values {
 
 // MerchantsClient provides access to the Merchants API.
 //
-// Merchant account represents a single business entity at SumUp.
+// A Merchant represents a single business which can use SumUp products like payment processing.
 type MerchantsClient struct {
 	c *client.Client
 }
@@ -578,7 +582,7 @@ func NewMerchantsClient(c *client.Client) *MerchantsClient {
 	return &MerchantsClient{c: c}
 }
 
-// Returns a list of persons related to the merchant.
+// Returns the Persons related to a Merchant.
 // Persons documentation: https://developer.sumup.com/tools/models/merchant#persons
 func (c *MerchantsClient) ListPersons(ctx context.Context, merchantCode string, params MerchantsListPersonsParams) (*ListPersonsResponseBody, error) {
 	path := fmt.Sprintf("/v1/merchants/%v/persons", merchantCode)
@@ -611,7 +615,7 @@ func (c *MerchantsClient) ListPersons(ctx context.Context, merchantCode string, 
 	}
 }
 
-// Retrieve a merchant.
+// Returns a Merchant for a valid Merchant code.
 // Merchant documentation: https://developer.sumup.com/tools/models/merchant
 func (c *MerchantsClient) Get(ctx context.Context, merchantCode string, params MerchantsGetParams) (*Merchant, error) {
 	path := fmt.Sprintf("/v1/merchants/%v", merchantCode)
@@ -644,7 +648,7 @@ func (c *MerchantsClient) Get(ctx context.Context, merchantCode string, params M
 	}
 }
 
-// Returns a single person related to the merchant.
+// Returns a single Person related to a Merchant.
 // Persons documentation: https://developer.sumup.com/tools/models/merchant#persons
 func (c *MerchantsClient) GetPerson(ctx context.Context, merchantCode string, personID string, params MerchantsGetPersonParams) (*Person, error) {
 	path := fmt.Sprintf("/v1/merchants/%v/persons/%v", merchantCode, personID)

@@ -363,6 +363,24 @@ type CheckoutSuccessPaymentInstrument struct {
 	Token *string `json:"token,omitempty"`
 }
 
+// Request body for updating an existing checkout. Include only the fields that should be changed.
+type CheckoutUpdateRequest struct {
+	// Updated amount to be charged to the payer, expressed in major units.
+	Amount *float32 `json:"amount,omitempty"`
+	// Updated merchant-defined reference for the checkout.
+	// Max length: 90
+	CheckoutReference *string `json:"checkout_reference,omitempty"`
+	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
+	// currency values are enumerated above.
+	Currency *Currency `json:"currency,omitempty"`
+	// Updated merchant-scoped customer identifier associated with the checkout.
+	CustomerID *string `json:"customer_id,omitempty"`
+	// Updated short merchant-defined description shown in SumUp tools and reporting.
+	Description *string `json:"description,omitempty"`
+	// Updated expiration timestamp. The checkout must be processed before this moment, otherwise it becomes unusable.
+	ValidUntil *nullable.Field[time.Time] `json:"valid_until,omitempty"`
+}
+
 // Error message structure.
 type DetailsError struct {
 	// Details of the error.
@@ -460,6 +478,8 @@ type CheckoutsCreateApplePaySessionParams struct {
 	// Format: uri
 	Target string `json:"target"`
 }
+
+type CheckoutsUpdateParams = CheckoutUpdateRequest
 
 type CheckoutsProcessParams = ProcessCheckout
 
@@ -816,6 +836,45 @@ func (c *CheckoutsClient) Get(ctx context.Context, checkoutID string) (*Checkout
 	switch resp.StatusCode {
 	case http.StatusOK:
 		var v CheckoutSuccess
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
+
+		return &v, nil
+	case http.StatusUnauthorized:
+		var apiErr Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	case http.StatusNotFound:
+		var apiErr Error
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
+}
+
+// Updates an identified checkout resource.
+func (c *CheckoutsClient) Update(ctx context.Context, checkoutID string, body CheckoutsUpdateParams) (*Checkout, error) {
+	path := fmt.Sprintf("/v0.1/checkouts/%v", checkoutID)
+
+	resp, err := c.c.Call(ctx, http.MethodPatch, path, client.WithJSONBody(body))
+	if err != nil {
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodPatch, path, err)
+	}
+	defer func() {
+		_ = resp.Body.Close()
+	}()
+
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v Checkout
 		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
 			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}

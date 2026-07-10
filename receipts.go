@@ -49,7 +49,7 @@ type ReceiptEvent struct {
 	Amount *json.Number `json:"amount,omitempty"`
 	// Unique ID of the transaction event.
 	// Format: int64
-	ID *EventID `json:"id,omitempty"`
+	ID *TransactionEventID `json:"id,omitempty"`
 	// Receipt number associated with the event.
 	ReceiptNo *string `json:"receipt_no,omitempty"`
 	// Status of the transaction event.
@@ -69,13 +69,13 @@ type ReceiptEvent struct {
 	// types that do not expose a more specific business outcome such as `PAID_OUT` or `REFUNDED`.
 	// - `FAILED`: The event could not be completed. Typical examples are a payout that could not be executed or
 	// an event that was rejected during processing.
-	Status *EventStatus `json:"status,omitempty"`
+	Status *TransactionEventStatus `json:"status,omitempty"`
 	// Date and time of the transaction event.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
 	// Unique ID of the transaction.
 	TransactionID *TransactionID `json:"transaction_id,omitempty"`
 	// Type of the transaction event.
-	Type *EventType `json:"type,omitempty"`
+	Type *TransactionEventType `json:"type,omitempty"`
 }
 
 // Receipt merchant data

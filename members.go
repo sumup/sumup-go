@@ -97,6 +97,7 @@ type MembersCreateParams struct {
 	Attributes Attributes `json:"attributes,omitempty"`
 	// Email address of the member to add.
 	// Format: email
+	// Max length: 256
 	Email string `json:"email"`
 	// True if the user is managed by the merchant. In this case, we'll created a virtual user with the provided password
 	// and nickname.
@@ -106,6 +107,7 @@ type MembersCreateParams struct {
 	// Max properties: 64
 	Metadata Metadata `json:"metadata,omitempty"`
 	// Nickname of the member to add. Only used if `is_managed_user` is true. Used for display purposes only.
+	// Max length: 64
 	Nickname *string `json:"nickname,omitempty"`
 	// Password of the member to add. Only used if `is_managed_user` is true. In the case of service accounts, the
 	// password is not used and can not be defined by the caller.
@@ -113,6 +115,7 @@ type MembersCreateParams struct {
 	// Min length: 8
 	Password *secret.Secret `json:"password,omitempty"`
 	// List of roles to assign to the new member.
+	// Max items: 124
 	Roles []string `json:"roles"`
 }
 
@@ -124,7 +127,8 @@ type MembersUpdateParams struct {
 	// submit whole metadata. Maximum of 64 parameters are allowed in the object.
 	// Max properties: 64
 	Metadata Metadata `json:"metadata,omitempty"`
-	Roles    []string `json:"roles,omitempty"`
+	// Max items: 124
+	Roles []string `json:"roles,omitempty"`
 	// Allows you to update user data of managed users.
 	User *MembersUpdateParamsUser `json:"user,omitempty"`
 }
@@ -132,6 +136,7 @@ type MembersUpdateParams struct {
 // Allows you to update user data of managed users.
 type MembersUpdateParamsUser struct {
 	// User's nickname. Used for display purposes only.
+	// Max length: 64
 	Nickname *string `json:"nickname,omitempty"`
 	// Password of the member to add. Only used if `is_managed_user` is true.
 	// Format: password
