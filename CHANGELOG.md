@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.17.1](https://github.com/sumup/sumup-go/compare/v0.17.0...v0.17.1) (2026-07-10)
+
+
+### Chores
+
+* **deps:** bump actions/checkout from 6.0.2 to 6.0.3 ([#278](https://github.com/sumup/sumup-go/issues/278)) ([3c4e361](https://github.com/sumup/sumup-go/commit/3c4e361178482fca65e18bfc2b9ae47f929bf9a2))
+* **deps:** bump actions/checkout from 6.0.3 to 7.0.0 ([#281](https://github.com/sumup/sumup-go/issues/281)) ([b7f733b](https://github.com/sumup/sumup-go/commit/b7f733bb939f6c4d6af17878f6b33927d4fd2148))
+* **deps:** bump actions/create-github-app-token from 3.1.1 to 3.2.0 ([#268](https://github.com/sumup/sumup-go/issues/268)) ([c3b27d0](https://github.com/sumup/sumup-go/commit/c3b27d0468726c8dd3ddf130751e7e4fd90e49f1))
+* **deps:** bump actions/setup-go from 6.4.0 to 6.5.0 ([#286](https://github.com/sumup/sumup-go/issues/286)) ([525b1cf](https://github.com/sumup/sumup-go/commit/525b1cf05eacd375adcd618224c5c85b05669aee))
+* **deps:** bump github.com/pb33f/libopenapi from 0.36.3 to 0.36.6 in /internal/cmd/codegen ([#273](https://github.com/sumup/sumup-go/issues/273)) ([9b56607](https://github.com/sumup/sumup-go/commit/9b566077a6fcb4565dcc3fd3fa03061f129cc05b))
+* **deps:** bump github.com/pb33f/libopenapi from 0.36.6 to 0.37.2 in /internal/cmd/codegen ([#274](https://github.com/sumup/sumup-go/issues/274)) ([b2efd4c](https://github.com/sumup/sumup-go/commit/b2efd4c65b2696e477daf367a596243b8be4f02f))
+* **deps:** bump github.com/pb33f/libopenapi from 0.37.2 to 0.37.3 in /internal/cmd/codegen ([#276](https://github.com/sumup/sumup-go/issues/276)) ([8c56840](https://github.com/sumup/sumup-go/commit/8c56840cc7758cb410516f9bd3065174de6d8821))
+* **deps:** bump github.com/pb33f/libopenapi from 0.37.3 to 0.38.1 in /internal/cmd/codegen ([#283](https://github.com/sumup/sumup-go/issues/283)) ([8f45e27](https://github.com/sumup/sumup-go/commit/8f45e27f1819c43c4c6d331d968bb0b9418ded7c))
+* **deps:** bump github.com/pb33f/libopenapi from 0.38.1 to 0.38.4 in /internal/cmd/codegen ([#285](https://github.com/sumup/sumup-go/issues/285)) ([adcb5c5](https://github.com/sumup/sumup-go/commit/adcb5c5374c94370946607644c97993f4d78c623))
+* **deps:** bump github/codeql-action from 4.35.4 to 4.36.0 ([#272](https://github.com/sumup/sumup-go/issues/272)) ([49bc22e](https://github.com/sumup/sumup-go/commit/49bc22ec513ed3ea5538ffe69492424581e2543e))
+* **deps:** bump github/codeql-action from 4.36.0 to 4.36.2 ([#277](https://github.com/sumup/sumup-go/issues/277)) ([131071f](https://github.com/sumup/sumup-go/commit/131071f99c132e3531ca819d7c7d6a0fbe669561))
+* **deps:** bump go.yaml.in/yaml/v4 from 4.0.0-rc.4 to 4.0.0-rc.6 in /internal/cmd/codegen ([#282](https://github.com/sumup/sumup-go/issues/282)) ([fa2f55a](https://github.com/sumup/sumup-go/commit/fa2f55ad6bc21893bf9038eae03442a7354514d4))
+* **deps:** bump golangci/golangci-lint-action from 9.2.0 to 9.2.1 ([#271](https://github.com/sumup/sumup-go/issues/271)) ([1875ea0](https://github.com/sumup/sumup-go/commit/1875ea013a1862ba4939e23b7ad9c78335319491))
+* **deps:** bump golangci/golangci-lint-action from 9.2.1 to 9.3.0 ([#284](https://github.com/sumup/sumup-go/issues/284)) ([f4d9343](https://github.com/sumup/sumup-go/commit/f4d93433687319d528a543ac0f5b912b58917fea))
+* synced file(s) with sumup/apis ([#265](https://github.com/sumup/sumup-go/issues/265)) ([98435f9](https://github.com/sumup/sumup-go/commit/98435f97c9b3427c5a13db3c2b9bd69298e29e17))
+* synced file(s) with sumup/apis ([#270](https://github.com/sumup/sumup-go/issues/270)) ([f2d8fcf](https://github.com/sumup/sumup-go/commit/f2d8fcf1ee53b0d663364c281b926e984ed3409d))
+* synced file(s) with sumup/apis ([#275](https://github.com/sumup/sumup-go/issues/275)) ([970e1b5](https://github.com/sumup/sumup-go/commit/970e1b540b49317c543a5729e56cc59c174711df))
+* synced file(s) with sumup/apis ([#287](https://github.com/sumup/sumup-go/issues/287)) ([654aefb](https://github.com/sumup/sumup-go/commit/654aefbc40d08955d6fbea3086a2a6d45299060a))
+
 ## [0.17.0](https://github.com/sumup/sumup-go/compare/v0.16.0...v0.17.0) (2026-05-21)
 
 
