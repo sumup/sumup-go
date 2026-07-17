@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.17.2](https://github.com/sumup/sumup-go/compare/v0.17.1...v0.17.2) (2026-07-17)
+
+
+### Bug Fixes
+
+* refund response typing ([#291](https://github.com/sumup/sumup-go/issues/291)) ([59e6b3a](https://github.com/sumup/sumup-go/commit/59e6b3a59ac90fde04587ddbc9a722abcb77da26))
+
+
+### Chores
+
+* **deps:** bump github.com/pb33f/libopenapi from 0.38.4 to 0.38.5 in /internal/cmd/codegen ([#289](https://github.com/sumup/sumup-go/issues/289)) ([94e917e](https://github.com/sumup/sumup-go/commit/94e917e303fc04c13875ae7012f6cdf3f471796b))
+* **deps:** bump github/codeql-action/upload-sarif from 4.36.2 to 4.36.3 ([#290](https://github.com/sumup/sumup-go/issues/290)) ([09c3d01](https://github.com/sumup/sumup-go/commit/09c3d0136407488611cb101959bdaedf18093287))
+
 ## [0.17.1](https://github.com/sumup/sumup-go/compare/v0.17.0...v0.17.1) (2026-07-10)
 
 
