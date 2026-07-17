@@ -304,7 +304,7 @@ import "github.com/sumup/sumup-go"
   - [func NewTransactionsClient\(c \*client.Client\) \*TransactionsClient](<#NewTransactionsClient>)
   - [func \(c \*TransactionsClient\) Get\(ctx context.Context, merchantCode string, params TransactionsGetParams\) \(\*TransactionFull, error\)](<#TransactionsClient.Get>)
   - [func \(c \*TransactionsClient\) List\(ctx context.Context, merchantCode string, params TransactionsListParams\) \(\*TransactionsListResponse, error\)](<#TransactionsClient.List>)
-  - [func \(c \*TransactionsClient\) Refund\(ctx context.Context, merchantCode string, transactionID string, body TransactionsRefundParams\) error](<#TransactionsClient.Refund>)
+  - [func \(c \*TransactionsClient\) Refund\(ctx context.Context, merchantCode string, transactionID string, body TransactionsRefundParams\) \(\*TransactionsRefundResponse, error\)](<#TransactionsClient.Refund>)
 - [type TransactionsGetParams](<#TransactionsGetParams>)
   - [func \(p \*TransactionsGetParams\) QueryValues\(\) url.Values](<#TransactionsGetParams.QueryValues>)
 - [type TransactionsHistoryLink](<#TransactionsHistoryLink>)
@@ -315,6 +315,7 @@ import "github.com/sumup/sumup-go"
 - [type TransactionsListStatusesItem](<#TransactionsListStatusesItem>)
 - [type TransactionsListTypesItem](<#TransactionsListTypesItem>)
 - [type TransactionsRefundParams](<#TransactionsRefundParams>)
+- [type TransactionsRefundResponse](<#TransactionsRefundResponse>)
 - [type Unauthorized](<#Unauthorized>)
   - [func \(e \*Unauthorized\) Error\(\) string](<#Unauthorized.Error>)
 - [type UnauthorizedErrors](<#UnauthorizedErrors>)
@@ -5563,7 +5564,7 @@ const (
 ```
 
 <a name="TransactionsClient"></a>
-## type [TransactionsClient](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L737-L739>)
+## type [TransactionsClient](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L740-L742>)
 
 TransactionsClient provides access to the Transactions API.
 
@@ -5582,7 +5583,7 @@ type TransactionsClient struct {
 ```
 
 <a name="NewTransactionsClient"></a>
-### func [NewTransactionsClient](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L741>)
+### func [NewTransactionsClient](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L744>)
 
 ```go
 func NewTransactionsClient(c *client.Client) *TransactionsClient
@@ -5591,7 +5592,7 @@ func NewTransactionsClient(c *client.Client) *TransactionsClient
 
 
 <a name="TransactionsClient.Get"></a>
-### func \(\*TransactionsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L790>)
+### func \(\*TransactionsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L793>)
 
 ```go
 func (c *TransactionsClient) Get(ctx context.Context, merchantCode string, params TransactionsGetParams) (*TransactionFull, error)
@@ -5600,7 +5601,7 @@ func (c *TransactionsClient) Get(ctx context.Context, merchantCode string, param
 Retrieves the full details of an identified transaction. The transaction resource is identified by a query parameter and \*one\* of following parameters is required: \- \`id\` \- \`transaction\_code\` \- \`foreign\_transaction\_id\` \- \`client\_transaction\_id\`
 
 <a name="TransactionsClient.List"></a>
-### func \(\*TransactionsClient\) [List](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L746>)
+### func \(\*TransactionsClient\) [List](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L749>)
 
 ```go
 func (c *TransactionsClient) List(ctx context.Context, merchantCode string, params TransactionsListParams) (*TransactionsListResponse, error)
@@ -5609,10 +5610,10 @@ func (c *TransactionsClient) List(ctx context.Context, merchantCode string, para
 Lists detailed history of all transactions associated with the merchant profile.
 
 <a name="TransactionsClient.Refund"></a>
-### func \(\*TransactionsClient\) [Refund](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L829>)
+### func \(\*TransactionsClient\) [Refund](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L832>)
 
 ```go
-func (c *TransactionsClient) Refund(ctx context.Context, merchantCode string, transactionID string, body TransactionsRefundParams) error
+func (c *TransactionsClient) Refund(ctx context.Context, merchantCode string, transactionID string, body TransactionsRefundParams) (*TransactionsRefundResponse, error)
 ```
 
 Refunds an identified transaction either in full or partially.
@@ -5792,6 +5793,15 @@ type TransactionsRefundParams struct {
     // and currency. If you do not specify a value, the system performs a full refund of the transaction.
     Amount *float32 `json:"amount,omitempty"`
 }
+```
+
+<a name="TransactionsRefundResponse"></a>
+## type [TransactionsRefundResponse](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L713>)
+
+TransactionsRefundResponse is a schema definition.
+
+```go
+type TransactionsRefundResponse json.RawMessage
 ```
 
 <a name="Unauthorized"></a>
@@ -6176,7 +6186,7 @@ const APIVersion = "1.0.0"
 <a name="Version"></a>
 
 ```go
-const Version = "0.17.0" // x-release-please-version
+const Version = "0.17.1" // x-release-please-version
 ```
 
 # nullable
