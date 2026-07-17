@@ -709,6 +709,9 @@ type TransactionsListResponse struct {
 	Links []TransactionsHistoryLink `json:"links,omitempty"`
 }
 
+// TransactionsRefundResponse is a schema definition.
+type TransactionsRefundResponse json.RawMessage
+
 // TransactionsClient provides access to the Transactions API.
 //
 // Transactions represent completed or attempted payment operations processed for a merchant account. A transaction
@@ -826,35 +829,61 @@ func (c *TransactionsClient) Get(ctx context.Context, merchantCode string, param
 }
 
 // Refunds an identified transaction either in full or partially.
-func (c *TransactionsClient) Refund(ctx context.Context, merchantCode string, transactionID string, body TransactionsRefundParams) error {
+func (c *TransactionsClient) Refund(ctx context.Context, merchantCode string, transactionID string, body TransactionsRefundParams) (*TransactionsRefundResponse, error) {
 	path := fmt.Sprintf("/v1.0/merchants/%v/payments/%v/refunds", merchantCode, transactionID)
 
 	resp, err := c.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
 	if err != nil {
-		return fmt.Errorf("call %s %s: %w", http.MethodPost, path, err)
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodPost, path, err)
 	}
 	defer func() {
 		_ = resp.Body.Close()
 	}()
 
 	switch resp.StatusCode {
-	case http.StatusNoContent:
-		return nil
+	case http.StatusCreated:
+		var v TransactionsRefundResponse
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
+
+		return &v, nil
+	case http.StatusBadRequest:
+		var apiErr Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	case http.StatusForbidden:
+		var apiErr Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	case http.StatusNotFound:
-		var apiErr Error
+		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return fmt.Errorf("read error response: %s", err.Error())
+			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
-		return &apiErr
+		return nil, &apiErr
 	case http.StatusConflict:
-		var apiErr Error
+		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return fmt.Errorf("read error response: %s", err.Error())
+			return nil, fmt.Errorf("read error response: %s", err.Error())
 		}
 
-		return &apiErr
+		return nil, &apiErr
+	case http.StatusUnprocessableEntity:
+		var apiErr Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
 	default:
-		return fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
 }
