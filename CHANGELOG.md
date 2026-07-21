@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.17.3](https://github.com/sumup/sumup-go/compare/v0.17.2...v0.17.3) (2026-07-21)
+
+
+### Chores
+
+* **deps:** bump github.com/lmittmann/tint from 1.1.3 to 1.2.0 in /internal/cmd/codegen ([#294](https://github.com/sumup/sumup-go/issues/294)) ([fbcfff2](https://github.com/sumup/sumup-go/commit/fbcfff248efd59713eb5ab50d5b1ffdab4c2fe02))
+* **deps:** bump github.com/pb33f/libopenapi from 0.38.5 to 0.38.6 in /internal/cmd/codegen ([#293](https://github.com/sumup/sumup-go/issues/293)) ([5d310ab](https://github.com/sumup/sumup-go/commit/5d310ab66418b8c3fbc0e22fd8aaca160ff7382b))
+* **deps:** bump github/codeql-action/upload-sarif from 4.36.3 to 4.37.0 ([#295](https://github.com/sumup/sumup-go/issues/295)) ([3095355](https://github.com/sumup/sumup-go/commit/309535572ed8a8aed39751c3586f3177864c5d89))
+
 ## [0.17.2](https://github.com/sumup/sumup-go/compare/v0.17.1...v0.17.2) (2026-07-17)
 
 
