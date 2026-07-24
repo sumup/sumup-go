@@ -14,6 +14,20 @@ import (
 	"github.com/sumup/sumup-go/nullable"
 )
 
+// Affiliate is a schema definition.
+type Affiliate struct {
+	AppID string `json:"app_id"`
+	Key   string `json:"key"`
+}
+
+// Amount is a schema definition.
+type Amount struct {
+	// Currency ISO 4217 code
+	Currency string `json:"currency"`
+	// Amount in minor units (e.g. cents).
+	Value int `json:"value"`
+}
+
 // 400 Bad Request
 type BadRequest struct {
 	Errors BadRequestErrors `json:"errors"`
@@ -180,6 +194,8 @@ type CreateReaderCheckoutResponse struct {
 
 // CreateReaderCheckoutResponseData is a schema definition.
 type CreateReaderCheckoutResponseData struct {
+	// The checkout ID is a unique identifier for the checkout.
+	CheckoutID *string `json:"checkout_id,omitempty"`
 	// The client transaction ID is a unique identifier for the transaction that is generated for the client.
 	//
 	// It can be used later to fetch the transaction details via the [Transactions API](https://developer.sumup.com/api/transactions/get).
@@ -233,6 +249,92 @@ func (e *CreateReaderTerminateUnprocessableEntity) Error() string {
 
 var _ error = (*CreateReaderTerminateUnprocessableEntity)(nil)
 
+// GetReaderCheckoutResponse is a schema definition.
+type GetReaderCheckoutResponse struct {
+	Data GetReaderCheckoutResponseData `json:"data"`
+}
+
+// GetReaderCheckoutResponseData is a schema definition.
+type GetReaderCheckoutResponseData struct {
+	// Type of the card. Required for some countries
+	CardType nullable.Field[GetReaderCheckoutResponseDataCardType] `json:"card_type"`
+	// Unique identifier for the checkout
+	// Format: uuid
+	CheckoutID string `json:"checkout_id"`
+	// Client transaction identifier associated with the checkout
+	ClientTransactionID string `json:"client_transaction_id"`
+	// Checkout creation timestamp
+	CreatedAt time.Time `json:"created_at"`
+	// Number of installments for the transaction. Required for some countries.
+	Installments nullable.Field[int] `json:"installments"`
+	// Payment failure reason
+	PaymentFailureReason *nullable.Field[string] `json:"payment_failure_reason,omitempty"`
+	// Payment status from payments v2 event
+	PaymentStatus nullable.Field[string] `json:"payment_status"`
+	// Type of the payment. Required for some countries
+	PaymentType GetReaderCheckoutResponseDataPaymentType `json:"payment_type"`
+	// Reader firmware version
+	ReaderFirmwareVersion string `json:"reader_firmware_version"`
+	// Device serial number
+	ReaderSerialNumber string `json:"reader_serial_number"`
+	// Current status of the checkout
+	Status GetReaderCheckoutResponseDataStatus `json:"status"`
+	// Amount structure.
+	//
+	// The amount is represented as an integer value altogether with the currency and the minor unit.
+	//
+	// For example, EUR 1.00 is represented as value 100 with minor unit of 2.
+	TotalAmount GetReaderCheckoutResponseDataTotalAmount `json:"total_amount"`
+	// Checkout last update timestamp
+	UpdatedAt time.Time `json:"updated_at"`
+	// Checkout expiration timestamp. After this time, the checkout will be automatically cancelled.
+	ValidUntil nullable.Field[time.Time] `json:"valid_until"`
+}
+
+// Type of the card. Required for some countries
+type GetReaderCheckoutResponseDataCardType string
+
+const (
+	GetReaderCheckoutResponseDataCardTypeCredit GetReaderCheckoutResponseDataCardType = "credit"
+	GetReaderCheckoutResponseDataCardTypeDebit  GetReaderCheckoutResponseDataCardType = "debit"
+)
+
+// Type of the payment. Required for some countries
+type GetReaderCheckoutResponseDataPaymentType string
+
+const (
+	GetReaderCheckoutResponseDataPaymentTypeCard GetReaderCheckoutResponseDataPaymentType = "card"
+	GetReaderCheckoutResponseDataPaymentTypePix  GetReaderCheckoutResponseDataPaymentType = "pix"
+)
+
+// Current status of the checkout
+type GetReaderCheckoutResponseDataStatus string
+
+const (
+	GetReaderCheckoutResponseDataStatusCancelled  GetReaderCheckoutResponseDataStatus = "cancelled"
+	GetReaderCheckoutResponseDataStatusFailed     GetReaderCheckoutResponseDataStatus = "failed"
+	GetReaderCheckoutResponseDataStatusPending    GetReaderCheckoutResponseDataStatus = "pending"
+	GetReaderCheckoutResponseDataStatusSuccessful GetReaderCheckoutResponseDataStatus = "successful"
+)
+
+// Amount structure.
+//
+// The amount is represented as an integer value altogether with the currency and the minor unit.
+//
+// For example, EUR 1.00 is represented as value 100 with minor unit of 2.
+type GetReaderCheckoutResponseDataTotalAmount struct {
+	// Currency ISO 4217 code
+	Currency string `json:"currency"`
+	// The minor units of the currency.
+	// It represents the number of decimals of the currency. For the currencies CLP, COP and HUF, the minor unit
+	// is 0.
+	// Min: 0
+	MinorUnit int `json:"minor_unit"`
+	// Integer value of the amount.
+	// Min: 0
+	Value int `json:"value"`
+}
+
 // 404 Not Found
 type NotFound struct {
 	Errors NotFoundErrors `json:"errors"`
@@ -256,11 +358,7 @@ type Reader struct {
 	CreatedAt time.Time `json:"created_at"`
 	// Information about the underlying physical device.
 	Device ReaderDevice `json:"device"`
-	// Unique identifier of the object.
-	//
-	// Note that this identifies the instance of the physical devices pairing with your SumUp account. If you [delete](https://developer.sumup.com/api/readers/delete-reader)
-	// a reader, and pair the device again, the ID will be different. Do not use this ID to refer to a physical device.
-	//
+	// Unique identifier of the reader that the payment is initiated on.
 	// Min length: 30
 	// Max length: 30
 	ID ReaderID `json:"id"`
@@ -305,11 +403,7 @@ const (
 	ReaderDeviceModelVirtualSolo ReaderDeviceModel = "virtual-solo"
 )
 
-// Unique identifier of the object.
-//
-// Note that this identifies the instance of the physical devices pairing with your SumUp account. If you [delete](https://developer.sumup.com/api/readers/delete-reader)
-// a reader, and pair the device again, the ID will be different. Do not use this ID to refer to a physical device.
-//
+// Unique identifier of the reader that the payment is initiated on.
 // Min length: 30
 // Max length: 30
 type ReaderID string
@@ -323,6 +417,29 @@ type ReaderName string
 // Min length: 8
 // Max length: 9
 type ReaderPairingCode string
+
+// ReaderPaymentRequestParams is a schema definition.
+type ReaderPaymentRequestParams struct {
+	Affiliate *Affiliate `json:"affiliate,omitempty"`
+	// Caller-supplied correlation identifier, used as the idempotency key.
+	ClientTransactionID string `json:"client_transaction_id"`
+	// Optional tip amount in minor units, added on top of total_amount.
+	TipAmount   *int   `json:"tip_amount,omitempty"`
+	TotalAmount Amount `json:"total_amount"`
+}
+
+// ReaderPaymentResponse is a schema definition.
+type ReaderPaymentResponse struct {
+	Data *ReaderPaymentResponseData `json:"data,omitempty"`
+}
+
+// ReaderPaymentResponseData is a schema definition.
+type ReaderPaymentResponseData struct {
+	// Caller-supplied correlation identifier that was provided in the request.
+	ClientTransactionID *string `json:"client_transaction_id,omitempty"`
+	// Transaction code returned by the acquirer/processing entity after processing the transaction.
+	TransactionCode *string `json:"transaction_code,omitempty"`
+}
 
 // The status of the reader object gives information about the current state of the reader.
 //
@@ -444,6 +561,8 @@ type ReadersCreateParams struct {
 	PairingCode ReaderPairingCode `json:"pairing_code"`
 }
 
+type ReadersCreateGoCheckoutParams = ReaderPaymentRequestParams
+
 type ReadersCreateCheckoutParams = CreateCheckoutRequest
 
 // ReadersUpdateParams is a schema definition.
@@ -455,6 +574,21 @@ type ReadersUpdateParams struct {
 	// Custom human-readable, user-defined name for easier identification of the reader.
 	// Max length: 500
 	Name *ReaderName `json:"name,omitempty"`
+}
+
+// ReadersCreateGoCheckoutParams are query parameters for CreateGoReaderCheckout.
+type ReadersCreateGoCheckoutParams struct {
+	// Access token in the format 'Bearer {token}'.
+	Authorization string
+}
+
+// QueryValues converts [ReadersCreateGoCheckoutParams] into [url.Values].
+func (p *ReadersCreateGoCheckoutParams) QueryValues() url.Values {
+	q := make(url.Values)
+
+	q.Set("Authorization", p.Authorization)
+
+	return q
 }
 
 // ReadersGetParams are query parameters for GetReader.
@@ -486,8 +620,6 @@ type ReadersListResponse struct {
 }
 
 // ReadersClient provides access to the Readers API.
-//
-// A reader represents a device that accepts payments. You can use the SumUp Solo to accept in-person payments.
 type ReadersClient struct {
 	c *client.Client
 }
@@ -563,6 +695,69 @@ func (c *ReadersClient) Create(ctx context.Context, merchantCode string, body Re
 
 		return nil, &apiErr
 	case http.StatusConflict:
+		var apiErr Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
+}
+
+// Initiates a payment on the SumUp Go terminal identified by the reader ID.
+//
+// Use `client_transaction_id` as an idempotency key: retrying the request with the same value returns the result
+// of the original payment instead of creating a duplicate.
+func (c *ReadersClient) CreateGoCheckout(ctx context.Context, merchantCode string, readerID ReaderID, body ReadersCreateGoCheckoutParams, params ReadersCreateGoCheckoutParams) (*ReaderPaymentResponse, error) {
+	path := fmt.Sprintf("/v0/merchants/%v/readers/%v/go-checkout", merchantCode, readerID)
+
+	resp, err := c.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body), client.WithQueryValues(params.QueryValues()))
+	if err != nil {
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodPost, path, err)
+	}
+	defer func() {
+		_ = resp.Body.Close()
+	}()
+
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v ReaderPaymentResponse
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
+
+		return &v, nil
+	case http.StatusBadRequest:
+		var apiErr Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	case http.StatusUnauthorized:
+		var apiErr Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	case http.StatusNotFound:
+		var apiErr Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	case http.StatusUnprocessableEntity:
+		var apiErr Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	case http.StatusInternalServerError:
 		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
@@ -842,6 +1037,45 @@ func (c *ReadersClient) Update(ctx context.Context, merchantCode string, readerI
 
 		return &v, nil
 	case http.StatusForbidden:
+		var apiErr Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	case http.StatusNotFound:
+		var apiErr Problem
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return nil, fmt.Errorf("read error response: %s", err.Error())
+		}
+
+		return nil, &apiErr
+	default:
+		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
+}
+
+// Get a Checkout for a Reader.
+func (c *ReadersClient) GetCheckout(ctx context.Context, merchantCode string, readerID string, checkoutID string) (*GetReaderCheckoutResponse, error) {
+	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v/checkout/%v", merchantCode, readerID, checkoutID)
+
+	resp, err := c.c.Call(ctx, http.MethodGet, path)
+	if err != nil {
+		return nil, fmt.Errorf("call %s %s: %w", http.MethodGet, path, err)
+	}
+	defer func() {
+		_ = resp.Body.Close()
+	}()
+
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var v GetReaderCheckoutResponse
+		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+			return nil, fmt.Errorf("decode response: %s", err.Error())
+		}
+
+		return &v, nil
+	case http.StatusUnauthorized:
 		var apiErr Problem
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
