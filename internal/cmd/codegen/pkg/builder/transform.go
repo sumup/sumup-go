@@ -178,6 +178,7 @@ func (b *Builder) pathsToParamTypes(tagName string, paths *v3.Paths) []Writable 
 						Name:      name,
 						Type:      typ,
 						Parameter: param,
+						Schema:    param.Schema,
 						Optional:  optional,
 						Pointer:   pointer,
 						Comment:   parameterPropertyGodoc(param),
@@ -680,6 +681,7 @@ func (b *Builder) createFields(properties *orderedmap.Map[string, *base.SchemaPr
 		fields = append(fields, StructField{
 			Name:    property,
 			Type:    typeName,
+			Schema:  schema,
 			Comment: schemaPropertyGodoc(schema.Schema()),
 			Tags: map[string][]string{
 				"json": tags,

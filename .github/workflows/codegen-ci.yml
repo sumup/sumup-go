@@ -7,12 +7,14 @@ on:
       - main
     paths:
       - 'internal/cmd/codegen/**'
+      - 'openapi.json'
       - '.github/workflows/codegen-ci.yml'
   pull_request:
     branches:
       - main
     paths:
       - 'internal/cmd/codegen/**'
+      - 'openapi.json'
       - '.github/workflows/codegen-ci.yml'
 
 env:

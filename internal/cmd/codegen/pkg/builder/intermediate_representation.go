@@ -50,6 +50,7 @@ type StructField struct {
 	Comment string
 
 	Parameter *v3.Parameter
+	Schema    *base.SchemaProxy
 }
 
 type EnumOption[E cmp.Ordered] struct {
