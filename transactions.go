@@ -841,12 +841,14 @@ func (c *TransactionsClient) Refund(ctx context.Context, merchantCode string, tr
 	}()
 
 	switch resp.StatusCode {
-	case http.StatusCreated:
-		var v TransactionsRefundResponse
-		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+	case http.StatusCreated:		
+		var raw json.RawMessage
+		if err := json.NewDecoder(resp.Body).Decode(&raw); err != nil {
 			return nil, fmt.Errorf("decode response: %s", err.Error())
 		}
 
+		v := TransactionsRefundResponse(raw)
+		
 		return &v, nil
 	case http.StatusBadRequest:
 		var apiErr Problem
