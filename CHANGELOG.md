@@ -1,5 +1,35 @@
 # Changelog
 
+## [0.18.0](https://github.com/sumup/sumup-go/compare/v0.17.2...v0.18.0) (2026-08-12)
+
+
+### Features
+
+* **codegen:** sample generator ([#253](https://github.com/sumup/sumup-go/issues/253)) ([0a96c0f](https://github.com/sumup/sumup-go/commit/0a96c0f59a23cf4b5a33f10fe9a0d4069f792757))
+
+
+### Bug Fixes
+
+* **codegen:** handle arbitrary object type responses ([#310](https://github.com/sumup/sumup-go/issues/310)) ([02d4f43](https://github.com/sumup/sumup-go/commit/02d4f43890d2230e79d79862fc4f107c2bafbb05))
+
+
+### Chores
+
+* **deps:** bump actions/checkout from 6.0.2 to 7.0.1 ([#307](https://github.com/sumup/sumup-go/issues/307)) ([5e5f708](https://github.com/sumup/sumup-go/commit/5e5f7084713e78a574bdc5a341430116f4775231))
+* **deps:** bump actions/checkout from 7.0.0 to 7.0.1 ([#301](https://github.com/sumup/sumup-go/issues/301)) ([028146d](https://github.com/sumup/sumup-go/commit/028146d65516e2ec7348b32d523f8d1259082c60))
+* **deps:** bump actions/create-github-app-token from 3.1.1 to 3.2.0 ([#303](https://github.com/sumup/sumup-go/issues/303)) ([7c41935](https://github.com/sumup/sumup-go/commit/7c41935c8f2f6913d7cf9bf999f9c6c6c7736081))
+* **deps:** bump actions/setup-go from 6.4.0 to 7.0.0 ([#305](https://github.com/sumup/sumup-go/issues/305)) ([5bcf983](https://github.com/sumup/sumup-go/commit/5bcf983f6d5cd01fb721ee92cf89fe8f47a58c94))
+* **deps:** bump actions/setup-go from 6.5.0 to 7.0.0 ([#300](https://github.com/sumup/sumup-go/issues/300)) ([133e8c1](https://github.com/sumup/sumup-go/commit/133e8c1c71187e8ce6d06b64d43dd2deeb5e463d))
+* **deps:** bump github.com/lmittmann/tint from 1.1.3 to 1.2.0 in /internal/cmd/codegen ([#294](https://github.com/sumup/sumup-go/issues/294)) ([fbcfff2](https://github.com/sumup/sumup-go/commit/fbcfff248efd59713eb5ab50d5b1ffdab4c2fe02))
+* **deps:** bump github.com/pb33f/libopenapi from 0.38.5 to 0.38.6 in /internal/cmd/codegen ([#293](https://github.com/sumup/sumup-go/issues/293)) ([5d310ab](https://github.com/sumup/sumup-go/commit/5d310ab66418b8c3fbc0e22fd8aaca160ff7382b))
+* **deps:** bump github.com/pb33f/libopenapi from 0.38.6 to 0.38.7 in /internal/cmd/codegen ([#298](https://github.com/sumup/sumup-go/issues/298)) ([d982b07](https://github.com/sumup/sumup-go/commit/d982b074b256cd87f4642ed616c9a5aa47afbbe7))
+* **deps:** bump github/codeql-action/upload-sarif from 4.36.3 to 4.37.0 ([#295](https://github.com/sumup/sumup-go/issues/295)) ([3095355](https://github.com/sumup/sumup-go/commit/309535572ed8a8aed39751c3586f3177864c5d89))
+* **deps:** bump github/codeql-action/upload-sarif from 4.37.0 to 4.37.1 ([#299](https://github.com/sumup/sumup-go/issues/299)) ([1168cd5](https://github.com/sumup/sumup-go/commit/1168cd5db38c4dd81bf456a208dfa45c66b79825))
+* **deps:** bump github/codeql-action/upload-sarif from 4.37.1 to 4.37.3 ([#302](https://github.com/sumup/sumup-go/issues/302)) ([cdd3b66](https://github.com/sumup/sumup-go/commit/cdd3b66851d8f7415523e44edc5bcc6ad57a2344))
+* **deps:** bump github/codeql-action/upload-sarif from 4.37.3 to 4.37.5 ([#306](https://github.com/sumup/sumup-go/issues/306)) ([67ecd6f](https://github.com/sumup/sumup-go/commit/67ecd6f5002d43e3266b0da342aa89d9f6472d89))
+* **deps:** bump reviewdog/action-actionlint from 1.72.0 to 1.73.0 ([#304](https://github.com/sumup/sumup-go/issues/304)) ([25df4f1](https://github.com/sumup/sumup-go/commit/25df4f1583e69ae4a8ab955a3f586c295ddc7e5a))
+* synced file(s) with sumup/apis ([#297](https://github.com/sumup/sumup-go/issues/297)) ([0d6ac98](https://github.com/sumup/sumup-go/commit/0d6ac98e272a6e7c4b483312d96351145322daf2))
+
 ## [0.17.2](https://github.com/sumup/sumup-go/compare/v0.17.1...v0.17.2) (2026-07-17)
 
 
