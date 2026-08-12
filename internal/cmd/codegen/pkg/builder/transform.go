@@ -429,6 +429,7 @@ func (b *Builder) generateSchemaComponents(name string, schema *base.SchemaProxy
 				Comment: schemaGodoc(name, spec),
 				Type:    "json.RawMessage",
 				Name:    name,
+				Alias:   !isErr,
 				Schema:  spec,
 			}
 			types = append(types, typ)
