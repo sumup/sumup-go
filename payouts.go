@@ -30,7 +30,8 @@ type FinancialPayout struct {
 	// Fee amount associated with the payout record, in major units.
 	Fee float32 `json:"fee"`
 	// Unique identifier of the payout-related record.
-	ID int `json:"id"`
+	// Format: int64
+	ID int64 `json:"id"`
 	// Processor or payout reference associated with the record.
 	Reference string `json:"reference"`
 	// Merchant-facing outcome of the payout record.
