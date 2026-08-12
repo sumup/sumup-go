@@ -527,7 +527,7 @@ func (p *CheckoutsListAvailablePaymentMethodsParams) QueryValues() url.Values {
 type CheckoutsListResponse []CheckoutSuccess
 
 // CheckoutsCreateApplePaySessionResponse is a schema definition.
-type CheckoutsCreateApplePaySessionResponse json.RawMessage
+type CheckoutsCreateApplePaySessionResponse = json.RawMessage
 
 // CheckoutsCreateApplePaySession400Response is a schema definition.
 type CheckoutsCreateApplePaySession400Response json.RawMessage

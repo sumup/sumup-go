@@ -21,7 +21,11 @@ func (tt *TypeDeclaration) String() string {
 	if tt.Comment != "" {
 		fmt.Fprintf(buf, "// %s\n", tt.Comment)
 	}
-	fmt.Fprintf(buf, "type %s %s", tt.Name, tt.Type)
+	fmt.Fprintf(buf, "type %s ", tt.Name)
+	if tt.Alias {
+		fmt.Fprint(buf, "= ")
+	}
+	fmt.Fprint(buf, tt.Type)
 	if tt.Fields != nil {
 		slices.SortFunc(tt.Fields, func(a, b StructField) int {
 			return strings.Compare(a.Name, b.Name)

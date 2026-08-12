@@ -710,7 +710,7 @@ type TransactionsListResponse struct {
 }
 
 // TransactionsRefundResponse is a schema definition.
-type TransactionsRefundResponse json.RawMessage
+type TransactionsRefundResponse = json.RawMessage
 
 // TransactionsClient provides access to the Transactions API.
 //

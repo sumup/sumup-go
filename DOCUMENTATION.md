@@ -1326,7 +1326,7 @@ type CheckoutsCreateApplePaySessionParams struct {
 CheckoutsCreateApplePaySessionResponse is a schema definition.
 
 ```go
-type CheckoutsCreateApplePaySessionResponse json.RawMessage
+type CheckoutsCreateApplePaySessionResponse = json.RawMessage
 ```
 
 <a name="CheckoutsCreateParams"></a>
@@ -5801,7 +5801,7 @@ type TransactionsRefundParams struct {
 TransactionsRefundResponse is a schema definition.
 
 ```go
-type TransactionsRefundResponse json.RawMessage
+type TransactionsRefundResponse = json.RawMessage
 ```
 
 <a name="Unauthorized"></a>

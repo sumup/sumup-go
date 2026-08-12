@@ -14,6 +14,8 @@ type TypeDeclaration struct {
 	Name string
 	// Type describes the type of the type (e.g. struct, int64, string)
 	Type string
+	// Alias indicates whether the declaration aliases Type instead of defining a new type.
+	Alias bool
 	// Fields holds the information for the field
 	Fields []StructField
 	// Comment holds the description of the type
