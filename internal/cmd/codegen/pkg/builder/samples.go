@@ -280,10 +280,9 @@ func (r *sampleRenderer) render(
 	example requestExample,
 ) (string, error) {
 	r.imports["context"] = struct{}{}
-	r.imports["log"] = struct{}{}
 	r.imports[sdkModule] = struct{}{}
 
-	args := []string{"ctx"}
+	args := []string{"context.TODO()"}
 	pathArgumentCount := len(method.PathParams)
 	if method.HasBody {
 		pathArgumentCount--
@@ -328,18 +327,18 @@ func (r *sampleRenderer) render(
 	call := fmt.Sprintf("client.%s.%s(%s)", strcase.ToCamel(tagName), method.FunctionName, strings.Join(args, ", "))
 	var body strings.Builder
 	body.WriteString("func main() {\n")
-	body.WriteString("\tctx := context.Background()\n")
-	body.WriteString("\tclient := sumup.NewClient()\n\n")
+	body.WriteString("\tclient := sumup.NewClient()\n")
 	if method.ResponseType == nil {
 		fmt.Fprintf(&body, "\tif err := %s; err != nil {\n", call)
-		body.WriteString("\t\tlog.Fatal(err)\n")
+		body.WriteString("\t\tpanic(err.Error())\n")
 		body.WriteString("\t}\n")
 	} else {
+		r.imports["fmt"] = struct{}{}
 		fmt.Fprintf(&body, "\tresult, err := %s\n", call)
 		body.WriteString("\tif err != nil {\n")
-		body.WriteString("\t\tlog.Fatal(err)\n")
+		body.WriteString("\t\tpanic(err.Error())\n")
 		body.WriteString("\t}\n\n")
-		body.WriteString("\tlog.Printf(\"%+v\", result)\n")
+		body.WriteString("\tfmt.Printf(\"%+v\\n\", result)\n")
 	}
 	body.WriteString("}\n")
 

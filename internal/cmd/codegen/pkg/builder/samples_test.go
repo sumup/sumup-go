@@ -67,6 +67,15 @@ func TestBuilderSamples(t *testing.T) {
 	if strings.Contains(checkout.Source, "time.Parse") || strings.Contains(checkout.Source, "func mustParseTime") {
 		t.Fatalf("CreateCheckout sample parses timestamps at runtime:\n%s", checkout.Source)
 	}
+	if !strings.Contains(checkout.Source, "context.TODO()") {
+		t.Fatalf("CreateCheckout sample does not inline its context:\n%s", checkout.Source)
+	}
+	if strings.Contains(checkout.Source, "ctx :=") || strings.Contains(checkout.Source, `"log"`) {
+		t.Fatalf("CreateCheckout sample contains unnecessary scaffolding:\n%s", checkout.Source)
+	}
+	if !strings.Contains(checkout.Source, `fmt.Printf("%+v\n", result)`) {
+		t.Fatalf("CreateCheckout sample does not print its result:\n%s", checkout.Source)
+	}
 	encodedSample, err := json.Marshal(createCheckout)
 	if err != nil {
 		t.Fatalf("marshal CreateCheckout sample: %v", err)
