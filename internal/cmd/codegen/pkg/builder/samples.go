@@ -268,11 +268,9 @@ func (b *Builder) sampleTypeRegistry() sampleTypeRegistry {
 }
 
 type sampleRenderer struct {
-	builder       *Builder
-	registry      sampleTypeRegistry
-	imports       map[string]struct{}
-	usesPointer   bool
-	usesTimeParse bool
+	builder  *Builder
+	registry sampleTypeRegistry
+	imports  map[string]struct{}
 }
 
 func (r *sampleRenderer) render(
@@ -345,16 +343,6 @@ func (r *sampleRenderer) render(
 	}
 	body.WriteString("}\n")
 
-	if r.usesPointer {
-		body.WriteString("\nfunc ptr[T any](value T) *T {\n\treturn &value\n}\n")
-	}
-	if r.usesTimeParse {
-		body.WriteString("\nfunc mustParseTime(value string) time.Time {\n")
-		body.WriteString("\tparsed, err := time.Parse(time.RFC3339, value)\n")
-		body.WriteString("\tif err != nil {\n\t\tpanic(err)\n\t}\n")
-		body.WriteString("\treturn parsed\n}\n")
-	}
-
 	var source bytes.Buffer
 	source.WriteString("package main\n\n")
 	source.WriteString(r.importBlock())
@@ -425,8 +413,23 @@ func (r *sampleRenderer) value(
 	case typeName == "time.Time":
 		r.imports["time"] = struct{}{}
 		if text, ok := raw.(string); ok && text != "" {
-			r.usesTimeParse = true
-			return fmt.Sprintf("mustParseTime(%q)", text), nil
+			if timestamp, err := time.Parse(time.RFC3339, text); err == nil {
+				location := "time.UTC"
+				if _, offset := timestamp.Zone(); offset != 0 {
+					location = fmt.Sprintf("time.FixedZone(%q, %d)", timestamp.Format("-07:00"), offset)
+				}
+				return fmt.Sprintf(
+					"time.Date(%d, time.%s, %d, %d, %d, %d, %d, %s)",
+					timestamp.Year(),
+					timestamp.Month(),
+					timestamp.Day(),
+					timestamp.Hour(),
+					timestamp.Minute(),
+					timestamp.Second(),
+					timestamp.Nanosecond(),
+					location,
+				), nil
+			}
 		}
 		return "time.Time{}", nil
 	case typeName == "datetime.Date":
@@ -505,8 +508,7 @@ func (r *sampleRenderer) pointerValue(typeName, expression string) string {
 			expression = fmt.Sprintf("%s(%s)", typeName, expression)
 		}
 	}
-	r.usesPointer = true
-	return fmt.Sprintf("ptr(%s)", expression)
+	return fmt.Sprintf("new(%s)", expression)
 }
 
 func (r *sampleRenderer) sliceValue(

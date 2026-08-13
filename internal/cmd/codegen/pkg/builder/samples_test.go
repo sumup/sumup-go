@@ -54,6 +54,19 @@ func TestBuilderSamples(t *testing.T) {
 	if !strings.Contains(createCheckout.Source, `CheckoutReference: "b50pr914-6k0e-3091-a592-890010285b3d"`) {
 		t.Fatalf("CreateCheckout sample does not use the OpenAPI example:\n%s", createCheckout.Source)
 	}
+	if !strings.Contains(createCheckout.Source, `new("A sample checkout")`) {
+		t.Fatalf("CreateCheckout sample does not use new for a pointer value:\n%s", createCheckout.Source)
+	}
+	if !strings.Contains(createCheckout.Source, `HostedCheckout: new(sumup.HostedCheckout{`) {
+		t.Fatalf("CreateCheckout sample does not use new for a pointer to a struct:\n%s", createCheckout.Source)
+	}
+	checkout := sampleByID(t, catalog.Samples, "CreateCheckout.Checkout")
+	if !strings.Contains(checkout.Source, `time.Date(2020, time.February, 29, 10, 56, 56, 0, time.UTC)`) {
+		t.Fatalf("CreateCheckout sample does not use time.Date for timestamps:\n%s", checkout.Source)
+	}
+	if strings.Contains(checkout.Source, "time.Parse") || strings.Contains(checkout.Source, "func mustParseTime") {
+		t.Fatalf("CreateCheckout sample parses timestamps at runtime:\n%s", checkout.Source)
+	}
 	encodedSample, err := json.Marshal(createCheckout)
 	if err != nil {
 		t.Fatalf("marshal CreateCheckout sample: %v", err)
@@ -66,6 +79,9 @@ func TestBuilderSamples(t *testing.T) {
 	}
 
 	for _, sample := range catalog.Samples {
+		if strings.Contains(sample.Source, "ptr(") || strings.Contains(sample.Source, "func ptr[") {
+			t.Errorf("sample %q contains the obsolete ptr helper:\n%s", sample.ID, sample.Source)
+		}
 		if _, err := parser.ParseFile(token.NewFileSet(), sample.ID+".go", sample.Source, parser.AllErrors); err != nil {
 			t.Errorf("parse sample %q: %v", sample.ID, err)
 		}
@@ -146,7 +162,7 @@ func compileSamples(t *testing.T, repositoryRoot string, samples []Sample) {
 	dir := t.TempDir()
 	module := fmt.Sprintf(`module generated-samples
 
-go 1.24.0
+go 1.26.0
 
 require github.com/sumup/sumup-go v0.0.0
 
