@@ -3203,22 +3203,6 @@
                 }
               }
             }
-          },
-          "500": {
-            "description": "An unexpected error occurred while processing the request.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                },
-                "example": {
-                  "type": "https://developer.sumup.com/problem/internal-server-error",
-                  "title": "Internal Server Error",
-                  "status": 500,
-                  "detail": "An unexpected error occurred while processing the request."
-                }
-              }
-            }
           }
         },
         "summary": "Create a Go Reader Payment",
@@ -11109,22 +11093,6 @@
               "title": "Requested resource couldn't be found.",
               "status": 404,
               "detail": "The requested resource doesn't exist or does not belong to you."
-            }
-          }
-        }
-      },
-      "InternalError": {
-        "description": "An unexpected error occurred while processing the request.",
-        "content": {
-          "application/problem+json": {
-            "schema": {
-              "$ref": "#/components/schemas/Problem"
-            },
-            "example": {
-              "type": "https://developer.sumup.com/problem/internal-server-error",
-              "title": "Internal Server Error",
-              "status": 500,
-              "detail": "An unexpected error occurred while processing the request."
             }
           }
         }

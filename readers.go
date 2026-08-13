@@ -742,13 +742,6 @@ func (c *ReadersClient) CreateGoCheckout(ctx context.Context, merchantCode strin
 		}
 
 		return nil, &apiErr
-	case http.StatusInternalServerError:
-		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
 	default:
 		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 	}
