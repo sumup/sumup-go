@@ -291,7 +291,7 @@ func (r *sampleRenderer) render(
 		argument := method.PathParams[i]
 		parameter := r.parameter(operation.Parameters, argument.Name, "path")
 		value, provided := parameterExample(parameter)
-		expression, err := r.value(argument.Type, parameterSchema(parameter), value, provided)
+		expression, err := r.value(argument.Type, parameterSchema(parameter), value, provided, true)
 		if err != nil {
 			return "", fmt.Errorf("render path parameter %q: %w", argument.Name, err)
 		}
@@ -301,7 +301,7 @@ func (r *sampleRenderer) render(
 	if method.HasBody {
 		argument := method.PathParams[len(method.PathParams)-1]
 		mediaType, _ := getJSONMediaType(operation.RequestBody.Content)
-		expression, err := r.value(argument.Type, mediaType.Schema, example.value, example.provided)
+		expression, err := r.value(argument.Type, mediaType.Schema, example.value, example.provided, true)
 		if err != nil {
 			return "", fmt.Errorf("render request body: %w", err)
 		}
@@ -317,7 +317,7 @@ func (r *sampleRenderer) render(
 				}
 			}
 		}
-		expression, err := r.value(method.QueryParams.Type, nil, values, false)
+		expression, err := r.value(method.QueryParams.Type, nil, values, false, true)
 		if err != nil {
 			return "", fmt.Errorf("render query parameters: %w", err)
 		}
@@ -369,14 +369,15 @@ func (r *sampleRenderer) value(
 	schema *base.SchemaProxy,
 	raw any,
 	provided bool,
+	allowSchemaExamples bool,
 ) (string, error) {
 	declaration := r.registry.declaration(typeName)
 	if declaration != nil {
 		switch {
 		case declaration.Type == "struct":
-			return r.structValue(typeName, declaration, raw, provided)
+			return r.structValue(typeName, declaration, raw, provided, allowSchemaExamples)
 		case strings.HasPrefix(declaration.Type, "[]"):
-			return r.sliceValue(typeName, strings.TrimPrefix(declaration.Type, "[]"), schema, raw, provided)
+			return r.sliceValue(typeName, strings.TrimPrefix(declaration.Type, "[]"), schema, raw, provided, allowSchemaExamples)
 		case strings.HasPrefix(declaration.Type, "map["):
 			return r.mapValue(typeName, raw)
 		case declaration.Type == "json.RawMessage":
@@ -385,17 +386,17 @@ func (r *sampleRenderer) value(
 			aliased := strings.TrimSpace(strings.TrimPrefix(declaration.Type, "= "))
 			target := r.registry.declaration(aliased)
 			if target != nil && target.Type == "struct" {
-				return r.structValue(typeName, target, raw, provided)
+				return r.structValue(typeName, target, raw, provided, allowSchemaExamples)
 			}
-			return r.primitiveValue(typeName, schema, raw, provided), nil
+			return r.primitiveValue(typeName, schema, raw, provided, allowSchemaExamples), nil
 		default:
-			return r.primitiveValue(typeName, schema, raw, provided), nil
+			return r.primitiveValue(typeName, schema, raw, provided, allowSchemaExamples), nil
 		}
 	}
 
 	switch {
 	case strings.HasPrefix(typeName, "[]"):
-		return r.sliceValue(typeName, strings.TrimPrefix(typeName, "[]"), schema, raw, provided)
+		return r.sliceValue(typeName, strings.TrimPrefix(typeName, "[]"), schema, raw, provided, allowSchemaExamples)
 	case strings.HasPrefix(typeName, "map["):
 		return r.mapValue(typeName, raw)
 	case strings.HasPrefix(typeName, "nullable.Field["):
@@ -404,7 +405,7 @@ func (r *sampleRenderer) value(
 		if provided && raw == nil {
 			return fmt.Sprintf("nullable.Null[%s]()", r.qualifyType(inner)), nil
 		}
-		expression, err := r.value(inner, schema, raw, provided)
+		expression, err := r.value(inner, schema, raw, provided, allowSchemaExamples)
 		if err != nil {
 			return "", err
 		}
@@ -459,7 +460,7 @@ func (r *sampleRenderer) value(
 	case typeName == "any":
 		return r.anyValue(raw), nil
 	default:
-		return r.primitiveValue(typeName, schema, raw, provided), nil
+		return r.primitiveValue(typeName, schema, raw, provided, allowSchemaExamples), nil
 	}
 }
 
@@ -468,6 +469,7 @@ func (r *sampleRenderer) structValue(
 	declaration *TypeDeclaration,
 	raw any,
 	provided bool,
+	allowSchemaExamples bool,
 ) (string, error) {
 	values, _ := raw.(map[string]any)
 	var body strings.Builder
@@ -478,14 +480,20 @@ func (r *sampleRenderer) structValue(
 		}
 		key := field.Name
 		value, fieldProvided := values[key]
-		if !fieldProvided && (!provided || !field.Optional) {
+		if !fieldProvided && !provided && allowSchemaExamples {
 			value, fieldProvided = schemaExample(field.Schema)
 		}
 		if field.Optional && !fieldProvided {
 			continue
 		}
 
-		expression, err := r.value(field.Type, field.Schema, value, fieldProvided)
+		expression, err := r.value(
+			field.Type,
+			field.Schema,
+			value,
+			fieldProvided,
+			allowSchemaExamples && !provided,
+		)
 		if err != nil {
 			return "", fmt.Errorf("render field %q: %w", field.Name, err)
 		}
@@ -516,6 +524,7 @@ func (r *sampleRenderer) sliceValue(
 	schema *base.SchemaProxy,
 	raw any,
 	provided bool,
+	allowSchemaExamples bool,
 ) (string, error) {
 	items, _ := raw.([]any)
 	var itemSchema *base.SchemaProxy
@@ -525,7 +534,7 @@ func (r *sampleRenderer) sliceValue(
 	var body strings.Builder
 	fmt.Fprintf(&body, "%s{", r.qualifyType(typeName))
 	for _, item := range items {
-		expression, err := r.value(elementType, itemSchema, item, true)
+		expression, err := r.value(elementType, itemSchema, item, true, allowSchemaExamples && !provided)
 		if err != nil {
 			return "", err
 		}
@@ -565,8 +574,9 @@ func (r *sampleRenderer) primitiveValue(
 	schema *base.SchemaProxy,
 	raw any,
 	provided bool,
+	allowSchemaExamples bool,
 ) string {
-	if !provided {
+	if !provided && allowSchemaExamples {
 		raw, provided = schemaExample(schema)
 	}
 	if !provided {

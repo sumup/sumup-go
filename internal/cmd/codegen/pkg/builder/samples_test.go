@@ -9,10 +9,13 @@ import (
 	"os/exec"
 	"path/filepath"
 	"slices"
+	"strconv"
 	"strings"
 	"testing"
 
 	"github.com/pb33f/libopenapi"
+	"github.com/pb33f/libopenapi/datamodel/high/base"
+	"go.yaml.in/yaml/v4"
 )
 
 func TestBuilderSamples(t *testing.T) {
@@ -114,6 +117,60 @@ func TestBuilderSamplesDeterministic(t *testing.T) {
 	}
 	if string(firstJSON) != string(secondJSON) {
 		t.Fatal("sample generation is not deterministic")
+	}
+}
+
+func TestSampleRendererPrefersRequestExampleOverPropertyExamples(t *testing.T) {
+	t.Parallel()
+
+	propertyExample := func(value string) *base.SchemaProxy {
+		return base.CreateSchemaProxy(&base.Schema{
+			Type:    []string{"string"},
+			Example: &yaml.Node{Kind: yaml.ScalarNode, Tag: "!!str", Value: value},
+		})
+	}
+	declaration := &TypeDeclaration{
+		Name: "Request",
+		Type: "struct",
+		Fields: []StructField{
+			{Name: "selected", Type: "string", Schema: propertyExample("property-selected")},
+			{Name: "required_fallback", Type: "string", Schema: propertyExample("property-required")},
+			{Name: "optional", Type: "string", Optional: true, Schema: propertyExample("property-optional")},
+		},
+	}
+	renderer := sampleRenderer{
+		registry: sampleTypeRegistry{"Request": declaration},
+		imports:  make(map[string]struct{}),
+	}
+
+	expression, err := renderer.value(
+		"Request",
+		nil,
+		map[string]any{"selected": "request-selected"},
+		true,
+		true,
+	)
+	if err != nil {
+		t.Fatalf("render request example: %v", err)
+	}
+	if !strings.Contains(expression, `Selected: "request-selected"`) {
+		t.Fatalf("rendered value does not use request example:\n%s", expression)
+	}
+	if !strings.Contains(expression, `RequiredFallback: "string"`) {
+		t.Fatalf("rendered value does not use a neutral fallback for an omitted required field:\n%s", expression)
+	}
+	if strings.Contains(expression, "property-") || strings.Contains(expression, "Optional:") {
+		t.Fatalf("rendered value drills into property examples after selecting a request example:\n%s", expression)
+	}
+
+	expression, err = renderer.value("Request", nil, nil, false, true)
+	if err != nil {
+		t.Fatalf("render property examples: %v", err)
+	}
+	for _, value := range []string{"property-selected", "property-required", "property-optional"} {
+		if !strings.Contains(expression, strconv.Quote(value)) {
+			t.Fatalf("rendered value does not use property example %q when no request example exists:\n%s", value, expression)
+		}
 	}
 }
 

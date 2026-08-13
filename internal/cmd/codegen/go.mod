@@ -1,6 +1,6 @@
 module github.com/sumup/sumup-go/internal/cmd/codegen
 
-go 1.25.7
+go 1.26.0
 
 require (
 	github.com/lmittmann/tint v1.2.0
