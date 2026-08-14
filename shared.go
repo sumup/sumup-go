@@ -59,8 +59,7 @@ const (
 	CardTypeVr           CardType = "VR"
 )
 
-// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
-// currency values are enumerated above.
+// Three-letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code of the amount.
 type Currency string
 
 const (
@@ -115,7 +114,7 @@ const (
 	EntryModeTwint                EntryMode = "TWINT"
 )
 
-// Error message structure.
+// Details of an API error.
 type Error struct {
 	// Platform code for the error.
 	ErrorCode *string `json:"error_code,omitempty"`
@@ -147,7 +146,7 @@ func (e *ErrorExtended) Error() string {
 
 var _ error = (*ErrorExtended)(nil)
 
-// Error message for forbidden requests.
+// Details of an error returned for a forbidden request.
 type ErrorForbidden struct {
 	// Platform code for the error.
 	ErrorCode *string `json:"error_code,omitempty"`
@@ -173,7 +172,7 @@ type Invite struct {
 
 // Details of the mandate linked to the saved payment instrument.
 type MandateResponse struct {
-	// Merchant account for which the mandate is valid.
+	// Short unique identifier for the merchant for which the mandate is valid.
 	MerchantCode *string `json:"merchant_code,omitempty"`
 	// Current lifecycle status of the mandate.
 	Status *MandateResponseStatus `json:"status,omitempty"`
@@ -237,7 +236,7 @@ type PersonalDetails struct {
 	LastName *string `json:"last_name,omitempty"`
 	// Phone number of the customer.
 	Phone *string `json:"phone,omitempty"`
-	// An identification number user for tax purposes (e.g. CPF)
+	// Identification number used for tax purposes, such as a CPF in Brazil.
 	// Max length: 255
 	TaxID *string `json:"tax_id,omitempty"`
 }
@@ -266,16 +265,15 @@ func (e *Problem) Error() string {
 
 var _ error = (*Problem)(nil)
 
-// Details of the transaction.
+// Core details shared by transaction resources.
 type TransactionBase struct {
 	// Total amount of the transaction.
 	Amount *float32 `json:"amount,omitempty"`
-	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
-	// currency values are enumerated above.
+	// Three-letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code of the amount.
 	Currency *Currency `json:"currency,omitempty"`
-	// Unique ID of the transaction.
+	// Unique identifier of the transaction.
 	ID *string `json:"id,omitempty"`
-	// Current number of the installment for deferred payments.
+	// Number of installments for a deferred payment.
 	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Payment type used for the transaction.
@@ -288,7 +286,7 @@ type TransactionBase struct {
 	// - `FAILED`: The transaction attempt did not complete successfully.
 	// - `REFUNDED`: The transaction was refunded in full or in part.
 	Status *TransactionStatus `json:"status,omitempty"`
-	// Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
+	// The timestamp of when the transaction was created.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
 	// Transaction code returned by the acquirer/processing entity after processing the transaction.
 	TransactionCode *string `json:"transaction_code,omitempty"`
@@ -308,7 +306,7 @@ type TransactionCheckoutInfo struct {
 	VATAmount *float32 `json:"vat_amount,omitempty"`
 }
 
-// Unique ID of the transaction event.
+// Unique identifier of the transaction event.
 // Format: int64
 type TransactionEventID int64
 
@@ -351,7 +349,7 @@ const (
 	TransactionEventTypeRefund          TransactionEventType = "REFUND"
 )
 
-// Unique ID of the transaction.
+// Unique identifier of the transaction.
 type TransactionID string
 
 // Current status of the transaction.

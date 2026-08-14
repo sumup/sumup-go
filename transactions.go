@@ -54,18 +54,18 @@ type ElvCardAccount struct {
 
 // High-level transaction event details.
 type Event struct {
-	// Amount of the event.
+	// Amount associated with the transaction event, in major units.
 	Amount *float32 `json:"amount,omitempty"`
-	// Amount deducted for the event.
+	// Amount deducted from the merchant for the event, in major units.
 	DeductedAmount *float32 `json:"deducted_amount,omitempty"`
-	// Amount of the fee deducted for the event.
+	// Fee deducted from the merchant for the event, in major units.
 	DeductedFeeAmount *float32 `json:"deducted_fee_amount,omitempty"`
-	// Amount of the fee related to the event.
+	// Fee associated with the transaction event, in major units.
 	FeeAmount *float32 `json:"fee_amount,omitempty"`
-	// Unique ID of the transaction event.
+	// Unique identifier of the transaction event.
 	// Format: int64
 	ID *TransactionEventID `json:"id,omitempty"`
-	// Consecutive number of the installment.
+	// Consecutive number of the installment associated with the event.
 	InstallmentNumber *int `json:"installment_number,omitempty"`
 	// Status of the transaction event.
 	//
@@ -85,9 +85,9 @@ type Event struct {
 	// - `FAILED`: The event could not be completed. Typical examples are a payout that could not be executed or
 	// an event that was rejected during processing.
 	Status *TransactionEventStatus `json:"status,omitempty"`
-	// Date and time of the transaction event.
+	// The timestamp of when the transaction event occurred.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
-	// Unique ID of the transaction.
+	// Unique identifier of the transaction.
 	TransactionID *TransactionID `json:"transaction_id,omitempty"`
 	// Type of the transaction event.
 	Type *TransactionEventType `json:"type,omitempty"`
@@ -106,13 +106,13 @@ type Link struct {
 	// URL for accessing the related resource.
 	// Format: uri
 	Href *string `json:"href,omitempty"`
-	// Maximum allowed amount for the refund.
+	// Maximum amount allowed for a refund, in major units.
 	MaxAmount *float32 `json:"max_amount,omitempty"`
-	// Minimum allowed amount for the refund.
+	// Minimum amount allowed for a refund, in major units.
 	MinAmount *float32 `json:"min_amount,omitempty"`
-	// Specifies the relation to the current resource.
+	// Relation of the linked resource to the current resource.
 	Rel *string `json:"rel,omitempty"`
-	// Specifies the media type of the related resource.
+	// Media type of the linked resource.
 	Type *string `json:"type,omitempty"`
 }
 
@@ -121,16 +121,16 @@ type Link struct {
 // Max: 180
 type Lon float32
 
-// Purchase product.
+// Product details associated with a transaction.
 type Product struct {
 	// Product name.
 	Name *string `json:"name,omitempty"`
 	// Product price.
 	// Format: decimal
 	Price *float64 `json:"price,omitempty"`
-	// Product description.
+	// Human-readable label for the product price.
 	PriceLabel *string `json:"price_label,omitempty"`
-	// Product price incl. VAT.
+	// Product price including VAT.
 	// Format: decimal
 	PriceWithVAT *float64 `json:"price_with_vat,omitempty"`
 	// Product quantity.
@@ -138,16 +138,16 @@ type Product struct {
 	// VAT amount for a single product.
 	// Format: decimal
 	SingleVATAmount *float64 `json:"single_vat_amount,omitempty"`
-	// Quantity x product price.
+	// Total price calculated as the product price multiplied by the quantity.
 	// Format: decimal
 	TotalPrice *float64 `json:"total_price,omitempty"`
-	// Total price incl. VAT.
+	// Total product price including VAT.
 	// Format: decimal
 	TotalWithVAT *float64 `json:"total_with_vat,omitempty"`
-	// VAT amount.
+	// Total VAT amount for the product quantity.
 	// Format: decimal
 	VATAmount *float64 `json:"vat_amount,omitempty"`
-	// VAT percentage.
+	// VAT rate applied to the product price.
 	// Format: decimal
 	VATRate *float64 `json:"vat_rate,omitempty"`
 }
@@ -165,7 +165,7 @@ type TransactionEvent struct {
 	DueDate *datetime.Date `json:"due_date,omitempty"`
 	// Type of the transaction event.
 	EventType *TransactionEventType `json:"event_type,omitempty"`
-	// Unique ID of the transaction event.
+	// Unique identifier of the transaction event.
 	// Format: int64
 	ID *TransactionEventID `json:"id,omitempty"`
 	// Consecutive number of the installment that is paid. Applicable only payout events, i.e. `event_type = PAYOUT`.
@@ -200,10 +200,9 @@ type TransactionFull struct {
 	AuthCode *string `json:"auth_code,omitempty"`
 	// Details of the payment card.
 	Card *CardResponse `json:"card,omitempty"`
-	// Client transaction id.
+	// Client-supplied identifier of the transaction.
 	ClientTransactionID *string `json:"client_transaction_id,omitempty"`
-	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
-	// currency values are enumerated above.
+	// Three-letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code of the amount.
 	Currency *Currency `json:"currency,omitempty"`
 	// Details of the device used to create the transaction.
 	DeviceInfo *Device `json:"device_info,omitempty"`
@@ -216,13 +215,13 @@ type TransactionFull struct {
 	// Transaction SumUp total fee amount.
 	// Format: decimal
 	FeeAmount *float64 `json:"fee_amount,omitempty"`
-	// External/foreign transaction id (passed by clients).
+	// External transaction identifier supplied by the client.
 	ForeignTransactionID *string `json:"foreign_transaction_id,omitempty"`
 	// Indication of the precision of the geographical position received from the payment terminal.
 	HorizontalAccuracy *HorizontalAccuracy `json:"horizontal_accuracy,omitempty"`
-	// Unique ID of the transaction.
+	// Unique identifier of the transaction.
 	ID *string `json:"id,omitempty"`
-	// Current number of the installment for deferred payments.
+	// Number of installments for a deferred payment.
 	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Latitude value from the coordinates of the payment location (as received from the payment terminal reader).
@@ -231,7 +230,7 @@ type TransactionFull struct {
 	Lat *Lat `json:"lat,omitempty"`
 	// List of hyperlinks for accessing related resources.
 	Links []Link `json:"links,omitempty"`
-	// Local date and time of the creation of the transaction.
+	// Local timestamp of when the transaction was created.
 	LocalTime *time.Time `json:"local_time,omitempty"`
 	// Details of the payment location as received from the payment terminal.
 	Location *TransactionFullLocation `json:"location,omitempty"`
@@ -241,7 +240,7 @@ type TransactionFull struct {
 	Lon *Lon `json:"lon,omitempty"`
 	// Unique code of the registered merchant to whom the payment is made.
 	MerchantCode *string `json:"merchant_code,omitempty"`
-	// SumUp merchant internal Id.
+	// Internal SumUp identifier of the merchant.
 	// Format: int64
 	MerchantID *int64 `json:"merchant_id,omitempty"`
 	// Payment type used for the transaction.
@@ -257,7 +256,7 @@ type TransactionFull struct {
 	PayoutsReceived *int `json:"payouts_received,omitempty"`
 	// Total number of payouts to the registered user specified in the `user` property.
 	PayoutsTotal *int `json:"payouts_total,omitempty"`
-	// Debit/Credit.
+	// Whether the transaction was processed as credit or debit.
 	ProcessAs *TransactionFullProcessA `json:"process_as,omitempty"`
 	// Short description of the payment. The value is taken from the `description` property of the related checkout resource.
 	ProductSummary *string `json:"product_summary,omitempty"`
@@ -290,7 +289,7 @@ type TransactionFull struct {
 	Status *TransactionStatus `json:"status,omitempty"`
 	// Indicates whether tax deduction is enabled for the transaction.
 	TaxEnabled *bool `json:"tax_enabled,omitempty"`
-	// Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
+	// The timestamp of when the transaction was created.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
 	// Amount of the tip (out of the total transaction amount).
 	TipAmount *float32 `json:"tip_amount,omitempty"`
@@ -340,7 +339,7 @@ const (
 	TransactionFullPayoutTypePrepaidCard TransactionFullPayoutType = "PREPAID_CARD"
 )
 
-// Debit/Credit.
+// Whether the transaction was processed as credit or debit.
 type TransactionFullProcessA string
 
 const (
@@ -431,14 +430,13 @@ type TransactionHistory struct {
 	Amount *float32 `json:"amount,omitempty"`
 	// Issuing card network of the payment card used for the transaction.
 	CardType *CardType `json:"card_type,omitempty"`
-	// Client-specific ID of the transaction.
+	// Client-supplied identifier of the transaction.
 	ClientTransactionID *string `json:"client_transaction_id,omitempty"`
-	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
-	// currency values are enumerated above.
+	// Three-letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code of the amount.
 	Currency *Currency `json:"currency,omitempty"`
-	// Unique ID of the transaction.
+	// Unique identifier of the transaction.
 	ID *string `json:"id,omitempty"`
-	// Current number of the installment for deferred payments.
+	// Number of installments for a deferred payment.
 	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Payment type used for the transaction.
@@ -467,11 +465,11 @@ type TransactionHistory struct {
 	// - `FAILED`: The transaction attempt did not complete successfully.
 	// - `REFUNDED`: The transaction was refunded in full or in part.
 	Status *TransactionStatus `json:"status,omitempty"`
-	// Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
+	// The timestamp of when the transaction was created.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
 	// Transaction code returned by the acquirer/processing entity after processing the transaction.
 	TransactionCode *string `json:"transaction_code,omitempty"`
-	// Unique ID of the transaction.
+	// Unique identifier of the transaction.
 	TransactionID *TransactionID `json:"transaction_id,omitempty"`
 	// Type of the transaction for the registered user specified in the `user` property.
 	Type *TransactionHistoryType `json:"type,omitempty"`
@@ -670,9 +668,9 @@ func (p *TransactionsListParams) QueryValues() url.Values {
 
 // TransactionsGetParams are query parameters for GetTransactionV2.1.
 type TransactionsGetParams struct {
-	// Client transaction id.
+	// Client-supplied identifier of the transaction.
 	ClientTransactionID *string
-	// External/foreign transaction id (passed by clients).
+	// External transaction identifier supplied by the client.
 	ForeignTransactionID *string
 	// Retrieves the transaction resource with the specified transaction ID (the `id` parameter in the transaction resource).
 	ID *string
@@ -705,7 +703,9 @@ func (p *TransactionsGetParams) QueryValues() url.Values {
 
 // TransactionsListResponse is a schema definition.
 type TransactionsListResponse struct {
-	Items []TransactionHistory      `json:"items,omitempty"`
+	// Transactions in the current result page.
+	Items []TransactionHistory `json:"items,omitempty"`
+	// Pagination links for navigating the transaction history.
 	Links []TransactionsHistoryLink `json:"links,omitempty"`
 }
 

@@ -20,34 +20,38 @@ type Receipt struct {
 	AcquirerData *ReceiptAcquirerData `json:"acquirer_data,omitempty"`
 	// EMV-specific metadata returned for card-present payments.
 	EmvData *json.RawMessage `json:"emv_data,omitempty"`
-	// Receipt merchant data
+	// Merchant details displayed on a transaction receipt.
 	MerchantData *ReceiptMerchantData `json:"merchant_data,omitempty"`
-	// Transaction information.
+	// Transaction details displayed on a receipt.
 	TransactionData *ReceiptTransaction `json:"transaction_data,omitempty"`
 }
 
 // Acquirer-specific metadata related to the card authorization.
 type ReceiptAcquirerData struct {
+	// Authorization code returned by the acquirer.
 	AuthorizationCode *string `json:"authorization_code,omitempty"`
-	LocalTime         *string `json:"local_time,omitempty"`
-	ReturnCode        *string `json:"return_code,omitempty"`
-	Tid               *string `json:"tid,omitempty"`
+	// Local timestamp of the card authorization.
+	LocalTime *string `json:"local_time,omitempty"`
+	// Return code reported by the acquirer.
+	ReturnCode *string `json:"return_code,omitempty"`
+	// Identifier of the terminal used for the authorization.
+	Tid *string `json:"tid,omitempty"`
 }
 
 // Payment card details displayed on the receipt.
 type ReceiptCard struct {
-	// Card last 4 digits.
+	// Last four digits of the payment card number.
 	Last4Digits *string `json:"last_4_digits,omitempty"`
-	// Card Scheme.
+	// Issuing card network of the payment card.
 	Type *string `json:"type,omitempty"`
 }
 
 // Transaction event details as rendered on the receipt.
 type ReceiptEvent struct {
-	// Amount of the event.
+	// Amount associated with the transaction event, in major units.
 	// Format: double
 	Amount *json.Number `json:"amount,omitempty"`
-	// Unique ID of the transaction event.
+	// Unique identifier of the transaction event.
 	// Format: int64
 	ID *TransactionEventID `json:"id,omitempty"`
 	// Receipt number associated with the event.
@@ -70,15 +74,15 @@ type ReceiptEvent struct {
 	// - `FAILED`: The event could not be completed. Typical examples are a payout that could not be executed or
 	// an event that was rejected during processing.
 	Status *TransactionEventStatus `json:"status,omitempty"`
-	// Date and time of the transaction event.
+	// The timestamp of when the transaction event occurred.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
-	// Unique ID of the transaction.
+	// Unique identifier of the transaction.
 	TransactionID *TransactionID `json:"transaction_id,omitempty"`
 	// Type of the transaction event.
 	Type *TransactionEventType `json:"type,omitempty"`
 }
 
-// Receipt merchant data
+// Merchant details displayed on a transaction receipt.
 type ReceiptMerchantData struct {
 	// Locale used for rendering localized receipt fields.
 	Locale *string `json:"locale,omitempty"`
@@ -88,82 +92,99 @@ type ReceiptMerchantData struct {
 
 // Merchant profile details displayed on the receipt.
 type ReceiptMerchantDataMerchantProfile struct {
-	Address                   *ReceiptMerchantDataMerchantProfileAddress `json:"address,omitempty"`
-	BusinessName              *string                                    `json:"business_name,omitempty"`
-	CompanyRegistrationNumber *string                                    `json:"company_registration_number,omitempty"`
-	Email                     *string                                    `json:"email,omitempty"`
-	Language                  *string                                    `json:"language,omitempty"`
-	MerchantCode              *string                                    `json:"merchant_code,omitempty"`
-	VATID                     *string                                    `json:"vat_id,omitempty"`
-	Website                   *string                                    `json:"website,omitempty"`
+	// Business address of the merchant.
+	Address *ReceiptMerchantDataMerchantProfileAddress `json:"address,omitempty"`
+	// Business name of the merchant.
+	BusinessName *string `json:"business_name,omitempty"`
+	// Company registration number of the merchant.
+	CompanyRegistrationNumber *string `json:"company_registration_number,omitempty"`
+	// Email address of the merchant.
+	Email *string `json:"email,omitempty"`
+	// Language configured for the merchant profile.
+	Language *string `json:"language,omitempty"`
+	// Short unique identifier for the merchant.
+	MerchantCode *string `json:"merchant_code,omitempty"`
+	// VAT identification number of the merchant.
+	VATID *string `json:"vat_id,omitempty"`
+	// Website of the merchant.
+	Website *string `json:"website,omitempty"`
 }
 
-// ReceiptMerchantDataMerchantProfileAddress is a schema definition.
+// Business address of the merchant.
 type ReceiptMerchantDataMerchantProfileAddress struct {
-	AddressLine1      *string `json:"address_line_1,omitempty"`
-	AddressLine2      *string `json:"address_line_2,omitempty"`
-	City              *string `json:"city,omitempty"`
-	Country           *string `json:"country,omitempty"`
-	CountryEnName     *string `json:"country_en_name,omitempty"`
+	// First line of the merchant address.
+	AddressLine1 *string `json:"address_line_1,omitempty"`
+	// Second line of the merchant address.
+	AddressLine2 *string `json:"address_line_2,omitempty"`
+	// City of the merchant address.
+	City *string `json:"city,omitempty"`
+	// Two-letter ISO 3166-1 alpha-2 country code of the merchant address.
+	Country *string `json:"country,omitempty"`
+	// English name of the country in the merchant address.
+	CountryEnName *string `json:"country_en_name,omitempty"`
+	// Localized name of the country in the merchant address.
 	CountryNativeName *string `json:"country_native_name,omitempty"`
-	Landline          *string `json:"landline,omitempty"`
-	PostCode          *string `json:"post_code,omitempty"`
-	RegionName        *string `json:"region_name,omitempty"`
+	// Landline phone number of the merchant.
+	Landline *string `json:"landline,omitempty"`
+	// Postal code of the merchant address.
+	PostCode *string `json:"post_code,omitempty"`
+	// Region or state of the merchant address.
+	RegionName *string `json:"region_name,omitempty"`
 }
 
 // Card reader details displayed on the receipt.
 type ReceiptReader struct {
-	// Reader serial number.
+	// Unique identifier of the physical card reader.
 	Code *string `json:"code,omitempty"`
-	// Reader type.
+	// Model of the physical card reader.
 	Type *string `json:"type,omitempty"`
 }
 
-// Transaction information.
+// Transaction details displayed on a receipt.
 type ReceiptTransaction struct {
-	// Transaction amount.
+	// Total transaction amount, in major units.
 	Amount *string `json:"amount,omitempty"`
 	// Payment card details displayed on the receipt.
 	Card *ReceiptCard `json:"card,omitempty"`
 	// Card reader details displayed on the receipt.
 	CardReader *ReceiptReader `json:"card_reader,omitempty"`
-	// Transaction currency.
+	// Three-letter ISO 4217 currency code of the transaction.
 	Currency *string `json:"currency,omitempty"`
-	// Transaction entry mode.
+	// Entry mode of the payment details.
 	EntryMode *string `json:"entry_mode,omitempty"`
-	// Events
+	// Transaction events displayed on the receipt.
 	Events []ReceiptEvent `json:"events,omitempty"`
 	// Number of installments.
 	InstallmentsCount *int `json:"installments_count,omitempty"`
-	// Merchant code.
+	// Short unique identifier for the merchant.
 	MerchantCode *string `json:"merchant_code,omitempty"`
-	// Transaction type.
+	// Payment type used for the transaction.
 	PaymentType *string `json:"payment_type,omitempty"`
-	// Debit/Credit.
+	// Whether the transaction was processed as credit or debit.
 	ProcessAs *ReceiptTransactionProcessA `json:"process_as,omitempty"`
-	// Products
+	// Products associated with the transaction.
 	Products []ReceiptTransactionProduct `json:"products,omitempty"`
-	// Receipt number
+	// Receipt number associated with the transaction.
 	ReceiptNo *string `json:"receipt_no,omitempty"`
-	// Transaction processing status.
+	// Current processing status of the transaction.
 	Status *string `json:"status,omitempty"`
-	// Time created at.
+	// The timestamp of when the transaction was created.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
-	// Tip amount (included in transaction amount).
+	// Tip included in the transaction amount, in major units.
 	TipAmount *string `json:"tip_amount,omitempty"`
-	// Transaction code.
+	// Transaction code returned after processing the transaction.
 	TransactionCode *string `json:"transaction_code,omitempty"`
-	// Unique ID of the transaction.
+	// Unique identifier of the transaction.
 	TransactionID *TransactionID `json:"transaction_id,omitempty"`
-	// Transaction VAT amount.
+	// VAT included in the transaction amount, in major units.
 	VATAmount *string `json:"vat_amount,omitempty"`
-	// Vat rates.
+	// VAT breakdown for the transaction.
 	VATRates []ReceiptTransactionVATRate `json:"vat_rates,omitempty"`
 	// Cardholder verification method.
 	VerificationMethod *string `json:"verification_method,omitempty"`
 }
 
-// Debit/Credit.
+// Whether the transaction was processed as credit or debit.
 type ReceiptTransactionProcessA string
 
 const (
@@ -173,53 +194,53 @@ const (
 
 // ReceiptTransactionProduct is a schema definition.
 type ReceiptTransactionProduct struct {
-	// Product description
+	// Product description.
 	Description *string `json:"description,omitempty"`
-	// Product name
+	// Product name.
 	Name *string `json:"name,omitempty"`
-	// Product price
+	// Product price.
 	// Format: double
 	Price *json.Number `json:"price,omitempty"`
-	// Product price including VAT
+	// Product price including VAT.
 	// Format: double
 	PriceWithVAT *json.Number `json:"price_with_vat,omitempty"`
-	// Product quantity
+	// Product quantity.
 	// Format: int64
 	Quantity *int64 `json:"quantity,omitempty"`
-	// VAT amount for a single product
+	// VAT amount for a single product.
 	// Format: double
 	SingleVATAmount *json.Number `json:"single_vat_amount,omitempty"`
-	// Quantity x product price
+	// Total price calculated as the product price multiplied by the quantity.
 	// Format: double
 	TotalPrice *json.Number `json:"total_price,omitempty"`
-	// Total price including VAT
+	// Total product price including VAT.
 	// Format: double
 	TotalWithVAT *json.Number `json:"total_with_vat,omitempty"`
-	// VAT amount
+	// Total VAT amount for the product quantity.
 	// Format: double
 	VATAmount *json.Number `json:"vat_amount,omitempty"`
-	// VAT rate
+	// VAT rate.
 	// Format: double
 	VATRate *json.Number `json:"vat_rate,omitempty"`
 }
 
 // ReceiptTransactionVATRate is a schema definition.
 type ReceiptTransactionVATRate struct {
-	// Gross
+	// Gross amount to which the VAT rate applies.
 	Gross *float32 `json:"gross,omitempty"`
-	// Net
+	// Net amount to which the VAT rate applies.
 	Net *float32 `json:"net,omitempty"`
-	// Rate
+	// VAT rate applied to the transaction amount.
 	Rate *float32 `json:"rate,omitempty"`
-	// Vat
+	// VAT amount included in the gross amount.
 	VAT *float32 `json:"vat,omitempty"`
 }
 
 // ReceiptsGetParams are query parameters for GetReceipt.
 type ReceiptsGetParams struct {
-	// Merchant code.
+	// Short unique identifier for the merchant.
 	Mid string
-	// The ID of the transaction event (refund).
+	// Unique identifier of the transaction event to include on the receipt.
 	TxEventID *int
 }
 

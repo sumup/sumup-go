@@ -74,13 +74,12 @@ type Checkout struct {
 	// subscription, or payment attempt in your systems.
 	// Max length: 90
 	CheckoutReference *string `json:"checkout_reference,omitempty"`
-	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
-	// currency values are enumerated above.
+	// Three-letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code of the amount.
 	Currency *Currency `json:"currency,omitempty"`
 	// Merchant-scoped identifier of the customer associated with the checkout. Use it when storing payment instruments
 	// or reusing saved customer context for recurring and returning-payer flows.
 	CustomerID *string `json:"customer_id,omitempty"`
-	// Date and time of the creation of the payment checkout. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
+	// The timestamp of when the checkout was created.
 	Date *time.Time `json:"date,omitempty"`
 	// Short merchant-defined description shown in SumUp tools and reporting. Use it to make the checkout easier to
 	// recognize in dashboards, support workflows, and reconciliation.
@@ -95,7 +94,7 @@ type Checkout struct {
 	ID *string `json:"id,omitempty"`
 	// Details of the mandate linked to the saved payment instrument.
 	Mandate *MandateResponse `json:"mandate,omitempty"`
-	// Merchant account that receives the payment.
+	// Short unique identifier for the merchant that receives the payment.
 	MerchantCode *string `json:"merchant_code,omitempty"`
 	// Optional backend callback URL used by SumUp to notify your platform about processing updates for the checkout.
 	//
@@ -132,14 +131,13 @@ type CheckoutTransaction struct {
 	Amount *float32 `json:"amount,omitempty"`
 	// Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
 	AuthCode *string `json:"auth_code,omitempty"`
-	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
-	// currency values are enumerated above.
+	// Three-letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code of the amount.
 	Currency *Currency `json:"currency,omitempty"`
 	// Entry mode of the payment details.
 	EntryMode *EntryMode `json:"entry_mode,omitempty"`
-	// Unique ID of the transaction.
+	// Unique identifier of the transaction.
 	ID *string `json:"id,omitempty"`
-	// Current number of the installment for deferred payments.
+	// Number of installments for a deferred payment.
 	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Unique code of the registered merchant to whom the payment is made.
@@ -154,7 +152,7 @@ type CheckoutTransaction struct {
 	// - `FAILED`: The transaction attempt did not complete successfully.
 	// - `REFUNDED`: The transaction was refunded in full or in part.
 	Status *TransactionStatus `json:"status,omitempty"`
-	// Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
+	// The timestamp of when the transaction was created.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
 	// Amount of the tip (out of the total transaction amount).
 	TipAmount *float32 `json:"tip_amount,omitempty"`
@@ -206,8 +204,7 @@ type CheckoutCreateRequest struct {
 	// in your own systems.
 	// Max length: 90
 	CheckoutReference string `json:"checkout_reference"`
-	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
-	// currency values are enumerated above.
+	// Three-letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code of the amount.
 	Currency Currency `json:"currency"`
 	// Merchant-scoped customer identifier. Required when setting up recurring payments and useful when the checkout
 	// should be linked to a returning payer.
@@ -216,7 +213,7 @@ type CheckoutCreateRequest struct {
 	Description *string `json:"description,omitempty"`
 	// Hosted Checkout configuration. Enable it to receive a SumUp-hosted payment page URL in the checkout response.
 	HostedCheckout *HostedCheckout `json:"hosted_checkout,omitempty"`
-	// Merchant account that should receive the payment.
+	// Short unique identifier for the merchant that should receive the payment.
 	MerchantCode string `json:"merchant_code"`
 	// Business purpose of the checkout. Use `CHECKOUT` for a standard payment and `SETUP_RECURRING_PAYMENT` when
 	// collecting consent and payment details for future recurring charges.
@@ -255,13 +252,12 @@ type CheckoutSuccess struct {
 	// subscription, or payment attempt in your systems.
 	// Max length: 90
 	CheckoutReference *string `json:"checkout_reference,omitempty"`
-	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
-	// currency values are enumerated above.
+	// Three-letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code of the amount.
 	Currency *Currency `json:"currency,omitempty"`
 	// Merchant-scoped identifier of the customer associated with the checkout. Use it when storing payment instruments
 	// or reusing saved customer context for recurring and returning-payer flows.
 	CustomerID *string `json:"customer_id,omitempty"`
-	// Date and time of the creation of the payment checkout. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
+	// The timestamp of when the checkout was created.
 	Date *time.Time `json:"date,omitempty"`
 	// Short merchant-defined description shown in SumUp tools and reporting. Use it to make the checkout easier to
 	// recognize in dashboards, support workflows, and reconciliation.
@@ -276,9 +272,9 @@ type CheckoutSuccess struct {
 	ID *string `json:"id,omitempty"`
 	// Details of the mandate linked to the saved payment instrument.
 	Mandate *MandateResponse `json:"mandate,omitempty"`
-	// Merchant account that receives the payment.
+	// Short unique identifier for the merchant that receives the payment.
 	MerchantCode *string `json:"merchant_code,omitempty"`
-	// Name of the merchant
+	// Name of the merchant.
 	MerchantName *string `json:"merchant_name,omitempty"`
 	// Details of the saved payment instrument created or reused during checkout processing.
 	PaymentInstrument *CheckoutSuccessPaymentInstrument `json:"payment_instrument,omitempty"`
@@ -295,7 +291,7 @@ type CheckoutSuccess struct {
 	// Transaction code of the successful transaction with which the payment for the checkout is completed.
 	// Read only
 	TransactionCode *string `json:"transaction_code,omitempty"`
-	// Transaction ID of the successful transaction with which the payment for the checkout is completed.
+	// Unique identifier of the successful transaction that completed payment for the checkout.
 	// Read only
 	TransactionID *string `json:"transaction_id,omitempty"`
 	// Payment attempts and resulting transaction records linked to this checkout. Use the Transactions endpoints when
@@ -325,14 +321,13 @@ type CheckoutSuccessTransaction struct {
 	Amount *float32 `json:"amount,omitempty"`
 	// Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
 	AuthCode *string `json:"auth_code,omitempty"`
-	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
-	// currency values are enumerated above.
+	// Three-letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code of the amount.
 	Currency *Currency `json:"currency,omitempty"`
 	// Entry mode of the payment details.
 	EntryMode *EntryMode `json:"entry_mode,omitempty"`
-	// Unique ID of the transaction.
+	// Unique identifier of the transaction.
 	ID *string `json:"id,omitempty"`
-	// Current number of the installment for deferred payments.
+	// Number of installments for a deferred payment.
 	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Unique code of the registered merchant to whom the payment is made.
@@ -347,7 +342,7 @@ type CheckoutSuccessTransaction struct {
 	// - `FAILED`: The transaction attempt did not complete successfully.
 	// - `REFUNDED`: The transaction was refunded in full or in part.
 	Status *TransactionStatus `json:"status,omitempty"`
-	// Date and time of the creation of the transaction. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
+	// The timestamp of when the transaction was created.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
 	// Amount of the tip (out of the total transaction amount).
 	TipAmount *float32 `json:"tip_amount,omitempty"`
@@ -359,7 +354,7 @@ type CheckoutSuccessTransaction struct {
 
 // Details of the saved payment instrument created or reused during checkout processing.
 type CheckoutSuccessPaymentInstrument struct {
-	// Token value
+	// Unique token of the saved payment instrument.
 	Token *string `json:"token,omitempty"`
 }
 
@@ -370,8 +365,7 @@ type CheckoutUpdateRequest struct {
 	// Updated merchant-defined reference for the checkout.
 	// Max length: 90
 	CheckoutReference *string `json:"checkout_reference,omitempty"`
-	// Three-letter [ISO4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency for the amount. Currently supported
-	// currency values are enumerated above.
+	// Three-letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code of the amount.
 	Currency *Currency `json:"currency,omitempty"`
 	// Updated merchant-scoped customer identifier associated with the checkout.
 	CustomerID *string `json:"customer_id,omitempty"`
@@ -381,13 +375,13 @@ type CheckoutUpdateRequest struct {
 	ValidUntil *nullable.Field[time.Time] `json:"valid_until,omitempty"`
 }
 
-// Error message structure.
+// Details of a request validation error.
 type DetailsError struct {
 	// Details of the error.
 	Details *string `json:"details,omitempty"`
 	// List of violated validation constraints.
 	FailedConstraints []DetailsErrorFailedConstraint `json:"failed_constraints,omitempty"`
-	// The status code.
+	// HTTP status code for the error.
 	Status *float64 `json:"status,omitempty"`
 	// Short title of the error.
 	Title *string `json:"title,omitempty"`
@@ -395,7 +389,9 @@ type DetailsError struct {
 
 // DetailsErrorFailedConstraint is a schema definition.
 type DetailsErrorFailedConstraint struct {
-	Message   *string `json:"message,omitempty"`
+	// Human-readable description of the violated constraint.
+	Message *string `json:"message,omitempty"`
+	// Name of the field that violated the constraint.
 	Reference *string `json:"reference,omitempty"`
 }
 
@@ -485,7 +481,7 @@ type CheckoutsProcessParams = ProcessCheckout
 
 // CheckoutsListParams are query parameters for ListCheckouts.
 type CheckoutsListParams struct {
-	// Filters the list of checkout resources by the unique ID of the checkout.
+	// Filters the list of checkout resources by the unique reference of the checkout.
 	CheckoutReference *string
 }
 
@@ -540,12 +536,13 @@ var _ error = (*CheckoutsCreateApplePaySession400Response)(nil)
 
 // CheckoutsListAvailablePaymentMethodsResponse is a schema definition.
 type CheckoutsListAvailablePaymentMethodsResponse struct {
+	// Payment methods available to the merchant for the checkout.
 	AvailablePaymentMethods []CheckoutsListAvailablePaymentMethodsResponseAvailablePaymentMethod `json:"available_payment_methods,omitempty"`
 }
 
 // CheckoutsListAvailablePaymentMethodsResponseAvailablePaymentMethod is a schema definition.
 type CheckoutsListAvailablePaymentMethodsResponseAvailablePaymentMethod struct {
-	// The ID of the payment method.
+	// Unique identifier of the payment method.
 	ID string `json:"id"`
 }
 
