@@ -605,6 +605,8 @@ type ReadersListResponse struct {
 }
 
 // ReadersClient provides access to the Readers API.
+//
+// A reader represents a device that accepts payments. You can use the SumUp Solo to accept in-person payments.
 type ReadersClient struct {
 	c *client.Client
 }

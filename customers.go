@@ -14,13 +14,13 @@ import (
 
 // Saved customer details.
 type Customer struct {
-	// Unique ID of the customer.
+	// Unique identifier of the customer.
 	CustomerID string `json:"customer_id"`
 	// Personal details for the customer.
 	PersonalDetails *PersonalDetails `json:"personal_details,omitempty"`
 }
 
-// Payment Instrument Response
+// Details of a saved payment instrument.
 type PaymentInstrumentResponse struct {
 	// Indicates whether the payment instrument is active and can be used for payments. To deactivate it, send a
 	// `DELETE` request to the resource endpoint.
@@ -29,7 +29,7 @@ type PaymentInstrumentResponse struct {
 	Active *bool `json:"active,omitempty"`
 	// Details of the payment card.
 	Card *PaymentInstrumentResponseCard `json:"card,omitempty"`
-	// Creation date of payment instrument. Response format expressed according to [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) code.
+	// The timestamp of when the payment instrument was created.
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// Details of the mandate linked to the saved payment instrument.
 	Mandate *MandateResponse `json:"mandate,omitempty"`
