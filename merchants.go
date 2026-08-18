@@ -482,7 +482,7 @@ type PersonalIdentifier struct {
 	// The unique reference for the personal identifier type.
 	// Max length: 32
 	Ref string `json:"ref"`
-	// The company identifier value.
+	// The personal identifier value.
 	// Max length: 128
 	Value string `json:"value"`
 }
