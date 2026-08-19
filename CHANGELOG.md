@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.19.0](https://github.com/sumup/sumup-go/compare/v0.18.0...v0.19.0) (2026-08-19)
+
+
+### Features
+
+* improve code samples generation ([9f704c5](https://github.com/sumup/sumup-go/commit/9f704c53901fc5d2a77aafc8c769c08499157e78))
+
+
+### Chores
+
+* **codegen:** adjust sample generator ([6977e47](https://github.com/sumup/sumup-go/commit/6977e4763b90e3ce29f2fbf0a2a6bfb670b006da))
+* **codegen:** make samples shorter ([db7202d](https://github.com/sumup/sumup-go/commit/db7202dee78bf57b265e2737a2ccbfaa1219339a))
+* **deps:** bump github/codeql-action/upload-sarif from 4.37.5 to 4.37.6 ([#314](https://github.com/sumup/sumup-go/issues/314)) ([8342be7](https://github.com/sumup/sumup-go/commit/8342be785439f19a9d4684a0f4e67cd8a1eaae66))
+* **deps:** bump reviewdog/action-actionlint from 1.73.0 to 1.73.1 ([#315](https://github.com/sumup/sumup-go/issues/315)) ([99677a3](https://github.com/sumup/sumup-go/commit/99677a3d28ffea5dfbff0989dce44e97e25899bd))
+* synced file(s) with sumup/apis ([#311](https://github.com/sumup/sumup-go/issues/311)) ([9acc2ab](https://github.com/sumup/sumup-go/commit/9acc2ab765a7f92faa314f2ee63f2352ea61bc49))
+* synced file(s) with sumup/apis ([#313](https://github.com/sumup/sumup-go/issues/313)) ([ed892aa](https://github.com/sumup/sumup-go/commit/ed892aa203c375bbb2617148383c06cc4a8c7338))
+* synced file(s) with sumup/apis ([#316](https://github.com/sumup/sumup-go/issues/316)) ([df9d479](https://github.com/sumup/sumup-go/commit/df9d479a580593ac13778093cee54b6f403c73bf))
+
 ## [0.18.0](https://github.com/sumup/sumup-go/compare/v0.17.2...v0.18.0) (2026-08-12)
 
 
