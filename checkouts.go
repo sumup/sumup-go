@@ -16,55 +16,6 @@ import (
 	"github.com/sumup/sumup-go/nullable"
 )
 
-// __Required when payment type is `card`.__ Details of the payment card.
-type Card struct {
-	// Three or four-digit card verification value (security code) of the payment card.
-	// Write only
-	// Min length: 3
-	// Max length: 4
-	Cvv string `json:"cvv"`
-	// Month from the expiration time of the payment card. Accepted format is `MM`.
-	// Write only
-	ExpiryMonth CardExpiryMonth `json:"expiry_month"`
-	// Year from the expiration time of the payment card. Accepted formats are `YY` and `YYYY`.
-	// Write only
-	// Min length: 2
-	// Max length: 4
-	ExpiryYear string `json:"expiry_year"`
-	// Name of the cardholder as it appears on the payment card.
-	// Write only
-	Name string `json:"name"`
-	// Number of the payment card (without spaces).
-	// Write only
-	Number string `json:"number"`
-	// Issuing card network of the payment card used for the transaction.
-	Type CardType `json:"type"`
-	// Required five-digit ZIP code. Applicable only to merchant users in the USA.
-	// Write only
-	// Min length: 5
-	// Max length: 5
-	ZipCode *string `json:"zip_code,omitempty"`
-}
-
-// Month from the expiration time of the payment card. Accepted format is `MM`.
-// Write only
-type CardExpiryMonth string
-
-const (
-	CardExpiryMonth01 CardExpiryMonth = "01"
-	CardExpiryMonth02 CardExpiryMonth = "02"
-	CardExpiryMonth03 CardExpiryMonth = "03"
-	CardExpiryMonth04 CardExpiryMonth = "04"
-	CardExpiryMonth05 CardExpiryMonth = "05"
-	CardExpiryMonth06 CardExpiryMonth = "06"
-	CardExpiryMonth07 CardExpiryMonth = "07"
-	CardExpiryMonth08 CardExpiryMonth = "08"
-	CardExpiryMonth09 CardExpiryMonth = "09"
-	CardExpiryMonth10 CardExpiryMonth = "10"
-	CardExpiryMonth11 CardExpiryMonth = "11"
-	CardExpiryMonth12 CardExpiryMonth = "12"
-)
-
 // Core checkout resource returned by the Checkouts API. A checkout is created before payment processing and
 // then updated as payment attempts, redirects, and resulting transactions are attached to it.
 type Checkout struct {
@@ -161,39 +112,6 @@ type CheckoutTransaction struct {
 	// Amount of the applicable VAT (out of the total transaction amount).
 	VATAmount *float32 `json:"vat_amount,omitempty"`
 }
-
-// Response returned when checkout processing requires an additional payer action, such as a 3DS challenge or
-// a redirect to an external payment method page.
-type CheckoutAccepted struct {
-	// Instructions for the next action the payer or client must take.
-	NextStep *CheckoutAcceptedNextStep `json:"next_step,omitempty"`
-}
-
-// Instructions for the next action the payer or client must take.
-type CheckoutAcceptedNextStep struct {
-	// Allowed presentation mechanisms for the next step. `iframe` means the flow can be embedded, while `browser` means
-	// it can be completed through a full-page redirect.
-	Mechanism []CheckoutAcceptedNextStepMechanism `json:"mechanism,omitempty"`
-	// HTTP method to use when following the next step.
-	Method *string `json:"method,omitempty"`
-	// Parameters required to complete the next step. The exact keys depend on the payment provider and flow type.
-	Payload CheckoutAcceptedNextStepPayload `json:"payload,omitempty"`
-	// Merchant URL where the payer returns after the external flow finishes.
-	RedirectURL *string `json:"redirect_url,omitempty"`
-	// URL to open or submit in order to continue processing.
-	URL *string `json:"url,omitempty"`
-}
-
-// CheckoutAcceptedNextStepMechanism is a schema definition.
-type CheckoutAcceptedNextStepMechanism string
-
-const (
-	CheckoutAcceptedNextStepMechanismBrowser CheckoutAcceptedNextStepMechanism = "browser"
-	CheckoutAcceptedNextStepMechanismIframe  CheckoutAcceptedNextStepMechanism = "iframe"
-)
-
-// Parameters required to complete the next step. The exact keys depend on the payment provider and flow type.
-type CheckoutAcceptedNextStepPayload map[string]any
 
 // Request body for creating a checkout before processing payment. Define the payment amount, currency, merchant,
 // and optional customer or redirect behavior here.
@@ -407,62 +325,6 @@ type HostedCheckout struct {
 	Enabled bool `json:"enabled"`
 }
 
-// Mandate details used when a checkout should create a reusable card token for future recurring or merchant-initiated payments.
-type MandatePayload struct {
-	// Type of mandate to create for the saved payment instrument.
-	Type MandatePayloadType `json:"type"`
-	// Browser or client user agent observed when consent was collected.
-	UserAgent string `json:"user_agent"`
-	// IP address of the payer when the mandate was accepted.
-	UserIP *string `json:"user_ip,omitempty"`
-}
-
-// Type of mandate to create for the saved payment instrument.
-type MandatePayloadType string
-
-const (
-	MandatePayloadTypeRecurrent MandatePayloadType = "recurrent"
-)
-
-// Request body for attempting payment on an existing checkout. The required companion fields depend on the
-// selected `payment_type`, for example card details, saved-card data, or payer information required by a
-// specific payment method.
-type ProcessCheckout struct {
-	// Raw payment token object received from Apple Pay. Send the Apple Pay response payload as-is.
-	ApplePay *json.RawMessage `json:"apple_pay,omitempty"`
-	// __Required when payment type is `card`.__ Details of the payment card.
-	Card *Card `json:"card,omitempty"`
-	// Customer identifier associated with the saved payment instrument. Required when `token` is provided.
-	CustomerID *string `json:"customer_id,omitempty"`
-	// Raw `PaymentData` object received from Google Pay. Send the Google Pay response payload as-is.
-	GooglePay *json.RawMessage `json:"google_pay,omitempty"`
-	// Number of installments for deferred payments. Available only to merchant users in Brazil.
-	// Min: 1
-	// Max: 12
-	Installments *int `json:"installments,omitempty"`
-	// Mandate details used when a checkout should create a reusable card token for future recurring or merchant-initiated payments.
-	Mandate *MandatePayload `json:"mandate,omitempty"`
-	// Payment method used for this processing attempt. It determines which additional request fields are required.
-	PaymentType ProcessCheckoutPaymentType `json:"payment_type"`
-	// Personal details for the customer.
-	PersonalDetails *PersonalDetails `json:"personal_details,omitempty"`
-	// Saved-card token to use instead of raw card details when processing with a previously stored payment instrument.
-	Token *string `json:"token,omitempty"`
-}
-
-// Payment method used for this processing attempt. It determines which additional request fields are required.
-type ProcessCheckoutPaymentType string
-
-const (
-	ProcessCheckoutPaymentTypeApplePay   ProcessCheckoutPaymentType = "apple_pay"
-	ProcessCheckoutPaymentTypeBancontact ProcessCheckoutPaymentType = "bancontact"
-	ProcessCheckoutPaymentTypeBlik       ProcessCheckoutPaymentType = "blik"
-	ProcessCheckoutPaymentTypeBoleto     ProcessCheckoutPaymentType = "boleto"
-	ProcessCheckoutPaymentTypeCard       ProcessCheckoutPaymentType = "card"
-	ProcessCheckoutPaymentTypeGooglePay  ProcessCheckoutPaymentType = "google_pay"
-	ProcessCheckoutPaymentTypeIdeal      ProcessCheckoutPaymentType = "ideal"
-)
-
 type CheckoutsCreateParams = CheckoutCreateRequest
 
 // CheckoutsCreateApplePaySessionParams is a schema definition.
@@ -476,8 +338,6 @@ type CheckoutsCreateApplePaySessionParams struct {
 }
 
 type CheckoutsUpdateParams = CheckoutUpdateRequest
-
-type CheckoutsProcessParams = ProcessCheckout
 
 // CheckoutsListParams are query parameters for ListCheckouts.
 type CheckoutsListParams struct {
@@ -544,36 +404,6 @@ type CheckoutsListAvailablePaymentMethodsResponse struct {
 type CheckoutsListAvailablePaymentMethodsResponseAvailablePaymentMethod struct {
 	// Unique identifier of the payment method.
 	ID string `json:"id"`
-}
-
-// CheckoutsProcess400Response is a schema definition.
-type CheckoutsProcess400Response json.RawMessage
-
-func (e *CheckoutsProcess400Response) Error() string {
-	return "CheckoutsProcess400Response"
-}
-
-var _ error = (*CheckoutsProcess400Response)(nil)
-
-type CheckoutsProcessResponse struct {
-	CheckoutSuccess  *CheckoutSuccess
-	CheckoutAccepted *CheckoutAccepted
-}
-
-func (r *CheckoutsProcessResponse) AsCheckoutSuccess() (*CheckoutSuccess, bool) {
-	if r.CheckoutSuccess != nil {
-		return r.CheckoutSuccess, true
-	}
-
-	return nil, false
-}
-
-func (r *CheckoutsProcessResponse) AsCheckoutAccepted() (*CheckoutAccepted, bool) {
-	if r.CheckoutAccepted != nil {
-		return r.CheckoutAccepted, true
-	}
-
-	return nil, false
 }
 
 // CheckoutsClient provides access to the Checkouts API.
@@ -885,73 +715,6 @@ func (c *CheckoutsClient) Update(ctx context.Context, checkoutID string, body Ch
 
 		return nil, &apiErr
 	case http.StatusNotFound:
-		var apiErr Error
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	}
-}
-
-// Processing a checkout will attempt to charge the provided payment instrument for the amount of the specified checkout
-// resource initiated in the `Create a checkout` endpoint.
-//
-// Follow this request with `Retrieve a checkout` to confirm its status.
-func (c *CheckoutsClient) Process(ctx context.Context, checkoutID string, body CheckoutsProcessParams) (*CheckoutsProcessResponse, error) {
-	path := fmt.Sprintf("/v0.1/checkouts/%v", checkoutID)
-
-	resp, err := c.c.Call(ctx, http.MethodPut, path, client.WithJSONBody(body))
-	if err != nil {
-		return nil, fmt.Errorf("call %s %s: %w", http.MethodPut, path, err)
-	}
-	defer func() {
-		_ = resp.Body.Close()
-	}()
-
-	switch resp.StatusCode {
-	case http.StatusOK:
-		var v CheckoutSuccess
-		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-			return nil, fmt.Errorf("decode response: %s", err.Error())
-		}
-
-		return &CheckoutsProcessResponse{
-			CheckoutSuccess: &v,
-		}, nil
-	case http.StatusAccepted:
-		var v CheckoutAccepted
-		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-			return nil, fmt.Errorf("decode response: %s", err.Error())
-		}
-
-		return &CheckoutsProcessResponse{
-			CheckoutAccepted: &v,
-		}, nil
-	case http.StatusBadRequest:
-		var apiErr CheckoutsProcess400Response
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	case http.StatusUnauthorized:
-		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	case http.StatusNotFound:
-		var apiErr Error
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
-	case http.StatusConflict:
 		var apiErr Error
 		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
 			return nil, fmt.Errorf("read error response: %s", err.Error())
