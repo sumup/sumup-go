@@ -6394,16 +6394,6 @@ func (s Secret) Value() string
 
 Value returns the underlying secret value as a string.
 
-# checkout
-
-```go
-import "github.com/sumup/sumup-go/example/checkout"
-```
-
-## Index
-
-
-
 # full
 
 ```go
