@@ -34,9 +34,9 @@ jobs:
     strategy:
       matrix:
         go:
-          - "1.24" # stable-2
-          - "1.25" # stable-1
-          - "stable" # 1.26
+          - "1.25" # stable-2
+          - "1.26" # stable-1
+          - "stable" # 1.27
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
