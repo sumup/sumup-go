@@ -160,6 +160,8 @@ type MembersListParams struct {
 	Status *MembershipStatus
 	// Search for a member by user id.
 	UserID *string
+	// Filter the returned members by user type. Repeat this parameter to include multiple user types.
+	UserType []UserType
 }
 
 // QueryValues converts [MembersListParams] into [url.Values].
@@ -192,6 +194,10 @@ func (p *MembersListParams) QueryValues() url.Values {
 
 	if p.UserID != nil {
 		q.Set("user.id", *p.UserID)
+	}
+
+	for _, v := range p.UserType {
+		q.Add("user.type", string(v))
 	}
 
 	return q
