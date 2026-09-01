@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.20.0](https://github.com/sumup/sumup-go/compare/v0.19.0...v0.20.0) (2026-09-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* bump minimum supported version of go to 1.25 ([#319](https://github.com/sumup/sumup-go/issues/319))
+
+### Features
+
+* bump minimum supported version of go to 1.25 ([#319](https://github.com/sumup/sumup-go/issues/319)) ([22f4f42](https://github.com/sumup/sumup-go/commit/22f4f421bece499099a75e96bf06f97423043345))
+
+
+### Chores
+
+* **deps:** bump github/codeql-action/upload-sarif from 4.37.6 to 4.37.7 ([#317](https://github.com/sumup/sumup-go/issues/317)) ([645a031](https://github.com/sumup/sumup-go/commit/645a031942ac8eb240c741205c7b6dcaabcb47fc))
+* **deps:** bump github/codeql-action/upload-sarif from 4.37.7 to 4.37.8 ([#321](https://github.com/sumup/sumup-go/issues/321)) ([2248f19](https://github.com/sumup/sumup-go/commit/2248f190ebdda30adda73e47610996f79096d121))
+* **deps:** bump golang.org/x/oauth2 from 0.35.0 to 0.36.0 ([#209](https://github.com/sumup/sumup-go/issues/209)) ([4ecc853](https://github.com/sumup/sumup-go/commit/4ecc85371546d7fcf236433f49ed3037d79f9456))
+* **deps:** bump reviewdog/action-actionlint from 1.73.1 to 1.73.2 ([#318](https://github.com/sumup/sumup-go/issues/318)) ([e1c6325](https://github.com/sumup/sumup-go/commit/e1c6325b6250f48afdd121e6cf4c1734f53377e7))
+* synced file(s) with sumup/apis ([#322](https://github.com/sumup/sumup-go/issues/322)) ([a2951fc](https://github.com/sumup/sumup-go/commit/a2951fc7eeb34945f46614b12bf8ba36638f5b01))
+* synced file(s) with sumup/apis ([#323](https://github.com/sumup/sumup-go/issues/323)) ([979d014](https://github.com/sumup/sumup-go/commit/979d01460ac8b4d7ac86d90c80dc322541e6e5dc))
+
 ## [0.19.0](https://github.com/sumup/sumup-go/compare/v0.18.0...v0.19.0) (2026-08-19)
 
 
