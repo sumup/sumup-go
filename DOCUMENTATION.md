@@ -2918,7 +2918,7 @@ type Member struct {
 ```
 
 <a name="MembersClient"></a>
-## type [MembersClient](<https://github.com/sumup/sumup-go/blob/main/members.go#L209-L211>)
+## type [MembersClient](<https://github.com/sumup/sumup-go/blob/main/members.go#L215-L217>)
 
 MembersClient provides access to the Members API.
 
@@ -2931,7 +2931,7 @@ type MembersClient struct {
 ```
 
 <a name="NewMembersClient"></a>
-### func [NewMembersClient](<https://github.com/sumup/sumup-go/blob/main/members.go#L213>)
+### func [NewMembersClient](<https://github.com/sumup/sumup-go/blob/main/members.go#L219>)
 
 ```go
 func NewMembersClient(c *client.Client) *MembersClient
@@ -2940,7 +2940,7 @@ func NewMembersClient(c *client.Client) *MembersClient
 
 
 <a name="MembersClient.Create"></a>
-### func \(\*MembersClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/members.go#L250>)
+### func \(\*MembersClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/members.go#L256>)
 
 ```go
 func (c *MembersClient) Create(ctx context.Context, merchantCode string, body MembersCreateParams) (*Member, error)
@@ -2949,7 +2949,7 @@ func (c *MembersClient) Create(ctx context.Context, merchantCode string, body Me
 Create a merchant member.
 
 <a name="MembersClient.Delete"></a>
-### func \(\*MembersClient\) [Delete](<https://github.com/sumup/sumup-go/blob/main/members.go#L296>)
+### func \(\*MembersClient\) [Delete](<https://github.com/sumup/sumup-go/blob/main/members.go#L302>)
 
 ```go
 func (c *MembersClient) Delete(ctx context.Context, merchantCode string, memberID string) error
@@ -2958,7 +2958,7 @@ func (c *MembersClient) Delete(ctx context.Context, merchantCode string, memberI
 Deletes a merchant member.
 
 <a name="MembersClient.Get"></a>
-### func \(\*MembersClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/members.go#L330>)
+### func \(\*MembersClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/members.go#L336>)
 
 ```go
 func (c *MembersClient) Get(ctx context.Context, merchantCode string, memberID string) (*Member, error)
@@ -2967,7 +2967,7 @@ func (c *MembersClient) Get(ctx context.Context, merchantCode string, memberID s
 Retrieve a merchant member.
 
 <a name="MembersClient.List"></a>
-### func \(\*MembersClient\) [List](<https://github.com/sumup/sumup-go/blob/main/members.go#L218>)
+### func \(\*MembersClient\) [List](<https://github.com/sumup/sumup-go/blob/main/members.go#L224>)
 
 ```go
 func (c *MembersClient) List(ctx context.Context, merchantCode string, params MembersListParams) (*MembersListResponse, error)
@@ -2976,7 +2976,7 @@ func (c *MembersClient) List(ctx context.Context, merchantCode string, params Me
 Lists merchant members.
 
 <a name="MembersClient.Update"></a>
-### func \(\*MembersClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/members.go#L362>)
+### func \(\*MembersClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/members.go#L368>)
 
 ```go
 func (c *MembersClient) Update(ctx context.Context, merchantCode string, memberID string, body MembersUpdateParams) (*Member, error)
@@ -3019,7 +3019,7 @@ type MembersCreateParams struct {
 ```
 
 <a name="MembersListParams"></a>
-## type [MembersListParams](<https://github.com/sumup/sumup-go/blob/main/members.go#L148-L163>)
+## type [MembersListParams](<https://github.com/sumup/sumup-go/blob/main/members.go#L148-L165>)
 
 MembersListParams are query parameters for ListMerchantMembers.
 
@@ -3039,11 +3039,13 @@ type MembersListParams struct {
     Status *MembershipStatus
     // Search for a member by user id.
     UserID *string
+    // Filter the returned members by user type. Repeat this parameter to include multiple user types.
+    UserType []UserType
 }
 ```
 
 <a name="MembersListParams.QueryValues"></a>
-### func \(\*MembersListParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/members.go#L166>)
+### func \(\*MembersListParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/members.go#L168>)
 
 ```go
 func (p *MembersListParams) QueryValues() url.Values
@@ -3052,7 +3054,7 @@ func (p *MembersListParams) QueryValues() url.Values
 QueryValues converts [MembersListParams](<#MembersListParams>) into \[url.Values\].
 
 <a name="MembersListResponse"></a>
-## type [MembersListResponse](<https://github.com/sumup/sumup-go/blob/main/members.go#L201-L204>)
+## type [MembersListResponse](<https://github.com/sumup/sumup-go/blob/main/members.go#L207-L210>)
 
 MembersListResponse is a schema definition.
 
