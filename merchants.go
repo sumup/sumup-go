@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"net/url"
 	"time"
 
 	"github.com/sumup/sumup-go/client"
@@ -119,13 +118,14 @@ type BasePerson struct {
 	Citizenship *CountryCode `json:"citizenship,omitempty"`
 	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code representing the country
 	// where the Person resides.
-	// Min length: 2
-	// Max length: 2
+	// Pattern: ^[A-Z]{2}$
 	CountryOfResidence *nullable.Field[string] `json:"country_of_residence,omitempty"`
 	// The last name(s) of the individual.
+	// Min length: 1
 	// Max length: 60
 	FamilyName *string `json:"family_name,omitempty"`
 	// The first name(s) of the individual.
+	// Min length: 1
 	// Max length: 60
 	GivenName *string `json:"given_name,omitempty"`
 	// The unique identifier for the Person. This is a [typeid](https://github.com/sumup/typeid).
@@ -137,10 +137,12 @@ type BasePerson struct {
 	// Middle name(s) of the End-User. Note that in some cultures, people can have multiple middle names; all can
 	// be present, with the names being separated by space characters. Also note that in some cultures, middle names
 	// are not used.
+	// Min length: 1
 	// Max length: 60
 	MiddleName *string `json:"middle_name,omitempty"`
 	// The Person's nationality. May be an [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country
 	// code, but legacy data may not conform to this standard.
+	// Pattern: ^[A-Z]{2}$
 	Nationality *nullable.Field[string] `json:"nationality,omitempty"`
 	Ownership   *Ownership              `json:"ownership,omitempty"`
 	// A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
@@ -201,9 +203,10 @@ type BusinessProfile struct {
 	// The more recognisable your descriptor is, the less risk you have of receiving disputes (e.g. chargebacks).
 	// Min length: 1
 	// Max length: 30
-	// Pattern: ^[a-zA-Z0-9 \-+\'_.]{0,30}$
+	// Pattern: ^[a-zA-Z0-9 +'_.-]+$
 	DynamicDescriptor *string `json:"dynamic_descriptor,omitempty"`
 	// A publicly available email address.
+	// Min length: 1
 	// Max length: 255
 	Email *string `json:"email,omitempty"`
 	// The customer-facing business name.
@@ -214,6 +217,7 @@ type BusinessProfile struct {
 	// Max length: 16
 	PhoneNumber *PhoneNumber `json:"phone_number,omitempty"`
 	// The business's publicly available website.
+	// Min length: 1
 	// Max length: 255
 	Website *string `json:"website,omitempty"`
 }
@@ -255,6 +259,7 @@ type Company struct {
 	// descriptions.
 	// Min length: 4
 	// Max length: 64
+	// Pattern: ^[a-z]{2}\.[a-z_]+$
 	// The country SDK documentation for legal types.: https://developer.sumup.com/tools/glossary/merchant#legal-types
 	LegalType *LegalType `json:"legal_type,omitempty"`
 	// The merchant category code for the account as specified by [ISO18245](https://www.iso.org/standard/33365.html). MCCs
@@ -276,6 +281,7 @@ type Company struct {
 	// Address documentation: https://developer.sumup.com/tools/glossary/address
 	TradingAddress *Address `json:"trading_address,omitempty"`
 	// HTTP(S) URL of the company's website.
+	// Min length: 1
 	// Max length: 255
 	Website *string `json:"website,omitempty"`
 }
@@ -284,8 +290,10 @@ type Company struct {
 // Company identifier documentation: https://developer.sumup.com/tools/glossary/merchant#company-identifiers
 type CompanyIdentifier struct {
 	// The unique reference for the company identifier type as defined in the country SDK.
+	// Pattern: ^[a-z]{2}\.[a-z_]+$
 	Ref string `json:"ref"`
 	// The company identifier value.
+	// Min length: 1
 	// Max length: 100
 	Value string `json:"value"`
 }
@@ -307,6 +315,7 @@ type CountryCode string
 //
 // Min length: 4
 // Max length: 64
+// Pattern: ^[a-z]{2}\.[a-z_]+$
 // The country SDK documentation for legal types.: https://developer.sumup.com/tools/glossary/merchant#legal-types
 type LegalType string
 
@@ -438,13 +447,14 @@ type Person struct {
 	Citizenship *CountryCode `json:"citizenship,omitempty"`
 	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code representing the country
 	// where the Person resides.
-	// Min length: 2
-	// Max length: 2
+	// Pattern: ^[A-Z]{2}$
 	CountryOfResidence *nullable.Field[string] `json:"country_of_residence,omitempty"`
 	// The last name(s) of the individual.
+	// Min length: 1
 	// Max length: 60
 	FamilyName *string `json:"family_name,omitempty"`
 	// The first name(s) of the individual.
+	// Min length: 1
 	// Max length: 60
 	GivenName *string `json:"given_name,omitempty"`
 	// The unique identifier for the Person. This is a [typeid](https://github.com/sumup/typeid).
@@ -456,10 +466,12 @@ type Person struct {
 	// Middle name(s) of the End-User. Note that in some cultures, people can have multiple middle names; all can
 	// be present, with the names being separated by space characters. Also note that in some cultures, middle names
 	// are not used.
+	// Min length: 1
 	// Max length: 60
 	MiddleName *string `json:"middle_name,omitempty"`
 	// The Person's nationality. May be an [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country
 	// code, but legacy data may not conform to this standard.
+	// Pattern: ^[A-Z]{2}$
 	Nationality *nullable.Field[string] `json:"nationality,omitempty"`
 	Ownership   *Ownership              `json:"ownership,omitempty"`
 	// A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
@@ -511,66 +523,6 @@ type Timestamps struct {
 // endpoints.
 type Version string
 
-// MerchantsListPersonsParams are query parameters for ListPersons.
-type MerchantsListPersonsParams struct {
-	// The version of the resource. At the moment, the only supported value is `latest`. When provided and the requested
-	// resource's `change_status` is pending, the resource will be returned with all pending changes applied. When
-	// no changes are pending the resource is returned as is. The `change_status` in the response body will reflect
-	// the current state of the resource.
-	Version *string
-}
-
-// QueryValues converts [MerchantsListPersonsParams] into [url.Values].
-func (p *MerchantsListPersonsParams) QueryValues() url.Values {
-	q := make(url.Values)
-
-	if p.Version != nil {
-		q.Set("version", *p.Version)
-	}
-
-	return q
-}
-
-// MerchantsGetParams are query parameters for GetMerchant.
-type MerchantsGetParams struct {
-	// The version of the resource. At the moment, the only supported value is `latest`. When provided and the requested
-	// resource's `change_status` is pending, the resource will be returned with all pending changes applied. When
-	// no changes are pending the resource is returned as is. The `change_status` in the response body will reflect
-	// the current state of the resource.
-	Version *string
-}
-
-// QueryValues converts [MerchantsGetParams] into [url.Values].
-func (p *MerchantsGetParams) QueryValues() url.Values {
-	q := make(url.Values)
-
-	if p.Version != nil {
-		q.Set("version", *p.Version)
-	}
-
-	return q
-}
-
-// MerchantsGetPersonParams are query parameters for GetPerson.
-type MerchantsGetPersonParams struct {
-	// The version of the resource. At the moment, the only supported value is `latest`. When provided and the requested
-	// resource's `change_status` is pending, the resource will be returned with all pending changes applied. When
-	// no changes are pending the resource is returned as is. The `change_status` in the response body will reflect
-	// the current state of the resource.
-	Version *string
-}
-
-// QueryValues converts [MerchantsGetPersonParams] into [url.Values].
-func (p *MerchantsGetPersonParams) QueryValues() url.Values {
-	q := make(url.Values)
-
-	if p.Version != nil {
-		q.Set("version", *p.Version)
-	}
-
-	return q
-}
-
 // MerchantsClient provides access to the Merchants API.
 //
 // A Merchant represents a single business which can use SumUp products like payment processing.
@@ -584,10 +536,10 @@ func NewMerchantsClient(c *client.Client) *MerchantsClient {
 
 // Returns the Persons related to a Merchant.
 // Persons documentation: https://developer.sumup.com/tools/models/merchant#persons
-func (c *MerchantsClient) ListPersons(ctx context.Context, merchantCode string, params MerchantsListPersonsParams) (*ListPersonsResponseBody, error) {
+func (c *MerchantsClient) ListPersons(ctx context.Context, merchantCode string) (*ListPersonsResponseBody, error) {
 	path := fmt.Sprintf("/v1/merchants/%v/persons", merchantCode)
 
-	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
+	resp, err := c.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
 		return nil, fmt.Errorf("call %s %s: %w", http.MethodGet, path, err)
 	}
@@ -617,10 +569,10 @@ func (c *MerchantsClient) ListPersons(ctx context.Context, merchantCode string, 
 
 // Returns a Merchant for a valid Merchant code.
 // Merchant documentation: https://developer.sumup.com/tools/models/merchant
-func (c *MerchantsClient) Get(ctx context.Context, merchantCode string, params MerchantsGetParams) (*Merchant, error) {
+func (c *MerchantsClient) Get(ctx context.Context, merchantCode string) (*Merchant, error) {
 	path := fmt.Sprintf("/v1/merchants/%v", merchantCode)
 
-	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
+	resp, err := c.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
 		return nil, fmt.Errorf("call %s %s: %w", http.MethodGet, path, err)
 	}
@@ -650,10 +602,10 @@ func (c *MerchantsClient) Get(ctx context.Context, merchantCode string, params M
 
 // Returns a single Person related to a Merchant.
 // Persons documentation: https://developer.sumup.com/tools/models/merchant#persons
-func (c *MerchantsClient) GetPerson(ctx context.Context, merchantCode string, personID string, params MerchantsGetPersonParams) (*Person, error) {
+func (c *MerchantsClient) GetPerson(ctx context.Context, merchantCode string, personID string) (*Person, error) {
 	path := fmt.Sprintf("/v1/merchants/%v/persons/%v", merchantCode, personID)
 
-	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
+	resp, err := c.c.Call(ctx, http.MethodGet, path)
 	if err != nil {
 		return nil, fmt.Errorf("call %s %s: %w", http.MethodGet, path, err)
 	}
