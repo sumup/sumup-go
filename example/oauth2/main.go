@@ -47,7 +47,7 @@ func main() {
 		// You should always request the minimal set of scope that you need for your application to
 		// work. In this example we use "email profile" scope which gives you access to user's
 		// email address and their profile.
-		Scopes: []string{"email profile"},
+		Scopes: []string{"user.profile_readonly"},
 	}
 
 	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
@@ -116,7 +116,7 @@ func main() {
 
 		client := sumup.NewClient(client.WithAPIKey(token.AccessToken))
 
-		merchant, err := client.Merchants.Get(r.Context(), defaultMerchantCode, sumup.MerchantsGetParams{})
+		merchant, err := client.Merchants.Get(r.Context(), defaultMerchantCode)
 		if err != nil {
 			log.Printf("get merchant information: %v\n", err)
 			w.WriteHeader(http.StatusInternalServerError)
