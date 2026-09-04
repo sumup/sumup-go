@@ -696,13 +696,14 @@ func (b *Builder) createFields(properties *orderedmap.Map[string, *base.SchemaPr
 	return fields, types
 }
 
-// isNullableSchema returns whether nullable is explicitly set in the source schema.
+// isNullableSchema returns whether the source schema explicitly allows null.
 func isNullableSchema(schema *base.SchemaProxy) bool {
 	if schema == nil || schema.Schema() == nil {
 		return false
 	}
 
-	return schema.Schema().Nullable != nil && *schema.Schema().Nullable
+	spec := schema.Schema()
+	return (spec.Nullable != nil && *spec.Nullable) || slices.Contains(spec.Type, "null")
 }
 
 func createEnum(schema *base.Schema, name string) Writable {
