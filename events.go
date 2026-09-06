@@ -64,8 +64,8 @@ func (*UnknownEvent) isEventNotification() {}
 //
 // The URL must have the SumUp API origin. Its path and query are resolved against
 // the client's configured base URL; URL credentials and fragments are ignored.
-// Requests use the client's authentication and redirect policy.
-// Deleted resources may return a *Problem API error.
+// Requests use the client's authentication and transport, with redirects disabled.
+// API failures return an *APIError, which may wrap a *Problem for deleted resources.
 func (e TypedEvent[T]) FetchObject(ctx context.Context) (*T, error) {
 	if e.client == nil || e.client.c == nil {
 		return nil, fmt.Errorf("fetch event object: event is not bound to a client")
@@ -80,21 +80,22 @@ func (e TypedEvent[T]) FetchObject(ctx context.Context) (*T, error) {
 		return nil, fmt.Errorf("fetch event object: expected a URL on %s", client.APIUrl)
 	}
 
-	resp, err := e.client.c.Call(ctx, http.MethodGet, u.EscapedPath(), client.WithQueryValues(u.Query()))
+	resp, err := e.client.c.Call(ctx, http.MethodGet, u.EscapedPath(), client.WithQueryValues(u.Query()), client.WithoutRedirects())
 	if err != nil {
 		return nil, fmt.Errorf("fetch event object: %w", err)
 	}
 	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
-		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err == nil && (apiErr.Type != "" || apiErr.Title != nil || apiErr.Detail != nil || apiErr.Status != nil) {
-			if apiErr.Status == nil {
-				apiErr.Status = &resp.StatusCode
+		apiErr := readAPIError(resp, nil)
+		var problem Problem
+		if apiErr.Err == nil && json.Unmarshal(apiErr.Body, &problem) == nil && (problem.Type != "" || problem.Title != nil || problem.Detail != nil || problem.Status != nil) {
+			if problem.Status == nil {
+				problem.Status = &resp.StatusCode
 			}
-			return nil, fmt.Errorf("fetch event object: %w", &apiErr)
+			apiErr.Err = &problem
 		}
-		return nil, fmt.Errorf("fetch event object: unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		return nil, fmt.Errorf("fetch event object: %w", apiErr)
 	}
 
 	var object T
@@ -122,13 +123,13 @@ func (c *Client) ParseEventNotificationWithoutVerification(payload []byte) (Even
 }
 
 func (c *Client) parseEventNotification(payload []byte) (EventNotification, error) {
-	var raw TypedEvent[json.RawMessage]
+	var raw *TypedEvent[json.RawMessage]
 	if err := json.Unmarshal(payload, &raw); err != nil {
 		return nil, fmt.Errorf("%w: %w", ErrEventPayloadInvalid, err)
 	}
-	if raw.ID == "" || raw.Type == "" || raw.CreatedAt.IsZero() || raw.Object.ID == "" || raw.Object.Type == "" || raw.Object.URL == "" {
-		return nil, fmt.Errorf("%w: missing required event fields", ErrEventPayloadInvalid)
+	if raw == nil {
+		return nil, fmt.Errorf("%w: expected a JSON object", ErrEventPayloadInvalid)
 	}
 	raw.client = c
-	return parseKnownEvent(raw), nil
+	return parseKnownEvent(*raw), nil
 }

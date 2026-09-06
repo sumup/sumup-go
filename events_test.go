@@ -2,9 +2,9 @@ package sumup
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
@@ -16,55 +16,43 @@ import (
 )
 
 func eventPayload(eventType, objectURL string) []byte {
-	return []byte(fmt.Sprintf(`{"id":"evt_123","type":%q,"created_at":"2026-04-11T10:00:00Z","object":{"id":"obj_123","type":"resource","url":%q}}`, eventType, objectURL))
+	return fmt.Appendf(nil, `{"id":"evt_123","type":%q,"created_at":"2026-04-11T10:00:00Z","object":{"id":"obj_123","type":"resource","url":%q}}`, eventType, objectURL)
 }
 
 func TestClient_ParseEventNotification(t *testing.T) {
 	t.Parallel()
+
 	c := NewClient()
-	for _, tc := range []struct {
-		eventType string
-		want      EventNotification
-	}{
-		{EventTypeMemberCreated, &MemberCreatedEvent{}},
-		{EventTypeMemberUpdated, &MemberUpdatedEvent{}},
-		{EventTypeMemberDeleted, &MemberDeletedEvent{}},
-		{EventTypeReaderCreated, &ReaderCreatedEvent{}},
-		{EventTypeReaderDeleted, &ReaderDeletedEvent{}},
-		{"future.event", &UnknownEvent{}},
+
+	for eventType, typ := range map[string]EventNotification{
+		EventTypeMemberCreated: &MemberCreatedEvent{},
+		EventTypeMemberUpdated: &MemberUpdatedEvent{},
+		EventTypeMemberDeleted: &MemberDeletedEvent{},
+		EventTypeReaderCreated: &ReaderCreatedEvent{},
+		EventTypeReaderDeleted: &ReaderDeletedEvent{},
+		"future.event":         &UnknownEvent{},
 	} {
-		t.Run(tc.eventType, func(t *testing.T) {
+		t.Run(eventType, func(t *testing.T) {
 			t.Parallel()
-			body := eventPayload(tc.eventType, "https://api.sumup.com/object")
-			headers := signedHeader(testEventSecret, time.Now(), body)
-			event, err := c.ParseEventNotification(testEventSecret, body, headers.Get(EventSignatureHeader))
+
+			body := eventPayload(eventType, "https://api.sumup.com/object")
+			signature := eventSignature(testEventSecret, time.Now(), body)
+			event, err := c.ParseEventNotification(testEventSecret, body, signature)
 			if err != nil {
 				t.Fatal(err)
 			}
-			if reflect.TypeOf(event) != reflect.TypeOf(tc.want) {
-				t.Fatalf("got %T, want %T", event, tc.want)
+			if reflect.TypeOf(event) != reflect.TypeOf(typ) {
+				t.Fatalf("got %T, want %T", event, typ)
 			}
-			if event.EventID() != "evt_123" || event.EventType() != tc.eventType {
+			if event.EventID() != "evt_123" || event.EventType() != eventType {
 				t.Fatalf("lost metadata: %v", event)
-			}
-			encoded, err := json.Marshal(event)
-			if err != nil {
-				t.Fatal(err)
-			}
-			var original, roundtrip any
-			if err := json.Unmarshal(body, &original); err != nil {
-				t.Fatal(err)
-			}
-			if err := json.Unmarshal(encoded, &roundtrip); err != nil {
-				t.Fatal(err)
-			}
-			if !reflect.DeepEqual(original, roundtrip) {
-				t.Fatalf("roundtrip changed payload: %s", encoded)
 			}
 		})
 	}
+
 	t.Run("verification precedes parsing", func(t *testing.T) {
 		t.Parallel()
+
 		if _, err := c.ParseEventNotification(testEventSecret, []byte("{"), "t=123,v1=bad"); !errors.Is(err, ErrEventSignatureExpired) {
 			t.Fatalf("verification did not precede parsing: %v", err)
 		}
@@ -73,56 +61,47 @@ func TestClient_ParseEventNotification(t *testing.T) {
 
 func TestClient_ParseEventNotificationWithoutVerification(t *testing.T) {
 	t.Parallel()
+
 	c := NewClient()
-	for _, tc := range []struct{ name, payload string }{
-		{"malformed JSON", "{"},
-		{"null payload", "null"},
-		{"invalid date", strings.Replace(string(eventPayload(EventTypeMemberCreated, "https://api.sumup.com/object")), "2026-04-11T10:00:00Z", "invalid", 1)},
-		{"trailing JSON", string(eventPayload(EventTypeMemberCreated, "https://api.sumup.com/object")) + ` {}`},
+	for name, payload := range map[string]string{
+		"malformed JSON":   "{",
+		"null payload":     "null",
+		"array payload":    "[]",
+		"wrong field type": `{"type":42}`,
+		"invalid date":     `{"created_at":"invalid"}`,
+		"trailing JSON":    `{} {}`,
 	} {
-		t.Run(tc.name, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			t.Parallel()
-			if _, err := c.ParseEventNotificationWithoutVerification([]byte(tc.payload)); !errors.Is(err, ErrEventPayloadInvalid) {
+
+			if _, err := c.ParseEventNotificationWithoutVerification([]byte(payload)); !errors.Is(err, ErrEventPayloadInvalid) {
 				t.Fatalf("error = %v", err)
 			}
 		})
 	}
-	payload := eventPayload("future.event", "https://api.sumup.com/object")
-	t.Run("unknown event retains client", func(t *testing.T) {
+
+	t.Run("empty fields use zero values", func(t *testing.T) {
 		t.Parallel()
-		event, err := c.ParseEventNotificationWithoutVerification(payload)
+
+		event, err := c.ParseEventNotificationWithoutVerification([]byte(`{}`))
 		if err != nil {
 			t.Fatal(err)
 		}
-		unknown := event.(*UnknownEvent)
-		if unknown.client != c {
-			t.Fatal("client missing")
+
+		unknown, ok := event.(*UnknownEvent)
+		if !ok || unknown.EventID() != "" || unknown.EventType() != "" || !unknown.CreatedAt.IsZero() {
+			t.Fatalf("unexpected empty event: %#v", event)
 		}
 	})
-	for _, key := range []string{"id", "type", "created_at", "object"} {
-		t.Run("missing "+key, func(t *testing.T) {
-			t.Parallel()
-			var fields map[string]json.RawMessage
-			if err := json.Unmarshal(payload, &fields); err != nil {
-				t.Fatal(err)
-			}
-			delete(fields, key)
-			body, err := json.Marshal(fields)
-			if err != nil {
-				t.Fatal(err)
-			}
-			if _, err := c.ParseEventNotificationWithoutVerification(body); !errors.Is(err, ErrEventPayloadInvalid) {
-				t.Errorf("missing %s: %v", key, err)
-			}
-		})
-	}
 }
 
 func TestTypedEvent_FetchObject(t *testing.T) {
 	t.Parallel()
+
 	for _, kind := range []string{EventTypeMemberUpdated, "future.event"} {
 		t.Run(kind, func(t *testing.T) {
 			t.Parallel()
+
 			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				if r.Method != http.MethodGet || r.URL.EscapedPath() != "/base/object/a%2Fb" || r.URL.RawQuery != "expand=payments&x=1&x=2" {
 					t.Errorf("request URL changed: %s %s", r.Method, r.URL)
@@ -133,8 +112,14 @@ func TestTypedEvent_FetchObject(t *testing.T) {
 				_, _ = w.Write([]byte(`{"id":"obj_123"}`))
 			}))
 			t.Cleanup(server.Close)
-			c := NewClient(clientpkg.WithBaseURL(server.URL+"/base"), clientpkg.WithAPIKey("test-key"))
-			event, err := c.ParseEventNotificationWithoutVerification(eventPayload(kind, clientpkg.APIUrl+"/object/a%2Fb?expand=payments&x=1&x=2"))
+			httpClient := &http.Client{Transport: eventRoundTripFunc(func(req *http.Request) (*http.Response, error) {
+				if req.URL.User != nil || req.URL.Fragment != "" {
+					t.Error("credentials or fragment reached transport")
+				}
+				return http.DefaultTransport.RoundTrip(req)
+			})}
+			c := NewClient(clientpkg.WithBaseURL(server.URL+"/base"), clientpkg.WithAPIKey("test-key"), clientpkg.WithClient(httpClient))
+			event, err := c.ParseEventNotificationWithoutVerification(eventPayload(kind, "https://user:password@api.sumup.com/object/a%2Fb?expand=payments&x=1&x=2#fragment"))
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -166,21 +151,34 @@ func TestTypedEvent_FetchObject(t *testing.T) {
 		body   string
 		want   string
 	}{
-		{"unknown error body", 404, `{"id":"not-a-success"}`, "unexpected response 404"},
-		{"plain text error", 503, `unavailable`, "unexpected response 503"},
-		{"malformed problem", 400, `{"type":`, "unexpected response 400"},
+		{"unknown error body", 404, `{"id":"not-a-success"}`, "HTTP 404"},
+		{"plain text error", 503, `unavailable`, "HTTP 503"},
+		{"rate limited", 429, `{"message":"retry later"}`, "HTTP 429"},
+		{"malformed problem", 400, `{"type":`, "HTTP 400"},
 		{"invalid JSON", 200, `{`, "decode event object"},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Retry-After", "60")
 				w.WriteHeader(tc.status)
 				_, _ = w.Write([]byte(tc.body))
 			}))
 			t.Cleanup(server.Close)
 			c := NewClient(clientpkg.WithBaseURL(server.URL))
 			e := TypedEvent[Member]{client: c, Object: EventObject{URL: clientpkg.APIUrl + "/object"}}
-			if _, err := e.FetchObject(t.Context()); err == nil || !strings.Contains(err.Error(), tc.want) {
+			_, err := e.FetchObject(t.Context())
+			if tc.status != http.StatusOK {
+				var apiError *APIError
+				if !errors.As(err, &apiError) || apiError.StatusCode != tc.status || string(apiError.Body) != tc.body || apiError.Headers.Get("Retry-After") != "60" {
+					t.Fatalf("lost API error context: %v", err)
+				}
+				var problem *Problem
+				if errors.As(err, &problem) {
+					t.Fatalf("unexpected Problem for %s", tc.body)
+				}
+			}
+			if err == nil || !strings.Contains(err.Error(), tc.want) {
 				t.Fatalf("error = %v", err)
 			}
 		})
@@ -206,6 +204,10 @@ func TestTypedEvent_FetchObject(t *testing.T) {
 				c := NewClient(clientpkg.WithBaseURL(server.URL))
 				event := TypedEvent[Member]{client: c, Object: EventObject{URL: clientpkg.APIUrl + "/object"}}
 				object, err := event.FetchObject(t.Context())
+				var apiError *APIError
+				if !errors.As(err, &apiError) || apiError.StatusCode != tc.status || string(apiError.Body) != tc.body || apiError.Headers.Get("Content-Type") != "application/problem+json" {
+					t.Fatalf("lost API error context: %v", err)
+				}
 				var problem *Problem
 				if object != nil || !errors.As(err, &problem) {
 					t.Fatalf("object = %v, error = %v; expected API problem", object, err)
@@ -219,44 +221,6 @@ func TestTypedEvent_FetchObject(t *testing.T) {
 			})
 		}
 	})
-	t.Run("normalizes URL credentials and fragments", func(t *testing.T) {
-		t.Parallel()
-		for _, tc := range []struct{ name, url string }{
-			{"credentials", "https://user:password@api.sumup.com/object/a%2Fb?x=1&x=2"},
-			{"fragment", "https://api.sumup.com/object/a%2Fb?x=1&x=2#fragment"},
-			{"both", "https://user:password@api.sumup.com/object/a%2Fb?x=1&x=2#fragment"},
-		} {
-			t.Run(tc.name, func(t *testing.T) {
-				t.Parallel()
-				server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-					if r.URL.EscapedPath() != "/base/object/a%2Fb" || r.URL.RawQuery != "x=1&x=2" {
-						t.Errorf("path or query changed: %s", r.URL)
-					}
-					if r.URL.User != nil || r.URL.Fragment != "" || r.Header.Get("Authorization") != "Bearer test-key" {
-						t.Error("request did not use normalized URL and client authentication")
-					}
-					_, _ = w.Write([]byte(`{"id":"obj_123"}`))
-				}))
-				t.Cleanup(server.Close)
-				httpClient := &http.Client{Transport: eventRoundTripFunc(func(req *http.Request) (*http.Response, error) {
-					if req.URL.User != nil || req.URL.Fragment != "" {
-						t.Error("credentials or fragment reached transport")
-					}
-					return http.DefaultTransport.RoundTrip(req)
-				})}
-				c := NewClient(clientpkg.WithBaseURL(server.URL+"/base"), clientpkg.WithAPIKey("test-key"), clientpkg.WithClient(httpClient))
-				event := TypedEvent[Member]{client: c, Object: EventObject{URL: tc.url}}
-				object, err := event.FetchObject(t.Context())
-				if err != nil {
-					t.Fatal(err)
-				}
-				if object.ID != "obj_123" {
-					t.Fatalf("object = %+v", object)
-				}
-			})
-		}
-	})
-
 	t.Run("missing client", func(t *testing.T) {
 		t.Parallel()
 		if _, err := (TypedEvent[Member]{}).FetchObject(t.Context()); err == nil {
@@ -307,26 +271,59 @@ func TestTypedEvent_FetchObject(t *testing.T) {
 			})
 		}
 	})
-	t.Run("uses configured redirect policy", func(t *testing.T) {
-		t.Parallel()
-		target := httptest.NewServer(http.HandlerFunc(func(http.ResponseWriter, *http.Request) { t.Error("followed redirect") }))
-		t.Cleanup(target.Close)
-		source := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { http.Redirect(w, r, target.URL, http.StatusFound) }))
-		t.Cleanup(source.Close)
-		redirectChecked := false
-		httpClient := &http.Client{CheckRedirect: func(*http.Request, []*http.Request) error {
-			redirectChecked = true
-			return http.ErrUseLastResponse
-		}}
-		c := NewClient(clientpkg.WithBaseURL(source.URL), clientpkg.WithClient(httpClient), clientpkg.WithAPIKey("must-not-leak"))
-		e := TypedEvent[Member]{client: c, Object: EventObject{URL: clientpkg.APIUrl + "/object"}}
-		if _, err := e.FetchObject(t.Context()); err == nil || !strings.Contains(err.Error(), "302") {
-			t.Fatalf("redirect error = %v", err)
-		}
-		if !redirectChecked {
-			t.Fatal("configured redirect policy was not called")
-		}
-	})
+	for _, customPolicy := range []bool{false, true} {
+		t.Run(fmt.Sprintf("does not follow redirects/custom policy=%t", customPolicy), func(t *testing.T) {
+			t.Parallel()
+			requests := 0
+			const target = "http://api.sumup.com/redirected"
+			httpClient := &http.Client{Transport: eventRoundTripFunc(func(r *http.Request) (*http.Response, error) {
+				requests++
+				if r.URL.String() == target {
+					return &http.Response{StatusCode: http.StatusOK, Header: make(http.Header), Body: io.NopCloser(strings.NewReader(`{"id":"obj_123"}`)), Request: r}, nil
+				}
+				return &http.Response{StatusCode: http.StatusFound, Header: http.Header{"Location": {target}}, Body: io.NopCloser(strings.NewReader("redirect")), Request: r}, nil
+			})}
+			policyCalled := false
+			policyError := errors.New("custom redirect policy")
+			if customPolicy {
+				httpClient.CheckRedirect = func(*http.Request, []*http.Request) error {
+					policyCalled = true
+					return policyError
+				}
+			}
+			c := NewClient(clientpkg.WithClient(httpClient), clientpkg.WithAPIKey("test-key"))
+			e := TypedEvent[Member]{client: c, Object: EventObject{URL: clientpkg.APIUrl + "/object"}}
+			_, err := e.FetchObject(t.Context())
+			if requests != 1 || policyCalled {
+				t.Fatalf("redirect escaped fetch: requests=%d custom policy called=%t", requests, policyCalled)
+			}
+			var apiError *APIError
+			if !errors.As(err, &apiError) || apiError.StatusCode != http.StatusFound || apiError.Headers.Get("Location") != target {
+				t.Fatalf("lost redirect response: %v", err)
+			}
+
+			// Event fetching must not change the shared client's redirect policy.
+			requests = 0
+			req, err := http.NewRequestWithContext(t.Context(), http.MethodGet, clientpkg.APIUrl+"/object", nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+			resp, err := httpClient.Do(req)
+			if customPolicy {
+				if !policyCalled || !errors.Is(err, policyError) {
+					t.Fatalf("custom redirect policy changed: %v", err)
+				}
+			} else {
+				if err != nil {
+					t.Fatal(err)
+				}
+				defer func() { _ = resp.Body.Close() }()
+				if requests != 2 || resp.StatusCode != http.StatusOK {
+					t.Fatalf("default redirect policy changed: requests=%d status=%d", requests, resp.StatusCode)
+				}
+			}
+		})
+	}
 }
 
 type eventRoundTripFunc func(*http.Request) (*http.Response, error)

@@ -520,7 +520,7 @@ var (
     ErrEventSignatureInvalid = errors.New("invalid event signature")
     // ErrEventSignatureExpired indicates a timestamp outside the allowed clock skew.
     ErrEventSignatureExpired = errors.New("event timestamp outside allowed tolerance")
-    // ErrEventPayloadInvalid indicates an invalid notification envelope.
+    // ErrEventPayloadInvalid indicates a JSON object that could not be decoded as an event.
     ErrEventPayloadInvalid = errors.New("invalid event payload")
     // ErrEventAlreadyRegistered indicates a duplicate typed callback registration.
     ErrEventAlreadyRegistered = errors.New("event callback already registered")
@@ -2077,7 +2077,7 @@ func main() {
 </details>
 
 <a name="Client.ParseEventNotification"></a>
-### func \(\*Client\) [ParseEventNotification](<https://github.com/sumup/sumup-go/blob/main/events.go#L110>)
+### func \(\*Client\) [ParseEventNotification](<https://github.com/sumup/sumup-go/blob/main/events.go#L111>)
 
 ```go
 func (c *Client) ParseEventNotification(secret string, payload []byte, signature string) (EventNotification, error)
@@ -2086,7 +2086,7 @@ func (c *Client) ParseEventNotification(secret string, payload []byte, signature
 ParseEventNotification verifies the signature and timestamp before parsing the exact raw body. Prefer [Client.EventsHandler](<#Client.EventsHandler>) when using callback dispatch.
 
 <a name="Client.ParseEventNotificationWithoutVerification"></a>
-### func \(\*Client\) [ParseEventNotificationWithoutVerification](<https://github.com/sumup/sumup-go/blob/main/events.go#L120>)
+### func \(\*Client\) [ParseEventNotificationWithoutVerification](<https://github.com/sumup/sumup-go/blob/main/events.go#L121>)
 
 ```go
 func (c *Client) ParseEventNotificationWithoutVerification(payload []byte) (EventNotification, error)
@@ -7206,7 +7206,7 @@ func (e TypedEvent[T]) FetchObject(ctx context.Context) (*T, error)
 
 FetchObject retrieves the latest resource using the client that parsed the notification.
 
-The URL must have the SumUp API origin. Its path and query are resolved against the client's configured base URL; URL credentials and fragments are ignored. Requests use the client's authentication and redirect policy. Deleted resources may return a \*Problem API error.
+The URL must have the SumUp API origin. Its path and query are resolved against the client's configured base URL; URL credentials and fragments are ignored. Requests use the client's authentication and transport, with redirects disabled. API failures return an \*APIError, which may wrap a \*Problem for deleted resources.
 
 <a name="Unauthorized"></a>
 ## type [Unauthorized](<https://github.com/sumup/sumup-go/blob/main/readers.go#L577-L579>)
@@ -7474,6 +7474,7 @@ import "github.com/sumup/sumup-go/client"
   - [func WithHeader\(key, value string\) RequestOption](<#WithHeader>)
   - [func WithJSONBody\(v any\) RequestOption](<#WithJSONBody>)
   - [func WithQueryValues\(q url.Values\) RequestOption](<#WithQueryValues>)
+  - [func WithoutRedirects\(\) RequestOption](<#WithoutRedirects>)
 
 
 ## Constants
@@ -7591,7 +7592,7 @@ func WithHTTPClient(client *http.Client) RequestOption
 WithHTTPClient returns a [RequestOption](<#RequestOption>) that overrides the underlying \[http.Client\] of the service used to make the request.
 
 <a name="WithHeader"></a>
-### func [WithHeader](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L206>)
+### func [WithHeader](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L220>)
 
 ```go
 func WithHeader(key, value string) RequestOption
@@ -7600,7 +7601,7 @@ func WithHeader(key, value string) RequestOption
 WithHeader returns a [RequestOption](<#RequestOption>) that sets a header key\-value pair. Any previously set value will be overwritten.
 
 <a name="WithJSONBody"></a>
-### func [WithJSONBody](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L214>)
+### func [WithJSONBody](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L228>)
 
 ```go
 func WithJSONBody(v any) RequestOption
@@ -7609,13 +7610,22 @@ func WithJSONBody(v any) RequestOption
 WithBody returns a [RequestOption](<#RequestOption>) that sets the request body as a JSON of the value v.
 
 <a name="WithQueryValues"></a>
-### func [WithQueryValues](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L228>)
+### func [WithQueryValues](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L242>)
 
 ```go
 func WithQueryValues(q url.Values) RequestOption
 ```
 
 WithQueryValues returns a [RequestOption](<#RequestOption>) that sets the request query params.
+
+<a name="WithoutRedirects"></a>
+### func [WithoutRedirects](<https://github.com/sumup/sumup-go/blob/main/client/client.go#L207>)
+
+```go
+func WithoutRedirects() RequestOption
+```
+
+WithoutRedirects prevents this request from following redirects. The configured client's transport, timeout, and cookie jar are preserved. Its redirect policy is unchanged for other requests.
 
 # datetime
 

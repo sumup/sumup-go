@@ -149,8 +149,8 @@ Only use `ParseEventNotificationWithoutVerification` for fixtures or notificatio
 
 `FetchObject(ctx)` returns the latest typed resource using the SDK's authentication and transport.
 Unknown events fetch raw JSON. Resource URLs must use the default API origin (`https://api.sumup.com`).
-URL credentials and fragments are ignored; the path and query use the client's configured base URL, authentication, and redirect policy.
-Structured API errors are returned as `*sumup.Problem`, accessible with `errors.As`.
+URL credentials and fragments are ignored; the path and query use the client's configured base URL and authentication. Resource fetching does not follow redirects.
+API failures return `*sumup.APIError`, preserving the status, headers, and body. Structured Problem details remain accessible as `*sumup.Problem` with `errors.As`.
 Deleted resources may no longer be fetchable. Treat events as notifications, make processing idempotent using the event ID,
 and allow for retries and out-of-order delivery. Return a 5xx response for `*sumup.EventCallbackError` so failed processing can be retried.
 
