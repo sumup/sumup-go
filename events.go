@@ -122,13 +122,13 @@ func (c *Client) ParseEventNotificationWithoutVerification(payload []byte) (Even
 }
 
 func (c *Client) parseEventNotification(payload []byte) (EventNotification, error) {
-	var raw TypedEvent[json.RawMessage]
+	var raw *TypedEvent[json.RawMessage]
 	if err := json.Unmarshal(payload, &raw); err != nil {
 		return nil, fmt.Errorf("%w: %w", ErrEventPayloadInvalid, err)
 	}
-	if raw.ID == "" || raw.Type == "" || raw.CreatedAt.IsZero() || raw.Object.ID == "" || raw.Object.Type == "" || raw.Object.URL == "" {
-		return nil, fmt.Errorf("%w: missing required event fields", ErrEventPayloadInvalid)
+	if raw == nil {
+		return nil, fmt.Errorf("%w: expected a JSON object", ErrEventPayloadInvalid)
 	}
 	raw.client = c
-	return parseKnownEvent(raw), nil
+	return parseKnownEvent(*raw), nil
 }

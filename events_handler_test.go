@@ -7,14 +7,12 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"errors"
-	"net/http"
 	"slices"
 	"strconv"
 	"strings"
 	"sync"
 	"sync/atomic"
 	"testing"
-	"testing/synctest"
 	"time"
 )
 
@@ -32,23 +30,21 @@ func testHandler(t *testing.T, fallback EventCallback) *EventsHandler {
 	return h
 }
 
-func signedHeader(secret string, timestamp time.Time, body []byte) http.Header {
+func eventSignature(secret string, timestamp time.Time, body []byte) string {
 	stamp := strconv.FormatInt(timestamp.Unix(), 10)
 	// Independent concatenated representation, not the verifier's streaming implementation.
 	content := append([]byte("v1:"+stamp+":"), body...)
 	mac := hmac.New(sha256.New, []byte(secret))
 	_, _ = mac.Write(content)
-	header := http.Header{}
-	header.Set("X-SumUp-Webhook-Signature", "t="+stamp+",v1="+hex.EncodeToString(mac.Sum(nil)))
-	return header
+	return "t=" + stamp + ",v1=" + hex.EncodeToString(mac.Sum(nil))
 }
 
 func handleSigned(t *testing.T, h *EventsHandler, eventType string) error {
 	t.Helper()
 
 	body := eventPayload(eventType, "https://api.sumup.com/object")
-	headers := signedHeader(testEventSecret, time.Now(), body)
-	return h.Handle(t.Context(), body, headers.Get(EventSignatureHeader))
+	signature := eventSignature(testEventSecret, time.Now(), body)
+	return h.Handle(t.Context(), body, signature)
 }
 
 func TestNewEventsHandler(t *testing.T) {
@@ -80,9 +76,8 @@ func TestVerifyEventSignature(t *testing.T) {
 
 	body := []byte(`{"id":"evt_123"}`)
 	now := time.Now()
-	valid := signedHeader(testEventSecret, now, body)
 	stamp := strconv.FormatInt(now.Unix(), 10)
-	validSignature := valid.Get(EventSignatureHeader)
+	validSignature := eventSignature(testEventSecret, now, body)
 	_, digest, _ := strings.Cut(validSignature, ",")
 	for _, tc := range []struct {
 		name, secret, signature string
@@ -125,20 +120,23 @@ func TestVerifyEventSignature(t *testing.T) {
 		}
 	})
 
-	for _, skew := range []time.Duration{-eventTolerance - time.Second, -eventTolerance, eventTolerance, eventTolerance + time.Second} {
-		t.Run("clock skew "+skew.String(), func(t *testing.T) {
+	for _, tc := range []struct {
+		name string
+		skew time.Duration
+		want error
+	}{
+		{"expired", -5*time.Minute - time.Second, ErrEventSignatureExpired},
+		{"oldest accepted", -5 * time.Minute, nil},
+		{"newest accepted", 5 * time.Minute, nil},
+		{"too far in future", 5*time.Minute + time.Second, ErrEventSignatureExpired},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			synctest.Test(t, func(t *testing.T) {
-				headers := signedHeader(testEventSecret, time.Now().Add(skew), body)
-				err := VerifyEventSignature(testEventSecret, body, headers.Get(EventSignatureHeader))
-				var want error
-				if skew < -eventTolerance || skew > eventTolerance {
-					want = ErrEventSignatureExpired
-				}
-				if !errors.Is(err, want) {
-					t.Errorf("skew %v: error = %v, want %v", skew, err, want)
-				}
-			})
+
+			signature := eventSignature(testEventSecret, now.Add(tc.skew), body)
+			if err := verifyEventSignature(testEventSecret, body, signature, now); !errors.Is(err, tc.want) {
+				t.Errorf("error = %v, want %v", err, tc.want)
+			}
 		})
 	}
 }
@@ -188,8 +186,8 @@ func TestEventsHandler_Handle(t *testing.T) {
 		if err := h.Handle(t.Context(), body, "t="+strconv.FormatInt(time.Now().Unix(), 10)+",v1=deadbeef"); !errors.Is(err, ErrEventSignatureInvalid) {
 			t.Fatal(err)
 		}
-		headers := signedHeader(testEventSecret, time.Now(), body)
-		if err := h.Handle(t.Context(), body, headers.Get(EventSignatureHeader)); !errors.Is(err, ErrEventPayloadInvalid) {
+		signature := eventSignature(testEventSecret, time.Now(), body)
+		if err := h.Handle(t.Context(), body, signature); !errors.Is(err, ErrEventPayloadInvalid) {
 			t.Fatal(err)
 		}
 	})
@@ -288,8 +286,8 @@ func TestEventsHandler_Parse(t *testing.T) {
 		t.Parallel()
 		h := testHandler(t, func(context.Context, EventNotification) error { t.Error("parse called callback"); return nil })
 		body := eventPayload(EventTypeMemberCreated, "https://api.sumup.com/object")
-		headers := signedHeader(testEventSecret, time.Now(), body)
-		event, err := h.Parse(body, headers.Get(EventSignatureHeader))
+		signature := eventSignature(testEventSecret, time.Now(), body)
+		event, err := h.Parse(body, signature)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -303,8 +301,8 @@ func TestEventsHandler_Parse(t *testing.T) {
 
 		h := testHandler(t, ignoreEvent)
 		body := eventPayload(EventTypeMemberCreated, "https://api.sumup.com/object")
-		headers := signedHeader(testEventSecret, time.Now().Add(-6*time.Minute), body)
-		if _, err := h.Parse(body, headers.Get(EventSignatureHeader)); !errors.Is(err, ErrEventSignatureExpired) {
+		signature := eventSignature(testEventSecret, time.Now().Add(-6*time.Minute), body)
+		if _, err := h.Parse(body, signature); !errors.Is(err, ErrEventSignatureExpired) {
 			t.Fatal(err)
 		}
 	})

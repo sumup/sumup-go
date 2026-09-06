@@ -34,7 +34,7 @@ var (
 	ErrEventSignatureInvalid = errors.New("invalid event signature")
 	// ErrEventSignatureExpired indicates a timestamp outside the allowed clock skew.
 	ErrEventSignatureExpired = errors.New("event timestamp outside allowed tolerance")
-	// ErrEventPayloadInvalid indicates an invalid notification envelope.
+	// ErrEventPayloadInvalid indicates a JSON object that could not be decoded as an event.
 	ErrEventPayloadInvalid = errors.New("invalid event payload")
 	// ErrEventAlreadyRegistered indicates a duplicate typed callback registration.
 	ErrEventAlreadyRegistered = errors.New("event callback already registered")
