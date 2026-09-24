@@ -386,6 +386,7 @@ func (b *Builder) buildPathParams(paramType string, params []*v3.Parameter) ([]P
 
 // convertToValidGoType converts a schema type to a valid Go type.
 func (b *Builder) convertToValidGoType(property string, r *base.SchemaProxy) string {
+	r = nonNullSchema(r)
 	if r == nil {
 		return "any"
 	}

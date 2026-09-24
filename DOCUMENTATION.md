@@ -3109,7 +3109,7 @@ type MembersUpdateParamsUser struct {
 ```
 
 <a name="Membership"></a>
-## type [Membership](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L19-L51>)
+## type [Membership](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L20-L52>)
 
 A membership associates a user with a resource, memberships is defined by user, resource, resource type, and associated roles.
 
@@ -3150,7 +3150,7 @@ type Membership struct {
 ```
 
 <a name="MembershipResource"></a>
-## type [MembershipResource](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L54-L74>)
+## type [MembershipResource](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L55-L75>)
 
 Information about the resource the membership is in.
 
@@ -3249,7 +3249,7 @@ type MembershipUserClassic struct {
 ```
 
 <a name="MembershipsClient"></a>
-## type [MembershipsClient](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L173-L175>)
+## type [MembershipsClient](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L182-L184>)
 
 MembershipsClient provides access to the Memberships API.
 
@@ -3262,7 +3262,7 @@ type MembershipsClient struct {
 ```
 
 <a name="NewMembershipsClient"></a>
-### func [NewMembershipsClient](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L177>)
+### func [NewMembershipsClient](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L186>)
 
 ```go
 func NewMembershipsClient(c *client.Client) *MembershipsClient
@@ -3271,7 +3271,7 @@ func NewMembershipsClient(c *client.Client) *MembershipsClient
 
 
 <a name="MembershipsClient.List"></a>
-### func \(\*MembershipsClient\) [List](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L182>)
+### func \(\*MembershipsClient\) [List](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L191>)
 
 ```go
 func (c *MembershipsClient) List(ctx context.Context, params MembershipsListParams) (*MembershipsListResponse, error)
@@ -3280,7 +3280,7 @@ func (c *MembershipsClient) List(ctx context.Context, params MembershipsListPara
 List memberships of the current user.
 
 <a name="MembershipsListParams"></a>
-## type [MembershipsListParams](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L83-L110>)
+## type [MembershipsListParams](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L84-L111>)
 
 MembershipsListParams are query parameters for ListMemberships.
 
@@ -3301,11 +3301,11 @@ type MembershipsListParams struct {
     // Filter memberships by the parent of the resource the membership is in.
     // When filtering by parent both `resource.parent.id` and `resource.parent.type` must be present. Pass explicit null
     // to filter for resources without a parent.
-    ResourceParentID *string
+    ResourceParentID *nullable.Field[string]
     // Filter memberships by the parent of the resource the membership is in.
     // When filtering by parent both `resource.parent.id` and `resource.parent.type` must be present. Pass explicit null
     // to filter for resources without a parent.
-    ResourceParentType *any
+    ResourceParentType *nullable.Field[ResourceType]
     // Filter memberships by resource kind.
     ResourceType *ResourceType
     // Filter the returned memberships by role.
@@ -3316,7 +3316,7 @@ type MembershipsListParams struct {
 ```
 
 <a name="MembershipsListParams.QueryValues"></a>
-### func \(\*MembershipsListParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L113>)
+### func \(\*MembershipsListParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L114>)
 
 ```go
 func (p *MembershipsListParams) QueryValues() url.Values
@@ -3325,7 +3325,7 @@ func (p *MembershipsListParams) QueryValues() url.Values
 QueryValues converts [MembershipsListParams](<#MembershipsListParams>) into \[url.Values\].
 
 <a name="MembershipsListResponse"></a>
-## type [MembershipsListResponse](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L164-L167>)
+## type [MembershipsListResponse](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L173-L176>)
 
 MembershipsListResponse is a schema definition.
 
@@ -4816,7 +4816,7 @@ func (p *ReceiptsGetParams) QueryValues() url.Values
 QueryValues converts [ReceiptsGetParams](<#ReceiptsGetParams>) into \[url.Values\].
 
 <a name="ResourceType"></a>
-## type [ResourceType](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L80>)
+## type [ResourceType](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L81>)
 
 The type of the membership resource. Possible values are: \* \`merchant\` \- merchant account\(s\) \* \`organization\` \- organization\(s\)
 

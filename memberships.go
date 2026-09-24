@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/sumup/sumup-go/client"
+	"github.com/sumup/sumup-go/nullable"
 )
 
 // A membership associates a user with a resource, memberships is defined by user, resource, resource type, and
@@ -96,11 +97,11 @@ type MembershipsListParams struct {
 	// Filter memberships by the parent of the resource the membership is in.
 	// When filtering by parent both `resource.parent.id` and `resource.parent.type` must be present. Pass explicit null
 	// to filter for resources without a parent.
-	ResourceParentID *string
+	ResourceParentID *nullable.Field[string]
 	// Filter memberships by the parent of the resource the membership is in.
 	// When filtering by parent both `resource.parent.id` and `resource.parent.type` must be present. Pass explicit null
 	// to filter for resources without a parent.
-	ResourceParentType *any
+	ResourceParentType *nullable.Field[ResourceType]
 	// Filter memberships by resource kind.
 	ResourceType *ResourceType
 	// Filter the returned memberships by role.
@@ -138,11 +139,19 @@ func (p *MembershipsListParams) QueryValues() url.Values {
 	}
 
 	if p.ResourceParentID != nil {
-		q.Set("resource.parent.id", *p.ResourceParentID)
+		if p.ResourceParentID.Null() {
+			q.Set("resource.parent.id", "null")
+		} else {
+			q.Set("resource.parent.id", *p.ResourceParentID.Value())
+		}
 	}
 
 	if p.ResourceParentType != nil {
-		q.Set("resource.parent.type", *p.ResourceParentType)
+		if p.ResourceParentType.Null() {
+			q.Set("resource.parent.type", "null")
+		} else {
+			q.Set("resource.parent.type", string(*p.ResourceParentType.Value()))
+		}
 	}
 
 	if p.ResourceType != nil {
