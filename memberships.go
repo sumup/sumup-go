@@ -89,6 +89,8 @@ type MembershipsListParams struct {
 	Offset *int
 	// Filter memberships by the sandbox status of the resource the membership is in.
 	ResourceAttributesSandbox *bool
+	// Filter memberships by the ID of the resource the membership is in.
+	ResourceID *string
 	// Filter memberships by the name of the resource the membership is in.
 	ResourceName *string
 	// Filter memberships by the parent of the resource the membership is in.
@@ -98,7 +100,7 @@ type MembershipsListParams struct {
 	// Filter memberships by the parent of the resource the membership is in.
 	// When filtering by parent both `resource.parent.id` and `resource.parent.type` must be present. Pass explicit null
 	// to filter for resources without a parent.
-	ResourceParentType *ResourceType
+	ResourceParentType *any
 	// Filter memberships by resource kind.
 	ResourceType *ResourceType
 	// Filter the returned memberships by role.
@@ -127,6 +129,10 @@ func (p *MembershipsListParams) QueryValues() url.Values {
 		q.Set("resource.attributes.sandbox", strconv.FormatBool(*p.ResourceAttributesSandbox))
 	}
 
+	if p.ResourceID != nil {
+		q.Set("resource.id", *p.ResourceID)
+	}
+
 	if p.ResourceName != nil {
 		q.Set("resource.name", *p.ResourceName)
 	}
@@ -136,7 +142,7 @@ func (p *MembershipsListParams) QueryValues() url.Values {
 	}
 
 	if p.ResourceParentType != nil {
-		q.Set("resource.parent.type", string(*p.ResourceParentType))
+		q.Set("resource.parent.type", *p.ResourceParentType)
 	}
 
 	if p.ResourceType != nil {

@@ -1217,20 +1217,20 @@ func NewCheckoutsClient(c *client.Client) *CheckoutsClient
 
 
 <a name="CheckoutsClient.Create"></a>
-### func \(\*CheckoutsClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L744>)
+### func \(\*CheckoutsClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L746>)
 
 ```go
 func (c *CheckoutsClient) Create(ctx context.Context, body CheckoutsCreateParams) (*Checkout, error)
 ```
 
-Creates a new payment checkout resource. The unique \`checkout\_reference\` created by this request, is used for further manipulation of the checkout.
+Creates a payment checkout for the specified merchant, amount, and currency. Supply a \`checkout\_reference\` to identify the payment attempt in your own systems. Creating a checkout does not charge a payment instrument.
 
-For 3DS checkouts, add the \`redirect\_url\` parameter to your request body schema. To use the \[Hosted Checkout\]\(https://developer.sumup.com/online-payments/checkouts/hosted-checkout/\) page, set the \`hosted\_checkout.enabled\` to \`true\`.
+Set \`hosted\_checkout.enabled\` to \`true\` to receive a \[Hosted Checkout\]\(https://developer.sumup.com/online-payments/checkouts/hosted-checkout/\) URL where the customer can complete the payment. Use \`redirect\_url\` for redirect\-based payment and 3DS flows. If \`return\_url\` is provided, SumUp sends processing updates to that backend callback URL.
 
-Follow by processing a checkout to charge the provided payment instrument.
+Complete the payment through \[Hosted Checkout\]\(https://developer.sumup.com/online-payments/checkouts/hosted-checkout/\) or the \[Payment Widget\]\(https://developer.sumup.com/online-payments/checkouts/card-widget\).
 
 <a name="CheckoutsClient.CreateApplePaySession"></a>
-### func \(\*CheckoutsClient\) [CreateApplePaySession](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L802>)
+### func \(\*CheckoutsClient\) [CreateApplePaySession](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L804>)
 
 ```go
 func (c *CheckoutsClient) CreateApplePaySession(ctx context.Context, checkoutID string, body CheckoutsCreateApplePaySessionParams) (*CheckoutsCreateApplePaySessionResponse, error)
@@ -1241,7 +1241,7 @@ Creates an Apple Pay merchant session for the specified checkout.
 Use this endpoint after the customer selects Apple Pay and before calling \`ApplePaySession.completeMerchantValidation\(...\)\` in the browser. SumUp validates the merchant session request and returns the Apple Pay session object that your frontend should pass to Apple's JavaScript API.
 
 <a name="CheckoutsClient.Deactivate"></a>
-### func \(\*CheckoutsClient\) [Deactivate](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L873>)
+### func \(\*CheckoutsClient\) [Deactivate](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L875>)
 
 ```go
 func (c *CheckoutsClient) Deactivate(ctx context.Context, checkoutID string) (*Checkout, error)
@@ -1250,7 +1250,7 @@ func (c *CheckoutsClient) Deactivate(ctx context.Context, checkoutID string) (*C
 Deactivates an identified checkout resource. If the checkout has already been processed it can not be deactivated.
 
 <a name="CheckoutsClient.Get"></a>
-### func \(\*CheckoutsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L920>)
+### func \(\*CheckoutsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L922>)
 
 ```go
 func (c *CheckoutsClient) Get(ctx context.Context, checkoutID string) (*CheckoutSuccess, error)
@@ -1268,7 +1268,7 @@ func (c *CheckoutsClient) List(ctx context.Context, params CheckoutsListParams) 
 Lists created checkout resources according to the applied \`checkout\_reference\`.
 
 <a name="CheckoutsClient.ListAvailablePaymentMethods"></a>
-### func \(\*CheckoutsClient\) [ListAvailablePaymentMethods](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L841>)
+### func \(\*CheckoutsClient\) [ListAvailablePaymentMethods](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L843>)
 
 ```go
 func (c *CheckoutsClient) ListAvailablePaymentMethods(ctx context.Context, merchantCode string, params CheckoutsListAvailablePaymentMethodsParams) (*CheckoutsListAvailablePaymentMethodsResponse, error)
@@ -1277,7 +1277,7 @@ func (c *CheckoutsClient) ListAvailablePaymentMethods(ctx context.Context, merch
 Get payment methods available for the given merchant to use with a checkout.
 
 <a name="CheckoutsClient.Process"></a>
-### func \(\*CheckoutsClient\) [Process](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L1007>)
+### func \(\*CheckoutsClient\) [Process](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L1013>)
 
 ```go
 func (c *CheckoutsClient) Process(ctx context.Context, checkoutID string, body CheckoutsProcessParams) (*CheckoutsProcessResponse, error)
@@ -1290,13 +1290,15 @@ Processing a checkout will attempt to charge the provided payment instrument for
 Follow this request with \`Retrieve a checkout\` to confirm its status.
 
 <a name="CheckoutsClient.Update"></a>
-### func \(\*CheckoutsClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L959>)
+### func \(\*CheckoutsClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L965>)
 
 ```go
 func (c *CheckoutsClient) Update(ctx context.Context, checkoutID string, body CheckoutsUpdateParams) (*Checkout, error)
 ```
 
-Updates an identified checkout resource.
+Updates the amount, currency, description, reference, expiration, or customer associated with an existing checkout. Only the supplied fields are updated.
+
+This request changes the checkout details; it does not charge a payment instrument. Process the checkout separately to attempt a payment.
 
 <a name="CheckoutsCreateApplePaySession400Response"></a>
 ## type [CheckoutsCreateApplePaySession400Response](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L512>)
@@ -2918,7 +2920,7 @@ type Member struct {
 ```
 
 <a name="MembersClient"></a>
-## type [MembersClient](<https://github.com/sumup/sumup-go/blob/main/members.go#L215-L217>)
+## type [MembersClient](<https://github.com/sumup/sumup-go/blob/main/members.go#L211-L213>)
 
 MembersClient provides access to the Members API.
 
@@ -2931,7 +2933,7 @@ type MembersClient struct {
 ```
 
 <a name="NewMembersClient"></a>
-### func [NewMembersClient](<https://github.com/sumup/sumup-go/blob/main/members.go#L219>)
+### func [NewMembersClient](<https://github.com/sumup/sumup-go/blob/main/members.go#L215>)
 
 ```go
 func NewMembersClient(c *client.Client) *MembersClient
@@ -2940,16 +2942,18 @@ func NewMembersClient(c *client.Client) *MembersClient
 
 
 <a name="MembersClient.Create"></a>
-### func \(\*MembersClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/members.go#L256>)
+### func \(\*MembersClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/members.go#L257>)
 
 ```go
 func (c *MembersClient) Create(ctx context.Context, merchantCode string, body MembersCreateParams) (*Member, error)
 ```
 
-Create a merchant member.
+Adds a member to the merchant account with the specified roles.
+
+By default, sends an invitation email to the provided address. The recipient must accept the invitation to join the account. When \`is\_managed\_user\` is \`true\`, creates a managed user with the provided password and optional nickname and assigns the roles directly, without sending an invitation.
 
 <a name="MembersClient.Delete"></a>
-### func \(\*MembersClient\) [Delete](<https://github.com/sumup/sumup-go/blob/main/members.go#L302>)
+### func \(\*MembersClient\) [Delete](<https://github.com/sumup/sumup-go/blob/main/members.go#L303>)
 
 ```go
 func (c *MembersClient) Delete(ctx context.Context, merchantCode string, memberID string) error
@@ -2958,7 +2962,7 @@ func (c *MembersClient) Delete(ctx context.Context, merchantCode string, memberI
 Deletes a merchant member.
 
 <a name="MembersClient.Get"></a>
-### func \(\*MembersClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/members.go#L336>)
+### func \(\*MembersClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/members.go#L337>)
 
 ```go
 func (c *MembersClient) Get(ctx context.Context, merchantCode string, memberID string) (*Member, error)
@@ -2967,7 +2971,7 @@ func (c *MembersClient) Get(ctx context.Context, merchantCode string, memberID s
 Retrieve a merchant member.
 
 <a name="MembersClient.List"></a>
-### func \(\*MembersClient\) [List](<https://github.com/sumup/sumup-go/blob/main/members.go#L224>)
+### func \(\*MembersClient\) [List](<https://github.com/sumup/sumup-go/blob/main/members.go#L220>)
 
 ```go
 func (c *MembersClient) List(ctx context.Context, merchantCode string, params MembersListParams) (*MembersListResponse, error)
@@ -2976,16 +2980,18 @@ func (c *MembersClient) List(ctx context.Context, merchantCode string, params Me
 Lists merchant members.
 
 <a name="MembersClient.Update"></a>
-### func \(\*MembersClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/members.go#L368>)
+### func \(\*MembersClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/members.go#L374>)
 
 ```go
 func (c *MembersClient) Update(ctx context.Context, merchantCode string, memberID string, body MembersUpdateParams) (*Member, error)
 ```
 
-Update the merchant member.
+Updates a merchant member and returns the updated member.
+
+Providing \`roles\` replaces the member's assigned roles and can grant or revoke access. Providing \`metadata\` replaces the entire metadata object. For managed users, \`user.nickname\` changes the display name and \`user.password\` replaces the password. Updating the password also enables the managed user account.
 
 <a name="MembersCreateParams"></a>
-## type [MembersCreateParams](<https://github.com/sumup/sumup-go/blob/main/members.go#L95-L120>)
+## type [MembersCreateParams](<https://github.com/sumup/sumup-go/blob/main/members.go#L95-L121>)
 
 MembersCreateParams is a schema definition.
 
@@ -3013,13 +3019,14 @@ type MembersCreateParams struct {
     // Min length: 8
     Password *secret.Secret `json:"password,omitempty"`
     // List of roles to assign to the new member.
+    // Min items: 1
     // Max items: 124
     Roles []string `json:"roles"`
 }
 ```
 
 <a name="MembersListParams"></a>
-## type [MembersListParams](<https://github.com/sumup/sumup-go/blob/main/members.go#L148-L165>)
+## type [MembersListParams](<https://github.com/sumup/sumup-go/blob/main/members.go#L150-L165>)
 
 MembersListParams are query parameters for ListMerchantMembers.
 
@@ -3039,8 +3046,6 @@ type MembersListParams struct {
     Status *MembershipStatus
     // Search for a member by user id.
     UserID *string
-    // Filter the returned members by user type. Repeat this parameter to include multiple user types.
-    UserType []UserType
 }
 ```
 
@@ -3054,7 +3059,7 @@ func (p *MembersListParams) QueryValues() url.Values
 QueryValues converts [MembersListParams](<#MembersListParams>) into \[url.Values\].
 
 <a name="MembersListResponse"></a>
-## type [MembersListResponse](<https://github.com/sumup/sumup-go/blob/main/members.go#L207-L210>)
+## type [MembersListResponse](<https://github.com/sumup/sumup-go/blob/main/members.go#L203-L206>)
 
 MembersListResponse is a schema definition.
 
@@ -3066,7 +3071,7 @@ type MembersListResponse struct {
 ```
 
 <a name="MembersUpdateParams"></a>
-## type [MembersUpdateParams](<https://github.com/sumup/sumup-go/blob/main/members.go#L123-L134>)
+## type [MembersUpdateParams](<https://github.com/sumup/sumup-go/blob/main/members.go#L124-L136>)
 
 MembersUpdateParams is a schema definition.
 
@@ -3078,6 +3083,7 @@ type MembersUpdateParams struct {
     // submit whole metadata. Maximum of 64 parameters are allowed in the object.
     // Max properties: 64
     Metadata Metadata `json:"metadata,omitempty"`
+    // Min items: 1
     // Max items: 124
     Roles []string `json:"roles,omitempty"`
     // Allows you to update user data of managed users.
@@ -3086,7 +3092,7 @@ type MembersUpdateParams struct {
 ```
 
 <a name="MembersUpdateParamsUser"></a>
-## type [MembersUpdateParamsUser](<https://github.com/sumup/sumup-go/blob/main/members.go#L137-L145>)
+## type [MembersUpdateParamsUser](<https://github.com/sumup/sumup-go/blob/main/members.go#L139-L147>)
 
 Allows you to update user data of managed users.
 
@@ -3243,7 +3249,7 @@ type MembershipUserClassic struct {
 ```
 
 <a name="MembershipsClient"></a>
-## type [MembershipsClient](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L167-L169>)
+## type [MembershipsClient](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L173-L175>)
 
 MembershipsClient provides access to the Memberships API.
 
@@ -3256,7 +3262,7 @@ type MembershipsClient struct {
 ```
 
 <a name="NewMembershipsClient"></a>
-### func [NewMembershipsClient](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L171>)
+### func [NewMembershipsClient](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L177>)
 
 ```go
 func NewMembershipsClient(c *client.Client) *MembershipsClient
@@ -3265,7 +3271,7 @@ func NewMembershipsClient(c *client.Client) *MembershipsClient
 
 
 <a name="MembershipsClient.List"></a>
-### func \(\*MembershipsClient\) [List](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L176>)
+### func \(\*MembershipsClient\) [List](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L182>)
 
 ```go
 func (c *MembershipsClient) List(ctx context.Context, params MembershipsListParams) (*MembershipsListResponse, error)
@@ -3274,7 +3280,7 @@ func (c *MembershipsClient) List(ctx context.Context, params MembershipsListPara
 List memberships of the current user.
 
 <a name="MembershipsListParams"></a>
-## type [MembershipsListParams](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L83-L108>)
+## type [MembershipsListParams](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L83-L110>)
 
 MembershipsListParams are query parameters for ListMemberships.
 
@@ -3288,6 +3294,8 @@ type MembershipsListParams struct {
     Offset *int
     // Filter memberships by the sandbox status of the resource the membership is in.
     ResourceAttributesSandbox *bool
+    // Filter memberships by the ID of the resource the membership is in.
+    ResourceID *string
     // Filter memberships by the name of the resource the membership is in.
     ResourceName *string
     // Filter memberships by the parent of the resource the membership is in.
@@ -3297,7 +3305,7 @@ type MembershipsListParams struct {
     // Filter memberships by the parent of the resource the membership is in.
     // When filtering by parent both `resource.parent.id` and `resource.parent.type` must be present. Pass explicit null
     // to filter for resources without a parent.
-    ResourceParentType *ResourceType
+    ResourceParentType *any
     // Filter memberships by resource kind.
     ResourceType *ResourceType
     // Filter the returned memberships by role.
@@ -3308,7 +3316,7 @@ type MembershipsListParams struct {
 ```
 
 <a name="MembershipsListParams.QueryValues"></a>
-### func \(\*MembershipsListParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L111>)
+### func \(\*MembershipsListParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L113>)
 
 ```go
 func (p *MembershipsListParams) QueryValues() url.Values
@@ -3317,7 +3325,7 @@ func (p *MembershipsListParams) QueryValues() url.Values
 QueryValues converts [MembershipsListParams](<#MembershipsListParams>) into \[url.Values\].
 
 <a name="MembershipsListResponse"></a>
-## type [MembershipsListResponse](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L158-L161>)
+## type [MembershipsListResponse](<https://github.com/sumup/sumup-go/blob/main/memberships.go#L164-L167>)
 
 MembershipsListResponse is a schema definition.
 
@@ -4294,7 +4302,7 @@ func (c *ReadersClient) Get(ctx context.Context, merchantCode string, readerID R
 Retrieve a Reader.
 
 <a name="ReadersClient.GetCheckout"></a>
-### func \(\*ReadersClient\) [GetCheckout](<https://github.com/sumup/sumup-go/blob/main/readers.go#L1039>)
+### func \(\*ReadersClient\) [GetCheckout](<https://github.com/sumup/sumup-go/blob/main/readers.go#L1042>)
 
 ```go
 func (c *ReadersClient) GetCheckout(ctx context.Context, merchantCode string, readerID string, checkoutID string) (*GetReaderCheckoutResponse, error)
@@ -4350,13 +4358,15 @@ If a transaction is successfully terminated and \`return\_url\` was provided on 
 \*\*Note\*\*: If the target device is a Solo, it must be in version 3.3.28.0 or higher.
 
 <a name="ReadersClient.Update"></a>
-### func \(\*ReadersClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/readers.go#L1000>)
+### func \(\*ReadersClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/readers.go#L1003>)
 
 ```go
 func (c *ReadersClient) Update(ctx context.Context, merchantCode string, readerID ReaderID, body ReadersUpdateParams) (*Reader, error)
 ```
 
-Update a Reader.
+Updates a reader's name or metadata and returns the updated reader.
+
+Providing \`metadata\` replaces the entire metadata object; include all entries that should be retained. Omitted fields remain unchanged.
 
 <a name="ReadersCreateCheckoutParams"></a>
 ## type [ReadersCreateCheckoutParams](<https://github.com/sumup/sumup-go/blob/main/readers.go#L566>)
@@ -4844,7 +4854,7 @@ type Role struct {
 ```
 
 <a name="RolesClient"></a>
-## type [RolesClient](<https://github.com/sumup/sumup-go/blob/main/roles.go#L74-L76>)
+## type [RolesClient](<https://github.com/sumup/sumup-go/blob/main/roles.go#L76-L78>)
 
 RolesClient provides access to the Roles API.
 
@@ -4857,7 +4867,7 @@ type RolesClient struct {
 ```
 
 <a name="NewRolesClient"></a>
-### func [NewRolesClient](<https://github.com/sumup/sumup-go/blob/main/roles.go#L78>)
+### func [NewRolesClient](<https://github.com/sumup/sumup-go/blob/main/roles.go#L80>)
 
 ```go
 func NewRolesClient(c *client.Client) *RolesClient
@@ -4866,7 +4876,7 @@ func NewRolesClient(c *client.Client) *RolesClient
 
 
 <a name="RolesClient.Create"></a>
-### func \(\*RolesClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/roles.go#L116>)
+### func \(\*RolesClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/roles.go#L118>)
 
 ```go
 func (c *RolesClient) Create(ctx context.Context, merchantCode string, body RolesCreateParams) (*Role, error)
@@ -4875,7 +4885,7 @@ func (c *RolesClient) Create(ctx context.Context, merchantCode string, body Role
 Create a custom role for the merchant. Roles are defined by the set of permissions that they grant to the members that they are assigned to.
 
 <a name="RolesClient.Delete"></a>
-### func \(\*RolesClient\) [Delete](<https://github.com/sumup/sumup-go/blob/main/roles.go#L155>)
+### func \(\*RolesClient\) [Delete](<https://github.com/sumup/sumup-go/blob/main/roles.go#L157>)
 
 ```go
 func (c *RolesClient) Delete(ctx context.Context, merchantCode string, roleID string) error
@@ -4884,7 +4894,7 @@ func (c *RolesClient) Delete(ctx context.Context, merchantCode string, roleID st
 Delete a custom role.
 
 <a name="RolesClient.Get"></a>
-### func \(\*RolesClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/roles.go#L189>)
+### func \(\*RolesClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/roles.go#L191>)
 
 ```go
 func (c *RolesClient) Get(ctx context.Context, merchantCode string, roleID string) (*Role, error)
@@ -4893,7 +4903,7 @@ func (c *RolesClient) Get(ctx context.Context, merchantCode string, roleID strin
 Retrieve a custom role by ID.
 
 <a name="RolesClient.List"></a>
-### func \(\*RolesClient\) [List](<https://github.com/sumup/sumup-go/blob/main/roles.go#L83>)
+### func \(\*RolesClient\) [List](<https://github.com/sumup/sumup-go/blob/main/roles.go#L85>)
 
 ```go
 func (c *RolesClient) List(ctx context.Context, merchantCode string) (*RolesListResponse, error)
@@ -4902,16 +4912,18 @@ func (c *RolesClient) List(ctx context.Context, merchantCode string) (*RolesList
 List merchant's custom roles.
 
 <a name="RolesClient.Update"></a>
-### func \(\*RolesClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/roles.go#L221>)
+### func \(\*RolesClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/roles.go#L226>)
 
 ```go
 func (c *RolesClient) Update(ctx context.Context, merchantCode string, roleID string, body RolesUpdateParams) (*Role, error)
 ```
 
-Update a custom role.
+Updates a custom role's name, description, or permissions and returns the updated role.
+
+Providing \`permissions\` replaces the role's permission list and changes the access granted to members assigned to that role. Omitted fields remain unchanged.
 
 <a name="RolesCreateParams"></a>
-## type [RolesCreateParams](<https://github.com/sumup/sumup-go/blob/main/roles.go#L39-L51>)
+## type [RolesCreateParams](<https://github.com/sumup/sumup-go/blob/main/roles.go#L39-L52>)
 
 RolesCreateParams is a schema definition.
 
@@ -4926,13 +4938,14 @@ type RolesCreateParams struct {
     // User-defined name of the role.
     Name string `json:"name"`
     // User's permissions.
+    // Min items: 1
     // Max items: 100
     Permissions []string `json:"permissions"`
 }
 ```
 
 <a name="RolesListResponse"></a>
-## type [RolesListResponse](<https://github.com/sumup/sumup-go/blob/main/roles.go#L65-L67>)
+## type [RolesListResponse](<https://github.com/sumup/sumup-go/blob/main/roles.go#L67-L69>)
 
 RolesListResponse is a schema definition.
 
@@ -4943,7 +4956,7 @@ type RolesListResponse struct {
 ```
 
 <a name="RolesUpdateParams"></a>
-## type [RolesUpdateParams](<https://github.com/sumup/sumup-go/blob/main/roles.go#L54-L62>)
+## type [RolesUpdateParams](<https://github.com/sumup/sumup-go/blob/main/roles.go#L55-L64>)
 
 RolesUpdateParams is a schema definition.
 
@@ -4954,6 +4967,7 @@ type RolesUpdateParams struct {
     // User-defined name of the role.
     Name *string `json:"name,omitempty"`
     // User's permissions.
+    // Min items: 1
     // Max items: 100
     Permissions []string `json:"permissions,omitempty"`
 }

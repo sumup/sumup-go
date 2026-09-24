@@ -996,7 +996,10 @@ func (c *ReadersClient) Get(ctx context.Context, merchantCode string, readerID R
 	}
 }
 
-// Update a Reader.
+// Updates a reader's name or metadata and returns the updated reader.
+//
+// Providing `metadata` replaces the entire metadata object; include all entries that should be retained. Omitted
+// fields remain unchanged.
 func (c *ReadersClient) Update(ctx context.Context, merchantCode string, readerID ReaderID, body ReadersUpdateParams) (*Reader, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, readerID)
 
