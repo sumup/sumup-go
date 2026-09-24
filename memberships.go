@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/sumup/sumup-go/client"
+	"github.com/sumup/sumup-go/nullable"
 )
 
 // A membership associates a user with a resource, memberships is defined by user, resource, resource type, and
@@ -89,16 +90,18 @@ type MembershipsListParams struct {
 	Offset *int
 	// Filter memberships by the sandbox status of the resource the membership is in.
 	ResourceAttributesSandbox *bool
+	// Filter memberships by the ID of the resource the membership is in.
+	ResourceID *string
 	// Filter memberships by the name of the resource the membership is in.
 	ResourceName *string
 	// Filter memberships by the parent of the resource the membership is in.
 	// When filtering by parent both `resource.parent.id` and `resource.parent.type` must be present. Pass explicit null
 	// to filter for resources without a parent.
-	ResourceParentID *string
+	ResourceParentID *nullable.Field[string]
 	// Filter memberships by the parent of the resource the membership is in.
 	// When filtering by parent both `resource.parent.id` and `resource.parent.type` must be present. Pass explicit null
 	// to filter for resources without a parent.
-	ResourceParentType *ResourceType
+	ResourceParentType *nullable.Field[ResourceType]
 	// Filter memberships by resource kind.
 	ResourceType *ResourceType
 	// Filter the returned memberships by role.
@@ -127,16 +130,28 @@ func (p *MembershipsListParams) QueryValues() url.Values {
 		q.Set("resource.attributes.sandbox", strconv.FormatBool(*p.ResourceAttributesSandbox))
 	}
 
+	if p.ResourceID != nil {
+		q.Set("resource.id", *p.ResourceID)
+	}
+
 	if p.ResourceName != nil {
 		q.Set("resource.name", *p.ResourceName)
 	}
 
 	if p.ResourceParentID != nil {
-		q.Set("resource.parent.id", *p.ResourceParentID)
+		if p.ResourceParentID.Null() {
+			q.Set("resource.parent.id", "null")
+		} else {
+			q.Set("resource.parent.id", *p.ResourceParentID.Value())
+		}
 	}
 
 	if p.ResourceParentType != nil {
-		q.Set("resource.parent.type", string(*p.ResourceParentType))
+		if p.ResourceParentType.Null() {
+			q.Set("resource.parent.type", "null")
+		} else {
+			q.Set("resource.parent.type", string(*p.ResourceParentType.Value()))
+		}
 	}
 
 	if p.ResourceType != nil {

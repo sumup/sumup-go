@@ -46,6 +46,7 @@ type RolesCreateParams struct {
 	// User-defined name of the role.
 	Name string `json:"name"`
 	// User's permissions.
+	// Min items: 1
 	// Max items: 100
 	Permissions []string `json:"permissions"`
 }
@@ -57,6 +58,7 @@ type RolesUpdateParams struct {
 	// User-defined name of the role.
 	Name *string `json:"name,omitempty"`
 	// User's permissions.
+	// Min items: 1
 	// Max items: 100
 	Permissions []string `json:"permissions,omitempty"`
 }
@@ -217,7 +219,10 @@ func (c *RolesClient) Get(ctx context.Context, merchantCode string, roleID strin
 	}
 }
 
-// Update a custom role.
+// Updates a custom role's name, description, or permissions and returns the updated role.
+//
+// Providing `permissions` replaces the role's permission list and changes the access granted to members assigned
+// to that role. Omitted fields remain unchanged.
 func (c *RolesClient) Update(ctx context.Context, merchantCode string, roleID string, body RolesUpdateParams) (*Role, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/roles/%v", merchantCode, roleID)
 

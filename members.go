@@ -115,6 +115,7 @@ type MembersCreateParams struct {
 	// Min length: 8
 	Password *secret.Secret `json:"password,omitempty"`
 	// List of roles to assign to the new member.
+	// Min items: 1
 	// Max items: 124
 	Roles []string `json:"roles"`
 }
@@ -127,6 +128,7 @@ type MembersUpdateParams struct {
 	// submit whole metadata. Maximum of 64 parameters are allowed in the object.
 	// Max properties: 64
 	Metadata Metadata `json:"metadata,omitempty"`
+	// Min items: 1
 	// Max items: 124
 	Roles []string `json:"roles,omitempty"`
 	// Allows you to update user data of managed users.
@@ -160,8 +162,6 @@ type MembersListParams struct {
 	Status *MembershipStatus
 	// Search for a member by user id.
 	UserID *string
-	// Filter the returned members by user type. Repeat this parameter to include multiple user types.
-	UserType []UserType
 }
 
 // QueryValues converts [MembersListParams] into [url.Values].
@@ -194,10 +194,6 @@ func (p *MembersListParams) QueryValues() url.Values {
 
 	if p.UserID != nil {
 		q.Set("user.id", *p.UserID)
-	}
-
-	for _, v := range p.UserType {
-		q.Add("user.type", string(v))
 	}
 
 	return q
@@ -252,7 +248,12 @@ func (c *MembersClient) List(ctx context.Context, merchantCode string, params Me
 	}
 }
 
-// Create a merchant member.
+// Adds a member to the merchant account with the specified roles.
+//
+// By default, sends an invitation email to the provided address. The recipient must accept the invitation to
+// join the account.
+// When `is_managed_user` is `true`, creates a managed user with the provided password and optional nickname and
+// assigns the roles directly, without sending an invitation.
 func (c *MembersClient) Create(ctx context.Context, merchantCode string, body MembersCreateParams) (*Member, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/members", merchantCode)
 
@@ -364,7 +365,12 @@ func (c *MembersClient) Get(ctx context.Context, merchantCode string, memberID s
 	}
 }
 
-// Update the merchant member.
+// Updates a merchant member and returns the updated member.
+//
+// Providing `roles` replaces the member's assigned roles and can grant or revoke access. Providing `metadata` replaces
+// the entire metadata object.
+// For managed users, `user.nickname` changes the display name and `user.password` replaces the password. Updating
+// the password also enables the managed user account.
 func (c *MembersClient) Update(ctx context.Context, merchantCode string, memberID string, body MembersUpdateParams) (*Member, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/members/%v", merchantCode, memberID)
 

@@ -174,6 +174,10 @@ func (b *Builder) pathsToParamTypes(tagName string, paths *v3.Paths) []Writable 
 
 					optional := param.Required == nil || !*param.Required
 					pointer := shouldUsePointer(optional, param.Schema, typ)
+					if isNullableSchema(param.Schema) {
+						typ = "nullable.Field[" + typ + "]"
+						pointer = optional
+					}
 					fields = append(fields, StructField{
 						Name:      name,
 						Type:      typ,
@@ -205,6 +209,7 @@ func (b *Builder) pathsToParamTypes(tagName string, paths *v3.Paths) []Writable 
 }
 
 func generateParamEnumType(schema *base.SchemaProxy, name string) (string, []Writable, bool) {
+	schema = nonNullSchema(schema)
 	if schema == nil || schema.IsReference() || schema.Schema() == nil {
 		return "", nil, false
 	}
@@ -359,6 +364,7 @@ func (b *Builder) pathsToResponseTypes(tagName string, paths *v3.Paths) []Writab
 // in `#/components/schemas/` part of the OpenAPI specs.
 func (b *Builder) generateSchemaComponents(name string, schema *base.SchemaProxy, isErr bool) []Writable {
 	types := make([]Writable, 0)
+	schema = nonNullSchema(schema)
 	if schema == nil || schema.Schema() == nil {
 		return types
 	}
@@ -485,6 +491,7 @@ func (b *Builder) generateSchemaComponents(name string, schema *base.SchemaProxy
 // genSchema is very similar to [generateSchemaComponents] but assumes that all schema components
 // have been already generated.
 func (b *Builder) genSchema(schema *base.SchemaProxy, name string) (string, []Writable) {
+	schema = nonNullSchema(schema)
 	if schema == nil {
 		return "any", nil
 	}
@@ -703,7 +710,7 @@ func isNullableSchema(schema *base.SchemaProxy) bool {
 	}
 
 	spec := schema.Schema()
-	return (spec.Nullable != nil && *spec.Nullable) || slices.Contains(spec.Type, "null")
+	return (spec.Nullable != nil && *spec.Nullable) || slices.Contains(spec.Type, "null") || nonNullSchema(schema) != schema
 }
 
 func createEnum(schema *base.Schema, name string) Writable {
