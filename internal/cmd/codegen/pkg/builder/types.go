@@ -276,27 +276,7 @@ func (e toQueryValues) String() string {
 	fmt.Fprintf(buf, "\tq := make(url.Values)\n\n")
 	for _, f := range e.Typ.Fields {
 		name := strcase.ToCamel(f.Name)
-		if isNullableSchema(f.Parameter.Schema) {
-			field := fmt.Sprintf("p.%s", name)
-			if f.Pointer {
-				fmt.Fprintf(buf, "\tif %s != nil {\n", field)
-			}
-			fmt.Fprintf(buf, "\tif %s.Null() {\n", field)
-			fmt.Fprintf(buf, "\t\tq.Set(%q, %q)\n", f.Name, "null")
-			fmt.Fprint(buf, "\t} else {\n")
-			schema := dereferenceSchema(f.Parameter.Schema)
-			if schema != nil && schema.Schema() != nil && isArraySchema(schema.Schema()) {
-				fmt.Fprintf(buf, "\t\tfor _, v := range *%s.Value() {\n", field)
-				fmt.Fprintf(buf, "\t\t\tq.Add(%q, %s)\n", f.Name, schemaToString("v", schema.Schema().Items.A))
-				fmt.Fprint(buf, "\t\t}\n")
-			} else {
-				fmt.Fprintf(buf, "\t\tq.Set(%q, %s)\n", f.Name, paramToString("*"+field+".Value()", f.Parameter))
-			}
-			fmt.Fprint(buf, "\t}\n")
-			if f.Pointer {
-				fmt.Fprint(buf, "\t}\n")
-			}
-		} else if f.Parameter.Schema != nil && f.Parameter.Schema.Schema() != nil && slices.Contains(f.Parameter.Schema.Schema().Type, "array") {
+		if f.Parameter.Schema != nil && f.Parameter.Schema.Schema() != nil && slices.Contains(f.Parameter.Schema.Schema().Type, "array") {
 			field := fmt.Sprintf("p.%s", name)
 			fmt.Fprintf(buf, "\tfor _, v := range %s {\n", field)
 			fmt.Fprintf(buf, "\t\tq.Add(%q, %s)\n", f.Name, paramToString("v", f.Parameter))

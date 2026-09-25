@@ -174,10 +174,6 @@ func (b *Builder) pathsToParamTypes(tagName string, paths *v3.Paths) []Writable 
 
 					optional := param.Required == nil || !*param.Required
 					pointer := shouldUsePointer(optional, param.Schema, typ)
-					if isNullableSchema(param.Schema) {
-						typ = "nullable.Field[" + typ + "]"
-						pointer = optional
-					}
 					fields = append(fields, StructField{
 						Name:      name,
 						Type:      typ,
