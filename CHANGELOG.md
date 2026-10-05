@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.20.1](https://github.com/sumup/sumup-go/compare/v0.20.0...v0.20.1) (2026-10-05)
+
+
+### Bug Fixes
+
+* **codegen:** handle nullable schemas in OpenAPI 3.1.0 ([#325](https://github.com/sumup/sumup-go/issues/325)) ([aa6ce20](https://github.com/sumup/sumup-go/commit/aa6ce200d274d93e0ce1de8c8ef47fb73b9179d3))
+
+
+### Chores
+
+* **deps:** bump github.com/pb33f/libopenapi from 0.38.7 to 0.40.1 in /internal/cmd/codegen ([#338](https://github.com/sumup/sumup-go/issues/338)) ([a4aee8e](https://github.com/sumup/sumup-go/commit/a4aee8e857b33c5e93687afc86d4963ad2e5817e))
+* **deps:** bump github/codeql-action/upload-sarif from 4.37.8 to 4.37.9 ([#328](https://github.com/sumup/sumup-go/issues/328)) ([67d419e](https://github.com/sumup/sumup-go/commit/67d419e81634d4910c66172c6787d2d23122d087))
+* **deps:** bump github/codeql-action/upload-sarif from 4.37.9 to 4.38.0 ([#332](https://github.com/sumup/sumup-go/issues/332)) ([01ad975](https://github.com/sumup/sumup-go/commit/01ad975e65ea457384773d8cd3418ae06e5bfa8e))
+* **deps:** bump github/codeql-action/upload-sarif from 4.38.0 to 4.38.2 ([#339](https://github.com/sumup/sumup-go/issues/339)) ([17fca51](https://github.com/sumup/sumup-go/commit/17fca51980c7b627da07ec15a2853be7dfc0ed85))
+* **deps:** bump reviewdog/action-actionlint from 1.73.2 to 1.74.0 ([#331](https://github.com/sumup/sumup-go/issues/331)) ([d954768](https://github.com/sumup/sumup-go/commit/d954768ab59ff951cd9f0c307c1a0748a3cdba1a))
+* **deps:** bump reviewdog/action-actionlint from 1.74.0 to 1.77.0 ([#337](https://github.com/sumup/sumup-go/issues/337)) ([90e3dfc](https://github.com/sumup/sumup-go/commit/90e3dfc88716926e21f12f8495ea38c030f23373))
+* synced file(s) with sumup/apis ([#324](https://github.com/sumup/sumup-go/issues/324)) ([389857c](https://github.com/sumup/sumup-go/commit/389857cc23acfcfbb64f53bbc4f9b3b2769f9e0a))
+* synced file(s) with sumup/apis ([#327](https://github.com/sumup/sumup-go/issues/327)) ([ad22089](https://github.com/sumup/sumup-go/commit/ad22089ccf7f10aa42aacbfe258c259d63dc74bd))
+* synced file(s) with sumup/apis ([#333](https://github.com/sumup/sumup-go/issues/333)) ([9ecc62b](https://github.com/sumup/sumup-go/commit/9ecc62b8fe748e1dcc48e19d3acf369cb8e1ee06))
+* synced file(s) with sumup/apis ([#334](https://github.com/sumup/sumup-go/issues/334)) ([e57392d](https://github.com/sumup/sumup-go/commit/e57392d129b9e74619e8a4ef986dbd6aaed17e00))
+* synced file(s) with sumup/apis ([#340](https://github.com/sumup/sumup-go/issues/340)) ([99b4a38](https://github.com/sumup/sumup-go/commit/99b4a38c9a9dc99a9ac2506989037cfe26dd345b))
+
 ## [0.20.0](https://github.com/sumup/sumup-go/compare/v0.19.0...v0.20.0) (2026-09-01)
 
 
