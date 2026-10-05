@@ -63,7 +63,6 @@ const (
 type Currency string
 
 const (
-	CurrencyBGN Currency = "BGN"
 	CurrencyBRL Currency = "BRL"
 	CurrencyCHF Currency = "CHF"
 	CurrencyCLP Currency = "CLP"
