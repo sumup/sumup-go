@@ -22,6 +22,8 @@ type CardResponse struct {
 	// Min length: 4
 	// Max length: 4
 	Last4Digits *string `json:"last_4_digits,omitempty"`
+	// PAR (Payment account reference) if available for the card.
+	PaymentAccountReference *string `json:"payment_account_reference,omitempty"`
 	// Issuing card network of the payment card used for the transaction.
 	Type *CardType `json:"type,omitempty"`
 }
