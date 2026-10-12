@@ -10,9 +10,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/pb33f/go-yaml"
 	"github.com/pb33f/libopenapi/datamodel/high/base"
 	v3 "github.com/pb33f/libopenapi/datamodel/high/v3"
-	"go.yaml.in/yaml/v4"
 
 	"github.com/sumup/sumup-go/internal/cmd/codegen/internal/strcase"
 )
