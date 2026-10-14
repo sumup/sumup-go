@@ -91,6 +91,7 @@ func New(cfg Config, opts ...Option) *Builder {
 func (b *Builder) Load(spec *v3.Document) error {
 	b.start = time.Now()
 	b.spec = spec
+	normalizeSchemaAnnotations(spec)
 
 	b.collectPaths()
 
@@ -472,6 +473,9 @@ func collectReferencedSchemasRecursive(
 
 	// save referenced schemas for later lookup
 	if schema.GetReference() != "" {
+		if _, seen := referencedSchemasMap[schema.GetReference()]; seen {
+			return
+		}
 		referencedSchemasMap[schema.GetReference()] = schema
 	}
 
