@@ -34,7 +34,6 @@ jobs:
     strategy:
       matrix:
         go:
-          - "1.25" # stable-2
           - "1.26" # stable-1
           - "stable" # 1.27
     steps:
