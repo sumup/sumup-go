@@ -72,6 +72,67 @@ The easiest form of authenticating with SumUp APIs is using [API keys](https://d
 client := sumup.NewClient(client.WithAPIKey("sup_sk_LZFWoLyd..."))
 ```
 
+## Events
+
+Receive signed event notifications with callbacks generated from the OpenAPI spec:
+
+```go
+handler, err := client.EventsHandler(os.Getenv("SUMUP_EVENT_SECRET"), handleUnhandled)
+if err != nil {
+	return err
+}
+if err := handler.OnMemberUpdated(handleMemberUpdated); err != nil {
+	return err
+}
+if err := handler.OnReaderCreated(handleReaderCreated); err != nil {
+	return err
+}
+
+// Inside your HTTP handler, limit and read the raw body before dispatch.
+r.Body = http.MaxBytesReader(w, r.Body, 1<<20)
+body, err := io.ReadAll(r.Body)
+if err != nil {
+	http.Error(w, "invalid event body", http.StatusBadRequest)
+	return
+}
+err = handler.Handle(r.Context(), body, r.Header.Get(sumup.EventSignatureHeader))
+// Return a 2xx response only after success.
+```
+
+Callbacks accept a context and their specific event type:
+
+```go
+func handleMemberUpdated(ctx context.Context, event *sumup.MemberUpdatedEvent) error {
+	member, err := event.FetchObject(ctx)
+	if err != nil {
+		return err
+	}
+	log.Printf("member updated: %s", member.ID)
+	return nil
+}
+```
+
+The required fallback has signature `func(context.Context, sumup.EventNotification) error`.
+It receives known events without a registered callback and unknown event types.
+Registering a nil or duplicate callback returns an error; registration and handling are concurrency-safe.
+Callbacks execute synchronously and must synchronize any shared state themselves.
+
+Signatures use `X-SumUp-Webhook-Signature: t=<unix timestamp>,v1=<hex HMAC>`.
+Verification happens before JSON parsing, uses the exact raw body, and accepts a fixed five minutes of clock skew. An empty signing secret is rejected.
+The SDK accepts already-read bytes and leaves body-size limits to your HTTP receiver. Use `http.MaxBytesReader` before reading the body, as in the example above.
+
+For manual dispatch, use `client.ParseEventNotification(secret, body, signature)` and a type switch.
+Only use `ParseEventNotificationWithoutVerification` for fixtures or notifications already verified by trusted infrastructure.
+
+`FetchObject(ctx)` returns the latest typed resource using the SDK's authentication and transport.
+Unknown events fetch raw JSON. Resource URLs must use the default API origin (`https://api.sumup.com`).
+URL credentials and fragments are ignored; the path and query use the client's configured base URL, authentication, and redirect policy.
+Structured API errors are returned as `*sumup.Problem`, accessible with `errors.As`.
+Deleted resources may no longer be fetchable. Treat events as notifications, make processing idempotent using the event ID,
+and allow for retries and out-of-order delivery. Return a 5xx response for `*sumup.EventCallbackError` so failed processing can be retried.
+
+See [the events example](./example/events) for a complete HTTP receiver and error handling.
+
 ## Examples
 
 The repository includes several examples demonstrating different use cases:
@@ -91,6 +152,12 @@ go run example/checkout/main.go
 go run example/full/main.go
 ```
 and visit http://localhost:8080
+
+**[events](./example/events)** - HTTP server showing signature verification, typed callbacks, and resource fetching.
+```sh
+SUMUP_EVENT_SECRET=whsec_test go run example/events/main.go
+```
+Then send `POST` requests to http://localhost:8080/events
 
 ## Support
 
