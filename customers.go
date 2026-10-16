@@ -12,9 +12,11 @@ import (
 	"github.com/sumup/sumup-go/client"
 )
 
-// Saved customer details.
+// Saved payer details identified by the `customer_id` supplied by your integration. A customer can have saved
+// payment instruments for subsequent payments.
 type Customer struct {
-	// Unique identifier of the customer.
+	// Identifier you supply when creating the customer. Use an ID from your own system and retain it for subsequent customer,
+	// checkout, and saved-payment-instrument requests.
 	CustomerID string `json:"customer_id"`
 	// Personal details for the customer.
 	PersonalDetails *PersonalDetails `json:"personal_details,omitempty"`
@@ -33,7 +35,8 @@ type PaymentInstrumentResponse struct {
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// Details of the mandate linked to the saved payment instrument.
 	Mandate *MandateResponse `json:"mandate,omitempty"`
-	// Unique token identifying the saved payment card for a customer.
+	// Token identifying the customer's saved payment card. Pass it as `token`, together with the associated `customer_id`
+	// and `payment_type = card`, when processing a checkout with this instrument.
 	// Read only
 	Token *string `json:"token,omitempty"`
 	// Type of the payment instrument.
@@ -80,12 +83,15 @@ type CustomersListPaymentInstrumentsResponse []PaymentInstrumentResponse
 
 // CustomersClient provides access to the Customers API.
 //
-// Allow your regular customers to save their information with the Customers model.
+// Customers represent payers in your integration. Create a customer with your own `customer_id` to associate their
+// personal details and saved payment instruments with your business records.
 //
-// This will prevent re-entering payment instrument information for recurring payments on your platform.
+// To save a card, create a checkout for that customer with `purpose = SETUP_RECURRING_PAYMENT`, then process it
+// with the payer's consent and mandate details. See the [tokenization guide](https://developer.sumup.com/online-payments/guides/tokenization-with-payment-sdk/).
 //
-// Depending on the needs you can allow, creating, listing or deactivating payment instruments & creating, retrieving
-// and updating customers.
+// Use the Customers endpoints to create, retrieve, or update customer details and to list or deactivate saved
+// payment instruments. For subsequent payments, process a new checkout with the saved instrument's `token` and
+// its associated `customer_id`.
 type CustomersClient struct {
 	c *client.Client
 }
@@ -94,7 +100,9 @@ func NewCustomersClient(c *client.Client) *CustomersClient {
 	return &CustomersClient{c: c}
 }
 
-// Creates a new saved customer resource which you can later manipulate and save payment instruments to.
+// Creates a customer using the `customer_id` you supply. Choose an identifier that maps to the payer in your
+// own system and reuse it when retrieving the customer or associating checkouts and saved payment instruments with
+// them.
 func (c *CustomersClient) Create(ctx context.Context, body CustomersCreateParams) (*Customer, error) {
 	path := fmt.Sprintf("/v0.1/customers")
 
@@ -193,8 +201,7 @@ func (c *CustomersClient) ListPaymentInstruments(ctx context.Context, customerID
 	}
 }
 
-// Retrieves an identified saved customer resource through the unique `customer_id` parameter, generated upon
-// customer creation.
+// Retrieves a saved customer using the `customer_id` you supplied when creating the customer.
 func (c *CustomersClient) Get(ctx context.Context, customerID string) (*Customer, error) {
 	path := fmt.Sprintf("/v0.1/customers/%v", customerID)
 
