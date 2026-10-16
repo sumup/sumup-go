@@ -55,7 +55,7 @@ type Checkout struct {
 	Amount *float32 `json:"amount,omitempty"`
 	// Merchant-defined reference for the checkout. Use it to correlate the SumUp checkout with your own order, cart,
 	// subscription, or payment attempt in your systems.
-	// Max length: 90
+	// Max length: 64
 	CheckoutReference *string `json:"checkout_reference,omitempty"`
 	// Three-letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code of the amount.
 	Currency *Currency `json:"currency,omitempty"`
@@ -79,8 +79,9 @@ type Checkout struct {
 	Mandate *MandateResponse `json:"mandate,omitempty"`
 	// Short unique identifier for the merchant that receives the payment.
 	MerchantCode *string `json:"merchant_code,omitempty"`
-	// Optional backend callback URL used by SumUp to notify your platform about processing updates for the checkout.
-	//
+	// Optional backend callback URL for checkout status notifications. SumUp sends an HTTP POST with `event_type` and
+	// the checkout `id`. Retrieve the checkout to verify its current status before updating your order. See the
+	// [webhook guide](https://developer.sumup.com/online-payments/webhooks/) for the payload and response requirements.
 	// Format: uri
 	ReturnURL *string `json:"return_url,omitempty"`
 	// Current high-level state of the checkout. `PENDING` means the checkout exists but is not yet completed, `PAID`
@@ -110,13 +111,15 @@ const (
 
 // CheckoutTransaction is a schema definition.
 type CheckoutTransaction struct {
-	// Total amount of the transaction.
+	// Total amount of the transaction in major units of `currency`, for example `10.1` for EUR 10.10.
 	Amount *float32 `json:"amount,omitempty"`
 	// Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
 	AuthCode *string `json:"auth_code,omitempty"`
 	// Three-letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code of the amount.
 	Currency *Currency `json:"currency,omitempty"`
-	// Entry mode of the payment details.
+	// How the payment details were captured, for example `CHIP` or `CONTACTLESS` for card-present payments and
+	// `CUSTOMER_ENTRY` for card details entered by the payer. For wallet and alternative payment methods, this can
+	// identify the method, such as `APPLE_PAY` or `BLIK`.
 	EntryMode *EntryMode `json:"entry_mode,omitempty"`
 	// Unique identifier of the transaction.
 	ID *string `json:"id,omitempty"`
@@ -125,7 +128,9 @@ type CheckoutTransaction struct {
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Unique code of the registered merchant to whom the payment is made.
 	MerchantCode *string `json:"merchant_code,omitempty"`
-	// Payment type used for the transaction.
+	// Payment category recorded on a transaction, for example `POS` for a point-of-sale card payment, `ECOM` for
+	// an online card payment, or `RECURRING` for a recurring card payment. These reporting values are separate from
+	// the lowercase `payment_type` values used to process checkouts.
 	PaymentType *PaymentType `json:"payment_type,omitempty"`
 	// Current status of the transaction.
 	//
@@ -137,11 +142,12 @@ type CheckoutTransaction struct {
 	Status *TransactionStatus `json:"status,omitempty"`
 	// The timestamp of when the transaction was created.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
-	// Amount of the tip (out of the total transaction amount).
+	// Tip included in the total transaction amount, in major units of the transaction's currency.
 	TipAmount *float32 `json:"tip_amount,omitempty"`
-	// Transaction code returned by the acquirer/processing entity after processing the transaction.
+	// SumUp transaction code, for example `TEENSK4W2K`. Use it to look up the transaction with the `transaction_code` query
+	// parameter. This is separate from the transaction's `id` and the card issuer's `auth_code`.
 	TransactionCode *string `json:"transaction_code,omitempty"`
-	// Amount of the applicable VAT (out of the total transaction amount).
+	// VAT included in the total transaction amount, in major units of the transaction's currency.
 	VATAmount *float32 `json:"vat_amount,omitempty"`
 }
 
@@ -183,8 +189,9 @@ type CheckoutAcceptedNextStepPayload map[string]any
 type CheckoutCreateRequest struct {
 	// Amount to be charged to the payer, expressed in major units.
 	Amount float32 `json:"amount"`
-	// Merchant-defined reference for the new checkout. It should be unique enough for you to identify the payment attempt
-	// in your own systems.
+	// Merchant-defined reference for the new checkout, up to 64 characters. Use it to correlate the checkout with
+	// an order or payment attempt in your own system. If a checkout already exists for the supplied unique parameters,
+	// creation returns `409` with `DUPLICATED_CHECKOUT`; see the conflict response.
 	// Max length: 64
 	CheckoutReference string `json:"checkout_reference"`
 	// Three-letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code of the amount.
@@ -207,8 +214,9 @@ type CheckoutCreateRequest struct {
 	// may require [3DS](https://developer.sumup.com/online-payments/features/3ds). If it is omitted, the [Payment Widget](https://developer.sumup.com/online-payments/checkouts)
 	// can render the challenge in an iframe instead of using a full-page redirect.
 	RedirectURL *string `json:"redirect_url,omitempty"`
-	// Optional backend callback URL used by SumUp to notify your platform about processing updates for the checkout.
-	//
+	// Optional backend callback URL for checkout status notifications. SumUp sends an HTTP POST with `event_type` and
+	// the checkout `id`. Retrieve the checkout to verify its current status before updating your order. See the
+	// [webhook guide](https://developer.sumup.com/online-payments/webhooks/) for the payload and response requirements.
 	// Format: uri
 	ReturnURL *string `json:"return_url,omitempty"`
 	// Optional expiration timestamp. The checkout must be processed before this moment, otherwise it becomes unusable.
@@ -233,7 +241,7 @@ type CheckoutSuccess struct {
 	Amount *float32 `json:"amount,omitempty"`
 	// Merchant-defined reference for the checkout. Use it to correlate the SumUp checkout with your own order, cart,
 	// subscription, or payment attempt in your systems.
-	// Max length: 90
+	// Max length: 64
 	CheckoutReference *string `json:"checkout_reference,omitempty"`
 	// Three-letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code of the amount.
 	Currency *Currency `json:"currency,omitempty"`
@@ -263,8 +271,9 @@ type CheckoutSuccess struct {
 	PaymentInstrument *CheckoutSuccessPaymentInstrument `json:"payment_instrument,omitempty"`
 	// URL where the payer is redirected after a redirect-based payment or SCA flow completes.
 	RedirectURL *string `json:"redirect_url,omitempty"`
-	// Optional backend callback URL used by SumUp to notify your platform about processing updates for the checkout.
-	//
+	// Optional backend callback URL for checkout status notifications. SumUp sends an HTTP POST with `event_type` and
+	// the checkout `id`. Retrieve the checkout to verify its current status before updating your order. See the
+	// [webhook guide](https://developer.sumup.com/online-payments/webhooks/) for the payload and response requirements.
 	// Format: uri
 	ReturnURL *string `json:"return_url,omitempty"`
 	// Current high-level state of the checkout. `PENDING` means the checkout exists but is not yet completed, `PAID`
@@ -300,13 +309,15 @@ const (
 
 // CheckoutSuccessTransaction is a schema definition.
 type CheckoutSuccessTransaction struct {
-	// Total amount of the transaction.
+	// Total amount of the transaction in major units of `currency`, for example `10.1` for EUR 10.10.
 	Amount *float32 `json:"amount,omitempty"`
 	// Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
 	AuthCode *string `json:"auth_code,omitempty"`
 	// Three-letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code of the amount.
 	Currency *Currency `json:"currency,omitempty"`
-	// Entry mode of the payment details.
+	// How the payment details were captured, for example `CHIP` or `CONTACTLESS` for card-present payments and
+	// `CUSTOMER_ENTRY` for card details entered by the payer. For wallet and alternative payment methods, this can
+	// identify the method, such as `APPLE_PAY` or `BLIK`.
 	EntryMode *EntryMode `json:"entry_mode,omitempty"`
 	// Unique identifier of the transaction.
 	ID *string `json:"id,omitempty"`
@@ -315,7 +326,9 @@ type CheckoutSuccessTransaction struct {
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Unique code of the registered merchant to whom the payment is made.
 	MerchantCode *string `json:"merchant_code,omitempty"`
-	// Payment type used for the transaction.
+	// Payment category recorded on a transaction, for example `POS` for a point-of-sale card payment, `ECOM` for
+	// an online card payment, or `RECURRING` for a recurring card payment. These reporting values are separate from
+	// the lowercase `payment_type` values used to process checkouts.
 	PaymentType *PaymentType `json:"payment_type,omitempty"`
 	// Current status of the transaction.
 	//
@@ -327,11 +340,12 @@ type CheckoutSuccessTransaction struct {
 	Status *TransactionStatus `json:"status,omitempty"`
 	// The timestamp of when the transaction was created.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
-	// Amount of the tip (out of the total transaction amount).
+	// Tip included in the total transaction amount, in major units of the transaction's currency.
 	TipAmount *float32 `json:"tip_amount,omitempty"`
-	// Transaction code returned by the acquirer/processing entity after processing the transaction.
+	// SumUp transaction code, for example `TEENSK4W2K`. Use it to look up the transaction with the `transaction_code` query
+	// parameter. This is separate from the transaction's `id` and the card issuer's `auth_code`.
 	TransactionCode *string `json:"transaction_code,omitempty"`
-	// Amount of the applicable VAT (out of the total transaction amount).
+	// VAT included in the total transaction amount, in major units of the transaction's currency.
 	VATAmount *float32 `json:"vat_amount,omitempty"`
 }
 
@@ -346,7 +360,7 @@ type CheckoutUpdateRequest struct {
 	// Updated amount to be charged to the payer, expressed in major units.
 	Amount *float32 `json:"amount,omitempty"`
 	// Updated merchant-defined reference for the checkout.
-	// Max length: 90
+	// Max length: 64
 	CheckoutReference *string `json:"checkout_reference,omitempty"`
 	// Three-letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code of the amount.
 	Currency *Currency `json:"currency,omitempty"`
@@ -429,7 +443,9 @@ type ProcessCheckout struct {
 	PaymentType ProcessCheckoutPaymentType `json:"payment_type"`
 	// Personal details for the customer.
 	PersonalDetails *PersonalDetails `json:"personal_details,omitempty"`
-	// Saved-card token to use instead of raw card details when processing with a previously stored payment instrument.
+	// Token of a saved payment instrument returned by checkout processing or the customer's payment-instruments endpoint.
+	// To charge a saved card, set `payment_type` to `card` and provide both this `token` and the associated `customer_id`
+	// instead of raw card details.
 	Token *string `json:"token,omitempty"`
 }
 
@@ -450,10 +466,11 @@ type CheckoutsCreateParams = CheckoutCreateRequest
 
 // CheckoutsCreateApplePaySessionParams is a schema definition.
 type CheckoutsCreateApplePaySessionParams struct {
-	// the context to create this apple pay session.
+	// Hostname of the website displaying the Apple Pay payment sheet, without a URL scheme or path. Use the domain
+	// registered for Apple Pay.
 	// Format: hostname
 	Context string `json:"context"`
-	// The target url to create this apple pay session.
+	// Apple Pay validation URL received as `validationURL` in the browser's `onvalidatemerchant` event.
 	// Format: uri
 	Target string `json:"target"`
 }
@@ -464,7 +481,8 @@ type CheckoutsProcessParams = ProcessCheckout
 
 // CheckoutsListParams are query parameters for ListCheckouts.
 type CheckoutsListParams struct {
-	// Filters the list of checkout resources by the unique reference of the checkout.
+	// Filters checkouts by the merchant-defined `checkout_reference` supplied when creating the checkout. This is
+	// separate from the SumUp-generated checkout `id`.
 	CheckoutReference *string
 }
 
@@ -481,9 +499,9 @@ func (p *CheckoutsListParams) QueryValues() url.Values {
 
 // CheckoutsListAvailablePaymentMethodsParams are query parameters for GetPaymentMethods.
 type CheckoutsListAvailablePaymentMethodsParams struct {
-	// The amount for which the payment methods should be eligible, in major units.
+	// Payment amount in major units, for example `9.99` for EUR 9.99. When filtering by `amount`, also provide `currency`.
 	Amount *float64
-	// The currency for which the payment methods should be eligible.
+	// Three-letter ISO 4217 currency code for which the payment methods should be eligible, for example `EUR`.
 	Currency *string
 }
 
@@ -536,7 +554,7 @@ type CheckoutsProcessCheckoutSuccessResponse struct {
 	Amount *float32 `json:"amount,omitempty"`
 	// Merchant-defined reference for the checkout. Use it to correlate the SumUp checkout with your own order, cart,
 	// subscription, or payment attempt in your systems.
-	// Max length: 90
+	// Max length: 64
 	CheckoutReference *string `json:"checkout_reference,omitempty"`
 	// Three-letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code of the amount.
 	Currency *Currency `json:"currency,omitempty"`
@@ -566,8 +584,9 @@ type CheckoutsProcessCheckoutSuccessResponse struct {
 	PaymentInstrument *CheckoutsProcessCheckoutSuccessResponsePaymentInstrument `json:"payment_instrument,omitempty"`
 	// URL where the payer is redirected after a redirect-based payment or SCA flow completes.
 	RedirectURL *string `json:"redirect_url,omitempty"`
-	// Optional backend callback URL used by SumUp to notify your platform about processing updates for the checkout.
-	//
+	// Optional backend callback URL for checkout status notifications. SumUp sends an HTTP POST with `event_type` and
+	// the checkout `id`. Retrieve the checkout to verify its current status before updating your order. See the
+	// [webhook guide](https://developer.sumup.com/online-payments/webhooks/) for the payload and response requirements.
 	// Format: uri
 	ReturnURL *string `json:"return_url,omitempty"`
 	// Current high-level state of the checkout. `PENDING` means the checkout exists but is not yet completed, `PAID`
@@ -603,13 +622,15 @@ const (
 
 // CheckoutsProcessCheckoutSuccessResponseTransaction is a schema definition.
 type CheckoutsProcessCheckoutSuccessResponseTransaction struct {
-	// Total amount of the transaction.
+	// Total amount of the transaction in major units of `currency`, for example `10.1` for EUR 10.10.
 	Amount *float32 `json:"amount,omitempty"`
 	// Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
 	AuthCode *string `json:"auth_code,omitempty"`
 	// Three-letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code of the amount.
 	Currency *Currency `json:"currency,omitempty"`
-	// Entry mode of the payment details.
+	// How the payment details were captured, for example `CHIP` or `CONTACTLESS` for card-present payments and
+	// `CUSTOMER_ENTRY` for card details entered by the payer. For wallet and alternative payment methods, this can
+	// identify the method, such as `APPLE_PAY` or `BLIK`.
 	EntryMode *EntryMode `json:"entry_mode,omitempty"`
 	// Unique identifier of the transaction.
 	ID *string `json:"id,omitempty"`
@@ -618,7 +639,9 @@ type CheckoutsProcessCheckoutSuccessResponseTransaction struct {
 	InstallmentsCount *int `json:"installments_count,omitempty"`
 	// Unique code of the registered merchant to whom the payment is made.
 	MerchantCode *string `json:"merchant_code,omitempty"`
-	// Payment type used for the transaction.
+	// Payment category recorded on a transaction, for example `POS` for a point-of-sale card payment, `ECOM` for
+	// an online card payment, or `RECURRING` for a recurring card payment. These reporting values are separate from
+	// the lowercase `payment_type` values used to process checkouts.
 	PaymentType *PaymentType `json:"payment_type,omitempty"`
 	// Current status of the transaction.
 	//
@@ -630,11 +653,12 @@ type CheckoutsProcessCheckoutSuccessResponseTransaction struct {
 	Status *TransactionStatus `json:"status,omitempty"`
 	// The timestamp of when the transaction was created.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
-	// Amount of the tip (out of the total transaction amount).
+	// Tip included in the total transaction amount, in major units of the transaction's currency.
 	TipAmount *float32 `json:"tip_amount,omitempty"`
-	// Transaction code returned by the acquirer/processing entity after processing the transaction.
+	// SumUp transaction code, for example `TEENSK4W2K`. Use it to look up the transaction with the `transaction_code` query
+	// parameter. This is separate from the transaction's `id` and the card issuer's `auth_code`.
 	TransactionCode *string `json:"transaction_code,omitempty"`
-	// Amount of the applicable VAT (out of the total transaction amount).
+	// VAT included in the total transaction amount, in major units of the transaction's currency.
 	VATAmount *float32 `json:"vat_amount,omitempty"`
 }
 
@@ -839,7 +863,8 @@ func (c *CheckoutsClient) CreateApplePaySession(ctx context.Context, checkoutID 
 	}
 }
 
-// Get payment methods available for the given merchant to use with a checkout.
+// Lists the payment methods available to the merchant for checkout payments. Use the optional amount and currency
+// filters to check eligibility for a particular payment before presenting payment options to the payer.
 func (c *CheckoutsClient) ListAvailablePaymentMethods(ctx context.Context, merchantCode string, params CheckoutsListAvailablePaymentMethodsParams) (*CheckoutsListAvailablePaymentMethodsResponse, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/payment-methods", merchantCode)
 
@@ -917,8 +942,9 @@ func (c *CheckoutsClient) Deactivate(ctx context.Context, checkoutID string) (*C
 	}
 }
 
-// Retrieves an identified checkout resource. Use this request after processing a checkout to confirm its status
-// and inform the end user respectively.
+// Retrieves a checkout by its SumUp `checkout_id`. After processing a payment, returning from a redirect, or
+// receiving a checkout notification, retrieve the checkout to confirm its current `status` before updating your
+// order or displaying the payment outcome to the payer.
 func (c *CheckoutsClient) Get(ctx context.Context, checkoutID string) (*CheckoutSuccess, error) {
 	path := fmt.Sprintf("/v0.1/checkouts/%v", checkoutID)
 
@@ -1009,7 +1035,11 @@ func (c *CheckoutsClient) Update(ctx context.Context, checkoutID string, body Ch
 // Processing a checkout will attempt to charge the provided payment instrument for the amount of the specified checkout
 // resource initiated in the `Create a checkout` endpoint.
 //
-// Follow this request with `Retrieve a checkout` to confirm its status.
+// A processing response can require an additional payer action, such as a 3DS challenge or a payment-provider redirect.
+// If `next_step` is returned, follow its instructions to continue the payment flow.
+//
+// Retrieve the checkout afterwards to confirm its payment status. Acceptance of the processing request does
+// not by itself mean the checkout is paid.
 func (c *CheckoutsClient) Process(ctx context.Context, checkoutID string, body CheckoutsProcessParams) (*CheckoutsProcessResponse, error) {
 	path := fmt.Sprintf("/v0.1/checkouts/%v", checkoutID)
 

@@ -420,12 +420,26 @@ type ReaderPairingCode string
 
 // ReaderPaymentRequestParams is a schema definition.
 type ReaderPaymentRequestParams struct {
-	Affiliate *Affiliate `json:"affiliate,omitempty"`
+	Affiliate *ReaderPaymentRequestParamsAffiliate `json:"affiliate,omitempty"`
 	// Caller-supplied correlation identifier, used as the idempotency key.
 	ClientTransactionID string `json:"client_transaction_id"`
-	// Optional tip amount in minor units, added on top of total_amount.
-	TipAmount   *int   `json:"tip_amount,omitempty"`
-	TotalAmount Amount `json:"total_amount"`
+	// Portion of total_amount that is a tip, in minor units.
+	TipAmount   *int                                  `json:"tip_amount,omitempty"`
+	TotalAmount ReaderPaymentRequestParamsTotalAmount `json:"total_amount"`
+}
+
+// ReaderPaymentRequestParamsAffiliate is a schema definition.
+type ReaderPaymentRequestParamsAffiliate struct {
+	AppID string `json:"app_id"`
+	Key   string `json:"key"`
+}
+
+// ReaderPaymentRequestParamsTotalAmount is a schema definition.
+type ReaderPaymentRequestParamsTotalAmount struct {
+	// Currency ISO 4217 code
+	Currency string `json:"currency"`
+	// Amount in minor units (e.g. cents).
+	Value int `json:"value"`
 }
 
 // ReaderPaymentResponse is a schema definition.
