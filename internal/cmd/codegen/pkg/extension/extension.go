@@ -1,8 +1,8 @@
 package extension
 
 import (
-	"github.com/pb33f/libopenapi/orderedmap"
 	"github.com/pb33f/go-yaml"
+	"github.com/pb33f/libopenapi/orderedmap"
 )
 
 // Get extracts extension attributes from extensions.
