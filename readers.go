@@ -45,7 +45,9 @@ type BadRequestErrors struct {
 type BadRequestErrorsType string
 
 const (
+	BadRequestErrorsTypeAppOutdated            BadRequestErrorsType = "APP_OUTDATED"
 	BadRequestErrorsTypeDuplicateHeaders       BadRequestErrorsType = "DUPLICATE_HEADERS"
+	BadRequestErrorsTypeInvalidAffiliateKey    BadRequestErrorsType = "INVALID_AFFILIATE_KEY"
 	BadRequestErrorsTypeInvalidBearerToken     BadRequestErrorsType = "INVALID_BEARER_TOKEN"
 	BadRequestErrorsTypeInvalidUserAgent       BadRequestErrorsType = "INVALID_USER_AGENT"
 	BadRequestErrorsTypeNotEnoughUnpaidPayouts BadRequestErrorsType = "NOT_ENOUGH_UNPAID_PAYOUTS"
@@ -76,18 +78,27 @@ func (e *CreateReaderCheckoutError) Error() string {
 
 var _ error = (*CreateReaderCheckoutError)(nil)
 
-// Reader Checkout
+// Reader Checkout request for SumUp API clients.
+//
+// SumUp API integrators send affiliate metadata in the `affiliate` field below. SDK clients
+// use `POST /api/terminals` with `terminal.affiliate` instead.
 type CreateCheckoutRequest struct {
 	// Optional object containing data for transactions from ERP integrators in Greece that comply with the AADE
 	// 1155 protocol.
 	// When such regulatory/business requirements apply, this object must be provided and contains the data needed
 	// to validate the transaction with the AADE signature provider.
 	AADE *CreateCheckoutRequestAADE `json:"aade,omitempty"`
-	// Affiliate metadata for the transaction.
-	// It is a field that allow for integrators to track the source of the transaction.
+	// **SumUp API clients:** affiliate ingress for Reader Checkout.
+	//
+	// Send integrator metadata here when creating a checkout. When `app_id` and `key` are both
+	// present, the key is validated against Identity Admin, stored server-side, and merged into
+	// the payment when the reader starts the transaction using the returned `client_transaction_id`
+	// as `terminal.client_id`.
+	//
+	// SDK clients send affiliate on `POST /api/terminals` instead.
 	Affiliate *nullable.Field[CreateCheckoutRequestAffiliate] `json:"affiliate,omitempty"`
 	// The card type of the card used for the transaction.
-	// Is is required only for some countries (e.g: Brazil).
+	// It is required only for some countries (e.g: Brazil).
 	CardType *CreateCheckoutRequestCardType `json:"card_type,omitempty"`
 	// Description of the checkout to be shown in the Merchant Sales
 	Description *string `json:"description,omitempty"`
@@ -95,17 +106,26 @@ type CreateCheckoutRequest struct {
 	// It may vary according to the merchant country.
 	// For example, in Brazil, the maximum number of installments is 12.
 	//
-	// Omit if the merchant country does support installments.
+	// Omit if the merchant country does not support installments.
 	// Otherwise, the checkout will be rejected.
 	// Min: 1
 	Installments *nullable.Field[int] `json:"installments,omitempty"`
+	// The payment method type for the transaction. Defaults to `card`.
+	//
+	// Use `pix` to initiate a Pix QR-code payment flow on the device.
+	// Pix is only supported for Brazilian merchants; other merchants will receive a 422 error.
+	// Default: card
+	PaymentType *CreateCheckoutRequestPaymentType `json:"payment_type,omitempty"`
 	// Webhook URL to which the payment result will be sent.
 	// It must be a HTTPS url.
 	// Format: uri
 	ReturnURL *string `json:"return_url,omitempty"`
-	// List of tipping rates to be displayed to the cardholder.
-	// The rates are in percentage and should be between 0.01 and 0.99.
-	// The list should be sorted in ascending order.
+	// Exactly three distinct tipping rates to be displayed to the cardholder.
+	// Each rate is a fraction between 0.01 and 1.00 in increments of 0.01.
+	// The rates are sorted in ascending order by the server.
+	// Unique items only
+	// Min items: 3
+	// Max items: 3
 	TipRates []float32 `json:"tip_rates,omitempty"`
 	// Time in seconds the cardholder has to select a tip rate.
 	// If not provided, the default value is 30 seconds.
@@ -138,35 +158,55 @@ type CreateCheckoutRequestAADE struct {
 	SignatureData string `json:"signature_data"`
 }
 
-// Affiliate metadata for the transaction.
-// It is a field that allow for integrators to track the source of the transaction.
+// **SumUp API clients:** affiliate ingress for Reader Checkout.
+//
+// Send integrator metadata here when creating a checkout. When `app_id` and `key` are both
+// present, the key is validated against Identity Admin, stored server-side, and merged into
+// the payment when the reader starts the transaction using the returned `client_transaction_id`
+// as `terminal.client_id`.
+//
+// SDK clients send affiliate on `POST /api/terminals` instead.
 type CreateCheckoutRequestAffiliate struct {
-	// Application ID of the affiliate.
-	// It is a unique identifier for the application and should be set by the integrator in the [Affiliate Keys](https://developer.sumup.com/affiliate-keys) page.
+	// Integrator application identifier from the [Affiliate Keys](https://developer.sumup.com/affiliate-keys) page.
+	//
+	// Required when the affiliate object is provided.
 	AppID string `json:"app_id"`
-	// Foreign transaction ID of the affiliate.
-	// It is a unique identifier for the transaction.
-	// It can be used later to fetch the transaction details via the [Transactions API](https://developer.sumup.com/api/transactions/get).
-	ForeignTransactionID string `json:"foreign_transaction_id"`
-	// Key of the affiliate.
-	// It is a unique identifier for the key  and should be generated by the integrator in the [Affiliate Keys](https://developer.sumup.com/affiliate-keys) page.
+	// Integrator-owned transaction reference. Optional.
+	// Forwarded to terminal-hub and can be used later to fetch the transaction via the [Transactions API](https://developer.sumup.com/api/transactions/get).
+	ForeignTransactionID *string `json:"foreign_transaction_id,omitempty"`
+	// Affiliate key generated in the [Affiliate Keys](https://developer.sumup.com/affiliate-keys) page.
+	// Required when the affiliate object is provided. Validated against Identity Admin when both `app_id` and `key`
+	// are present.
 	Key string `json:"key"`
-	// Additional metadata for the transaction.
-	// It is key-value object that can be associated with the transaction.
+	// Optional key-value metadata associated with the transaction.
+	// Forwarded to terminal-hub together with the payment.
 	Tags CreateCheckoutRequestAffiliateTags `json:"tags,omitempty"`
 }
 
-// Additional metadata for the transaction.
-// It is key-value object that can be associated with the transaction.
+// Optional key-value metadata associated with the transaction.
+// Forwarded to terminal-hub together with the payment.
 type CreateCheckoutRequestAffiliateTags map[string]any
 
 // The card type of the card used for the transaction.
-// Is is required only for some countries (e.g: Brazil).
+// It is required only for some countries (e.g: Brazil).
 type CreateCheckoutRequestCardType string
 
 const (
 	CreateCheckoutRequestCardTypeCredit CreateCheckoutRequestCardType = "credit"
 	CreateCheckoutRequestCardTypeDebit  CreateCheckoutRequestCardType = "debit"
+)
+
+// The payment method type for the transaction. Defaults to `card`.
+//
+// Use `pix` to initiate a Pix QR-code payment flow on the device.
+// Pix is only supported for Brazilian merchants; other merchants will receive a 422 error.
+//
+// Default: card
+type CreateCheckoutRequestPaymentType string
+
+const (
+	CreateCheckoutRequestPaymentTypeCard CreateCheckoutRequestPaymentType = "card"
+	CreateCheckoutRequestPaymentTypePix  CreateCheckoutRequestPaymentType = "pix"
 )
 
 // Amount structure.
@@ -196,9 +236,13 @@ type CreateReaderCheckoutResponse struct {
 type CreateReaderCheckoutResponseData struct {
 	// The checkout ID is a unique identifier for the checkout.
 	CheckoutID *string `json:"checkout_id,omitempty"`
-	// The client transaction ID is a unique identifier for the transaction that is generated for the client.
+	// **SumUp API flow.** Unique identifier for this checkout-generated transaction.
 	//
-	// It can be used later to fetch the transaction details via the [Transactions API](https://developer.sumup.com/api/transactions/get).
+	// Pass this value as `terminal.client_id` when the reader creates the terminal so
+	// checkout metadata (including affiliate sent here) is merged into the payment.
+	//
+	// SDK clients do not use this field for affiliate metadata; they send affiliate in
+	// `terminal.affiliate` on `POST /api/terminals` instead.
 	ClientTransactionID string `json:"client_transaction_id"`
 }
 
@@ -256,7 +300,7 @@ type GetReaderCheckoutResponse struct {
 
 // GetReaderCheckoutResponseData is a schema definition.
 type GetReaderCheckoutResponseData struct {
-	// Type of the card. Required for some countries
+	// Type of the card, or null when no card type was specified.
 	CardType nullable.Field[GetReaderCheckoutResponseDataCardType] `json:"card_type"`
 	// Unique identifier for the checkout
 	// Format: uuid
@@ -268,7 +312,7 @@ type GetReaderCheckoutResponseData struct {
 	// Number of installments for the transaction. Required for some countries.
 	Installments nullable.Field[int] `json:"installments"`
 	// Payment failure reason
-	PaymentFailureReason *nullable.Field[string] `json:"payment_failure_reason,omitempty"`
+	PaymentFailureReason nullable.Field[string] `json:"payment_failure_reason"`
 	// Payment status from payments v2 event
 	PaymentStatus nullable.Field[string] `json:"payment_status"`
 	// Type of the payment. Required for some countries
@@ -291,10 +335,11 @@ type GetReaderCheckoutResponseData struct {
 	ValidUntil nullable.Field[time.Time] `json:"valid_until"`
 }
 
-// Type of the card. Required for some countries
+// Type of the card, or null when no card type was specified.
 type GetReaderCheckoutResponseDataCardType string
 
 const (
+	GetReaderCheckoutResponseDataCardType       GetReaderCheckoutResponseDataCardType = ""
 	GetReaderCheckoutResponseDataCardTypeCredit GetReaderCheckoutResponseDataCardType = "credit"
 	GetReaderCheckoutResponseDataCardTypeDebit  GetReaderCheckoutResponseDataCardType = "debit"
 )
@@ -420,12 +465,26 @@ type ReaderPairingCode string
 
 // ReaderPaymentRequestParams is a schema definition.
 type ReaderPaymentRequestParams struct {
-	Affiliate *Affiliate `json:"affiliate,omitempty"`
+	Affiliate *ReaderPaymentRequestParamsAffiliate `json:"affiliate,omitempty"`
 	// Caller-supplied correlation identifier, used as the idempotency key.
 	ClientTransactionID string `json:"client_transaction_id"`
-	// Optional tip amount in minor units, added on top of total_amount.
-	TipAmount   *int   `json:"tip_amount,omitempty"`
-	TotalAmount Amount `json:"total_amount"`
+	// Portion of total_amount that is a tip, in minor units.
+	TipAmount   *int                                  `json:"tip_amount,omitempty"`
+	TotalAmount ReaderPaymentRequestParamsTotalAmount `json:"total_amount"`
+}
+
+// ReaderPaymentRequestParamsAffiliate is a schema definition.
+type ReaderPaymentRequestParamsAffiliate struct {
+	AppID string `json:"app_id"`
+	Key   string `json:"key"`
+}
+
+// ReaderPaymentRequestParamsTotalAmount is a schema definition.
+type ReaderPaymentRequestParamsTotalAmount struct {
+	// Currency ISO 4217 code
+	Currency string `json:"currency"`
+	// Amount in minor units (e.g. cents).
+	Value int `json:"value"`
 }
 
 // ReaderPaymentResponse is a schema definition.
@@ -885,6 +944,13 @@ func (c *ReadersClient) GetStatus(ctx context.Context, merchantCode string, read
 // this time, any other checkout for the same device will be rejected.
 //
 // **Note**: If the target device is a Solo, it must be in version 3.3.24.3 or higher.
+//
+// **Affiliate metadata**: Optionally include an `affiliate` object to attach integrator metadata to the payment.
+//
+// When provided, the affiliate key is validated against Identity Admin, stored server-side for approximately 600
+// seconds,
+// and merged into the downstream payment when the reader starts the transaction using the returned `client_transaction_id`.
+// Affiliate metadata is not sent to the device during checkout creation.
 func (c *ReadersClient) CreateCheckout(ctx context.Context, merchantCode string, readerID string, body ReadersCreateCheckoutParams) (*CreateReaderCheckoutResponse, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v/checkout", merchantCode, readerID)
 

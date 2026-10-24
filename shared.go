@@ -35,6 +35,7 @@ type CardType string
 const (
 	CardTypeAlelo        CardType = "ALELO"
 	CardTypeAmex         CardType = "AMEX"
+	CardTypeBancomat     CardType = "BANCOMAT"
 	CardTypeConecs       CardType = "CONECS"
 	CardTypeCup          CardType = "CUP"
 	CardTypeDiners       CardType = "DINERS"
@@ -49,6 +50,7 @@ const (
 	CardTypeMaestro      CardType = "MAESTRO"
 	CardTypeMastercard   CardType = "MASTERCARD"
 	CardTypePluxee       CardType = "PLUXEE"
+	CardTypeSumup        CardType = "SUMUP"
 	CardTypeSwile        CardType = "SWILE"
 	CardTypeTicket       CardType = "TICKET"
 	CardTypeUnknown      CardType = "UNKNOWN"
@@ -80,7 +82,9 @@ const (
 	CurrencyUSD Currency = "USD"
 )
 
-// Entry mode of the payment details.
+// How the payment details were captured, for example `CHIP` or `CONTACTLESS` for card-present payments and
+// `CUSTOMER_ENTRY` for card details entered by the payer. For wallet and alternative payment methods, this can
+// identify the method, such as `APPLE_PAY` or `BLIK`.
 type EntryMode string
 
 const (
@@ -203,7 +207,9 @@ const (
 // Max properties: 64
 type Metadata map[string]any
 
-// Payment type used for the transaction.
+// Payment category recorded on a transaction, for example `POS` for a point-of-sale card payment, `ECOM` for
+// an online card payment, or `RECURRING` for a recurring card payment. These reporting values are separate from
+// the lowercase `payment_type` values used to process checkouts.
 type PaymentType string
 
 const (
@@ -224,7 +230,7 @@ const (
 type PersonalDetails struct {
 	// Profile's personal address information.
 	Address *AddressLegacy `json:"address,omitempty"`
-	// Date of birth of the customer.
+	// Date of birth of the customer in `YYYY-MM-DD` format, without a time or timezone.
 	// Format: date
 	BirthDate *datetime.Date `json:"birth_date,omitempty"`
 	// Email address of the customer.
@@ -266,7 +272,7 @@ var _ error = (*Problem)(nil)
 
 // Core details shared by transaction resources.
 type TransactionBase struct {
-	// Total amount of the transaction.
+	// Total amount of the transaction in major units of `currency`, for example `10.1` for EUR 10.10.
 	Amount *float32 `json:"amount,omitempty"`
 	// Three-letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code of the amount.
 	Currency *Currency `json:"currency,omitempty"`
@@ -275,7 +281,9 @@ type TransactionBase struct {
 	// Number of installments for a deferred payment.
 	// Min: 1
 	InstallmentsCount *int `json:"installments_count,omitempty"`
-	// Payment type used for the transaction.
+	// Payment category recorded on a transaction, for example `POS` for a point-of-sale card payment, `ECOM` for
+	// an online card payment, or `RECURRING` for a recurring card payment. These reporting values are separate from
+	// the lowercase `payment_type` values used to process checkouts.
 	PaymentType *PaymentType `json:"payment_type,omitempty"`
 	// Current status of the transaction.
 	//
@@ -287,7 +295,8 @@ type TransactionBase struct {
 	Status *TransactionStatus `json:"status,omitempty"`
 	// The timestamp of when the transaction was created.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
-	// Transaction code returned by the acquirer/processing entity after processing the transaction.
+	// SumUp transaction code, for example `TEENSK4W2K`. Use it to look up the transaction with the `transaction_code` query
+	// parameter. This is separate from the transaction's `id` and the card issuer's `auth_code`.
 	TransactionCode *string `json:"transaction_code,omitempty"`
 }
 
@@ -295,17 +304,20 @@ type TransactionBase struct {
 type TransactionCheckoutInfo struct {
 	// Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
 	AuthCode *string `json:"auth_code,omitempty"`
-	// Entry mode of the payment details.
+	// How the payment details were captured, for example `CHIP` or `CONTACTLESS` for card-present payments and
+	// `CUSTOMER_ENTRY` for card details entered by the payer. For wallet and alternative payment methods, this can
+	// identify the method, such as `APPLE_PAY` or `BLIK`.
 	EntryMode *EntryMode `json:"entry_mode,omitempty"`
 	// Unique code of the registered merchant to whom the payment is made.
 	MerchantCode *string `json:"merchant_code,omitempty"`
-	// Amount of the tip (out of the total transaction amount).
+	// Tip included in the total transaction amount, in major units of the transaction's currency.
 	TipAmount *float32 `json:"tip_amount,omitempty"`
-	// Amount of the applicable VAT (out of the total transaction amount).
+	// VAT included in the total transaction amount, in major units of the transaction's currency.
 	VATAmount *float32 `json:"vat_amount,omitempty"`
 }
 
-// Unique identifier of the transaction event.
+// Numeric identifier of a transaction event. Use it as `tx_event_id` when requesting receipt details for a
+// specific event. This is separate from the transaction ID and the transaction history pagination references.
 // Format: int64
 type TransactionEventID int64
 
@@ -338,7 +350,13 @@ const (
 	TransactionEventStatusSuccessful TransactionEventStatus = "SUCCESSFUL"
 )
 
-// Type of the transaction event.
+// Financial event associated with a transaction.
+//
+// - `PAYOUT`: Funds from the transaction being prepared for or included in a merchant payout. Check the event
+// status to determine whether they have been paid out.
+// - `REFUND`: Money returned to the payer.
+// - `CHARGE_BACK`: A reversal of the payment following a chargeback.
+// - `PAYOUT_DEDUCTION`: An amount deducted from a merchant payout, for example to cover a refund or chargeback.
 type TransactionEventType string
 
 const (
