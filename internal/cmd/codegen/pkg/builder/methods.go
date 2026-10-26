@@ -43,11 +43,11 @@ func (mt Method) ParamsString() string {
 	res.WriteString("ctx context.Context")
 	for _, p := range mt.PathParams {
 		res.WriteString(", ")
-		res.WriteString(fmt.Sprintf("%s %s", strcase.ToLowerCamel(p.Name), p.Type))
+		fmt.Fprintf(&res, "%s %s", strcase.ToLowerCamel(p.Name), p.Type)
 	}
 	if mt.QueryParams != nil {
 		res.WriteString(", ")
-		res.WriteString(fmt.Sprintf("%s %s", strcase.ToLowerCamel(mt.QueryParams.Name), mt.QueryParams.Type))
+		fmt.Fprintf(&res, "%s %s", strcase.ToLowerCamel(mt.QueryParams.Name), mt.QueryParams.Type)
 	}
 	return res.String()
 }

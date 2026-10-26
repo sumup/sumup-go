@@ -51,7 +51,7 @@ func clientGodoc(name string, tag *base.Tag) string {
 
 	fmt.Fprintf(out, "%s provides access to the %s API.", name, cmp.Or(tag.Name, "tag"))
 
-	if tag != nil && strings.TrimSpace(tag.Description) != "" {
+	if strings.TrimSpace(tag.Description) != "" {
 		fmt.Fprintf(out, "\n\n%s", strings.TrimSpace(tag.Description))
 	}
 
