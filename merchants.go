@@ -557,13 +557,9 @@ func (c *MerchantsClient) ListPersons(ctx context.Context, merchantCode string) 
 		return &v, nil
 	case http.StatusNotFound:
 		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		return nil, readAPIError(resp, nil)
 	}
 }
 
@@ -590,13 +586,9 @@ func (c *MerchantsClient) Get(ctx context.Context, merchantCode string) (*Mercha
 		return &v, nil
 	case http.StatusNotFound:
 		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		return nil, readAPIError(resp, nil)
 	}
 }
 
@@ -623,12 +615,8 @@ func (c *MerchantsClient) GetPerson(ctx context.Context, merchantCode string, pe
 		return &v, nil
 	case http.StatusNotFound:
 		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		return nil, readAPIError(resp, nil)
 	}
 }

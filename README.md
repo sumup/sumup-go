@@ -72,6 +72,29 @@ The easiest form of authenticating with SumUp APIs is using [API keys](https://d
 client := sumup.NewClient(client.WithAPIKey("sup_sk_LZFWoLyd..."))
 ```
 
+## Handling errors
+
+Use `errors.As` from the standard `errors` package to read typed Problem details:
+
+```go
+_, err := client.Checkouts.Get(context.Background(), "your-checkout-id")
+
+var problem *sumup.Problem
+if errors.As(err, &problem) {
+    fmt.Println(problem.Type)
+    if problem.Detail != nil {
+        fmt.Println(*problem.Detail)
+    }
+}
+var apiError *sumup.APIError
+if errors.As(err, &apiError) {
+    fmt.Println(apiError.StatusCode, string(apiError.Body))
+}
+```
+
+`APIError.Headers` contains the response headers. Connection failures retain their
+original Go error, so `errors.Is` and `errors.As` continue to work.
+
 ## Examples
 
 The repository includes several examples demonstrating different use cases:

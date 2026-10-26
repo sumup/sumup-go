@@ -103,13 +103,9 @@ func (c *RolesClient) List(ctx context.Context, merchantCode string) (*RolesList
 		return &v, nil
 	case http.StatusNotFound:
 		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		return nil, readAPIError(resp, nil)
 	}
 }
 
@@ -136,20 +132,12 @@ func (c *RolesClient) Create(ctx context.Context, merchantCode string, body Role
 		return &v, nil
 	case http.StatusBadRequest:
 		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	case http.StatusNotFound:
 		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		return nil, readAPIError(resp, nil)
 	}
 }
 
@@ -170,20 +158,12 @@ func (c *RolesClient) Delete(ctx context.Context, merchantCode string, roleID st
 		return nil
 	case http.StatusBadRequest:
 		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return &apiErr
+		return readAPIError(resp, &apiErr)
 	case http.StatusNotFound:
 		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return &apiErr
+		return readAPIError(resp, &apiErr)
 	default:
-		return fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		return readAPIError(resp, nil)
 	}
 }
 
@@ -209,13 +189,9 @@ func (c *RolesClient) Get(ctx context.Context, merchantCode string, roleID strin
 		return &v, nil
 	case http.StatusNotFound:
 		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		return nil, readAPIError(resp, nil)
 	}
 }
 
@@ -244,19 +220,11 @@ func (c *RolesClient) Update(ctx context.Context, merchantCode string, roleID st
 		return &v, nil
 	case http.StatusBadRequest:
 		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	case http.StatusNotFound:
 		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		return nil, readAPIError(resp, nil)
 	}
 }

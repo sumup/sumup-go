@@ -9,6 +9,9 @@ import "github.com/sumup/sumup-go"
 ## Index
 
 - [Variables](<#variables>)
+- [type APIError](<#APIError>)
+  - [func \(e \*APIError\) Error\(\) string](<#APIError.Error>)
+  - [func \(e \*APIError\) Unwrap\(\) error](<#APIError.Unwrap>)
 - [type Address](<#Address>)
 - [type AddressLegacy](<#AddressLegacy>)
 - [type Affiliate](<#Affiliate>)
@@ -345,6 +348,38 @@ var OAuth2Endpoint = oauth2.Endpoint{
     TokenURL: "https://api.sumup.com/token",
 }
 ```
+
+<a name="APIError"></a>
+## type [APIError](<https://github.com/sumup/sumup-go/blob/main/api_error.go#L12-L17>)
+
+APIError preserves the HTTP response for an unsuccessful API request. Use errors.As to inspect a documented body such as \*Problem.
+
+```go
+type APIError struct {
+    StatusCode int
+    Headers    http.Header
+    Body       []byte
+    Err        error
+}
+```
+
+<a name="APIError.Error"></a>
+### func \(\*APIError\) [Error](<https://github.com/sumup/sumup-go/blob/main/api_error.go#L19>)
+
+```go
+func (e *APIError) Error() string
+```
+
+
+
+<a name="APIError.Unwrap"></a>
+### func \(\*APIError\) [Unwrap](<https://github.com/sumup/sumup-go/blob/main/api_error.go#L27>)
+
+```go
+func (e *APIError) Unwrap() error
+```
+
+Unwrap returns the typed API body or the response\-reading error.
 
 <a name="Address"></a>
 ## type [Address](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L23-L87>)
@@ -1219,7 +1254,7 @@ func NewCheckoutsClient(c *client.Client) *CheckoutsClient
 
 
 <a name="CheckoutsClient.Create"></a>
-### func \(\*CheckoutsClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L746>)
+### func \(\*CheckoutsClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L742>)
 
 ```go
 func (c *CheckoutsClient) Create(ctx context.Context, body CheckoutsCreateParams) (*Checkout, error)
@@ -1232,7 +1267,7 @@ Set \`hosted\_checkout.enabled\` to \`true\` to receive a \[Hosted Checkout\]\(h
 Complete the payment through \[Hosted Checkout\]\(https://developer.sumup.com/online-payments/checkouts/hosted-checkout/\) or the \[Payment Widget\]\(https://developer.sumup.com/online-payments/checkouts/card-widget\).
 
 <a name="CheckoutsClient.CreateApplePaySession"></a>
-### func \(\*CheckoutsClient\) [CreateApplePaySession](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L804>)
+### func \(\*CheckoutsClient\) [CreateApplePaySession](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L784>)
 
 ```go
 func (c *CheckoutsClient) CreateApplePaySession(ctx context.Context, checkoutID string, body CheckoutsCreateApplePaySessionParams) (*CheckoutsCreateApplePaySessionResponse, error)
@@ -1243,7 +1278,7 @@ Creates an Apple Pay merchant session for the specified checkout.
 Use this endpoint after the customer selects Apple Pay and before calling \`ApplePaySession.completeMerchantValidation\(...\)\` in the browser. SumUp validates the merchant session request and returns the Apple Pay session object that your frontend should pass to Apple's JavaScript API.
 
 <a name="CheckoutsClient.Deactivate"></a>
-### func \(\*CheckoutsClient\) [Deactivate](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L875>)
+### func \(\*CheckoutsClient\) [Deactivate](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L843>)
 
 ```go
 func (c *CheckoutsClient) Deactivate(ctx context.Context, checkoutID string) (*Checkout, error)
@@ -1252,7 +1287,7 @@ func (c *CheckoutsClient) Deactivate(ctx context.Context, checkoutID string) (*C
 Deactivates an identified checkout resource. If the checkout has already been processed it can not be deactivated.
 
 <a name="CheckoutsClient.Get"></a>
-### func \(\*CheckoutsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L922>)
+### func \(\*CheckoutsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L878>)
 
 ```go
 func (c *CheckoutsClient) Get(ctx context.Context, checkoutID string) (*CheckoutSuccess, error)
@@ -1270,7 +1305,7 @@ func (c *CheckoutsClient) List(ctx context.Context, params CheckoutsListParams) 
 Lists created checkout resources according to the applied \`checkout\_reference\`.
 
 <a name="CheckoutsClient.ListAvailablePaymentMethods"></a>
-### func \(\*CheckoutsClient\) [ListAvailablePaymentMethods](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L843>)
+### func \(\*CheckoutsClient\) [ListAvailablePaymentMethods](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L815>)
 
 ```go
 func (c *CheckoutsClient) ListAvailablePaymentMethods(ctx context.Context, merchantCode string, params CheckoutsListAvailablePaymentMethodsParams) (*CheckoutsListAvailablePaymentMethodsResponse, error)
@@ -1279,7 +1314,7 @@ func (c *CheckoutsClient) ListAvailablePaymentMethods(ctx context.Context, merch
 Get payment methods available for the given merchant to use with a checkout.
 
 <a name="CheckoutsClient.Process"></a>
-### func \(\*CheckoutsClient\) [Process](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L1013>)
+### func \(\*CheckoutsClient\) [Process](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L953>)
 
 ```go
 func (c *CheckoutsClient) Process(ctx context.Context, checkoutID string, body CheckoutsProcessParams) (*CheckoutsProcessResponse, error)
@@ -1292,7 +1327,7 @@ Processing a checkout will attempt to charge the provided payment instrument for
 Follow this request with \`Retrieve a checkout\` to confirm its status.
 
 <a name="CheckoutsClient.Update"></a>
-### func \(\*CheckoutsClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L965>)
+### func \(\*CheckoutsClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/checkouts.go#L913>)
 
 ```go
 func (c *CheckoutsClient) Update(ctx context.Context, checkoutID string, body CheckoutsUpdateParams) (*Checkout, error)
@@ -2180,7 +2215,7 @@ func (c *CustomersClient) Create(ctx context.Context, body CustomersCreateParams
 Creates a new saved customer resource which you can later manipulate and save payment instruments to.
 
 <a name="CustomersClient.DeactivatePaymentInstrument"></a>
-### func \(\*CustomersClient\) [DeactivatePaymentInstrument](<https://github.com/sumup/sumup-go/blob/main/customers.go#L293>)
+### func \(\*CustomersClient\) [DeactivatePaymentInstrument](<https://github.com/sumup/sumup-go/blob/main/customers.go#L241>)
 
 ```go
 func (c *CustomersClient) DeactivatePaymentInstrument(ctx context.Context, customerID string, token string) error
@@ -2189,7 +2224,7 @@ func (c *CustomersClient) DeactivatePaymentInstrument(ctx context.Context, custo
 Deactivates an identified card payment instrument resource for a customer.
 
 <a name="CustomersClient.Get"></a>
-### func \(\*CustomersClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/customers.go#L198>)
+### func \(\*CustomersClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/customers.go#L170>)
 
 ```go
 func (c *CustomersClient) Get(ctx context.Context, customerID string) (*Customer, error)
@@ -2198,7 +2233,7 @@ func (c *CustomersClient) Get(ctx context.Context, customerID string) (*Customer
 Retrieves an identified saved customer resource through the unique \`customer\_id\` parameter, generated upon customer creation.
 
 <a name="CustomersClient.ListPaymentInstruments"></a>
-### func \(\*CustomersClient\) [ListPaymentInstruments](<https://github.com/sumup/sumup-go/blob/main/customers.go#L151>)
+### func \(\*CustomersClient\) [ListPaymentInstruments](<https://github.com/sumup/sumup-go/blob/main/customers.go#L135>)
 
 ```go
 func (c *CustomersClient) ListPaymentInstruments(ctx context.Context, customerID string) (*CustomersListPaymentInstrumentsResponse, error)
@@ -2207,7 +2242,7 @@ func (c *CustomersClient) ListPaymentInstruments(ctx context.Context, customerID
 Lists all payment instrument resources that are saved for an identified customer.
 
 <a name="CustomersClient.Update"></a>
-### func \(\*CustomersClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/customers.go#L247>)
+### func \(\*CustomersClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/customers.go#L207>)
 
 ```go
 func (c *CustomersClient) Update(ctx context.Context, customerID string, body CustomersUpdateParams) (*Customer, error)
@@ -2943,7 +2978,7 @@ func NewMembersClient(c *client.Client) *MembersClient
 
 
 <a name="MembersClient.Create"></a>
-### func \(\*MembersClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/members.go#L257>)
+### func \(\*MembersClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/members.go#L253>)
 
 ```go
 func (c *MembersClient) Create(ctx context.Context, merchantCode string, body MembersCreateParams) (*Member, error)
@@ -2954,7 +2989,7 @@ Adds a member to the merchant account with the specified roles.
 By default, sends an invitation email to the provided address. The recipient must accept the invitation to join the account. When \`is\_managed\_user\` is \`true\`, creates a managed user with the provided password and optional nickname and assigns the roles directly, without sending an invitation.
 
 <a name="MembersClient.Delete"></a>
-### func \(\*MembersClient\) [Delete](<https://github.com/sumup/sumup-go/blob/main/members.go#L303>)
+### func \(\*MembersClient\) [Delete](<https://github.com/sumup/sumup-go/blob/main/members.go#L287>)
 
 ```go
 func (c *MembersClient) Delete(ctx context.Context, merchantCode string, memberID string) error
@@ -2963,7 +2998,7 @@ func (c *MembersClient) Delete(ctx context.Context, merchantCode string, memberI
 Deletes a merchant member.
 
 <a name="MembersClient.Get"></a>
-### func \(\*MembersClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/members.go#L337>)
+### func \(\*MembersClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/members.go#L313>)
 
 ```go
 func (c *MembersClient) Get(ctx context.Context, merchantCode string, memberID string) (*Member, error)
@@ -2981,7 +3016,7 @@ func (c *MembersClient) List(ctx context.Context, merchantCode string, params Me
 Lists merchant members.
 
 <a name="MembersClient.Update"></a>
-### func \(\*MembersClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/members.go#L374>)
+### func \(\*MembersClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/members.go#L346>)
 
 ```go
 func (c *MembersClient) Update(ctx context.Context, merchantCode string, memberID string, body MembersUpdateParams) (*Member, error)
@@ -3445,7 +3480,7 @@ func NewMerchantsClient(c *client.Client) *MerchantsClient
 
 
 <a name="MerchantsClient.Get"></a>
-### func \(\*MerchantsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L572>)
+### func \(\*MerchantsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L568>)
 
 ```go
 func (c *MerchantsClient) Get(ctx context.Context, merchantCode string) (*Merchant, error)
@@ -3454,7 +3489,7 @@ func (c *MerchantsClient) Get(ctx context.Context, merchantCode string) (*Mercha
 Returns a Merchant for a valid Merchant code. Merchant documentation: https://developer.sumup.com/tools/models/merchant
 
 <a name="MerchantsClient.GetPerson"></a>
-### func \(\*MerchantsClient\) [GetPerson](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L605>)
+### func \(\*MerchantsClient\) [GetPerson](<https://github.com/sumup/sumup-go/blob/main/merchants.go#L597>)
 
 ```go
 func (c *MerchantsClient) GetPerson(ctx context.Context, merchantCode string, personID string) (*Person, error)
@@ -4252,7 +4287,7 @@ func NewReadersClient(c *client.Client) *ReadersClient
 
 
 <a name="ReadersClient.Create"></a>
-### func \(\*ReadersClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/readers.go#L651>)
+### func \(\*ReadersClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/readers.go#L647>)
 
 ```go
 func (c *ReadersClient) Create(ctx context.Context, merchantCode string, body ReadersCreateParams) (*Reader, error)
@@ -4261,7 +4296,7 @@ func (c *ReadersClient) Create(ctx context.Context, merchantCode string, body Re
 Create a new Reader for the merchant account.
 
 <a name="ReadersClient.CreateCheckout"></a>
-### func \(\*ReadersClient\) [CreateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers.go#L888>)
+### func \(\*ReadersClient\) [CreateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers.go#L828>)
 
 ```go
 func (c *ReadersClient) CreateCheckout(ctx context.Context, merchantCode string, readerID string, body ReadersCreateCheckoutParams) (*CreateReaderCheckoutResponse, error)
@@ -4276,7 +4311,7 @@ There are some caveats when using this endpoint: \* The target device must be on
 \*\*Note\*\*: If the target device is a Solo, it must be in version 3.3.24.3 or higher.
 
 <a name="ReadersClient.CreateGoCheckout"></a>
-### func \(\*ReadersClient\) [CreateGoCheckout](<https://github.com/sumup/sumup-go/blob/main/readers.go#L700>)
+### func \(\*ReadersClient\) [CreateGoCheckout](<https://github.com/sumup/sumup-go/blob/main/readers.go#L684>)
 
 ```go
 func (c *ReadersClient) CreateGoCheckout(ctx context.Context, merchantCode string, readerID ReaderID, body ReadersCreateGoCheckoutParams) (*ReaderPaymentResponse, error)
@@ -4287,7 +4322,7 @@ Initiates a payment on the SumUp Go terminal identified by the reader ID.
 Use \`client\_transaction\_id\` as an idempotency key: retrying the request with the same value returns the result of the original payment instead of creating a duplicate.
 
 <a name="ReadersClient.Delete"></a>
-### func \(\*ReadersClient\) [Delete](<https://github.com/sumup/sumup-go/blob/main/readers.go#L941>)
+### func \(\*ReadersClient\) [Delete](<https://github.com/sumup/sumup-go/blob/main/readers.go#L865>)
 
 ```go
 func (c *ReadersClient) Delete(ctx context.Context, merchantCode string, readerID ReaderID) error
@@ -4296,7 +4331,7 @@ func (c *ReadersClient) Delete(ctx context.Context, merchantCode string, readerI
 Delete a reader.
 
 <a name="ReadersClient.Get"></a>
-### func \(\*ReadersClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/readers.go#L968>)
+### func \(\*ReadersClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/readers.go#L888>)
 
 ```go
 func (c *ReadersClient) Get(ctx context.Context, merchantCode string, readerID ReaderID, params ReadersGetParams) (*Reader, error)
@@ -4305,7 +4340,7 @@ func (c *ReadersClient) Get(ctx context.Context, merchantCode string, readerID R
 Retrieve a Reader.
 
 <a name="ReadersClient.GetCheckout"></a>
-### func \(\*ReadersClient\) [GetCheckout](<https://github.com/sumup/sumup-go/blob/main/readers.go#L1042>)
+### func \(\*ReadersClient\) [GetCheckout](<https://github.com/sumup/sumup-go/blob/main/readers.go#L950>)
 
 ```go
 func (c *ReadersClient) GetCheckout(ctx context.Context, merchantCode string, readerID string, checkoutID string) (*GetReaderCheckoutResponse, error)
@@ -4314,7 +4349,7 @@ func (c *ReadersClient) GetCheckout(ctx context.Context, merchantCode string, re
 Get a Checkout for a Reader.
 
 <a name="ReadersClient.GetStatus"></a>
-### func \(\*ReadersClient\) [GetStatus](<https://github.com/sumup/sumup-go/blob/main/readers.go#L833>)
+### func \(\*ReadersClient\) [GetStatus](<https://github.com/sumup/sumup-go/blob/main/readers.go#L785>)
 
 ```go
 func (c *ReadersClient) GetStatus(ctx context.Context, merchantCode string, readerID string) (*StatusResponse, error)
@@ -4344,7 +4379,7 @@ func (c *ReadersClient) List(ctx context.Context, merchantCode string) (*Readers
 List all readers of the merchant.
 
 <a name="ReadersClient.TerminateCheckout"></a>
-### func \(\*ReadersClient\) [TerminateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers.go#L766>)
+### func \(\*ReadersClient\) [TerminateCheckout](<https://github.com/sumup/sumup-go/blob/main/readers.go#L734>)
 
 ```go
 func (c *ReadersClient) TerminateCheckout(ctx context.Context, merchantCode string, readerID string) error
@@ -4361,7 +4396,7 @@ If a transaction is successfully terminated and \`return\_url\` was provided on 
 \*\*Note\*\*: If the target device is a Solo, it must be in version 3.3.28.0 or higher.
 
 <a name="ReadersClient.Update"></a>
-### func \(\*ReadersClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/readers.go#L1003>)
+### func \(\*ReadersClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/readers.go#L919>)
 
 ```go
 func (c *ReadersClient) Update(ctx context.Context, merchantCode string, readerID ReaderID, body ReadersUpdateParams) (*Reader, error)
@@ -4879,7 +4914,7 @@ func NewRolesClient(c *client.Client) *RolesClient
 
 
 <a name="RolesClient.Create"></a>
-### func \(\*RolesClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/roles.go#L118>)
+### func \(\*RolesClient\) [Create](<https://github.com/sumup/sumup-go/blob/main/roles.go#L114>)
 
 ```go
 func (c *RolesClient) Create(ctx context.Context, merchantCode string, body RolesCreateParams) (*Role, error)
@@ -4888,7 +4923,7 @@ func (c *RolesClient) Create(ctx context.Context, merchantCode string, body Role
 Create a custom role for the merchant. Roles are defined by the set of permissions that they grant to the members that they are assigned to.
 
 <a name="RolesClient.Delete"></a>
-### func \(\*RolesClient\) [Delete](<https://github.com/sumup/sumup-go/blob/main/roles.go#L157>)
+### func \(\*RolesClient\) [Delete](<https://github.com/sumup/sumup-go/blob/main/roles.go#L145>)
 
 ```go
 func (c *RolesClient) Delete(ctx context.Context, merchantCode string, roleID string) error
@@ -4897,7 +4932,7 @@ func (c *RolesClient) Delete(ctx context.Context, merchantCode string, roleID st
 Delete a custom role.
 
 <a name="RolesClient.Get"></a>
-### func \(\*RolesClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/roles.go#L191>)
+### func \(\*RolesClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/roles.go#L171>)
 
 ```go
 func (c *RolesClient) Get(ctx context.Context, merchantCode string, roleID string) (*Role, error)
@@ -4915,7 +4950,7 @@ func (c *RolesClient) List(ctx context.Context, merchantCode string) (*RolesList
 List merchant's custom roles.
 
 <a name="RolesClient.Update"></a>
-### func \(\*RolesClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/roles.go#L226>)
+### func \(\*RolesClient\) [Update](<https://github.com/sumup/sumup-go/blob/main/roles.go#L202>)
 
 ```go
 func (c *RolesClient) Update(ctx context.Context, merchantCode string, roleID string, body RolesUpdateParams) (*Role, error)
@@ -5918,7 +5953,7 @@ func NewTransactionsClient(c *client.Client) *TransactionsClient
 
 
 <a name="TransactionsClient.Get"></a>
-### func \(\*TransactionsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L795>)
+### func \(\*TransactionsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L787>)
 
 ```go
 func (c *TransactionsClient) Get(ctx context.Context, merchantCode string, params TransactionsGetParams) (*TransactionFull, error)
@@ -5936,7 +5971,7 @@ func (c *TransactionsClient) List(ctx context.Context, merchantCode string, para
 Lists detailed history of all transactions associated with the merchant profile.
 
 <a name="TransactionsClient.Refund"></a>
-### func \(\*TransactionsClient\) [Refund](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L834>)
+### func \(\*TransactionsClient\) [Refund](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L818>)
 
 ```go
 func (c *TransactionsClient) Refund(ctx context.Context, merchantCode string, transactionID string, body TransactionsRefundParams) (*TransactionsRefundResponse, error)

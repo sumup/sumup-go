@@ -723,13 +723,9 @@ func (c *CheckoutsClient) List(ctx context.Context, params CheckoutsListParams) 
 		return &v, nil
 	case http.StatusUnauthorized:
 		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		return nil, readAPIError(resp, nil)
 	}
 }
 
@@ -764,34 +760,18 @@ func (c *CheckoutsClient) Create(ctx context.Context, body CheckoutsCreateParams
 		return &v, nil
 	case http.StatusBadRequest:
 		var apiErr ErrorExtended
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	case http.StatusUnauthorized:
 		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	case http.StatusForbidden:
 		var apiErr ErrorForbidden
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	case http.StatusConflict:
 		var apiErr Error
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		return nil, readAPIError(resp, nil)
 	}
 }
 
@@ -822,20 +802,12 @@ func (c *CheckoutsClient) CreateApplePaySession(ctx context.Context, checkoutID 
 		return &v, nil
 	case http.StatusBadRequest:
 		var apiErr CheckoutsCreateApplePaySession400Response
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	case http.StatusNotFound:
 		var apiErr Error
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		return nil, readAPIError(resp, nil)
 	}
 }
 
@@ -861,13 +833,9 @@ func (c *CheckoutsClient) ListAvailablePaymentMethods(ctx context.Context, merch
 		return &v, nil
 	case http.StatusBadRequest:
 		var apiErr DetailsError
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		return nil, readAPIError(resp, nil)
 	}
 }
 
@@ -893,27 +861,15 @@ func (c *CheckoutsClient) Deactivate(ctx context.Context, checkoutID string) (*C
 		return &v, nil
 	case http.StatusUnauthorized:
 		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	case http.StatusNotFound:
 		var apiErr Error
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	case http.StatusConflict:
 		var apiErr Error
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		return nil, readAPIError(resp, nil)
 	}
 }
 
@@ -940,20 +896,12 @@ func (c *CheckoutsClient) Get(ctx context.Context, checkoutID string) (*Checkout
 		return &v, nil
 	case http.StatusUnauthorized:
 		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	case http.StatusNotFound:
 		var apiErr Error
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		return nil, readAPIError(resp, nil)
 	}
 }
 
@@ -983,20 +931,12 @@ func (c *CheckoutsClient) Update(ctx context.Context, checkoutID string, body Ch
 		return &v, nil
 	case http.StatusUnauthorized:
 		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	case http.StatusNotFound:
 		var apiErr Error
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		return nil, readAPIError(resp, nil)
 	}
 }
 
@@ -1042,33 +982,17 @@ func (c *CheckoutsClient) Process(ctx context.Context, checkoutID string, body C
 		}, nil
 	case http.StatusBadRequest:
 		var apiErr CheckoutsProcess400Response
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	case http.StatusUnauthorized:
 		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	case http.StatusNotFound:
 		var apiErr Error
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	case http.StatusConflict:
 		var apiErr Error
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		return nil, readAPIError(resp, nil)
 	}
 }
