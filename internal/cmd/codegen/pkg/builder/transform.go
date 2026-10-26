@@ -715,6 +715,9 @@ func createEnum(schema *base.Schema, name string) Writable {
 	case slices.Contains(schema.Type, "string"):
 		values := make([]EnumOption[string], 0)
 		for _, v := range schema.Enum {
+			if v.Tag == "!!null" {
+				continue
+			}
 			var option string
 			if err := v.Decode(&option); err != nil {
 				slog.Warn("invalid enum value",
@@ -746,6 +749,9 @@ func createEnum(schema *base.Schema, name string) Writable {
 		if schema.Format == "int64" {
 			values := make([]EnumOption[int64], 0)
 			for _, v := range schema.Enum {
+				if v.Tag == "!!null" {
+					continue
+				}
 				var option float64
 				if err := v.Decode(&option); err != nil {
 					slog.Warn("invalid enum value",
@@ -778,6 +784,9 @@ func createEnum(schema *base.Schema, name string) Writable {
 		if schema.Format == "int32" {
 			values := make([]EnumOption[int32], 0)
 			for _, v := range schema.Enum {
+				if v.Tag == "!!null" {
+					continue
+				}
 				var option float64
 				if err := v.Decode(&option); err != nil {
 					slog.Warn("invalid enum value",
@@ -809,6 +818,9 @@ func createEnum(schema *base.Schema, name string) Writable {
 
 		values := make([]EnumOption[int], 0)
 		for _, v := range schema.Enum {
+			if v.Tag == "!!null" {
+				continue
+			}
 			var option float64
 			if err := v.Decode(&option); err != nil {
 				slog.Warn("invalid enum value",
@@ -840,6 +852,9 @@ func createEnum(schema *base.Schema, name string) Writable {
 		if schema.Format == "float" {
 			values := make([]EnumOption[float32], 0)
 			for _, v := range schema.Enum {
+				if v.Tag == "!!null" {
+					continue
+				}
 				var option float64
 				if err := v.Decode(&option); err != nil {
 					slog.Warn("invalid enum value",
@@ -871,6 +886,9 @@ func createEnum(schema *base.Schema, name string) Writable {
 
 		values := make([]EnumOption[float64], 0)
 		for _, v := range schema.Enum {
+			if v.Tag == "!!null" {
+				continue
+			}
 			var option float64
 			if err := v.Decode(&option); err != nil {
 				slog.Warn("invalid enum value",
