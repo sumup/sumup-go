@@ -1,5 +1,48 @@
 # Changelog
 
+## [0.21.0](https://github.com/sumup/sumup-go/compare/v0.20.0...v0.21.0) (2026-10-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* preserve HTTP context alongside typed API errors ([#352](https://github.com/sumup/sumup-go/issues/352))
+
+### Features
+
+* preserve HTTP context alongside typed API errors ([#352](https://github.com/sumup/sumup-go/issues/352)) ([2670a14](https://github.com/sumup/sumup-go/commit/2670a140b9034215a03e35ae2b3eee91b182d03d))
+
+
+### Bug Fixes
+
+* **codegen:** handle nullable enums in OpenAPI updates ([#353](https://github.com/sumup/sumup-go/issues/353)) ([d744f2b](https://github.com/sumup/sumup-go/commit/d744f2b04abcbbdd8e97bce981f71ec79c140d11))
+* **codegen:** handle nullable schemas in OpenAPI 3.1.0 ([#325](https://github.com/sumup/sumup-go/issues/325)) ([aa6ce20](https://github.com/sumup/sumup-go/commit/aa6ce200d274d93e0ce1de8c8ef47fb73b9179d3))
+* **codegen:** preserve annotated schema types ([#345](https://github.com/sumup/sumup-go/issues/345)) ([01468df](https://github.com/sumup/sumup-go/commit/01468df8df50d1c64ae1c7aceea8f450e2c8732e))
+
+
+### Chores
+
+* **deps:** bump actions/create-github-app-token from 3.2.0 to 3.3.0 ([#348](https://github.com/sumup/sumup-go/issues/348)) ([07e7d1d](https://github.com/sumup/sumup-go/commit/07e7d1d1c89befa4cf717d4be5fb03b8307f303e))
+* **deps:** bump github.com/lmittmann/tint from 1.2.0 to 1.2.1 in /internal/cmd/codegen ([#344](https://github.com/sumup/sumup-go/issues/344)) ([c1ce255](https://github.com/sumup/sumup-go/commit/c1ce255a8b24eb9377cc235233b08877b87b7814))
+* **deps:** bump github.com/pb33f/libopenapi from 0.38.7 to 0.40.1 in /internal/cmd/codegen ([#338](https://github.com/sumup/sumup-go/issues/338)) ([a4aee8e](https://github.com/sumup/sumup-go/commit/a4aee8e857b33c5e93687afc86d4963ad2e5817e))
+* **deps:** bump github.com/pb33f/libopenapi from 0.40.1 to 0.41.2 in /internal/cmd/codegen ([#343](https://github.com/sumup/sumup-go/issues/343)) ([eeadb65](https://github.com/sumup/sumup-go/commit/eeadb657cf5692a915f7e3ad81336b7a26f0fe3f))
+* **deps:** bump github.com/pb33f/libopenapi from 0.41.2 to 0.41.6 in /internal/cmd/codegen ([#346](https://github.com/sumup/sumup-go/issues/346)) ([3a20b76](https://github.com/sumup/sumup-go/commit/3a20b7673483cd659c30a7dc533e69c55b17416c))
+* **deps:** bump github/codeql-action/upload-sarif from 4.37.8 to 4.37.9 ([#328](https://github.com/sumup/sumup-go/issues/328)) ([67d419e](https://github.com/sumup/sumup-go/commit/67d419e81634d4910c66172c6787d2d23122d087))
+* **deps:** bump github/codeql-action/upload-sarif from 4.37.9 to 4.38.0 ([#332](https://github.com/sumup/sumup-go/issues/332)) ([01ad975](https://github.com/sumup/sumup-go/commit/01ad975e65ea457384773d8cd3418ae06e5bfa8e))
+* **deps:** bump github/codeql-action/upload-sarif from 4.38.0 to 4.38.2 ([#339](https://github.com/sumup/sumup-go/issues/339)) ([17fca51](https://github.com/sumup/sumup-go/commit/17fca51980c7b627da07ec15a2853be7dfc0ed85))
+* **deps:** bump github/codeql-action/upload-sarif from 4.38.2 to 4.38.3 ([#347](https://github.com/sumup/sumup-go/issues/347)) ([dd13537](https://github.com/sumup/sumup-go/commit/dd135371d6d2a517ba5e25117847cfa68e79a4a5))
+* **deps:** bump github/codeql-action/upload-sarif from 4.38.3 to 4.39.0 ([#350](https://github.com/sumup/sumup-go/issues/350)) ([97e2bb5](https://github.com/sumup/sumup-go/commit/97e2bb59da53453d2e29fa86aa053b542ff9cd5a))
+* **deps:** bump reviewdog/action-actionlint from 1.73.2 to 1.74.0 ([#331](https://github.com/sumup/sumup-go/issues/331)) ([d954768](https://github.com/sumup/sumup-go/commit/d954768ab59ff951cd9f0c307c1a0748a3cdba1a))
+* **deps:** bump reviewdog/action-actionlint from 1.74.0 to 1.77.0 ([#337](https://github.com/sumup/sumup-go/issues/337)) ([90e3dfc](https://github.com/sumup/sumup-go/commit/90e3dfc88716926e21f12f8495ea38c030f23373))
+* **deps:** bump reviewdog/action-actionlint from 1.77.0 to 1.79.1 ([#342](https://github.com/sumup/sumup-go/issues/342)) ([fd5f2d6](https://github.com/sumup/sumup-go/commit/fd5f2d61bf11a6a987ead2fd90b3aba641c279a5))
+* **deps:** bump reviewdog/action-actionlint from 1.79.1 to 1.80.0 ([#349](https://github.com/sumup/sumup-go/issues/349)) ([0c3c112](https://github.com/sumup/sumup-go/commit/0c3c11290cce5a29b6a89eca7b76aca7f00b36ed))
+* **deps:** bump reviewdog/action-actionlint from 1.80.0 to 1.80.4 ([#351](https://github.com/sumup/sumup-go/issues/351)) ([e46e752](https://github.com/sumup/sumup-go/commit/e46e7522b62be9f9070829140803580a2ec85da9))
+* synced file(s) with sumup/apis ([#324](https://github.com/sumup/sumup-go/issues/324)) ([389857c](https://github.com/sumup/sumup-go/commit/389857cc23acfcfbb64f53bbc4f9b3b2769f9e0a))
+* synced file(s) with sumup/apis ([#327](https://github.com/sumup/sumup-go/issues/327)) ([ad22089](https://github.com/sumup/sumup-go/commit/ad22089ccf7f10aa42aacbfe258c259d63dc74bd))
+* synced file(s) with sumup/apis ([#333](https://github.com/sumup/sumup-go/issues/333)) ([9ecc62b](https://github.com/sumup/sumup-go/commit/9ecc62b8fe748e1dcc48e19d3acf369cb8e1ee06))
+* synced file(s) with sumup/apis ([#334](https://github.com/sumup/sumup-go/issues/334)) ([e57392d](https://github.com/sumup/sumup-go/commit/e57392d129b9e74619e8a4ef986dbd6aaed17e00))
+* synced file(s) with sumup/apis ([#340](https://github.com/sumup/sumup-go/issues/340)) ([99b4a38](https://github.com/sumup/sumup-go/commit/99b4a38c9a9dc99a9ac2506989037cfe26dd345b))
+* synced file(s) with sumup/apis ([#341](https://github.com/sumup/sumup-go/issues/341)) ([51e5bf9](https://github.com/sumup/sumup-go/commit/51e5bf99be275acb7ad33f1030974a00be99867b))
+
 ## [0.20.0](https://github.com/sumup/sumup-go/compare/v0.19.0...v0.20.0) (2026-09-01)
 
 
