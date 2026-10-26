@@ -14,7 +14,9 @@ import (
 	"github.com/sumup/sumup-go/client"
 )
 
-// Receipt details for a transaction.
+// Structured receipt details for a transaction. The transaction's `amount`, `vat_amount`, and `tip_amount`, as
+// well as event amounts, are returned as decimal strings in major currency units, for example `"10.10"` for
+// EUR 10.10.
 type Receipt struct {
 	// Acquirer-specific metadata related to the card authorization.
 	AcquirerData *ReceiptAcquirerData `json:"acquirer_data,omitempty"`
@@ -51,7 +53,8 @@ type ReceiptEvent struct {
 	// Amount associated with the transaction event, in major units.
 	// Format: double
 	Amount *json.Number `json:"amount,omitempty"`
-	// Unique identifier of the transaction event.
+	// Numeric identifier of a transaction event. Use it as `tx_event_id` when requesting receipt details for a
+	// specific event. This is separate from the transaction ID and the transaction history pagination references.
 	// Format: int64
 	ID *TransactionEventID `json:"id,omitempty"`
 	// Receipt number associated with the event.
@@ -78,7 +81,13 @@ type ReceiptEvent struct {
 	Timestamp *time.Time `json:"timestamp,omitempty"`
 	// Unique identifier of the transaction.
 	TransactionID *TransactionID `json:"transaction_id,omitempty"`
-	// Type of the transaction event.
+	// Financial event associated with a transaction.
+	//
+	// - `PAYOUT`: Funds from the transaction being prepared for or included in a merchant payout. Check the event
+	// status to determine whether they have been paid out.
+	// - `REFUND`: Money returned to the payer.
+	// - `CHARGE_BACK`: A reversal of the payment following a chargeback.
+	// - `PAYOUT_DEDUCTION`: An amount deducted from a merchant payout, for example to cover a refund or chargeback.
 	Type *TransactionEventType `json:"type,omitempty"`
 }
 
@@ -259,7 +268,8 @@ func (p *ReceiptsGetParams) QueryValues() url.Values {
 
 // ReceiptsClient provides access to the Receipts API.
 //
-// The Receipts model obtains receipt-like details for specific transactions.
+// Retrieve structured receipt data for a transaction, including payment, merchant, and acquirer details. Use
+// this data to display a receipt in your application. The response is JSON, rather than a rendered receipt document.
 type ReceiptsClient struct {
 	c *client.Client
 }
@@ -268,7 +278,9 @@ func NewReceiptsClient(c *client.Client) *ReceiptsClient {
 	return &ReceiptsClient{c: c}
 }
 
-// Retrieves receipt specific data for a transaction.
+// Retrieves structured receipt data for a transaction belonging to the merchant specified by `mid`. The path
+// accepts either the SumUp transaction ID or transaction code. Provide `tx_event_id` to include a specific transaction
+// event, such as a refund, on the receipt.
 func (c *ReceiptsClient) Get(ctx context.Context, transactionID string, params ReceiptsGetParams) (*Receipt, error) {
 	path := fmt.Sprintf("/v1.1/receipts/%v", transactionID)
 

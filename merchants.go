@@ -31,9 +31,7 @@ type Address struct {
 	// the common interest. Used in countries such as Chile.
 	// Max length: 60
 	Commune *string `json:"commune,omitempty"`
-	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
-	// country code. This definition users `oneOf` with a two-character string
-	// type to allow for support of future countries in client code.
+	// The ISO3166-1 Alpha-2 code of the address country.
 	// Min length: 2
 	// Max length: 2
 	// Pattern: ^[A-Z]{2}$
@@ -92,11 +90,7 @@ type Address struct {
 //
 // Person documentation: https://developer.sumup.com/tools/glossary/merchant#persons
 type BasePerson struct {
-	// An address somewhere in the world. The address fields used depend on the country conventions. For example, in
-	// Great Britain, `city` is `post_town`. In the United States, the top-level administrative unit used in addresses
-	// is `state`, whereas in Chile it's `region`.
-	// Whether an address is valid or not depends on whether the locally required fields are present. Fields not
-	// supported in a country will be ignored.
+	// The address of the individual.
 	// Address documentation: https://developer.sumup.com/tools/glossary/address
 	Address *Address `json:"address,omitempty"`
 	// The date of birth of the individual, represented as an ISO 8601:2004 [ISO8601‑2004] YYYY-MM-DD format.
@@ -109,9 +103,7 @@ type BasePerson struct {
 	// provided.
 	// Read only
 	ChangeStatus *ChangeStatus `json:"change_status,omitempty"`
-	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
-	// country code. This definition users `oneOf` with a two-character string
-	// type to allow for support of future countries in client code.
+	// The Alpha-2 ISO code of the country where the Person is a citizen.
 	// Min length: 2
 	// Max length: 2
 	// Pattern: ^[A-Z]{2}$
@@ -144,8 +136,11 @@ type BasePerson struct {
 	// code, but legacy data may not conform to this standard.
 	// Pattern: ^[A-Z]{2}$
 	Nationality *nullable.Field[string] `json:"nationality,omitempty"`
-	Ownership   *Ownership              `json:"ownership,omitempty"`
-	// A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
+	// Details about the ownership relationship between the Person and the Merchant. This is only set if the Person
+	// has a relationship of type `owner`.
+	Ownership *Ownership `json:"ownership,omitempty"`
+	// The (mobile) phone number of the individual (used for verification) in [E.164](https://en.wikipedia.org/wiki/E.164) format.
+	//
 	// Max length: 16
 	PhoneNumber *PhoneNumber `json:"phone_number,omitempty"`
 	// A list of roles the Person has in the Merchant or towards SumUp. A Merchant must have at least one Person with
@@ -243,20 +238,14 @@ type ClassicMerchantIdentifiers struct {
 //
 // Company documentation: https://developer.sumup.com/tools/glossary/merchant#company
 type Company struct {
-	// An address somewhere in the world. The address fields used depend on the country conventions. For example, in
-	// Great Britain, `city` is `post_town`. In the United States, the top-level administrative unit used in addresses
-	// is `state`, whereas in Chile it's `region`.
-	// Whether an address is valid or not depends on whether the locally required fields are present. Fields not
-	// supported in a country will be ignored.
+	// The company's primary address.
 	// Address documentation: https://developer.sumup.com/tools/glossary/address
 	Address *Address `json:"address,omitempty"`
 	// Object attributes that are modifiable only by SumUp applications.
 	Attributes Attributes `json:"attributes,omitempty"`
 	// A list of country-specific company identifiers.
 	Identifiers CompanyIdentifiers `json:"identifiers,omitempty"`
-	// The unique legal type reference as defined in the country SDK. We do not rely on IDs as used by other services.
-	// Consumers of this API are expected to use the country SDK to map to any other IDs, translation keys, or
-	// descriptions.
+	// The category identifying the legal structure of the company or legal entity.
 	// Min length: 4
 	// Max length: 64
 	// Pattern: ^[a-z]{2}\.[a-z_]+$
@@ -270,14 +259,11 @@ type Company struct {
 	// Min length: 1
 	// Max length: 150
 	Name *string `json:"name,omitempty"`
-	// A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
+	// The company's phone number (used for verification) in [E.164](https://en.wikipedia.org/wiki/E.164) format.
 	// Max length: 16
 	PhoneNumber *PhoneNumber `json:"phone_number,omitempty"`
-	// An address somewhere in the world. The address fields used depend on the country conventions. For example, in
-	// Great Britain, `city` is `post_town`. In the United States, the top-level administrative unit used in addresses
-	// is `state`, whereas in Chile it's `region`.
-	// Whether an address is valid or not depends on whether the locally required fields are present. Fields not
-	// supported in a country will be ignored.
+	// A trading address is where your suppliers, banks or customers send you correspondence to. Trading address can
+	// be different to the company's registered address (`address`).
 	// Address documentation: https://developer.sumup.com/tools/glossary/address
 	TradingAddress *Address `json:"trading_address,omitempty"`
 	// HTTP(S) URL of the company's website.
@@ -421,11 +407,7 @@ type Ownership struct {
 
 // Person is a schema definition.
 type Person struct {
-	// An address somewhere in the world. The address fields used depend on the country conventions. For example, in
-	// Great Britain, `city` is `post_town`. In the United States, the top-level administrative unit used in addresses
-	// is `state`, whereas in Chile it's `region`.
-	// Whether an address is valid or not depends on whether the locally required fields are present. Fields not
-	// supported in a country will be ignored.
+	// The address of the individual.
 	// Address documentation: https://developer.sumup.com/tools/glossary/address
 	Address *Address `json:"address,omitempty"`
 	// The date of birth of the individual, represented as an ISO 8601:2004 [ISO8601‑2004] YYYY-MM-DD format.
@@ -438,9 +420,7 @@ type Person struct {
 	// provided.
 	// Read only
 	ChangeStatus *ChangeStatus `json:"change_status,omitempty"`
-	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
-	// country code. This definition users `oneOf` with a two-character string
-	// type to allow for support of future countries in client code.
+	// The Alpha-2 ISO code of the country where the Person is a citizen.
 	// Min length: 2
 	// Max length: 2
 	// Pattern: ^[A-Z]{2}$
@@ -473,8 +453,11 @@ type Person struct {
 	// code, but legacy data may not conform to this standard.
 	// Pattern: ^[A-Z]{2}$
 	Nationality *nullable.Field[string] `json:"nationality,omitempty"`
-	Ownership   *Ownership              `json:"ownership,omitempty"`
-	// A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
+	// Details about the ownership relationship between the Person and the Merchant. This is only set if the Person
+	// has a relationship of type `owner`.
+	Ownership *Ownership `json:"ownership,omitempty"`
+	// The (mobile) phone number of the individual (used for verification) in [E.164](https://en.wikipedia.org/wiki/E.164) format.
+	//
 	// Max length: 16
 	PhoneNumber *PhoneNumber `json:"phone_number,omitempty"`
 	// A list of roles the Person has in the Merchant or towards SumUp. A Merchant must have at least one Person with
