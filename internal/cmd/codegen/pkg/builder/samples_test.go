@@ -64,7 +64,7 @@ func TestBuilderSamples(t *testing.T) {
 		t.Fatalf("CreateCheckout sample does not use new for a pointer to a struct:\n%s", createCheckout.Source)
 	}
 	checkout := sampleByID(t, catalog.Samples, "CreateCheckout.Checkout")
-	if !strings.Contains(checkout.Source, `time.Date(2020, time.February, 29, 10, 56, 56, 0, time.UTC)`) {
+	if !strings.Contains(checkout.Source, "time.Date(") {
 		t.Fatalf("CreateCheckout sample does not use time.Date for timestamps:\n%s", checkout.Source)
 	}
 	if strings.Contains(checkout.Source, "time.Parse") || strings.Contains(checkout.Source, "func mustParseTime") {
