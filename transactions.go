@@ -769,20 +769,12 @@ func (c *TransactionsClient) List(ctx context.Context, merchantCode string, para
 		return &v, nil
 	case http.StatusBadRequest:
 		var apiErr Error
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	case http.StatusUnauthorized:
 		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		return nil, readAPIError(resp, nil)
 	}
 }
 
@@ -813,20 +805,12 @@ func (c *TransactionsClient) Get(ctx context.Context, merchantCode string, param
 		return &v, nil
 	case http.StatusUnauthorized:
 		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	case http.StatusNotFound:
 		var apiErr Error
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		return nil, readAPIError(resp, nil)
 	}
 }
 
@@ -852,40 +836,20 @@ func (c *TransactionsClient) Refund(ctx context.Context, merchantCode string, tr
 		return &v, nil
 	case http.StatusBadRequest:
 		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	case http.StatusForbidden:
 		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	case http.StatusNotFound:
 		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	case http.StatusConflict:
 		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	case http.StatusUnprocessableEntity:
 		var apiErr Problem
-		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
-			return nil, fmt.Errorf("read error response: %s", err.Error())
-		}
-
-		return nil, &apiErr
+		return nil, readAPIError(resp, &apiErr)
 	default:
-		return nil, fmt.Errorf("unexpected response %d: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		return nil, readAPIError(resp, nil)
 	}
 }

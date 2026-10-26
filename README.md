@@ -101,3 +101,24 @@ For question specifically related to this Golang SDK please [Open an Issue](http
 `sumup-go` SDK will always support latest 3 version of golang following the Golang [Release Policy](https://go.dev/doc/devel/release).
 
 [docs-badge]: https://img.shields.io/badge/SumUp-documentation-white.svg?logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgY29sb3I9IndoaXRlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogICAgPHBhdGggZD0iTTIyLjI5IDBIMS43Qy43NyAwIDAgLjc3IDAgMS43MVYyMi4zYzAgLjkzLjc3IDEuNyAxLjcxIDEuN0gyMi4zYy45NCAwIDEuNzEtLjc3IDEuNzEtMS43MVYxLjdDMjQgLjc3IDIzLjIzIDAgMjIuMjkgMFptLTcuMjIgMTguMDdhNS42MiA1LjYyIDAgMCAxLTcuNjguMjQuMzYuMzYgMCAwIDEtLjAxLS40OWw3LjQ0LTcuNDRhLjM1LjM1IDAgMCAxIC40OSAwIDUuNiA1LjYgMCAwIDEtLjI0IDcuNjlabTEuNTUtMTEuOS03LjQ0IDcuNDVhLjM1LjM1IDAgMCAxLS41IDAgNS42MSA1LjYxIDAgMCAxIDcuOS03Ljk2bC4wMy4wM2MuMTMuMTMuMTQuMzUuMDEuNDlaIiBmaWxsPSJjdXJyZW50Q29sb3IiLz4KPC9zdmc+
+
+## Handling errors
+
+Use `errors.As` to read typed Problem details:
+
+```go
+var problem *sumup.Problem
+if errors.As(err, &problem) {
+    fmt.Println(problem.Type)
+    if problem.Detail != nil {
+        fmt.Println(*problem.Detail)
+    }
+}
+var apiError *sumup.APIError
+if errors.As(err, &apiError) {
+    fmt.Println(apiError.StatusCode, string(apiError.Body))
+}
+```
+
+`APIError.Headers` contains the response headers. Connection failures retain their
+original Go error, so `errors.Is` and `errors.As` continue to work.
