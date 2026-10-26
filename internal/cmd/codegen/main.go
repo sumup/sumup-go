@@ -22,7 +22,7 @@ func App() *cli.App {
 		Usage:          "Golang SDK generator.",
 		DefaultCommand: "generate",
 		Before: func(ctx *cli.Context) error {
-			logger := slog.New(tint.NewHandler(os.Stderr, nil))
+			logger := slog.New(tint.NewTextHandler(os.Stderr, nil))
 			slog.SetDefault(logger)
 			return nil
 		},
