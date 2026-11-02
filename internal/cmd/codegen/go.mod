@@ -5,7 +5,7 @@ go 1.26.0
 require (
 	github.com/lmittmann/tint v1.2.1
 	github.com/pb33f/go-yaml v0.1.1
-	github.com/pb33f/libopenapi v0.41.6
+	github.com/pb33f/libopenapi v0.41.7
 	github.com/urfave/cli/v2 v2.27.7
 )
 
@@ -17,5 +17,5 @@ require (
 	github.com/pb33f/ordered-map/v2 v2.3.2 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/xrash/smetrics v0.0.0-20250705151800-55b8f293f342 // indirect
-	golang.org/x/sync v0.23.0 // indirect
+	golang.org/x/sync v0.24.0 // indirect
 )
