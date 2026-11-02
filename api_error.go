@@ -26,7 +26,7 @@ func (e *APIError) Error() string {
 // Unwrap returns the typed API body or the response-reading error.
 func (e *APIError) Unwrap() error { return e.Err }
 
-func readAPIError(response *http.Response, body error) error {
+func readAPIError(response *http.Response, body error) *APIError {
 	raw, err := io.ReadAll(response.Body)
 	result := &APIError{StatusCode: response.StatusCode, Headers: response.Header.Clone(), Body: raw}
 	if err != nil {

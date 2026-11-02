@@ -201,6 +201,20 @@ func WithHTTPClient(client *http.Client) RequestOption {
 	}
 }
 
+// WithoutRedirects prevents this request from following redirects.
+// The configured client's transport, timeout, and cookie jar are preserved.
+// Its redirect policy is unchanged for other requests.
+func WithoutRedirects() RequestOption {
+	return func(r *request) error {
+		httpClient := *r.httpClient
+		httpClient.CheckRedirect = func(*http.Request, []*http.Request) error {
+			return http.ErrUseLastResponse
+		}
+		r.httpClient = &httpClient
+		return nil
+	}
+}
+
 // WithHeader returns a [RequestOption] that sets a header key-value pair.
 // Any previously set value will be overwritten.
 func WithHeader(key, value string) RequestOption {
