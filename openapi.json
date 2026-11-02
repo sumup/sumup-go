@@ -5673,16 +5673,16 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateReaderCheckoutRequest"
-              },
               "example": {
+                "return_url": "https://example.com/sumup/webhook",
                 "total_amount": {
                   "currency": "EUR",
                   "minor_unit": 2,
                   "value": 1500
-                },
-                "return_url": "https://example.com/sumup/webhook"
+                }
+              },
+              "schema": {
+                "$ref": "#/components/schemas/CreateReaderCheckoutRequest"
               }
             }
           },
@@ -6054,7 +6054,7 @@
                 }
               }
             },
-            "description": "The reader model is not supported, or the reader could not return its settings."
+            "description": "The reader model is not supported, the firmware version is unsupported, or the reader could not return its settings."
           }
         },
         "security": [
@@ -6217,7 +6217,7 @@
                 }
               }
             },
-            "description": "The settings are invalid, the reader is offline, the reader model is not supported, or the reader could not apply the update."
+            "description": "The settings are invalid, the reader is offline, the reader model is not supported, the firmware version is unsupported, or the reader could not apply the update."
           }
         },
         "security": [
@@ -10082,21 +10082,14 @@
           "given_name": {
             "type": "string",
             "description": "The first name(s) of the individual.",
-            "example": "James Herrald",
+            "example": "Sofia",
             "minLength": 1,
             "maxLength": 60
           },
           "family_name": {
             "type": "string",
             "description": "The last name(s) of the individual.",
-            "example": "Bond",
-            "minLength": 1,
-            "maxLength": 60
-          },
-          "middle_name": {
-            "type": "string",
-            "description": "Middle name(s) of the End-User. Note that in some cultures, people can have multiple middle names; all can be present, with the names being separated by space characters. Also note that in some cultures, middle names are not used.\n",
-            "example": "Maria Sophie",
+            "example": "Rossi",
             "minLength": 1,
             "maxLength": 60
           },

@@ -126,12 +126,6 @@ type BasePerson struct {
 	// A list of country-specific personal identifiers.
 	// Max items: 32
 	Identifiers PersonalIdentifiers `json:"identifiers,omitempty"`
-	// Middle name(s) of the End-User. Note that in some cultures, people can have multiple middle names; all can
-	// be present, with the names being separated by space characters. Also note that in some cultures, middle names
-	// are not used.
-	// Min length: 1
-	// Max length: 60
-	MiddleName *string `json:"middle_name,omitempty"`
 	// The Person's nationality. May be an [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country
 	// code, but legacy data may not conform to this standard.
 	// Pattern: ^[A-Z]{2}$
@@ -443,12 +437,6 @@ type Person struct {
 	// A list of country-specific personal identifiers.
 	// Max items: 32
 	Identifiers PersonalIdentifiers `json:"identifiers,omitempty"`
-	// Middle name(s) of the End-User. Note that in some cultures, people can have multiple middle names; all can
-	// be present, with the names being separated by space characters. Also note that in some cultures, middle names
-	// are not used.
-	// Min length: 1
-	// Max length: 60
-	MiddleName *string `json:"middle_name,omitempty"`
 	// The Person's nationality. May be an [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country
 	// code, but legacy data may not conform to this standard.
 	// Pattern: ^[A-Z]{2}$
