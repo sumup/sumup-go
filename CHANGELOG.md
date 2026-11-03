@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.22.0](https://github.com/sumup/sumup-go/compare/v0.21.0...v0.22.0) (2026-11-03)
+
+
+### Features
+
+* **sdk:** events ([#242](https://github.com/sumup/sumup-go/issues/242)) ([9ec8c0a](https://github.com/sumup/sumup-go/commit/9ec8c0abd264faa2fb468351e276b70327d107d6))
+
+
+### Chores
+
+* **deps:** bump github.com/pb33f/libopenapi from 0.41.6 to 0.41.7 in /internal/cmd/codegen ([#357](https://github.com/sumup/sumup-go/issues/357)) ([e714edb](https://github.com/sumup/sumup-go/commit/e714edbbc1b8c057a636dec85193b0a39d4eb0e8))
+* **deps:** bump github/codeql-action/upload-sarif from 4.39.0 to 4.39.1 ([#358](https://github.com/sumup/sumup-go/issues/358)) ([f4d97e4](https://github.com/sumup/sumup-go/commit/f4d97e4ddba00c9d912964c84b90c9f46e2b2197))
+* **deps:** bump reviewdog/action-actionlint from 1.80.4 to 1.80.6 ([#356](https://github.com/sumup/sumup-go/issues/356)) ([a69b64c](https://github.com/sumup/sumup-go/commit/a69b64c66a8d371af391078759b47cf2d4125abe))
+* synced file(s) with sumup/apis ([#354](https://github.com/sumup/sumup-go/issues/354)) ([054c18b](https://github.com/sumup/sumup-go/commit/054c18b4d6421e46b990acf7bd563c4cefc29166))
+* synced file(s) with sumup/apis ([#359](https://github.com/sumup/sumup-go/issues/359)) ([e659836](https://github.com/sumup/sumup-go/commit/e6598369aebe7fa6c8281c1318950603b3224319))
+* synced file(s) with sumup/apis ([#360](https://github.com/sumup/sumup-go/issues/360)) ([62269d5](https://github.com/sumup/sumup-go/commit/62269d5b5288c9cd4e3d03719ac6b319a7fee526))
+
 ## [0.21.0](https://github.com/sumup/sumup-go/compare/v0.20.0...v0.21.0) (2026-10-26)
 
 
