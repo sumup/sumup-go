@@ -26,6 +26,14 @@ type AddressLegacy struct {
 	State *string `json:"state,omitempty"`
 }
 
+// Amount is a schema definition.
+type Amount struct {
+	// Currency ISO 4217 code
+	Currency string `json:"currency"`
+	// Amount in minor units (e.g. cents).
+	Value int `json:"value"`
+}
+
 // Object attributes that are modifiable only by SumUp applications.
 type Attributes map[string]any
 
