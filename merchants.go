@@ -90,7 +90,11 @@ type Address struct {
 //
 // Person documentation: https://developer.sumup.com/tools/glossary/merchant#persons
 type BasePerson struct {
-	// The address of the individual.
+	// An address somewhere in the world. The address fields used depend on the country conventions. For example, in
+	// Great Britain, `city` is `post_town`. In the United States, the top-level administrative unit used in addresses
+	// is `state`, whereas in Chile it's `region`.
+	// Whether an address is valid or not depends on whether the locally required fields are present. Fields not
+	// supported in a country will be ignored.
 	// Address documentation: https://developer.sumup.com/tools/glossary/address
 	Address *Address `json:"address,omitempty"`
 	// The date of birth of the individual, represented as an ISO 8601:2004 [ISO8601‑2004] YYYY-MM-DD format.
@@ -103,7 +107,9 @@ type BasePerson struct {
 	// provided.
 	// Read only
 	ChangeStatus *ChangeStatus `json:"change_status,omitempty"`
-	// The Alpha-2 ISO code of the country where the Person is a citizen.
+	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+	// country code. This definition users `oneOf` with a two-character string
+	// type to allow for support of future countries in client code.
 	// Min length: 2
 	// Max length: 2
 	// Pattern: ^[A-Z]{2}$
@@ -130,11 +136,8 @@ type BasePerson struct {
 	// code, but legacy data may not conform to this standard.
 	// Pattern: ^[A-Z]{2}$
 	Nationality *nullable.Field[string] `json:"nationality,omitempty"`
-	// Details about the ownership relationship between the Person and the Merchant. This is only set if the Person
-	// has a relationship of type `owner`.
-	Ownership *Ownership `json:"ownership,omitempty"`
-	// The (mobile) phone number of the individual (used for verification) in [E.164](https://en.wikipedia.org/wiki/E.164) format.
-	//
+	Ownership   *Ownership              `json:"ownership,omitempty"`
+	// A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
 	// Max length: 16
 	PhoneNumber *PhoneNumber `json:"phone_number,omitempty"`
 	// A list of roles the Person has in the Merchant or towards SumUp. A Merchant must have at least one Person with
@@ -401,7 +404,11 @@ type Ownership struct {
 
 // Person is a schema definition.
 type Person struct {
-	// The address of the individual.
+	// An address somewhere in the world. The address fields used depend on the country conventions. For example, in
+	// Great Britain, `city` is `post_town`. In the United States, the top-level administrative unit used in addresses
+	// is `state`, whereas in Chile it's `region`.
+	// Whether an address is valid or not depends on whether the locally required fields are present. Fields not
+	// supported in a country will be ignored.
 	// Address documentation: https://developer.sumup.com/tools/glossary/address
 	Address *Address `json:"address,omitempty"`
 	// The date of birth of the individual, represented as an ISO 8601:2004 [ISO8601‑2004] YYYY-MM-DD format.
@@ -414,7 +421,9 @@ type Person struct {
 	// provided.
 	// Read only
 	ChangeStatus *ChangeStatus `json:"change_status,omitempty"`
-	// The Alpha-2 ISO code of the country where the Person is a citizen.
+	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+	// country code. This definition users `oneOf` with a two-character string
+	// type to allow for support of future countries in client code.
 	// Min length: 2
 	// Max length: 2
 	// Pattern: ^[A-Z]{2}$
@@ -441,11 +450,8 @@ type Person struct {
 	// code, but legacy data may not conform to this standard.
 	// Pattern: ^[A-Z]{2}$
 	Nationality *nullable.Field[string] `json:"nationality,omitempty"`
-	// Details about the ownership relationship between the Person and the Merchant. This is only set if the Person
-	// has a relationship of type `owner`.
-	Ownership *Ownership `json:"ownership,omitempty"`
-	// The (mobile) phone number of the individual (used for verification) in [E.164](https://en.wikipedia.org/wiki/E.164) format.
-	//
+	Ownership   *Ownership              `json:"ownership,omitempty"`
+	// A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
 	// Max length: 16
 	PhoneNumber *PhoneNumber `json:"phone_number,omitempty"`
 	// A list of roles the Person has in the Merchant or towards SumUp. A Merchant must have at least one Person with

@@ -21,14 +21,6 @@ type Affiliate struct {
 	Key   string `json:"key"`
 }
 
-// Amount is a schema definition.
-type Amount struct {
-	// Currency ISO 4217 code
-	Currency string `json:"currency"`
-	// Amount in minor units (e.g. cents).
-	Value int `json:"value"`
-}
-
 // 400 Bad Request
 type BadRequest struct {
 	Errors BadRequestErrors `json:"errors"`
