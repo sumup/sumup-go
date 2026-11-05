@@ -189,6 +189,34 @@ func (h *EventsHandler) OnRoleUpdated(callback func(context.Context, *RoleUpdate
 	return registerEvent(h, EventTypeRoleUpdated, callback)
 }
 
+// EventTypeSaleCompleted identifies a sales.completed notification.
+const EventTypeSaleCompleted = "sales.completed"
+
+// SaleCompletedEvent is a sales.completed notification. FetchObject retrieves the latest Sale.
+type SaleCompletedEvent struct{ TypedEvent[Sale] }
+
+func (*SaleCompletedEvent) isEventNotification() {}
+
+// OnSaleCompleted registers a callback for sales.completed notifications.
+// It rejects nil callbacks and duplicate registrations. Registration is safe during handling.
+func (h *EventsHandler) OnSaleCompleted(callback func(context.Context, *SaleCompletedEvent) error) error {
+	return registerEvent(h, EventTypeSaleCompleted, callback)
+}
+
+// EventTypeSaleUpdated identifies a sales.updated notification.
+const EventTypeSaleUpdated = "sales.updated"
+
+// SaleUpdatedEvent is a sales.updated notification. FetchObject retrieves the latest Sale.
+type SaleUpdatedEvent struct{ TypedEvent[Sale] }
+
+func (*SaleUpdatedEvent) isEventNotification() {}
+
+// OnSaleUpdated registers a callback for sales.updated notifications.
+// It rejects nil callbacks and duplicate registrations. Registration is safe during handling.
+func (h *EventsHandler) OnSaleUpdated(callback func(context.Context, *SaleUpdatedEvent) error) error {
+	return registerEvent(h, EventTypeSaleUpdated, callback)
+}
+
 func parseKnownEvent(raw TypedEvent[json.RawMessage]) EventNotification {
 	switch raw.Type {
 	case EventTypeCheckoutCreated:
@@ -217,6 +245,10 @@ func parseKnownEvent(raw TypedEvent[json.RawMessage]) EventNotification {
 		return &RoleDeletedEvent{TypedEvent[Role](raw)}
 	case EventTypeRoleUpdated:
 		return &RoleUpdatedEvent{TypedEvent[Role](raw)}
+	case EventTypeSaleCompleted:
+		return &SaleCompletedEvent{TypedEvent[Sale](raw)}
+	case EventTypeSaleUpdated:
+		return &SaleUpdatedEvent{TypedEvent[Sale](raw)}
 	default:
 		return &UnknownEvent{raw}
 	}
