@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.22.1](https://github.com/sumup/sumup-go/compare/v0.22.0...v0.22.1) (2026-11-05)
+
+
+### Chores
+
+* synced file(s) with sumup/apis ([#361](https://github.com/sumup/sumup-go/issues/361)) ([1809333](https://github.com/sumup/sumup-go/commit/1809333854e46177bd174035f13cff53a53dc4f0))
+
 ## [0.22.0](https://github.com/sumup/sumup-go/compare/v0.21.0...v0.22.0) (2026-11-03)
 
 
