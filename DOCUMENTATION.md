@@ -179,6 +179,8 @@ import "github.com/sumup/sumup-go"
   - [func \(h \*EventsHandler\) OnRoleCreated\(callback func\(context.Context, \*RoleCreatedEvent\) error\) error](<#EventsHandler.OnRoleCreated>)
   - [func \(h \*EventsHandler\) OnRoleDeleted\(callback func\(context.Context, \*RoleDeletedEvent\) error\) error](<#EventsHandler.OnRoleDeleted>)
   - [func \(h \*EventsHandler\) OnRoleUpdated\(callback func\(context.Context, \*RoleUpdatedEvent\) error\) error](<#EventsHandler.OnRoleUpdated>)
+  - [func \(h \*EventsHandler\) OnSaleCompleted\(callback func\(context.Context, \*SaleCompletedEvent\) error\) error](<#EventsHandler.OnSaleCompleted>)
+  - [func \(h \*EventsHandler\) OnSaleUpdated\(callback func\(context.Context, \*SaleUpdatedEvent\) error\) error](<#EventsHandler.OnSaleUpdated>)
   - [func \(h \*EventsHandler\) Parse\(payload \[\]byte, signature string\) \(EventNotification, error\)](<#EventsHandler.Parse>)
   - [func \(h \*EventsHandler\) String\(\) string](<#EventsHandler.String>)
 - [type FeatureV10](<#FeatureV10>)
@@ -378,6 +380,7 @@ import "github.com/sumup/sumup-go"
 - [type RolesListResponse](<#RolesListResponse>)
 - [type RolesUpdateParams](<#RolesUpdateParams>)
 - [type Sale](<#Sale>)
+- [type SaleCompletedEvent](<#SaleCompletedEvent>)
 - [type SaleLineItemV10](<#SaleLineItemV10>)
 - [type SaleLineItemV10ServiceType](<#SaleLineItemV10ServiceType>)
 - [type SalePage](<#SalePage>)
@@ -390,6 +393,7 @@ import "github.com/sumup/sumup-go"
 - [type SaleSearchResponse](<#SaleSearchResponse>)
 - [type SaleSource](<#SaleSource>)
 - [type SaleStateV10](<#SaleStateV10>)
+- [type SaleUpdatedEvent](<#SaleUpdatedEvent>)
 - [type SalesChannel](<#SalesChannel>)
 - [type SalesChannelFilterV10](<#SalesChannelFilterV10>)
 - [type SalesClient](<#SalesClient>)
@@ -586,6 +590,18 @@ const EventTypeRoleDeleted = "roles.deleted"
 
 ```go
 const EventTypeRoleUpdated = "roles.updated"
+```
+
+<a name="EventTypeSaleCompleted"></a>EventTypeSaleCompleted identifies a sales.completed notification.
+
+```go
+const EventTypeSaleCompleted = "sales.completed"
+```
+
+<a name="EventTypeSaleUpdated"></a>EventTypeSaleUpdated identifies a sales.updated notification.
+
+```go
+const EventTypeSaleUpdated = "sales.updated"
 ```
 
 ## Variables
@@ -3616,6 +3632,24 @@ func (h *EventsHandler) OnRoleUpdated(callback func(context.Context, *RoleUpdate
 ```
 
 OnRoleUpdated registers a callback for roles.updated notifications. It rejects nil callbacks and duplicate registrations. Registration is safe during handling.
+
+<a name="EventsHandler.OnSaleCompleted"></a>
+### func \(\*EventsHandler\) [OnSaleCompleted](<https://github.com/sumup/sumup-go/blob/main/events_generated.go#L202>)
+
+```go
+func (h *EventsHandler) OnSaleCompleted(callback func(context.Context, *SaleCompletedEvent) error) error
+```
+
+OnSaleCompleted registers a callback for sales.completed notifications. It rejects nil callbacks and duplicate registrations. Registration is safe during handling.
+
+<a name="EventsHandler.OnSaleUpdated"></a>
+### func \(\*EventsHandler\) [OnSaleUpdated](<https://github.com/sumup/sumup-go/blob/main/events_generated.go#L216>)
+
+```go
+func (h *EventsHandler) OnSaleUpdated(callback func(context.Context, *SaleUpdatedEvent) error) error
+```
+
+OnSaleUpdated registers a callback for sales.updated notifications. It rejects nil callbacks and duplicate registrations. Registration is safe during handling.
 
 <a name="EventsHandler.Parse"></a>
 ### func \(\*EventsHandler\) [Parse](<https://github.com/sumup/sumup-go/blob/main/events_handler.go#L145>)
@@ -7043,6 +7077,17 @@ type Sale struct {
 }
 ```
 
+<a name="SaleCompletedEvent"></a>
+## type [SaleCompletedEvent](<https://github.com/sumup/sumup-go/blob/main/events_generated.go#L196>)
+
+SaleCompletedEvent is a sales.completed notification. FetchObject retrieves the latest Sale.
+
+```go
+type SaleCompletedEvent struct {
+    // contains filtered or unexported fields
+}
+```
+
 <a name="SaleLineItemV10"></a>
 ## type [SaleLineItemV10](<https://github.com/sumup/sumup-go/blob/main/sales.go#L821-L876>)
 
@@ -7339,6 +7384,17 @@ type SaleStateV10 string
 const (
     SaleStateV10Closed SaleStateV10 = "CLOSED"
 )
+```
+
+<a name="SaleUpdatedEvent"></a>
+## type [SaleUpdatedEvent](<https://github.com/sumup/sumup-go/blob/main/events_generated.go#L210>)
+
+SaleUpdatedEvent is a sales.updated notification. FetchObject retrieves the latest Sale.
+
+```go
+type SaleUpdatedEvent struct {
+    // contains filtered or unexported fields
+}
 ```
 
 <a name="SalesChannel"></a>
@@ -9483,7 +9539,7 @@ const APIVersion = "1.0.0"
 <a name="Version"></a>
 
 ```go
-const Version = "0.21.0" // x-release-please-version
+const Version = "0.22.0" // x-release-please-version
 ```
 
 # nullable
