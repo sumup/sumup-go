@@ -60,54 +60,6 @@ type ElvCardAccount struct {
 	SortCode *string `json:"sort_code,omitempty"`
 }
 
-// High-level transaction event details.
-type Event struct {
-	// Amount associated with the transaction event, in major units.
-	Amount *float32 `json:"amount,omitempty"`
-	// Amount deducted from the merchant for the event, in major units.
-	DeductedAmount *float32 `json:"deducted_amount,omitempty"`
-	// Fee deducted from the merchant for the event, in major units.
-	DeductedFeeAmount *float32 `json:"deducted_fee_amount,omitempty"`
-	// Fee associated with the transaction event, in major units.
-	FeeAmount *float32 `json:"fee_amount,omitempty"`
-	// Numeric identifier of a transaction event. Use it as `tx_event_id` when requesting receipt details for a
-	// specific event. This is separate from the transaction ID and the transaction history pagination references.
-	// Format: int64
-	ID *int64 `json:"id,omitempty"`
-	// Consecutive number of the installment associated with the event.
-	InstallmentNumber *int `json:"installment_number,omitempty"`
-	// Status of the transaction event.
-	//
-	// Not every value is used for every event type.
-	//
-	// - `PENDING`: The event has been created but is not final yet. Used for events that are still being processed and
-	// whose final outcome is not known yet.
-	// - `SCHEDULED`: The event is planned for a future payout cycle but has not been executed yet. This applies to
-	// payout events before money is actually sent out.
-	// - `RECONCILED`: The underlying payment has been matched with settlement data and is ready to continue through
-	// payout processing, but the funds have not been paid out yet. This applies to payout events.
-	// - `PAID_OUT`: The payout event has been completed and the funds were included in a merchant payout.
-	// - `REFUNDED`: A refund event has been accepted and recorded in the refund flow. This is the status returned for
-	// refund events once the transaction amount is being or has been returned to the payer.
-	// - `SUCCESSFUL`: The event completed successfully. Use this as the generic terminal success status for event
-	// types that do not expose a more specific business outcome such as `PAID_OUT` or `REFUNDED`.
-	// - `FAILED`: The event could not be completed. Typical examples are a payout that could not be executed or
-	// an event that was rejected during processing.
-	Status *TransactionEventStatus `json:"status,omitempty"`
-	// The timestamp of when the transaction event occurred.
-	Timestamp *time.Time `json:"timestamp,omitempty"`
-	// Unique identifier of the transaction.
-	TransactionID *string `json:"transaction_id,omitempty"`
-	// Financial event associated with a transaction.
-	//
-	// - `PAYOUT`: Funds from the transaction being prepared for or included in a merchant payout. Check the event
-	// status to determine whether they have been paid out.
-	// - `REFUND`: Money returned to the payer.
-	// - `CHARGE_BACK`: A reversal of the payment following a chargeback.
-	// - `PAYOUT_DEDUCTION`: An amount deducted from a merchant payout, for example to cover a refund or chargeback.
-	Type *TransactionEventType `json:"type,omitempty"`
-}
-
 // Details of a link to a related resource.
 type Link struct {
 	// URL for accessing the related resource.
@@ -154,8 +106,56 @@ type Product struct {
 	VATRate *float64 `json:"vat_rate,omitempty"`
 }
 
-// Detailed information about a transaction event.
+// High-level transaction event details.
 type TransactionEvent struct {
+	// Amount associated with the transaction event, in major units.
+	Amount *float32 `json:"amount,omitempty"`
+	// Amount deducted from the merchant for the event, in major units.
+	DeductedAmount *float32 `json:"deducted_amount,omitempty"`
+	// Fee deducted from the merchant for the event, in major units.
+	DeductedFeeAmount *float32 `json:"deducted_fee_amount,omitempty"`
+	// Fee associated with the transaction event, in major units.
+	FeeAmount *float32 `json:"fee_amount,omitempty"`
+	// Numeric identifier of a transaction event. Use it as `tx_event_id` when requesting receipt details for a
+	// specific event. This is separate from the transaction ID and the transaction history pagination references.
+	// Format: int64
+	ID *int64 `json:"id,omitempty"`
+	// Consecutive number of the installment associated with the event.
+	InstallmentNumber *int `json:"installment_number,omitempty"`
+	// Status of the transaction event.
+	//
+	// Not every value is used for every event type.
+	//
+	// - `PENDING`: The event has been created but is not final yet. Used for events that are still being processed and
+	// whose final outcome is not known yet.
+	// - `SCHEDULED`: The event is planned for a future payout cycle but has not been executed yet. This applies to
+	// payout events before money is actually sent out.
+	// - `RECONCILED`: The underlying payment has been matched with settlement data and is ready to continue through
+	// payout processing, but the funds have not been paid out yet. This applies to payout events.
+	// - `PAID_OUT`: The payout event has been completed and the funds were included in a merchant payout.
+	// - `REFUNDED`: A refund event has been accepted and recorded in the refund flow. This is the status returned for
+	// refund events once the transaction amount is being or has been returned to the payer.
+	// - `SUCCESSFUL`: The event completed successfully. Use this as the generic terminal success status for event
+	// types that do not expose a more specific business outcome such as `PAID_OUT` or `REFUNDED`.
+	// - `FAILED`: The event could not be completed. Typical examples are a payout that could not be executed or
+	// an event that was rejected during processing.
+	Status *TransactionEventStatus `json:"status,omitempty"`
+	// The timestamp of when the transaction event occurred.
+	Timestamp *time.Time `json:"timestamp,omitempty"`
+	// Unique identifier of the transaction.
+	TransactionID *string `json:"transaction_id,omitempty"`
+	// Financial event associated with a transaction.
+	//
+	// - `PAYOUT`: Funds from the transaction being prepared for or included in a merchant payout. Check the event
+	// status to determine whether they have been paid out.
+	// - `REFUND`: Money returned to the payer.
+	// - `CHARGE_BACK`: A reversal of the payment following a chargeback.
+	// - `PAYOUT_DEDUCTION`: An amount deducted from a merchant payout, for example to cover a refund or chargeback.
+	Type *TransactionEventType `json:"type,omitempty"`
+}
+
+// Detailed information about a transaction event.
+type TransactionEventDetails struct {
 	// Amount of the event in major units of the associated transaction's currency.
 	// Format: decimal
 	Amount *float64 `json:"amount,omitempty"`
@@ -223,7 +223,7 @@ type TransactionFull struct {
 	// identify the method, such as `APPLE_PAY` or `BLIK`.
 	EntryMode *EntryMode `json:"entry_mode,omitempty"`
 	// Compact list of events related to the transaction.
-	Events []Event `json:"events,omitempty"`
+	Events []TransactionEvent `json:"events,omitempty"`
 	// Total SumUp transaction fee in major units of the transaction's currency.
 	// Format: decimal
 	FeeAmount *float64 `json:"fee_amount,omitempty"`
@@ -311,7 +311,7 @@ type TransactionFull struct {
 	// parameter. This is separate from the transaction's `id` and the card issuer's `auth_code`.
 	TransactionCode *string `json:"transaction_code,omitempty"`
 	// Detailed list of events related to the transaction.
-	TransactionEvents []TransactionEvent `json:"transaction_events,omitempty"`
+	TransactionEvents []TransactionEventDetails `json:"transaction_events,omitempty"`
 	// Email address of the registered user (merchant) to whom the payment is made.
 	// Format: email
 	Username *string `json:"username,omitempty"`
