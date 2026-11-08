@@ -21,6 +21,14 @@ type Affiliate struct {
 	Key   string `json:"key"`
 }
 
+// Amount is a schema definition.
+type Amount struct {
+	// Currency ISO 4217 code
+	Currency string `json:"currency"`
+	// Amount in minor units (e.g. cents).
+	Value int `json:"value"`
+}
+
 // 400 Bad Request
 type BadRequest struct {
 	Errors BadRequestErrors `json:"errors"`
@@ -393,17 +401,21 @@ type Reader struct {
 	CreatedAt time.Time `json:"created_at"`
 	// Information about the underlying physical device.
 	Device ReaderDevice `json:"device"`
-	// Unique identifier of the reader that the payment is initiated on.
+	// Unique identifier of the object.
+	//
+	// Note that this identifies the instance of the physical devices pairing with your SumUp account. If you [delete](https://developer.sumup.com/api/readers/delete-reader)
+	// a reader, and pair the device again, the ID will be different. Do not use this ID to refer to a physical device.
+	//
 	// Min length: 30
 	// Max length: 30
-	ID ReaderID `json:"id"`
+	ID string `json:"id"`
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
 	// submit whole metadata. Maximum of 64 parameters are allowed in the object.
 	// Max properties: 64
 	Metadata Metadata `json:"metadata,omitempty"`
 	// Custom human-readable, user-defined name for easier identification of the reader.
 	// Max length: 500
-	Name ReaderName `json:"name"`
+	Name string `json:"name"`
 	// Identifier of the system-managed service account associated with this reader.
 	// Present only for readers that are already paired.
 	// This field is currently in beta and may change.
@@ -437,21 +449,6 @@ const (
 	ReaderDeviceModelSolo        ReaderDeviceModel = "solo"
 	ReaderDeviceModelVirtualSolo ReaderDeviceModel = "virtual-solo"
 )
-
-// Unique identifier of the reader that the payment is initiated on.
-// Min length: 30
-// Max length: 30
-type ReaderID string
-
-// Custom human-readable, user-defined name for easier identification of the reader.
-// Max length: 500
-type ReaderName string
-
-// The pairing code is a 8 or 9 character alphanumeric string that is displayed on a SumUp Device after initiating
-// the pairing. It is used to link the physical device to the created pairing.
-// Min length: 8
-// Max length: 9
-type ReaderPairingCode string
 
 // ReaderPaymentRequestParams is a schema definition.
 type ReaderPaymentRequestParams struct {
@@ -683,12 +680,12 @@ type ReadersCreateParams struct {
 	Metadata Metadata `json:"metadata,omitempty"`
 	// Custom human-readable, user-defined name for easier identification of the reader.
 	// Max length: 500
-	Name ReaderName `json:"name"`
+	Name string `json:"name"`
 	// The pairing code is a 8 or 9 character alphanumeric string that is displayed on a SumUp Device after initiating
 	// the pairing. It is used to link the physical device to the created pairing.
 	// Min length: 8
 	// Max length: 9
-	PairingCode ReaderPairingCode `json:"pairing_code"`
+	PairingCode string `json:"pairing_code"`
 }
 
 type ReadersCreateGoCheckoutParams = ReaderPaymentRequestParams
@@ -705,7 +702,7 @@ type ReadersUpdateParams struct {
 	Metadata Metadata `json:"metadata,omitempty"`
 	// Custom human-readable, user-defined name for easier identification of the reader.
 	// Max length: 500
-	Name *ReaderName `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 }
 
 // ReadersGetParams are query parameters for GetReader.
@@ -813,7 +810,7 @@ func (c *ReadersClient) Create(ctx context.Context, merchantCode string, body Re
 //
 // Use `client_transaction_id` as an idempotency key: retrying the request with the same value returns the result
 // of the original payment instead of creating a duplicate.
-func (c *ReadersClient) CreateGoCheckout(ctx context.Context, merchantCode string, readerID ReaderID, body ReadersCreateGoCheckoutParams) (*ReaderPaymentResponse, error) {
+func (c *ReadersClient) CreateGoCheckout(ctx context.Context, merchantCode string, readerID string, body ReadersCreateGoCheckoutParams) (*ReaderPaymentResponse, error) {
 	path := fmt.Sprintf("/v0/merchants/%v/readers/%v/go-checkout", merchantCode, readerID)
 
 	resp, err := c.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
@@ -1082,7 +1079,7 @@ func (c *ReadersClient) CreateCheckout(ctx context.Context, merchantCode string,
 }
 
 // Delete a reader.
-func (c *ReadersClient) Delete(ctx context.Context, merchantCode string, readerID ReaderID) error {
+func (c *ReadersClient) Delete(ctx context.Context, merchantCode string, readerID string) error {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, readerID)
 
 	resp, err := c.c.Call(ctx, http.MethodDelete, path)
@@ -1105,7 +1102,7 @@ func (c *ReadersClient) Delete(ctx context.Context, merchantCode string, readerI
 }
 
 // Retrieve a Reader.
-func (c *ReadersClient) Get(ctx context.Context, merchantCode string, readerID ReaderID, params ReadersGetParams) (*Reader, error) {
+func (c *ReadersClient) Get(ctx context.Context, merchantCode string, readerID string, params ReadersGetParams) (*Reader, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, readerID)
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
@@ -1136,7 +1133,7 @@ func (c *ReadersClient) Get(ctx context.Context, merchantCode string, readerID R
 //
 // Providing `metadata` replaces the entire metadata object; include all entries that should be retained. Omitted
 // fields remain unchanged.
-func (c *ReadersClient) Update(ctx context.Context, merchantCode string, readerID ReaderID, body ReadersUpdateParams) (*Reader, error) {
+func (c *ReadersClient) Update(ctx context.Context, merchantCode string, readerID string, body ReadersUpdateParams) (*Reader, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v", merchantCode, readerID)
 
 	resp, err := c.c.Call(ctx, http.MethodPatch, path, client.WithJSONBody(body))

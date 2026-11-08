@@ -73,7 +73,7 @@ type Event struct {
 	// Numeric identifier of a transaction event. Use it as `tx_event_id` when requesting receipt details for a
 	// specific event. This is separate from the transaction ID and the transaction history pagination references.
 	// Format: int64
-	ID *TransactionEventID `json:"id,omitempty"`
+	ID *int64 `json:"id,omitempty"`
 	// Consecutive number of the installment associated with the event.
 	InstallmentNumber *int `json:"installment_number,omitempty"`
 	// Status of the transaction event.
@@ -97,7 +97,7 @@ type Event struct {
 	// The timestamp of when the transaction event occurred.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
 	// Unique identifier of the transaction.
-	TransactionID *TransactionID `json:"transaction_id,omitempty"`
+	TransactionID *string `json:"transaction_id,omitempty"`
 	// Financial event associated with a transaction.
 	//
 	// - `PAYOUT`: Funds from the transaction being prepared for or included in a merchant payout. Check the event
@@ -107,14 +107,6 @@ type Event struct {
 	// - `PAYOUT_DEDUCTION`: An amount deducted from a merchant payout, for example to cover a refund or chargeback.
 	Type *TransactionEventType `json:"type,omitempty"`
 }
-
-// Indication of the precision of the geographical position received from the payment terminal.
-type HorizontalAccuracy float32
-
-// Latitude value from the coordinates of the payment location (as received from the payment terminal reader).
-// Min: -90
-// Max: 90
-type Lat float32
 
 // Details of a link to a related resource.
 type Link struct {
@@ -130,11 +122,6 @@ type Link struct {
 	// Media type of the linked resource.
 	Type *string `json:"type,omitempty"`
 }
-
-// Longitude value from the coordinates of the payment location (as received from the payment terminal reader).
-// Min: -180
-// Max: 180
-type Lon float32
 
 // Product details associated with a transaction.
 type Product struct {
@@ -189,7 +176,7 @@ type TransactionEvent struct {
 	// Numeric identifier of a transaction event. Use it as `tx_event_id` when requesting receipt details for a
 	// specific event. This is separate from the transaction ID and the transaction history pagination references.
 	// Format: int64
-	ID *TransactionEventID `json:"id,omitempty"`
+	ID *int64 `json:"id,omitempty"`
 	// Consecutive number of the installment that is paid. Applicable only to payout events, i.e. `event_type =
 	// PAYOUT`.
 	InstallmentNumber *int `json:"installment_number,omitempty"`
@@ -243,7 +230,7 @@ type TransactionFull struct {
 	// External transaction identifier supplied by the client.
 	ForeignTransactionID *string `json:"foreign_transaction_id,omitempty"`
 	// Indication of the precision of the geographical position received from the payment terminal.
-	HorizontalAccuracy *HorizontalAccuracy `json:"horizontal_accuracy,omitempty"`
+	HorizontalAccuracy *float32 `json:"horizontal_accuracy,omitempty"`
 	// Unique identifier of the transaction.
 	ID *string `json:"id,omitempty"`
 	// Number of installments for a deferred payment.
@@ -252,7 +239,7 @@ type TransactionFull struct {
 	// Latitude value from the coordinates of the payment location (as received from the payment terminal reader).
 	// Min: -90
 	// Max: 90
-	Lat *Lat `json:"lat,omitempty"`
+	Lat *float32 `json:"lat,omitempty"`
 	// List of hyperlinks for accessing related resources.
 	Links []Link `json:"links,omitempty"`
 	// Local timestamp of when the transaction was created.
@@ -262,7 +249,7 @@ type TransactionFull struct {
 	// Longitude value from the coordinates of the payment location (as received from the payment terminal reader).
 	// Min: -180
 	// Max: 180
-	Lon *Lon `json:"lon,omitempty"`
+	Lon *float32 `json:"lon,omitempty"`
 	// Unique code of the registered merchant to whom the payment is made.
 	MerchantCode *string `json:"merchant_code,omitempty"`
 	// Internal SumUp identifier of the merchant.
@@ -348,15 +335,15 @@ const (
 // Details of the payment location as received from the payment terminal.
 type TransactionFullLocation struct {
 	// Indication of the precision of the geographical position received from the payment terminal.
-	HorizontalAccuracy *HorizontalAccuracy `json:"horizontal_accuracy,omitempty"`
+	HorizontalAccuracy *float32 `json:"horizontal_accuracy,omitempty"`
 	// Latitude value from the coordinates of the payment location (as received from the payment terminal reader).
 	// Min: -90
 	// Max: 90
-	Lat *Lat `json:"lat,omitempty"`
+	Lat *float32 `json:"lat,omitempty"`
 	// Longitude value from the coordinates of the payment location (as received from the payment terminal reader).
 	// Min: -180
 	// Max: 180
-	Lon *Lon `json:"lon,omitempty"`
+	Lon *float32 `json:"lon,omitempty"`
 }
 
 // Payout type for the transaction.
@@ -501,7 +488,7 @@ type TransactionHistory struct {
 	// parameter. This is separate from the transaction's `id` and the card issuer's `auth_code`.
 	TransactionCode *string `json:"transaction_code,omitempty"`
 	// Unique identifier of the transaction.
-	TransactionID *TransactionID `json:"transaction_id,omitempty"`
+	TransactionID *string `json:"transaction_id,omitempty"`
 	// Type of the transaction for the registered user specified in the `user` property.
 	Type *TransactionHistoryType `json:"type,omitempty"`
 	// Email address of the registered user (merchant) to whom the payment is made.

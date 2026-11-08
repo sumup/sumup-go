@@ -14,13 +14,283 @@ import (
 	"github.com/sumup/sumup-go/nullable"
 )
 
+// Base schema for a Person associated with a Merchant. This can be a legal representative, business owner (ultimate
+// beneficial owner), or an officer. A legal representative is the Person who registered the Merchant with SumUp.
+// They should always have a `user_id`.
+//
+// Person documentation: https://developer.sumup.com/tools/glossary/merchant#persons
+type BasePerson struct {
+	// An address somewhere in the world. The address fields used depend on the country conventions. For example, in
+	// Great Britain, `city` is `post_town`. In the United States, the top-level administrative unit used in addresses
+	// is `state`, whereas in Chile it's `region`.
+	// Whether an address is valid or not depends on whether the locally required fields are present. Fields not
+	// supported in a country will be ignored.
+	// Address documentation: https://developer.sumup.com/tools/glossary/merchant#addresses
+	Address *MerchantsAddress `json:"address,omitempty"`
+	// The date of birth of the individual, represented as an ISO 8601:2004 [ISO8601‑2004] YYYY-MM-DD format.
+	// Format: date
+	Birthdate *datetime.Date `json:"birthdate,omitempty"`
+	// Reflects the status of changes submitted through the `PATCH` endpoints for the Merchant or Persons. If some
+	// changes have not been applied yet, the status will be `pending`. If all changes have been applied, the status
+	// `done`.
+	// The status is only returned after write operations or on read endpoints when the `version` query parameter is
+	// provided.
+	// Read only
+	ChangeStatus *string `json:"change_status,omitempty"`
+	// The Alpha-2 ISO code of the country where the Person is a citizen.
+	// Pattern: ^[A-Z]{2}$
+	Citizenship *string `json:"citizenship,omitempty"`
+	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code representing the country
+	// where the Person resides.
+	// Pattern: ^[A-Z]{2}$
+	CountryOfResidence *nullable.Field[string] `json:"country_of_residence,omitempty"`
+	// The last name(s) of the individual.
+	// Min length: 1
+	// Max length: 60
+	FamilyName *string `json:"family_name,omitempty"`
+	// The first name(s) of the individual.
+	// Min length: 1
+	// Max length: 60
+	GivenName *string `json:"given_name,omitempty"`
+	// The unique identifier for the Person. This is a [typeid](https://github.com/sumup/typeid).
+	// Read only
+	ID string `json:"id"`
+	// A list of country-specific personal identifiers.
+	// Max items: 5
+	Identifiers MerchantsPersonalIdentifiers `json:"identifiers,omitempty"`
+	// The Person's nationality. May be an [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country
+	// code, but legacy data may not conform to this standard.
+	// Pattern: ^[A-Z]{2}$
+	Nationality *nullable.Field[string] `json:"nationality,omitempty"`
+	Ownership   *Ownership              `json:"ownership,omitempty"`
+	// The (mobile) phone number of the individual (used for verification) in [E.164](https://en.wikipedia.org/wiki/E.164) format.
+	//
+	// Max length: 16
+	PhoneNumber *string `json:"phone_number,omitempty"`
+	// A list of roles the Person has in the Merchant or towards SumUp. A Merchant must have at least one Person with
+	// the relationship `representative`.
+	// Min items: 1
+	// Max items: 1
+	Relationships []string `json:"relationships,omitempty"`
+	// A corresponding identity user ID for the Person, if they have a user account.
+	UserID *string `json:"user_id,omitempty"`
+	// The version of the resource. The version reflects a specific change submitted to the API via one of the `PATCH`
+	// endpoints.
+	Version *string `json:"version,omitempty"`
+}
+
+// Settings used to apply the Merchant's branding to email receipts, invoices, checkouts, and other products.
+type Branding struct {
+	// A hex color value representing the preferred background color of this merchant.
+	BackgroundColor *string `json:"background_color,omitempty"`
+	// Footer text rendered on receipts and other customer-facing products.
+	// Min length: 1
+	// Max length: 500
+	FooterText *string `json:"footer_text,omitempty"`
+	// Data-URL encoded hero image for the merchant business.
+	// Format: uri
+	Hero *string `json:"hero,omitempty"`
+	// An icon for the merchant. Must be square.
+	// Format: uri
+	Icon *string `json:"icon,omitempty"`
+	// A logo for the merchant that will be used in place of the icon and without the merchant's name next to it
+	// if there's sufficient space.
+	// Format: uri
+	Logo *string `json:"logo,omitempty"`
+	// A hex color value representing the primary branding color of this merchant (your brand color).
+	PrimaryColor *string `json:"primary_color,omitempty"`
+	// A hex color value representing the color of the text displayed on branding color of this merchant.
+	PrimaryColorFg *string `json:"primary_color_fg,omitempty"`
+	// A hex color value representing the secondary branding color of this merchant (accent color used for buttons).
+	SecondaryColor *string `json:"secondary_color,omitempty"`
+	// A hex color value representing the color of the text displayed on secondary branding color of this merchant.
+	SecondaryColorFg *string `json:"secondary_color_fg,omitempty"`
+}
+
+// Business information about the merchant. This information will be visible to the merchant's customers.
+type BusinessProfile struct {
+	// An address somewhere in the world. The address fields used depend on the country conventions. For example, in
+	// Great Britain, `city` is `post_town`. In the United States, the top-level administrative unit used in addresses
+	// is `state`, whereas in Chile it's `region`.
+	// Whether an address is valid or not depends on whether the locally required fields are present. Fields not
+	// supported in a country will be ignored.
+	// Address documentation: https://developer.sumup.com/tools/glossary/merchant#addresses
+	Address *MerchantsAddress `json:"address,omitempty"`
+	// Settings used to apply the Merchant's branding to email receipts, invoices, checkouts, and other products.
+	Branding *Branding `json:"branding,omitempty"`
+	// The descriptor is the text that your customer sees on their bank account statement.
+	// The more recognisable your descriptor is, the less risk you have of receiving disputes (e.g. chargebacks).
+	// Min length: 1
+	// Max length: 30
+	// Pattern: ^[a-zA-Z0-9 +'_.-]+$
+	DynamicDescriptor *string `json:"dynamic_descriptor,omitempty"`
+	// A publicly available email address.
+	// Min length: 1
+	// Max length: 255
+	Email *string `json:"email,omitempty"`
+	// The customer-facing business name.
+	// Min length: 1
+	// Max length: 150
+	Name *string `json:"name,omitempty"`
+	// A public phone number that customers can call.
+	// Max length: 16
+	PhoneNumber *string `json:"phone_number,omitempty"`
+	// The business's publicly available website.
+	// Min length: 1
+	// Max length: 255
+	Website *string `json:"website,omitempty"`
+}
+
+// ClassicMerchantIdentifiers is a schema definition.
+type ClassicMerchantIdentifiers struct {
+	// Classic (serial) merchant ID.
+	// Format: int64
+	// Deprecated: this operation is deprecated
+	ID int64 `json:"id"`
+}
+
+// Information about the company or business. This is legal information that is used for verification.
+//
+// Company documentation: https://developer.sumup.com/tools/glossary/merchant#company
+type Company struct {
+	// The company's primary address.
+	// Address documentation: https://developer.sumup.com/tools/glossary/merchant#addresses
+	Address *MerchantsAddress `json:"address,omitempty"`
+	// Object metadata which should only be writable for internal applications, and readable by all clients.
+	// **Warning**: Updating Attributes will overwrite the existing data. Make sure to always include the complete JSON
+	// object.
+	Attributes MerchantsAttributes `json:"attributes,omitempty"`
+	// A list of country-specific company identifiers.
+	Identifiers CompanyIdentifiers `json:"identifiers,omitempty"`
+	// The category identifying the legal structure of the company or legal entity.
+	// Min length: 4
+	// Max length: 64
+	// Pattern: ^[a-z]{2}\.[a-z_]+$
+	// The country SDK documentation for legal types.: https://developer.sumup.com/tools/glossary/merchant#legal-types
+	LegalType *string `json:"legal_type,omitempty"`
+	// The merchant category code for the account as specified by [ISO18245](https://www.iso.org/standard/33365.html). MCCs
+	// are used to classify businesses based on the goods or services they provide.
+	// Pattern: ^[0-9]{4}$
+	MerchantCategoryCode *string `json:"merchant_category_code,omitempty"`
+	// The company's legal name.
+	// Min length: 1
+	// Max length: 150
+	Name *string `json:"name,omitempty"`
+	// The company's phone number (used for verification) in [E.164](https://en.wikipedia.org/wiki/E.164) format.
+	// Max length: 16
+	PhoneNumber *string `json:"phone_number,omitempty"`
+	// A trading address is where your suppliers, banks or customers send you correspondence to. Trading address can
+	// be different to the company's registered address (`address`).
+	// Address documentation: https://developer.sumup.com/tools/glossary/merchant#addresses
+	TradingAddress *MerchantsAddress `json:"trading_address,omitempty"`
+	// HTTP(S) URL of the company's website.
+	// Min length: 1
+	// Max length: 255
+	Website *string `json:"website,omitempty"`
+}
+
+// CompanyIdentifier is a schema definition.
+// Company identifier documentation: https://developer.sumup.com/tools/glossary/merchant#company-identifiers
+type CompanyIdentifier struct {
+	// The unique reference for the company identifier type as defined in the country SDK.
+	// Pattern: ^[a-z]{2}\.[a-z_]+$
+	Ref string `json:"ref"`
+	// The company identifier value.
+	// Min length: 1
+	// Max length: 100
+	Value string `json:"value"`
+}
+
+// A list of country-specific company identifiers.
+type CompanyIdentifiers []CompanyIdentifier
+
+// ListPersonsResponseBody is a schema definition.
+type ListPersonsResponseBody struct {
+	Items []Person `json:"items"`
+}
+
+// Merchant is a schema definition.
+// Merchant documentation: https://developer.sumup.com/tools/glossary/merchant
+type Merchant struct {
+	// A user-facing name of the merchant account for use in dashboards and other user-facing applications. For
+	// customer-facing business name see `merchant.business_profile`.
+	Alias *string `json:"alias,omitempty"`
+	// A user-facing small-format logo for use in dashboards and other user-facing applications. For customer-facing branding
+	// see `merchant.business_profile.branding`.
+	// Format: uri
+	Avatar *string `json:"avatar,omitempty"`
+	// Business information about the merchant. This information will be visible to the merchant's customers.
+	BusinessProfile *BusinessProfile `json:"business_profile,omitempty"`
+	// The business type.
+	// * `sole_trader`: The business is run by an self-employed individual.
+	// * `company`: The business is run as a company with one or more shareholders
+	// * `partnership`: The business is run as a company with two or more shareholders that can be also other legal
+	// entities
+	// * `non_profit`: The business is run as a nonprofit organization that operates for public or social benefit
+	// * `government_entity`: The business is state owned and operated
+	BusinessType *string `json:"business_type,omitempty"`
+	// Reflects the status of changes submitted through the `PATCH` endpoints for the Merchant or Persons. If some
+	// changes have not been applied yet, the status will be `pending`. If all changes have been applied, the status
+	// `done`.
+	// The status is only returned after write operations or on read endpoints when the `version` query parameter is
+	// provided.
+	// Read only
+	ChangeStatus *string                     `json:"change_status,omitempty"`
+	Classic      *ClassicMerchantIdentifiers `json:"classic,omitempty"`
+	// Information about the company or business. This is legal information that is used for verification.
+	// Company documentation: https://developer.sumup.com/tools/glossary/merchant#company
+	Company *Company `json:"company,omitempty"`
+	// The [https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2](ISO3166-1 alpha-2) country code of the country the
+	// merchant is registered and operates in.
+	// Pattern: ^[A-Z]{2}$
+	Country string `json:"country"`
+	// The date and time when the resource was created. This is a string as defined in [RFC 3339, section 5.6](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6).
+	// Read only
+	CreatedAt time.Time `json:"created_at"`
+	// Three-letter [ISO currency code](https://en.wikipedia.org/wiki/ISO_4217) representing the default currency for
+	// the account.
+	// Read only
+	// Min length: 3
+	// Max length: 3
+	DefaultCurrency string `json:"default_currency"`
+	// Merchant's default locale, represented as a BCP47 [RFC5646](https://datatracker.ietf.org/doc/html/rfc5646) language
+	// tag. This is typically an ISO 639-1 Alpha-2 [ISO639‑1](https://www.iso.org/iso-639-language-code) language code
+	// in lowercase and an ISO 3166-1 Alpha-2 [ISO3166‑1](https://www.iso.org/iso-3166-country-codes.html) country
+	// code in uppercase, separated by a dash. For example, en-US or fr-CA.
+	// In multilingual countries this is the merchant's preferred locale out of those, that are officially spoken in
+	// the country. In a countries with a single official language this will match the official language.
+	// Min length: 2
+	// Max length: 5
+	DefaultLocale string `json:"default_locale"`
+	// Short unique identifier for the merchant.
+	// Read only
+	MerchantCode string `json:"merchant_code"`
+	// A set of key-value pairs that you can attach to an object. This can be useful for storing additional information
+	// about the object in a structured format.
+	//
+	// **Warning**: Updating Meta will overwrite the existing data. Make sure to always include the complete JSON
+	// object.
+	Meta Meta `json:"meta,omitempty"`
+	// ID of the organization the merchant belongs to (if any).
+	OrganizationID *string `json:"organization_id,omitempty"`
+	// True if the merchant is a sandbox for testing.
+	Sandbox *bool `json:"sandbox,omitempty"`
+	// The date and time when the resource was last updated. This is a string as defined in [RFC 3339, section 5.6](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6).
+	//
+	// Read only
+	UpdatedAt time.Time `json:"updated_at"`
+	// The version of the resource. The version reflects a specific change submitted to the API via one of the `PATCH`
+	// endpoints.
+	Version *string `json:"version,omitempty"`
+}
+
 // An address somewhere in the world. The address fields used depend on the country conventions. For example, in
 // Great Britain, `city` is `post_town`. In the United States, the top-level administrative unit used in addresses
 // is `state`, whereas in Chile it's `region`.
 // Whether an address is valid or not depends on whether the locally required fields are present. Fields not
 // supported in a country will be ignored.
-// Address documentation: https://developer.sumup.com/tools/glossary/address
-type Address struct {
+// Address documentation: https://developer.sumup.com/tools/glossary/merchant#addresses
+type MerchantsAddress struct {
 	// In Spain, an autonomous community is the first sub-national level of political and administrative division.
 	// Max length: 60
 	AutonomousCommunity *string `json:"autonomous_community,omitempty"`
@@ -32,10 +302,8 @@ type Address struct {
 	// Max length: 60
 	Commune *string `json:"commune,omitempty"`
 	// The ISO3166-1 Alpha-2 code of the address country.
-	// Min length: 2
-	// Max length: 2
 	// Pattern: ^[A-Z]{2}$
-	Country CountryCode `json:"country"`
+	Country string `json:"country"`
 	// A county is a geographic region of a country used for administrative or other purposes in some nations. Used
 	// in countries such as Ireland, Romania, etc.
 	// Max length: 60
@@ -77,6 +345,7 @@ type Address struct {
 	// and Brazil.
 	// Max length: 60
 	State *string `json:"state,omitempty"`
+	// Min items: 1
 	// Max items: 2
 	StreetAddress []string `json:"street_address,omitempty"`
 	// A US system of postal codes used by the United States Postal Service (USPS).
@@ -84,306 +353,26 @@ type Address struct {
 	ZipCode *string `json:"zip_code,omitempty"`
 }
 
-// Base schema for a Person associated with a Merchant. This can be a legal representative, business owner (ultimate
-// beneficial owner), or an officer. A legal representative is the Person who registered the Merchant with SumUp.
-// They should always have a `user_id`.
-//
-// Person documentation: https://developer.sumup.com/tools/glossary/merchant#persons
-type BasePerson struct {
-	// An address somewhere in the world. The address fields used depend on the country conventions. For example, in
-	// Great Britain, `city` is `post_town`. In the United States, the top-level administrative unit used in addresses
-	// is `state`, whereas in Chile it's `region`.
-	// Whether an address is valid or not depends on whether the locally required fields are present. Fields not
-	// supported in a country will be ignored.
-	// Address documentation: https://developer.sumup.com/tools/glossary/address
-	Address *Address `json:"address,omitempty"`
-	// The date of birth of the individual, represented as an ISO 8601:2004 [ISO8601‑2004] YYYY-MM-DD format.
-	// Format: date
-	Birthdate *datetime.Date `json:"birthdate,omitempty"`
-	// Reflects the status of changes submitted through the `PATCH` endpoints for the Merchant or Persons. If some
-	// changes have not been applied yet, the status will be `pending`. If all changes have been applied, the status
-	// `done`.
-	// The status is only returned after write operations or on read endpoints when the `version` query parameter is
-	// provided.
-	// Read only
-	ChangeStatus *ChangeStatus `json:"change_status,omitempty"`
-	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
-	// country code. This definition users `oneOf` with a two-character string
-	// type to allow for support of future countries in client code.
-	// Min length: 2
-	// Max length: 2
-	// Pattern: ^[A-Z]{2}$
-	Citizenship *CountryCode `json:"citizenship,omitempty"`
-	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code representing the country
-	// where the Person resides.
-	// Pattern: ^[A-Z]{2}$
-	CountryOfResidence *nullable.Field[string] `json:"country_of_residence,omitempty"`
-	// The last name(s) of the individual.
-	// Min length: 1
-	// Max length: 60
-	FamilyName *string `json:"family_name,omitempty"`
-	// The first name(s) of the individual.
-	// Min length: 1
-	// Max length: 60
-	GivenName *string `json:"given_name,omitempty"`
-	// The unique identifier for the Person. This is a [typeid](https://github.com/sumup/typeid).
-	// Read only
-	ID string `json:"id"`
-	// A list of country-specific personal identifiers.
-	// Max items: 32
-	Identifiers PersonalIdentifiers `json:"identifiers,omitempty"`
-	// The Person's nationality. May be an [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country
-	// code, but legacy data may not conform to this standard.
-	// Pattern: ^[A-Z]{2}$
-	Nationality *nullable.Field[string] `json:"nationality,omitempty"`
-	Ownership   *Ownership              `json:"ownership,omitempty"`
-	// A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
-	// Max length: 16
-	PhoneNumber *PhoneNumber `json:"phone_number,omitempty"`
-	// A list of roles the Person has in the Merchant or towards SumUp. A Merchant must have at least one Person with
-	// the relationship `representative`.
-	// Min items: 1
-	// Max items: 1
-	Relationships []string `json:"relationships,omitempty"`
-	// A corresponding identity user ID for the Person, if they have a user account.
-	UserID *string `json:"user_id,omitempty"`
-	// The version of the resource. The version reflects a specific change submitted to the API via one of the `PATCH`
-	// endpoints.
-	Version *Version `json:"version,omitempty"`
-}
+// Object metadata which should only be writable for internal applications, and readable by all clients.
+// **Warning**: Updating Attributes will overwrite the existing data. Make sure to always include the complete JSON
+// object.
+type MerchantsAttributes map[string]any
 
-// Settings used to apply the Merchant's branding to email receipts, invoices, checkouts, and other products.
-type Branding struct {
-	// A hex color value representing the preferred background color of this merchant.
-	BackgroundColor *string `json:"background_color,omitempty"`
-	// Footer text rendered on receipts and other customer-facing products.
-	// Min length: 1
-	// Max length: 500
-	FooterText *string `json:"footer_text,omitempty"`
-	// Data-URL encoded hero image for the merchant business.
-	// Format: uri
-	Hero *string `json:"hero,omitempty"`
-	// An icon for the merchant. Must be square.
-	// Format: uri
-	Icon *string `json:"icon,omitempty"`
-	// A logo for the merchant that will be used in place of the icon and without the merchant's name next to it
-	// if there's sufficient space.
-	// Format: uri
-	Logo *string `json:"logo,omitempty"`
-	// A hex color value representing the primary branding color of this merchant (your brand color).
-	PrimaryColor *string `json:"primary_color,omitempty"`
-	// A hex color value representing the color of the text displayed on branding color of this merchant.
-	PrimaryColorFg *string `json:"primary_color_fg,omitempty"`
-	// A hex color value representing the secondary branding color of this merchant (accent color used for buttons).
-	SecondaryColor *string `json:"secondary_color,omitempty"`
-	// A hex color value representing the color of the text displayed on secondary branding color of this merchant.
-	SecondaryColorFg *string `json:"secondary_color_fg,omitempty"`
-}
-
-// Business information about the merchant. This information will be visible to the merchant's customers.
-type BusinessProfile struct {
-	// An address somewhere in the world. The address fields used depend on the country conventions. For example, in
-	// Great Britain, `city` is `post_town`. In the United States, the top-level administrative unit used in addresses
-	// is `state`, whereas in Chile it's `region`.
-	// Whether an address is valid or not depends on whether the locally required fields are present. Fields not
-	// supported in a country will be ignored.
-	// Address documentation: https://developer.sumup.com/tools/glossary/address
-	Address *Address `json:"address,omitempty"`
-	// Settings used to apply the Merchant's branding to email receipts, invoices, checkouts, and other products.
-	Branding *Branding `json:"branding,omitempty"`
-	// The descriptor is the text that your customer sees on their bank account statement.
-	// The more recognisable your descriptor is, the less risk you have of receiving disputes (e.g. chargebacks).
-	// Min length: 1
-	// Max length: 30
-	// Pattern: ^[a-zA-Z0-9 +'_.-]+$
-	DynamicDescriptor *string `json:"dynamic_descriptor,omitempty"`
-	// A publicly available email address.
-	// Min length: 1
-	// Max length: 255
-	Email *string `json:"email,omitempty"`
-	// The customer-facing business name.
-	// Min length: 1
-	// Max length: 150
-	Name *string `json:"name,omitempty"`
-	// A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
-	// Max length: 16
-	PhoneNumber *PhoneNumber `json:"phone_number,omitempty"`
-	// The business's publicly available website.
-	// Min length: 1
-	// Max length: 255
-	Website *string `json:"website,omitempty"`
-}
-
-// Reflects the status of changes submitted through the `PATCH` endpoints for the Merchant or Persons. If some
-// changes have not been applied yet, the status will be `pending`. If all changes have been applied, the status
-// `done`.
-// The status is only returned after write operations or on read endpoints when the `version` query parameter is
-// provided.
-//
-// Read only
-type ChangeStatus string
-
-// ClassicMerchantIdentifiers is a schema definition.
-type ClassicMerchantIdentifiers struct {
-	// Classic (serial) merchant ID.
-	// Format: int64
-	// Deprecated: this operation is deprecated
-	ID int64 `json:"id"`
-}
-
-// Information about the company or business. This is legal information that is used for verification.
-//
-// Company documentation: https://developer.sumup.com/tools/glossary/merchant#company
-type Company struct {
-	// The company's primary address.
-	// Address documentation: https://developer.sumup.com/tools/glossary/address
-	Address *Address `json:"address,omitempty"`
-	// Object attributes that are modifiable only by SumUp applications.
-	Attributes Attributes `json:"attributes,omitempty"`
-	// A list of country-specific company identifiers.
-	Identifiers CompanyIdentifiers `json:"identifiers,omitempty"`
-	// The category identifying the legal structure of the company or legal entity.
-	// Min length: 4
-	// Max length: 64
-	// Pattern: ^[a-z]{2}\.[a-z_]+$
-	// The country SDK documentation for legal types.: https://developer.sumup.com/tools/glossary/merchant#legal-types
-	LegalType *LegalType `json:"legal_type,omitempty"`
-	// The merchant category code for the account as specified by [ISO18245](https://www.iso.org/standard/33365.html). MCCs
-	// are used to classify businesses based on the goods or services they provide.
-	// Pattern: ^[0-9]{4}$
-	MerchantCategoryCode *string `json:"merchant_category_code,omitempty"`
-	// The company's legal name.
-	// Min length: 1
-	// Max length: 150
-	Name *string `json:"name,omitempty"`
-	// The company's phone number (used for verification) in [E.164](https://en.wikipedia.org/wiki/E.164) format.
-	// Max length: 16
-	PhoneNumber *PhoneNumber `json:"phone_number,omitempty"`
-	// A trading address is where your suppliers, banks or customers send you correspondence to. Trading address can
-	// be different to the company's registered address (`address`).
-	// Address documentation: https://developer.sumup.com/tools/glossary/address
-	TradingAddress *Address `json:"trading_address,omitempty"`
-	// HTTP(S) URL of the company's website.
-	// Min length: 1
-	// Max length: 255
-	Website *string `json:"website,omitempty"`
-}
-
-// CompanyIdentifier is a schema definition.
-// Company identifier documentation: https://developer.sumup.com/tools/glossary/merchant#company-identifiers
-type CompanyIdentifier struct {
-	// The unique reference for the company identifier type as defined in the country SDK.
+// MerchantsPersonalIdentifier is a schema definition.
+type MerchantsPersonalIdentifier struct {
+	// The unique reference for the personal identifier type as defined in the country SDK.
 	// Pattern: ^[a-z]{2}\.[a-z_]+$
 	Ref string `json:"ref"`
-	// The company identifier value.
+	// The value of the personal identifier.
 	// Min length: 1
-	// Max length: 100
+	// Max length: 30
 	Value string `json:"value"`
 }
 
-// A list of country-specific company identifiers.
-type CompanyIdentifiers []CompanyIdentifier
-
-// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
-// country code. This definition users `oneOf` with a two-character string
-// type to allow for support of future countries in client code.
-// Min length: 2
-// Max length: 2
-// Pattern: ^[A-Z]{2}$
-type CountryCode string
-
-// The unique legal type reference as defined in the country SDK. We do not rely on IDs as used by other services.
-// Consumers of this API are expected to use the country SDK to map to any other IDs, translation keys, or
-// descriptions.
+// A list of country-specific personal identifiers.
 //
-// Min length: 4
-// Max length: 64
-// Pattern: ^[a-z]{2}\.[a-z_]+$
-// The country SDK documentation for legal types.: https://developer.sumup.com/tools/glossary/merchant#legal-types
-type LegalType string
-
-// ListPersonsResponseBody is a schema definition.
-type ListPersonsResponseBody struct {
-	Items []Person `json:"items"`
-}
-
-// Merchant is a schema definition.
-// Merchant documentation: https://developer.sumup.com/tools/glossary/merchant
-type Merchant struct {
-	// A user-facing name of the merchant account for use in dashboards and other user-facing applications. For
-	// customer-facing business name see `merchant.business_profile`.
-	Alias *string `json:"alias,omitempty"`
-	// A user-facing small-format logo for use in dashboards and other user-facing applications. For customer-facing branding
-	// see `merchant.business_profile.branding`.
-	// Format: uri
-	Avatar *string `json:"avatar,omitempty"`
-	// Business information about the merchant. This information will be visible to the merchant's customers.
-	BusinessProfile *BusinessProfile `json:"business_profile,omitempty"`
-	// The business type.
-	// * `sole_trader`: The business is run by an self-employed individual.
-	// * `company`: The business is run as a company with one or more shareholders
-	// * `partnership`: The business is run as a company with two or more shareholders that can be also other legal
-	// entities
-	// * `non_profit`: The business is run as a nonprofit organization that operates for public or social benefit
-	// * `government_entity`: The business is state owned and operated
-	BusinessType *string `json:"business_type,omitempty"`
-	// Reflects the status of changes submitted through the `PATCH` endpoints for the Merchant or Persons. If some
-	// changes have not been applied yet, the status will be `pending`. If all changes have been applied, the status
-	// `done`.
-	// The status is only returned after write operations or on read endpoints when the `version` query parameter is
-	// provided.
-	// Read only
-	ChangeStatus *ChangeStatus               `json:"change_status,omitempty"`
-	Classic      *ClassicMerchantIdentifiers `json:"classic,omitempty"`
-	// Information about the company or business. This is legal information that is used for verification.
-	// Company documentation: https://developer.sumup.com/tools/glossary/merchant#company
-	Company *Company `json:"company,omitempty"`
-	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
-	// country code. This definition users `oneOf` with a two-character string
-	// type to allow for support of future countries in client code.
-	// Min length: 2
-	// Max length: 2
-	// Pattern: ^[A-Z]{2}$
-	Country CountryCode `json:"country"`
-	// The date and time when the resource was created. This is a string as defined in [RFC 3339, section 5.6](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6).
-	// Read only
-	CreatedAt time.Time `json:"created_at"`
-	// Three-letter [ISO currency code](https://en.wikipedia.org/wiki/ISO_4217) representing the default currency for
-	// the account.
-	// Read only
-	// Min length: 3
-	// Max length: 3
-	DefaultCurrency string `json:"default_currency"`
-	// Merchant's default locale, represented as a BCP47 [RFC5646](https://datatracker.ietf.org/doc/html/rfc5646) language
-	// tag. This is typically an ISO 639-1 Alpha-2 [ISO639‑1](https://www.iso.org/iso-639-language-code) language code
-	// in lowercase and an ISO 3166-1 Alpha-2 [ISO3166‑1](https://www.iso.org/iso-3166-country-codes.html) country
-	// code in uppercase, separated by a dash. For example, en-US or fr-CA.
-	// In multilingual countries this is the merchant's preferred locale out of those, that are officially spoken in
-	// the country. In a countries with a single official language this will match the official language.
-	// Min length: 2
-	// Max length: 5
-	DefaultLocale string `json:"default_locale"`
-	// Short unique identifier for the merchant.
-	// Read only
-	MerchantCode string `json:"merchant_code"`
-	// A set of key-value pairs that you can attach to an object. This can be useful for storing additional information
-	// about the object in a structured format.
-	//
-	// **Warning**: Updating Meta will overwrite the existing data. Make sure to always include the complete JSON
-	// object.
-	Meta Meta `json:"meta,omitempty"`
-	// ID of the organization the merchant belongs to (if any).
-	OrganizationID *string `json:"organization_id,omitempty"`
-	// True if the merchant is a sandbox for testing.
-	Sandbox *bool `json:"sandbox,omitempty"`
-	// The date and time when the resource was last updated. This is a string as defined in [RFC 3339, section 5.6](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6).
-	//
-	// Read only
-	UpdatedAt time.Time `json:"updated_at"`
-	// The version of the resource. The version reflects a specific change submitted to the API via one of the `PATCH`
-	// endpoints.
-	Version *Version `json:"version,omitempty"`
-}
+// Max items: 5
+type MerchantsPersonalIdentifiers []MerchantsPersonalIdentifier
 
 // A set of key-value pairs that you can attach to an object. This can be useful for storing additional information
 // about the object in a structured format.
@@ -409,8 +398,8 @@ type Person struct {
 	// is `state`, whereas in Chile it's `region`.
 	// Whether an address is valid or not depends on whether the locally required fields are present. Fields not
 	// supported in a country will be ignored.
-	// Address documentation: https://developer.sumup.com/tools/glossary/address
-	Address *Address `json:"address,omitempty"`
+	// Address documentation: https://developer.sumup.com/tools/glossary/merchant#addresses
+	Address *MerchantsAddress `json:"address,omitempty"`
 	// The date of birth of the individual, represented as an ISO 8601:2004 [ISO8601‑2004] YYYY-MM-DD format.
 	// Format: date
 	Birthdate *datetime.Date `json:"birthdate,omitempty"`
@@ -420,14 +409,10 @@ type Person struct {
 	// The status is only returned after write operations or on read endpoints when the `version` query parameter is
 	// provided.
 	// Read only
-	ChangeStatus *ChangeStatus `json:"change_status,omitempty"`
-	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
-	// country code. This definition users `oneOf` with a two-character string
-	// type to allow for support of future countries in client code.
-	// Min length: 2
-	// Max length: 2
+	ChangeStatus *string `json:"change_status,omitempty"`
+	// The Alpha-2 ISO code of the country where the Person is a citizen.
 	// Pattern: ^[A-Z]{2}$
-	Citizenship *CountryCode `json:"citizenship,omitempty"`
+	Citizenship *string `json:"citizenship,omitempty"`
 	// An [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code representing the country
 	// where the Person resides.
 	// Pattern: ^[A-Z]{2}$
@@ -444,16 +429,17 @@ type Person struct {
 	// Read only
 	ID string `json:"id"`
 	// A list of country-specific personal identifiers.
-	// Max items: 32
-	Identifiers PersonalIdentifiers `json:"identifiers,omitempty"`
+	// Max items: 5
+	Identifiers MerchantsPersonalIdentifiers `json:"identifiers,omitempty"`
 	// The Person's nationality. May be an [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country
 	// code, but legacy data may not conform to this standard.
 	// Pattern: ^[A-Z]{2}$
 	Nationality *nullable.Field[string] `json:"nationality,omitempty"`
 	Ownership   *Ownership              `json:"ownership,omitempty"`
-	// A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
+	// The (mobile) phone number of the individual (used for verification) in [E.164](https://en.wikipedia.org/wiki/E.164) format.
+	//
 	// Max length: 16
-	PhoneNumber *PhoneNumber `json:"phone_number,omitempty"`
+	PhoneNumber *string `json:"phone_number,omitempty"`
 	// A list of roles the Person has in the Merchant or towards SumUp. A Merchant must have at least one Person with
 	// the relationship `representative`.
 	// Min items: 1
@@ -463,27 +449,8 @@ type Person struct {
 	UserID *string `json:"user_id,omitempty"`
 	// The version of the resource. The version reflects a specific change submitted to the API via one of the `PATCH`
 	// endpoints.
-	Version *Version `json:"version,omitempty"`
+	Version *string `json:"version,omitempty"`
 }
-
-// PersonalIdentifier is a schema definition.
-type PersonalIdentifier struct {
-	// The unique reference for the personal identifier type.
-	// Max length: 32
-	Ref string `json:"ref"`
-	// The personal identifier value.
-	// Max length: 128
-	Value string `json:"value"`
-}
-
-// A list of country-specific personal identifiers.
-// Max items: 32
-type PersonalIdentifiers []PersonalIdentifier
-
-// A publicly available phone number in [E.164](https://en.wikipedia.org/wiki/E.164) format.
-//
-// Max length: 16
-type PhoneNumber string
 
 // Timestamps is a schema definition.
 type Timestamps struct {
@@ -495,10 +462,6 @@ type Timestamps struct {
 	// Read only
 	UpdatedAt time.Time `json:"updated_at"`
 }
-
-// The version of the resource. The version reflects a specific change submitted to the API via one of the `PATCH`
-// endpoints.
-type Version string
 
 // MerchantsClient provides access to the Merchants API.
 //
