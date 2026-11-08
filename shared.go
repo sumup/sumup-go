@@ -26,14 +26,6 @@ type AddressLegacy struct {
 	State *string `json:"state,omitempty"`
 }
 
-// Amount is a schema definition.
-type Amount struct {
-	// Currency ISO 4217 code
-	Currency string `json:"currency"`
-	// Amount in minor units (e.g. cents).
-	Value int `json:"value"`
-}
-
 // Object attributes that are modifiable only by SumUp applications.
 type Attributes map[string]any
 
@@ -324,11 +316,6 @@ type TransactionCheckoutInfo struct {
 	VATAmount *float32 `json:"vat_amount,omitempty"`
 }
 
-// Numeric identifier of a transaction event. Use it as `tx_event_id` when requesting receipt details for a
-// specific event. This is separate from the transaction ID and the transaction history pagination references.
-// Format: int64
-type TransactionEventID int64
-
 // Status of the transaction event.
 //
 // Not every value is used for every event type.
@@ -373,9 +360,6 @@ const (
 	TransactionEventTypePayoutDeduction TransactionEventType = "PAYOUT_DEDUCTION"
 	TransactionEventTypeRefund          TransactionEventType = "REFUND"
 )
-
-// Unique identifier of the transaction.
-type TransactionID string
 
 // Current status of the transaction.
 //

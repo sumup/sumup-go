@@ -56,7 +56,7 @@ type ReceiptEvent struct {
 	// Numeric identifier of a transaction event. Use it as `tx_event_id` when requesting receipt details for a
 	// specific event. This is separate from the transaction ID and the transaction history pagination references.
 	// Format: int64
-	ID *TransactionEventID `json:"id,omitempty"`
+	ID *int64 `json:"id,omitempty"`
 	// Receipt number associated with the event.
 	ReceiptNo *string `json:"receipt_no,omitempty"`
 	// Status of the transaction event.
@@ -80,7 +80,7 @@ type ReceiptEvent struct {
 	// The timestamp of when the transaction event occurred.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
 	// Unique identifier of the transaction.
-	TransactionID *TransactionID `json:"transaction_id,omitempty"`
+	TransactionID *string `json:"transaction_id,omitempty"`
 	// Financial event associated with a transaction.
 	//
 	// - `PAYOUT`: Funds from the transaction being prepared for or included in a merchant payout. Check the event
@@ -184,7 +184,7 @@ type ReceiptTransaction struct {
 	// Transaction code returned after processing the transaction.
 	TransactionCode *string `json:"transaction_code,omitempty"`
 	// Unique identifier of the transaction.
-	TransactionID *TransactionID `json:"transaction_id,omitempty"`
+	TransactionID *string `json:"transaction_id,omitempty"`
 	// VAT included in the transaction amount, in major units.
 	VATAmount *string `json:"vat_amount,omitempty"`
 	// VAT breakdown for the transaction.

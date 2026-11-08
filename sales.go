@@ -16,13 +16,6 @@ import (
 	"github.com/sumup/sumup-go/nullable"
 )
 
-// The brand of the card.
-// Input is case-insensitive; the canonical form is lowercase snake_case.
-// **VALUES**: [amex, cup, diners, discover, elo, elv, hipercard, jcb, maestro, mastercard, visa, visa_electron,
-// visa_vpay, vr, eftpos, conecs, swile, girocard, interac, sumup, bancomat].
-// Max length: 20
-type Brand string
-
 // A category a line belongs to.
 type CategoryV10 struct {
 	// The category id. Usually a UUID, but not always (legacy cases).
@@ -55,15 +48,6 @@ const (
 	DiscountClasMealDeal DiscountClas = "MEAL_DEAL"
 )
 
-// Specifies where discount was applied by user (either merchant or consumer):
-// - CART: Applied to the whole cart (calculated and distributed per sale item)
-// - ITEM: Applied to specific sale item
-//
-// *Accepted values:* ["ITEM", "CART"].
-// Min length: 4
-// Max length: 4
-type DiscountLevel string
-
 // Object representing information about single discount line.
 type DiscountLine struct {
 	// A description or reason of the discount.
@@ -73,7 +57,7 @@ type DiscountLine struct {
 	// The value of the amount in minor units of the currency according to the Sale.currency.scale.
 	// Format: int64
 	// Min: 0
-	GrossAmount PositiveAmount `json:"gross_amount"`
+	GrossAmount int64 `json:"gross_amount"`
 	// An id used to associate a discount line with a specific discount.
 	// Since we can apply multiple discounts (e.g. 2x 10% whole cart off)
 	// we need to be able to identify which discount line belongs to which cart discount.
@@ -87,19 +71,19 @@ type DiscountLine struct {
 	// *Accepted values:* ["ITEM", "CART"].
 	// Min length: 4
 	// Max length: 4
-	Level DiscountLevel `json:"level"`
+	Level string `json:"level"`
 	// The net amount of the discount.
 	// The value of the amount in minor units of the currency according to the Sale.currency.scale.
 	// Format: int64
 	// Min: 0
-	NetAmount PositiveAmount `json:"net_amount"`
+	NetAmount int64 `json:"net_amount"`
 	// The source of discount. Exactly one property must be set.
 	Source DiscountSource `json:"source"`
 	// The tax amount of the discount.
 	// The value of the amount in minor units of the currency according to the Sale.currency.scale.
 	// Format: int64
 	// Min: 0
-	TaxAmount PositiveAmount `json:"tax_amount"`
+	TaxAmount int64 `json:"tax_amount"`
 	// The value type of the discount, either a percentage based or absolute monetary value.
 	//
 	// It is required that only one of the following is set:
@@ -251,7 +235,7 @@ type DiscountValue struct {
 	// Example: 10000 = 10.00
 	// Format: int64
 	// Min: 0
-	Absolute *PositiveAmount `json:"absolute,omitempty"`
+	Absolute *int64 `json:"absolute,omitempty"`
 	// The percentage in minor units (1/100000).
 	//
 	// Examples:
@@ -337,12 +321,12 @@ type FinalPriceAmounts struct {
 	// equal to total_gross_amount.
 	// Format: int64
 	// Min: 0
-	TotalGrossAmountFinal PositiveAmount `json:"total_gross_amount_final"`
+	TotalGrossAmountFinal int64 `json:"total_gross_amount_final"`
 	// The final net amount includes discounts and modifiers. It does NOT include taxes. If no discounts are applied,
 	// it should be equal to total_net_amount.
 	// Format: int64
 	// Min: 0
-	TotalNetAmountFinal PositiveAmount `json:"total_net_amount_final"`
+	TotalNetAmountFinal int64 `json:"total_net_amount_final"`
 }
 
 // Outward identifiers and links for a line, kept in one place rather than scattered
@@ -376,21 +360,6 @@ const (
 	ItemReferencesV10CatalogSourceSumup    ItemReferencesV10CatalogSource = "SUMUP"
 )
 
-// Classifies a sale line. Not a schema subclass.
-//
-// Known values: `CATALOG`, `DEPOSIT`, `GIFT_CARD`, `CUSTOM`, `FEE`.
-//
-// `FEE` lines represent merchant-charged fees on the sale (e.g. shipping, service
-// charge, surcharge, cancellation). They participate in sale totals like any other
-// line; type-specific data is carried in `features` (see `Feature` for the
-// conventional feature keys).
-//
-// This is intentionally an open string, NOT a closed enum: new values are added
-// over time as pure data and consumers MUST tolerate unknown values, rendering the
-// line from the generic envelope (name, quantity, price, taxes) and reading any
-// extra information from `features`.
-type ItemTypeV10 string
-
 // Pricing for a single line, valid for every item type.
 //
 // Merges the standard amounts (with tax breakdown) and the final amounts (after
@@ -413,50 +382,23 @@ type LineItemPriceV10 struct {
 	// Max items: 1000
 	TaxesFinal []TaxLine `json:"taxes_final"`
 	// The gross amount (including modifiers if applied). It does NOT include discounts.
-	TotalGrossAmount LineItemPriceV10TotalGrossAmount `json:"total_gross_amount"`
+	// Format: int64
+	TotalGrossAmount int64 `json:"total_gross_amount"`
 	// The final gross amount including discounts, modifiers and taxes. Equals `total_gross_amount` if no discounts apply.
-	TotalGrossAmountFinal LineItemPriceV10TotalGrossAmountFinal `json:"total_gross_amount_final"`
+	//
+	// Format: int64
+	TotalGrossAmountFinal int64 `json:"total_gross_amount_final"`
 	// The net amount (including modifiers if applied). It does NOT include discounts.
-	TotalNetAmount LineItemPriceV10TotalNetAmount `json:"total_net_amount"`
+	// Format: int64
+	TotalNetAmount int64 `json:"total_net_amount"`
 	// The final net amount including discounts and modifiers. Equals `total_net_amount` if no discounts apply.
-	TotalNetAmountFinal LineItemPriceV10TotalNetAmountFinal `json:"total_net_amount_final"`
+	// Format: int64
+	TotalNetAmountFinal int64 `json:"total_net_amount_final"`
 	// The price of a single unit. If the tax_mode is GROSS it includes taxes,
 	// otherwise no tax is included. It does NOT include discounts.
 	// Format: int64
 	// Min: 0
-	UnitAmount PositiveAmount `json:"unit_amount"`
-}
-
-// The gross amount (including modifiers if applied). It does NOT include discounts.
-type LineItemPriceV10TotalGrossAmount struct {
-	// Currency ISO 4217 code
-	Currency string `json:"currency"`
-	// Amount in minor units (e.g. cents).
-	Value int `json:"value"`
-}
-
-// The final gross amount including discounts, modifiers and taxes. Equals `total_gross_amount` if no discounts apply.
-type LineItemPriceV10TotalGrossAmountFinal struct {
-	// Currency ISO 4217 code
-	Currency string `json:"currency"`
-	// Amount in minor units (e.g. cents).
-	Value int `json:"value"`
-}
-
-// The net amount (including modifiers if applied). It does NOT include discounts.
-type LineItemPriceV10TotalNetAmount struct {
-	// Currency ISO 4217 code
-	Currency string `json:"currency"`
-	// Amount in minor units (e.g. cents).
-	Value int `json:"value"`
-}
-
-// The final net amount including discounts and modifiers. Equals `total_net_amount` if no discounts apply.
-type LineItemPriceV10TotalNetAmountFinal struct {
-	// Currency ISO 4217 code
-	Currency string `json:"currency"`
-	// Amount in minor units (e.g. cents).
-	Value int `json:"value"`
+	UnitAmount int64 `json:"unit_amount"`
 }
 
 // Modifiers are reported under line items and can be build from Item Catalog objects.
@@ -485,41 +427,20 @@ const (
 	PaymentStatusFilterV10Paid        PaymentStatusFilterV10 = "PAID"
 )
 
-// The value of the amount in minor units of the currency according to the Sale.currency.scale.
-// `value` can get large for some currencies and applications.
-// Use Long type or a similar data type when parsing `value`.
-// Format: int64
-// Min: 0
-type PositiveAmount int64
-
 // Price information for items with positive amounts only.
 type PositivePriceAmounts struct {
 	// The gross amount (including modifiers if applied). It does NOT include discounts.
-	TotalGrossAmount PositivePriceAmountsTotalGrossAmount `json:"total_gross_amount"`
+	// Format: int64
+	TotalGrossAmount int64 `json:"total_gross_amount"`
 	// The net amount (including modifiers if applied). It does NOT include discounts.
-	TotalNetAmount PositivePriceAmountsTotalNetAmount `json:"total_net_amount"`
+	// Format: int64
+	TotalNetAmount int64 `json:"total_net_amount"`
 	// The price of a single unit.
 	// If the tax_mode is GROSS, it includes taxes, otherwise no tax included.
 	// It doesn't include discounts.
 	// Format: int64
 	// Min: 0
-	UnitAmount PositiveAmount `json:"unit_amount"`
-}
-
-// The gross amount (including modifiers if applied). It does NOT include discounts.
-type PositivePriceAmountsTotalGrossAmount struct {
-	// Currency ISO 4217 code
-	Currency string `json:"currency"`
-	// Amount in minor units (e.g. cents).
-	Value int `json:"value"`
-}
-
-// The net amount (including modifiers if applied). It does NOT include discounts.
-type PositivePriceAmountsTotalNetAmount struct {
-	// Currency ISO 4217 code
-	Currency string `json:"currency"`
-	// Amount in minor units (e.g. cents).
-	Value int `json:"value"`
+	UnitAmount int64 `json:"unit_amount"`
 }
 
 // Price information with positive amounts and detailed tax breakdown.
@@ -539,7 +460,8 @@ type PositivePriceWithTaxes struct {
 type PositiveTaxLine struct {
 	// Gross amount after applying the tax.
 	// The value of the amount in minor units of the currency according to the Sale.currency.scale.
-	GrossAmount PositiveTaxLineGrossAmount `json:"gross_amount"`
+	// Format: int64
+	GrossAmount int64 `json:"gross_amount"`
 	// Tax ID from the Tax Service (External Id)
 	// Max length: 100
 	ID string `json:"id"`
@@ -548,71 +470,32 @@ type PositiveTaxLine struct {
 	Name *string `json:"name,omitempty"`
 	// Net amount before applying the tax.
 	// The value of the amount in minor units of the currency according to the Sale.currency.scale.
-	NetAmount PositiveTaxLineNetAmount `json:"net_amount"`
+	// Format: int64
+	NetAmount int64 `json:"net_amount"`
 	// The tax rate percentage in minor units (1/100000). For example 19000 = 19%.
 	// Format: int64
 	// Min: 0
-	Percentage *TaxRate `json:"percentage,omitempty"`
+	Percentage *int64 `json:"percentage,omitempty"`
 	// Amount of tax.
 	// The value of the amount in minor units of the currency according to the Sale.currency.scale.
-	TaxAmount PositiveTaxLineTaxAmount `json:"tax_amount"`
-}
-
-// Gross amount after applying the tax.
-// The value of the amount in minor units of the currency according to the Sale.currency.scale.
-type PositiveTaxLineGrossAmount struct {
-	// Currency ISO 4217 code
-	Currency string `json:"currency"`
-	// Amount in minor units (e.g. cents).
-	Value int `json:"value"`
-}
-
-// Net amount before applying the tax.
-// The value of the amount in minor units of the currency according to the Sale.currency.scale.
-type PositiveTaxLineNetAmount struct {
-	// Currency ISO 4217 code
-	Currency string `json:"currency"`
-	// Amount in minor units (e.g. cents).
-	Value int `json:"value"`
-}
-
-// Amount of tax.
-// The value of the amount in minor units of the currency according to the Sale.currency.scale.
-type PositiveTaxLineTaxAmount struct {
-	// Currency ISO 4217 code
-	Currency string `json:"currency"`
-	// Amount in minor units (e.g. cents).
-	Value int `json:"value"`
+	// Format: int64
+	TaxAmount int64 `json:"tax_amount"`
 }
 
 // Base price information for items including unit amount and totals.
 type PriceAmounts struct {
 	// The gross amount (including modifiers if applied). It does NOT include discounts.
-	TotalGrossAmount PriceAmountsTotalGrossAmount `json:"total_gross_amount"`
+	// Format: int64
+	TotalGrossAmount int64 `json:"total_gross_amount"`
 	// The net amount (including modifiers if applied). It does NOT include discounts.
-	TotalNetAmount PriceAmountsTotalNetAmount `json:"total_net_amount"`
+	// Format: int64
+	TotalNetAmount int64 `json:"total_net_amount"`
 	// The price of a single unit.
 	// If the tax_mode is GROSS, it includes taxes, otherwise no tax included.
 	// It doesn't include discounts.
 	// Format: int64
 	// Min: 0
-	UnitAmount PositiveAmount `json:"unit_amount"`
-}
-
-// The gross amount (including modifiers if applied). It does NOT include discounts.
-type PriceAmountsTotalGrossAmount struct {
-	// Currency ISO 4217 code
-	Currency string `json:"currency"`
-	// Amount in minor units (e.g. cents).
-	Value int `json:"value"`
-}
-
-// The net amount (including modifiers if applied). It does NOT include discounts.
-type PriceAmountsTotalNetAmount struct {
-	// Currency ISO 4217 code
-	Currency string `json:"currency"`
-	// Amount in minor units (e.g. cents).
-	Value int `json:"value"`
+	UnitAmount int64 `json:"unit_amount"`
 }
 
 // A RFC 9457 problem details object.
@@ -639,13 +522,6 @@ func (e *ProblemV10) Error() string {
 
 var _ error = (*ProblemV10)(nil)
 
-// Alternative payment method type when `method` is `apm`.
-// Gift card is not an APM on this API.
-// Input is case-insensitive; the canonical form is lowercase snake_case.
-// **VALUES**: [qr_code_pix, sepa_dd, paypal, sumup_pay, twint, iris].
-// Max length: 20
-type PublicApmType string
-
 // Card brand, credit/debit processing type, and last four digits.
 type PublicCardV10 struct {
 	// The brand of the card.
@@ -653,7 +529,7 @@ type PublicCardV10 struct {
 	// **VALUES**: [amex, cup, diners, discover, elo, elv, hipercard, jcb, maestro, mastercard, visa, visa_electron,
 	// visa_vpay, vr, eftpos, conecs, swile, girocard, interac, sumup, bancomat].
 	// Max length: 20
-	Brand Brand `json:"brand"`
+	Brand string `json:"brand"`
 	// The last 4 digits of the card used for the payment.
 	// Min length: 4
 	// Max length: 4
@@ -684,13 +560,6 @@ type PublicGiftCardPayment struct {
 	ID string `json:"id"`
 }
 
-// Payment method on public sales read API v1.0.
-// Digital wallets are first-class methods. Gift card payments use `gift_card`, not `apm`.
-// Input is case-insensitive; the canonical form is lowercase snake_case.
-// **VALUES**: [card, cash, apm, external, apple_pay, google_pay, whatsapp_pay, gift_card].
-// Max length: 20
-type PublicPaymentMethod string
-
 // Payment on a closed sale, for bookkeeping and reconciliation.
 //
 // Acquirer/processing cost is not on this object. Merchant-charged fees (shipping, service
@@ -700,13 +569,13 @@ type PublicPaymentV10 struct {
 	// The value of the amount in minor units of `Sale.currency`.
 	// Format: int64
 	// Min: 0
-	Amount PositiveAmount `json:"amount"`
+	Amount int64 `json:"amount"`
 	// Alternative payment method type when `method` is `apm`.
 	// Gift card is not an APM on this API.
 	// Input is case-insensitive; the canonical form is lowercase snake_case.
 	// **VALUES**: [qr_code_pix, sepa_dd, paypal, sumup_pay, twint, iris].
 	// Max length: 20
-	ApmType *PublicApmType `json:"apm_type,omitempty"`
+	ApmType *string `json:"apm_type,omitempty"`
 	// Card brand, credit/debit processing type, and last four digits.
 	Card *PublicCardV10 `json:"card,omitempty"`
 	// Gift card used for this payment. Present when `method` is `gift_card` and the gift card
@@ -719,14 +588,14 @@ type PublicPaymentV10 struct {
 	// Input is case-insensitive; the canonical form is lowercase snake_case.
 	// **VALUES**: [card, cash, apm, external, apple_pay, google_pay, whatsapp_pay, gift_card].
 	// Max length: 20
-	Method PublicPaymentMethod `json:"method"`
+	Method string `json:"method"`
 	// UTC date-time when SumUp recorded this payment’s exposed `status` (successful, failed,
 	// or canceled). Server processed time when available; otherwise the payment provider’s
 	// transaction time. Not the device clock.
 	ProcessedAt time.Time `json:"processed_at"`
 	// The reference to the actual payment used for this sale, e.g. the sumup transaction code.
 	// Max length: 50
-	Reference Reference `json:"reference"`
+	Reference string `json:"reference"`
 	// The status of the payment.
 	Status PublicPaymentV10Status `json:"status"`
 	// Payment operation type.
@@ -748,15 +617,6 @@ const (
 	PublicPaymentV10StatusSuccessful PublicPaymentV10Status = "SUCCESSFUL"
 )
 
-// The numerical value representing the quantity in the specified unit.
-// Format: double
-// Min: 0
-type Quantity float64
-
-// The reference to the actual payment used for this sale, e.g. the sumup transaction code.
-// Max length: 50
-type Reference string
-
 // Core model of the Sales API. Returned by `GET /sales` and `GET /sales/{sale_id}`.
 //
 // Non-finalised sales are never returned; only fully-paid sales.
@@ -768,8 +628,8 @@ type Sale struct {
 	ClosedAt time.Time `json:"closed_at"`
 	// Instant when the sale was created.
 	CreatedAt time.Time `json:"created_at"`
-	// Three-letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code of the amount.
-	Currency Currency `json:"currency"`
+	// The currency of the sale.
+	Currency SalesActivityCurrency `json:"currency"`
 	// The ID of the sale.
 	ID string `json:"id"`
 	// The lines sold in this sale, in the order they were added to the cart.
@@ -851,7 +711,7 @@ type SaleLineItemV10 struct {
 	// The numerical value representing the quantity in the specified unit.
 	// Format: double
 	// Min: 0
-	Quantity Quantity `json:"quantity"`
+	Quantity float64 `json:"quantity"`
 	// Outward identifiers and links for a line, kept in one place rather than scattered
 	// per item type.
 	References *ItemReferencesV10 `json:"references,omitempty"`
@@ -870,7 +730,7 @@ type SaleLineItemV10 struct {
 	// over time as pure data and consumers MUST tolerate unknown values, rendering the
 	// line from the generic envelope (name, quantity, price, taxes) and reading any
 	// extra information from `features`.
-	Type ItemTypeV10 `json:"type"`
+	Type string `json:"type"`
 	// The unit of measure of the item.
 	UnitOfMeasure UnitOfMeasure `json:"unit_of_measure"`
 }
@@ -908,37 +768,18 @@ type SalePriceV10 struct {
 	// after cart-level discounts (tips excluded).
 	// Same value as search `total_amount`, in minor units according to `Sale.currency.scale`.
 	// Payment amounts include tips and can therefore differ from this gross total.
-	GrossAmount SalePriceV10GrossAmount `json:"gross_amount"`
+	// Format: int64
+	GrossAmount int64 `json:"gross_amount"`
 	// Final net total for the sale: sum of `items[].price.total_net_amount_final`
 	// after cart-level discounts (tips excluded).
 	// In minor units according to `Sale.currency.scale`.
-	NetAmount SalePriceV10NetAmount `json:"net_amount"`
+	// Format: int64
+	NetAmount int64 `json:"net_amount"`
 	// Tax lines aggregated across the sale (after cart-level discounts).
 	// Per-line tax detail remains on `items[].price.taxes` / `taxes_final`.
 	// Min items: 1
 	// Max items: 1000
 	Taxes []TaxLine `json:"taxes"`
-}
-
-// Final gross total for the sale: sum of `items[].price.total_gross_amount_final`
-// after cart-level discounts (tips excluded).
-// Same value as search `total_amount`, in minor units according to `Sale.currency.scale`.
-// Payment amounts include tips and can therefore differ from this gross total.
-type SalePriceV10GrossAmount struct {
-	// Currency ISO 4217 code
-	Currency string `json:"currency"`
-	// Amount in minor units (e.g. cents).
-	Value int `json:"value"`
-}
-
-// Final net total for the sale: sum of `items[].price.total_net_amount_final`
-// after cart-level discounts (tips excluded).
-// In minor units according to `Sale.currency.scale`.
-type SalePriceV10NetAmount struct {
-	// Currency ISO 4217 code
-	Currency string `json:"currency"`
-	// Amount in minor units (e.g. cents).
-	Value int `json:"value"`
 }
 
 // Summary row for a sale in search results. Use `GET /sales/{sale_id}` for the full `Sale`.
@@ -947,8 +788,8 @@ type SaleSearchItem struct {
 	ClosedAt time.Time `json:"closed_at"`
 	// Instant when the sale was created.
 	CreatedAt time.Time `json:"created_at"`
-	// Three-letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code of the amount.
-	Currency Currency `json:"currency"`
+	// The currency of the sale.
+	Currency SalesActivityCurrency `json:"currency"`
 	// Sale identifier.
 	ID string `json:"id"`
 	// Display name of the sale when set; otherwise a concatenation of item names with
@@ -962,21 +803,12 @@ type SaleSearchItem struct {
 	// Final sale gross total after discounts and taxes, excluding tips.
 	// Same value as `Sale.price.gross_amount`, in minor units according to `currency.scale`.
 	// Payment amounts include tips and can therefore differ from this total.
-	TotalAmount SaleSearchItemTotalAmount `json:"total_amount"`
+	// Format: int64
+	TotalAmount int64 `json:"total_amount"`
 	// Identity UUID of the cashier who processed the sale. Omitted when the cashier
 	// identity is unknown.
 	// Format: uuid
 	UserID *string `json:"user_id,omitempty"`
-}
-
-// Final sale gross total after discounts and taxes, excluding tips.
-// Same value as `Sale.price.gross_amount`, in minor units according to `currency.scale`.
-// Payment amounts include tips and can therefore differ from this total.
-type SaleSearchItemTotalAmount struct {
-	// Currency ISO 4217 code
-	Currency string `json:"currency"`
-	// Amount in minor units (e.g. cents).
-	Value int `json:"value"`
 }
 
 // Filter and pagination criteria for `POST /sales/search`. Filters from different categories
@@ -1023,7 +855,7 @@ type SaleSource struct {
 	//
 	// *Accepted values:* ["POS", "KIOSK", "ONLINE_STORE", "SOLO", "ORDER_AND_PAY", "INVOICE", "BOOKINGS", "ORDER_AGGREGATOR", "SUBSCRIPTIONS",
 	// "UNKNOWN"].
-	Channel SalesChannel `json:"channel"`
+	Channel string `json:"channel"`
 	// An external reference ID for connecting orders/sales between products
 	// Max length: 250
 	ExternalID *string `json:"external_id,omitempty"`
@@ -1047,14 +879,19 @@ const (
 	SaleStateV10Closed SaleStateV10 = "CLOSED"
 )
 
-// The sale_channel is field that indicates the channel through
-// which the sale was made. For example, if the sale was made in the merchant app,
-// the sale_channel could be POS. If the sale was made on a kiosk, the
-// sale_channel is KIOSK.
-//
-// *Accepted values:* ["POS", "KIOSK", "ONLINE_STORE", "SOLO", "ORDER_AND_PAY", "INVOICE", "BOOKINGS", "ORDER_AGGREGATOR", "SUBSCRIPTIONS",
-// "UNKNOWN"].
-type SalesChannel string
+// The currency of the sale.
+type SalesActivityCurrency struct {
+	// 3-letter currency code as defined by ISO-4217.
+	// Format: iso-4217
+	// Min length: 3
+	// Max length: 3
+	Code string `json:"code"`
+	// The scaling factor to apply to the value to arrive at the currency's major unit. Providing a scale mitigates changes
+	// to the minor unit over time, for example due to inflation. For example, if `scale` is denoted by `s` and
+	// `value` is denoted by  `v` is the value, then one arrives at the major currency value by calculating `v
+	// / 10^s`.
+	Scale int `json:"scale"`
+}
 
 // Sale channel filter value. Multi-select uses **OR** within this field.
 type SalesChannelFilterV10 string
@@ -1079,7 +916,8 @@ const (
 type TaxLine struct {
 	// Gross amount after applying the tax.
 	// The value of the amount in minor units of the currency according to the Sale.currency.scale.
-	GrossAmount TaxLineGrossAmount `json:"gross_amount"`
+	// Format: int64
+	GrossAmount int64 `json:"gross_amount"`
 	// Tax ID from the Tax Service (External Id)
 	// Max length: 100
 	ID string `json:"id"`
@@ -1088,41 +926,16 @@ type TaxLine struct {
 	Name *string `json:"name,omitempty"`
 	// Net amount before applying the tax.
 	// The value of the amount in minor units of the currency according to the Sale.currency.scale.
-	NetAmount TaxLineNetAmount `json:"net_amount"`
+	// Format: int64
+	NetAmount int64 `json:"net_amount"`
 	// The tax rate percentage in minor units (1/100000). For example 19000 = 19%.
 	// Format: int64
 	// Min: 0
-	Percentage *TaxRate `json:"percentage,omitempty"`
+	Percentage *int64 `json:"percentage,omitempty"`
 	// Amount of tax.
 	// The value of the amount in minor units of the currency according to the Sale.currency.scale.
-	TaxAmount TaxLineTaxAmount `json:"tax_amount"`
-}
-
-// Gross amount after applying the tax.
-// The value of the amount in minor units of the currency according to the Sale.currency.scale.
-type TaxLineGrossAmount struct {
-	// Currency ISO 4217 code
-	Currency string `json:"currency"`
-	// Amount in minor units (e.g. cents).
-	Value int `json:"value"`
-}
-
-// Net amount before applying the tax.
-// The value of the amount in minor units of the currency according to the Sale.currency.scale.
-type TaxLineNetAmount struct {
-	// Currency ISO 4217 code
-	Currency string `json:"currency"`
-	// Amount in minor units (e.g. cents).
-	Value int `json:"value"`
-}
-
-// Amount of tax.
-// The value of the amount in minor units of the currency according to the Sale.currency.scale.
-type TaxLineTaxAmount struct {
-	// Currency ISO 4217 code
-	Currency string `json:"currency"`
-	// Amount in minor units (e.g. cents).
-	Value int `json:"value"`
+	// Format: int64
+	TaxAmount int64 `json:"tax_amount"`
 }
 
 // The tax mode used by merchant for displaying prices and calculating taxes:
@@ -1140,11 +953,6 @@ const (
 	TaxModeNet   TaxMode = "NET"
 	TaxModeNoTax TaxMode = "NO_TAX"
 )
-
-// The tax rate percentage in minor units (1/100000). For example 19000 = 19%.
-// Format: int64
-// Min: 0
-type TaxRate int64
 
 // The unit of measure of the item.
 type UnitOfMeasure struct {

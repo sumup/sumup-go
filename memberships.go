@@ -45,7 +45,7 @@ type Membership struct {
 	// Possible values are:
 	// * `merchant` - merchant account(s)
 	// * `organization` - organization(s)
-	Type ResourceType `json:"type"`
+	Type string `json:"type"`
 	// The timestamp of when the membership was last updated.
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -68,21 +68,15 @@ type MembershipResource struct {
 	// Possible values are:
 	// * `merchant` - merchant account(s)
 	// * `organization` - organization(s)
-	Type ResourceType `json:"type"`
+	Type string `json:"type"`
 	// The timestamp of when the membership resource was last updated.
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// The type of the membership resource.
-// Possible values are:
-// * `merchant` - merchant account(s)
-// * `organization` - organization(s)
-type ResourceType string
-
 // MembershipsListParams are query parameters for ListMemberships.
 type MembershipsListParams struct {
 	// Filter memberships by resource kind.
-	Kind *ResourceType
+	Kind *string
 	// Maximum number of members to return.
 	Limit *int
 	// Offset of the first member to return.
@@ -102,9 +96,9 @@ type MembershipsListParams struct {
 	// Omit both `resource.parent.id` and `resource.parent.type` to skip parent filtering. When filtering by parent,
 	// both parameters must be present. To select resources without a parent, set each parameter to an empty value.
 	// Otherwise, both parameters must identify a parent.
-	ResourceParentType *ResourceType
+	ResourceParentType *string
 	// Filter memberships by resource kind.
-	ResourceType *ResourceType
+	ResourceType *string
 	// Filter the returned memberships by role.
 	Roles []string
 	// Filter the returned memberships by the membership status.
@@ -116,7 +110,7 @@ func (p *MembershipsListParams) QueryValues() url.Values {
 	q := make(url.Values)
 
 	if p.Kind != nil {
-		q.Set("kind", string(*p.Kind))
+		q.Set("kind", *p.Kind)
 	}
 
 	if p.Limit != nil {
@@ -144,11 +138,11 @@ func (p *MembershipsListParams) QueryValues() url.Values {
 	}
 
 	if p.ResourceParentType != nil {
-		q.Set("resource.parent.type", string(*p.ResourceParentType))
+		q.Set("resource.parent.type", *p.ResourceParentType)
 	}
 
 	if p.ResourceType != nil {
-		q.Set("resource.type", string(*p.ResourceType))
+		q.Set("resource.type", *p.ResourceType)
 	}
 
 	for _, v := range p.Roles {
