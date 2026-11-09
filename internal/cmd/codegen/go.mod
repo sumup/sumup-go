@@ -5,7 +5,7 @@ go 1.26.0
 require (
 	github.com/lmittmann/tint v1.2.1
 	github.com/pb33f/go-yaml v0.1.1
-	github.com/pb33f/libopenapi v0.41.7
+	github.com/pb33f/libopenapi v0.42.3
 	github.com/urfave/cli/v2 v2.27.7
 )
 
