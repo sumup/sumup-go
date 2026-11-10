@@ -82,41 +82,6 @@ const (
 	CurrencyUSD Currency = "USD"
 )
 
-// How the payment details were captured, for example `CHIP` or `CONTACTLESS` for card-present payments and
-// `CUSTOMER_ENTRY` for card details entered by the payer. For wallet and alternative payment methods, this can
-// identify the method, such as `APPLE_PAY` or `BLIK`.
-type EntryMode string
-
-const (
-	EntryModeApplePay             EntryMode = "APPLE_PAY"
-	EntryModeBancontact           EntryMode = "BANCONTACT"
-	EntryModeBlik                 EntryMode = "BLIK"
-	EntryModeBoleto               EntryMode = "BOLETO"
-	EntryModeChip                 EntryMode = "CHIP"
-	EntryModeContactless          EntryMode = "CONTACTLESS"
-	EntryModeContactlessMagstripe EntryMode = "CONTACTLESS_MAGSTRIPE"
-	EntryModeCustomerEntry        EntryMode = "CUSTOMER_ENTRY"
-	EntryModeDirectDebit          EntryMode = "DIRECT_DEBIT"
-	EntryModeEps                  EntryMode = "EPS"
-	EntryModeGiropay              EntryMode = "GIROPAY"
-	EntryModeGooglePay            EntryMode = "GOOGLE_PAY"
-	EntryModeIdeal                EntryMode = "IDEAL"
-	EntryModeMagstripe            EntryMode = "MAGSTRIPE"
-	EntryModeMagstripeFallback    EntryMode = "MAGSTRIPE_FALLBACK"
-	EntryModeManualEntry          EntryMode = "MANUAL_ENTRY"
-	EntryModeMoto                 EntryMode = "MOTO"
-	EntryModeMybank               EntryMode = "MYBANK"
-	EntryModeNA                   EntryMode = "N/A"
-	EntryModeNone                 EntryMode = "NONE"
-	EntryModeP24                  EntryMode = "P24"
-	EntryModePaypal               EntryMode = "PAYPAL"
-	EntryModePix                  EntryMode = "PIX"
-	EntryModeQrCodePix            EntryMode = "QR_CODE_PIX"
-	EntryModeSatispay             EntryMode = "SATISPAY"
-	EntryModeSofort               EntryMode = "SOFORT"
-	EntryModeTwint                EntryMode = "TWINT"
-)
-
 // Details of an API error.
 type Error struct {
 	// Platform code for the error.
@@ -304,10 +269,6 @@ type TransactionBase struct {
 type TransactionCheckoutInfo struct {
 	// Authorization code for the transaction sent by the payment card issuer or bank. Applicable only to card payments.
 	AuthCode *string `json:"auth_code,omitempty"`
-	// How the payment details were captured, for example `CHIP` or `CONTACTLESS` for card-present payments and
-	// `CUSTOMER_ENTRY` for card details entered by the payer. For wallet and alternative payment methods, this can
-	// identify the method, such as `APPLE_PAY` or `BLIK`.
-	EntryMode *EntryMode `json:"entry_mode,omitempty"`
 	// Unique code of the registered merchant to whom the payment is made.
 	MerchantCode *string `json:"merchant_code,omitempty"`
 	// Tip included in the total transaction amount, in major units of the transaction's currency.

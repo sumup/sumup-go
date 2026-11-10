@@ -60,6 +60,44 @@ type ElvCardAccount struct {
 	SortCode *string `json:"sort_code,omitempty"`
 }
 
+// How the payment details were captured, for example `chip` or `contactless` for card-present payments and
+// `customer entry` for card details entered by the payer. For wallet and alternative payment methods, this can
+// identify the method, such as `apple pay` or `blik`.
+type EntryMode string
+
+const (
+	EntryModeApplePay             EntryMode = "apple pay"
+	EntryModeBancontact           EntryMode = "bancontact"
+	EntryModeBlik                 EntryMode = "blik"
+	EntryModeBoleto               EntryMode = "boleto"
+	EntryModeChip                 EntryMode = "chip"
+	EntryModeContactless          EntryMode = "contactless"
+	EntryModeContactlessMagstripe EntryMode = "contactless magstripe"
+	EntryModeCustomerEntry        EntryMode = "customer entry"
+	EntryModeDirectDebit          EntryMode = "direct debit"
+	EntryModeEps                  EntryMode = "eps"
+	EntryModeGiropay              EntryMode = "giropay"
+	EntryModeGooglePay            EntryMode = "google pay"
+	EntryModeIdeal                EntryMode = "ideal"
+	EntryModeIris                 EntryMode = "iris"
+	EntryModeMagstripe            EntryMode = "magstripe"
+	EntryModeMagstripeFallback    EntryMode = "magstripe fallback"
+	EntryModeManualEntry          EntryMode = "manual entry"
+	EntryModeMoto                 EntryMode = "moto"
+	EntryModeMybank               EntryMode = "mybank"
+	EntryModeNa                   EntryMode = "na"
+	EntryModeNone                 EntryMode = "none"
+	EntryModeP24                  EntryMode = "p24"
+	EntryModePaypal               EntryMode = "paypal"
+	EntryModePix                  EntryMode = "pix"
+	EntryModeQrCodePix            EntryMode = "qr code pix"
+	EntryModeSatispay             EntryMode = "satispay"
+	EntryModeSofort               EntryMode = "sofort"
+	EntryModeSumupGiftCard        EntryMode = "sumup gift card"
+	EntryModeSumupPay             EntryMode = "sumup pay"
+	EntryModeTwint                EntryMode = "twint"
+)
+
 // Details of a link to a related resource.
 type Link struct {
 	// URL for accessing the related resource.
@@ -218,9 +256,9 @@ type TransactionFull struct {
 	DeviceInfo *Device `json:"device_info,omitempty"`
 	// Details of the ELV card account associated with the transaction.
 	ElvAccount *ElvCardAccount `json:"elv_account,omitempty"`
-	// How the payment details were captured, for example `CHIP` or `CONTACTLESS` for card-present payments and
-	// `CUSTOMER_ENTRY` for card details entered by the payer. For wallet and alternative payment methods, this can
-	// identify the method, such as `APPLE_PAY` or `BLIK`.
+	// How the payment details were captured, for example `chip` or `contactless` for card-present payments and
+	// `customer entry` for card details entered by the payer. For wallet and alternative payment methods, this can
+	// identify the method, such as `apple pay` or `blik`.
 	EntryMode *EntryMode `json:"entry_mode,omitempty"`
 	// Compact list of events related to the transaction.
 	Events []TransactionEvent `json:"events,omitempty"`
@@ -449,6 +487,10 @@ type TransactionHistory struct {
 	ClientTransactionID *string `json:"client_transaction_id,omitempty"`
 	// Three-letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code of the amount.
 	Currency *Currency `json:"currency,omitempty"`
+	// How the payment details were captured, for example `chip` or `contactless` for card-present payments and
+	// `customer entry` for card details entered by the payer. For wallet and alternative payment methods, this can
+	// identify the method, such as `apple pay` or `blik`.
+	EntryMode *EntryMode `json:"entry_mode,omitempty"`
 	// Unique identifier of the transaction.
 	ID *string `json:"id,omitempty"`
 	// Number of installments for a deferred payment.
@@ -524,6 +566,10 @@ const (
 
 // Additional transaction fields used by history and detailed views.
 type TransactionMixinHistory struct {
+	// How the payment details were captured, for example `chip` or `contactless` for card-present payments and
+	// `customer entry` for card details entered by the payer. For wallet and alternative payment methods, this can
+	// identify the method, such as `apple pay` or `blik`.
+	EntryMode *EntryMode `json:"entry_mode,omitempty"`
 	// Payout plan of the registered user at the time when the transaction was made.
 	PayoutPlan *TransactionMixinHistoryPayoutPlan `json:"payout_plan,omitempty"`
 	// Number of payouts that are made to the registered user specified in the `user` property.

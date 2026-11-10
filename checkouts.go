@@ -117,10 +117,10 @@ type CheckoutTransaction struct {
 	AuthCode *string `json:"auth_code,omitempty"`
 	// Three-letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code of the amount.
 	Currency *Currency `json:"currency,omitempty"`
-	// How the payment details were captured, for example `CHIP` or `CONTACTLESS` for card-present payments and
-	// `CUSTOMER_ENTRY` for card details entered by the payer. For wallet and alternative payment methods, this can
-	// identify the method, such as `APPLE_PAY` or `BLIK`.
-	EntryMode *EntryMode `json:"entry_mode,omitempty"`
+	// How the payment details were captured for a checkout transaction, for example `CUSTOMER_ENTRY` for card details
+	// entered by the payer or `APPLE_PAY` for an Apple Pay payment. Checkout entry modes use uppercase values, unlike
+	// entry modes returned by the Transactions endpoints.
+	EntryMode *CheckoutEntryMode `json:"entry_mode,omitempty"`
 	// Unique identifier of the transaction.
 	ID *string `json:"id,omitempty"`
 	// Number of installments for a deferred payment.
@@ -234,6 +234,34 @@ const (
 	CheckoutCreateRequestPurposeSetupRecurringPayment CheckoutCreateRequestPurpose = "SETUP_RECURRING_PAYMENT"
 )
 
+// How the payment details were captured for a checkout transaction, for example `CUSTOMER_ENTRY` for card details
+// entered by the payer or `APPLE_PAY` for an Apple Pay payment. Checkout entry modes use uppercase values, unlike
+// entry modes returned by the Transactions endpoints.
+type CheckoutEntryMode string
+
+const (
+	CheckoutEntryModeApplePay      CheckoutEntryMode = "APPLE_PAY"
+	CheckoutEntryModeBancomatpay   CheckoutEntryMode = "BANCOMATPAY"
+	CheckoutEntryModeBancontact    CheckoutEntryMode = "BANCONTACT"
+	CheckoutEntryModeBlik          CheckoutEntryMode = "BLIK"
+	CheckoutEntryModeBoleto        CheckoutEntryMode = "BOLETO"
+	CheckoutEntryModeCard          CheckoutEntryMode = "CARD"
+	CheckoutEntryModeCustomerEntry CheckoutEntryMode = "CUSTOMER_ENTRY"
+	CheckoutEntryModeDirectDebit   CheckoutEntryMode = "DIRECT_DEBIT"
+	CheckoutEntryModeEps           CheckoutEntryMode = "EPS"
+	CheckoutEntryModeGiropay       CheckoutEntryMode = "GIROPAY"
+	CheckoutEntryModeGooglePay     CheckoutEntryMode = "GOOGLE_PAY"
+	CheckoutEntryModeIdeal         CheckoutEntryMode = "IDEAL"
+	CheckoutEntryModeKlarna        CheckoutEntryMode = "KLARNA"
+	CheckoutEntryModeMoto          CheckoutEntryMode = "MOTO"
+	CheckoutEntryModeMybank        CheckoutEntryMode = "MYBANK"
+	CheckoutEntryModeP24           CheckoutEntryMode = "P24"
+	CheckoutEntryModePaypal        CheckoutEntryMode = "PAYPAL"
+	CheckoutEntryModePix           CheckoutEntryMode = "PIX"
+	CheckoutEntryModeQrCodePix     CheckoutEntryMode = "QR_CODE_PIX"
+	CheckoutEntryModeSatispay      CheckoutEntryMode = "SATISPAY"
+)
+
 // Checkout resource returned after a synchronous processing attempt. In addition to the base checkout fields, it
 // can include the resulting transaction identifiers and any newly created payment instrument token.
 type CheckoutSuccess struct {
@@ -315,10 +343,10 @@ type CheckoutSuccessTransaction struct {
 	AuthCode *string `json:"auth_code,omitempty"`
 	// Three-letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code of the amount.
 	Currency *Currency `json:"currency,omitempty"`
-	// How the payment details were captured, for example `CHIP` or `CONTACTLESS` for card-present payments and
-	// `CUSTOMER_ENTRY` for card details entered by the payer. For wallet and alternative payment methods, this can
-	// identify the method, such as `APPLE_PAY` or `BLIK`.
-	EntryMode *EntryMode `json:"entry_mode,omitempty"`
+	// How the payment details were captured for a checkout transaction, for example `CUSTOMER_ENTRY` for card details
+	// entered by the payer or `APPLE_PAY` for an Apple Pay payment. Checkout entry modes use uppercase values, unlike
+	// entry modes returned by the Transactions endpoints.
+	EntryMode *CheckoutEntryMode `json:"entry_mode,omitempty"`
 	// Unique identifier of the transaction.
 	ID *string `json:"id,omitempty"`
 	// Number of installments for a deferred payment.
@@ -628,10 +656,10 @@ type CheckoutsProcessCheckoutSuccessResponseTransaction struct {
 	AuthCode *string `json:"auth_code,omitempty"`
 	// Three-letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code of the amount.
 	Currency *Currency `json:"currency,omitempty"`
-	// How the payment details were captured, for example `CHIP` or `CONTACTLESS` for card-present payments and
-	// `CUSTOMER_ENTRY` for card details entered by the payer. For wallet and alternative payment methods, this can
-	// identify the method, such as `APPLE_PAY` or `BLIK`.
-	EntryMode *EntryMode `json:"entry_mode,omitempty"`
+	// How the payment details were captured for a checkout transaction, for example `CUSTOMER_ENTRY` for card details
+	// entered by the payer or `APPLE_PAY` for an Apple Pay payment. Checkout entry modes use uppercase values, unlike
+	// entry modes returned by the Transactions endpoints.
+	EntryMode *CheckoutEntryMode `json:"entry_mode,omitempty"`
 	// Unique identifier of the transaction.
 	ID *string `json:"id,omitempty"`
 	// Number of installments for a deferred payment.
