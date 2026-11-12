@@ -572,8 +572,9 @@ type PublicPaymentV10 struct {
 	Amount int64 `json:"amount"`
 	// Alternative payment method type when `method` is `apm`.
 	// Gift card is not an APM on this API.
-	// Input is case-insensitive; the canonical form is lowercase snake_case.
-	// **VALUES**: [qr_code_pix, sepa_dd, paypal, sumup_pay, twint, iris].
+	// Values use lowercase snake_case. Known values are `qr_code_pix`, `sepa_dd`, `paypal`,
+	// `sumup_pay`, `twint`, and `iris`.
+	// Additional values may be returned as new alternative payment methods become available.
 	// Max length: 20
 	ApmType *string `json:"apm_type,omitempty"`
 	// Card brand, credit/debit processing type, and last four digits.
@@ -585,8 +586,9 @@ type PublicPaymentV10 struct {
 	GiftCard *PublicGiftCardPayment `json:"gift_card,omitempty"`
 	// Payment method on public sales read API v1.0.
 	// Digital wallets are first-class methods. Gift card payments use `gift_card`, not `apm`.
-	// Input is case-insensitive; the canonical form is lowercase snake_case.
-	// **VALUES**: [card, cash, apm, external, apple_pay, google_pay, whatsapp_pay, gift_card].
+	// Values use lowercase snake_case. Known values are `card`, `cash`, `apm`, `external`,
+	// `apple_pay`, `google_pay`, `whatsapp_pay`, and `gift_card`.
+	// Additional values may be returned as new payment methods become available.
 	// Max length: 20
 	Method string `json:"method"`
 	// UTC date-time when SumUp recorded this payment’s exposed `status` (successful, failed,
@@ -600,10 +602,8 @@ type PublicPaymentV10 struct {
 	Status PublicPaymentV10Status `json:"status"`
 	// Payment operation type.
 	// This is distinct from the payment instrument in `method`.
-	// Input is case-insensitive; the canonical form is lowercase snake_case.
-	// **VALUES**: [purchase, unreferenced_refund]
-	// Defaults to "purchase" if unspecified. Either a normal purchase or an unreferenced refund for negative
-	// sales like deposit returns.
+	// Values use lowercase snake_case. Known values are `purchase` for a normal purchase
+	// and `unreferenced_refund` for negative sales such as deposit returns.
 	// Default: purchase
 	Type string `json:"type"`
 }
@@ -744,13 +744,11 @@ const (
 )
 
 // Paginated list of `Sale` objects. Results are ordered **newest first** by the newest
-// activity recorded for each sale. See `ListSalesV10`.
+// activity recorded for each sale.
 type SalePage struct {
 	Items []Sale `json:"items"`
-	// Pagination token for subsequent requests. Should only be set by clients if they have
-	// received a token in the previous response, and this request is an immediate follow-up
-	// request to that response to load the subsequent page. Clients should treat this as an
-	// opaque token and should not attempt to parse it in any way.
+	// Opaque token for the next page. Pass it as the `pagination_token` query parameter
+	// on the next list request. Omitted when no further page is available.
 	PaginationToken *string `json:"pagination_token,omitempty"`
 }
 
@@ -823,8 +821,8 @@ type SaleSearchRequest struct {
 	// Min: 1
 	// Max: 25
 	PaginationLimit *int `json:"pagination_limit,omitempty"`
-	// Opaque pagination token from a previous search response. Not interchangeable with tokens
-	// from `GET /sales`.
+	// Opaque token from the previous search response. To load the next page, send it with
+	// the same filters. Not interchangeable with tokens from `GET /sales`.
 	PaginationToken *string `json:"pagination_token,omitempty"`
 	// Filters rows by payment outcome. Multiple values match any of them (**OR**). The search
 	// row does not echo this value.
@@ -842,7 +840,8 @@ type SaleSearchRequest struct {
 // Search hits and an optional pagination token. Results are ordered **newest first** by sale close date.
 type SaleSearchResponse struct {
 	Items []SaleSearchItem `json:"items"`
-	// Opaque token for the next page of search results.
+	// Opaque token for the next page. Pass it as `pagination_token` in the next search
+	// request body with the same filters. Omitted when no further page is available.
 	PaginationToken *string `json:"pagination_token,omitempty"`
 }
 
@@ -967,21 +966,20 @@ type UnitOfMeasure struct {
 	UnitRatio float64 `json:"unit_ratio"`
 }
 
-type SalesSearchSalesV10Params = SaleSearchRequest
+type SalesSearchParams = SaleSearchRequest
 
-// SalesListSalesV10Params are query parameters for ListSalesV10.
-type SalesListSalesV10Params struct {
+// SalesListParams are query parameters for ListSalesV10.
+type SalesListParams struct {
 	// Maximum number of results per page.
 	PaginationLimit *int
-	// Pagination token for subsequent requests. Should only be set by clients if they have
-	// received a token in the previous response, and this request is an immediate follow-up
-	// request to that response to load the subsequent page. Clients should treat this as an
-	// opaque token and should not attempt to parse it in any way.
+	// Opaque token from the previous list response. Omit it on the first request. To load
+	// the next page, pass the returned token unchanged. Not interchangeable with tokens
+	// from `POST /sales/search`.
 	PaginationToken *string
 }
 
-// QueryValues converts [SalesListSalesV10Params] into [url.Values].
-func (p *SalesListSalesV10Params) QueryValues() url.Values {
+// QueryValues converts [SalesListParams] into [url.Values].
+func (p *SalesListParams) QueryValues() url.Values {
 	q := make(url.Values)
 
 	if p.PaginationLimit != nil {
@@ -997,7 +995,12 @@ func (p *SalesListSalesV10Params) QueryValues() url.Values {
 
 // SalesClient provides access to the Sales API.
 //
-// Operations related to reading sales data.
+// Read a merchant's fully-paid, closed sales, including item lines, taxes, discounts, and payments.
+//
+// List sales to retrieve full `Sale` objects, or search by date, payment status, and sales channel
+// to retrieve summaries. Use a summary's `id` to get the full sale.
+//
+// Amounts are expressed in minor units according to each sale's `currency.scale`.
 type SalesClient struct {
 	c *client.Client
 }
@@ -1013,7 +1016,7 @@ func NewSalesClient(c *client.Client) *SalesClient {
 // field stack with **logical OR**. Results cover the merchant’s **last two years** of sales
 // (narrow further with `start_date` / `end_date`). Pagination tokens are not interchangeable
 // with `GET /sales`.
-func (c *SalesClient) SearchSalesV10(ctx context.Context, merchantCode string, body SalesSearchSalesV10Params) (*SaleSearchResponse, error) {
+func (c *SalesClient) Search(ctx context.Context, merchantCode string, body SalesSearchParams) (*SaleSearchResponse, error) {
 	path := fmt.Sprintf("/v1.0/merchants/%v/sales/search", merchantCode)
 
 	resp, err := c.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
@@ -1054,7 +1057,7 @@ func (c *SalesClient) SearchSalesV10(ctx context.Context, merchantCode string, b
 //
 // Covers the merchant’s **last two years** of sales. Non-finalised sales are never returned;
 // only fully-paid sales. Use `POST /sales/search` for filtered queries.
-func (c *SalesClient) ListSalesV10(ctx context.Context, merchantCode string, params SalesListSalesV10Params) (*SalePage, error) {
+func (c *SalesClient) List(ctx context.Context, merchantCode string, params SalesListParams) (*SalePage, error) {
 	path := fmt.Sprintf("/v1.0/merchants/%v/sales", merchantCode)
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
@@ -1092,7 +1095,7 @@ func (c *SalesClient) ListSalesV10(ctx context.Context, merchantCode string, par
 
 // Returns `Sale` for `sale_id`, including item lines and `payments[]`.
 // Non-finalised sales are never returned; only fully-paid sales.
-func (c *SalesClient) GetSaleV10(ctx context.Context, merchantCode string, saleID string) (*Sale, error) {
+func (c *SalesClient) Get(ctx context.Context, merchantCode string, saleID string) (*Sale, error) {
 	path := fmt.Sprintf("/v1.0/merchants/%v/sales/%v", merchantCode, saleID)
 
 	resp, err := c.c.Call(ctx, http.MethodGet, path)

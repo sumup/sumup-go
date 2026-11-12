@@ -366,12 +366,12 @@ import "github.com/sumup/sumup-go"
 - [type SalesChannelFilterV10](<#SalesChannelFilterV10>)
 - [type SalesClient](<#SalesClient>)
   - [func NewSalesClient\(c \*client.Client\) \*SalesClient](<#NewSalesClient>)
-  - [func \(c \*SalesClient\) GetSaleV10\(ctx context.Context, merchantCode string, saleID string\) \(\*Sale, error\)](<#SalesClient.GetSaleV10>)
-  - [func \(c \*SalesClient\) ListSalesV10\(ctx context.Context, merchantCode string, params SalesListSalesV10Params\) \(\*SalePage, error\)](<#SalesClient.ListSalesV10>)
-  - [func \(c \*SalesClient\) SearchSalesV10\(ctx context.Context, merchantCode string, body SalesSearchSalesV10Params\) \(\*SaleSearchResponse, error\)](<#SalesClient.SearchSalesV10>)
-- [type SalesListSalesV10Params](<#SalesListSalesV10Params>)
-  - [func \(p \*SalesListSalesV10Params\) QueryValues\(\) url.Values](<#SalesListSalesV10Params.QueryValues>)
-- [type SalesSearchSalesV10Params](<#SalesSearchSalesV10Params>)
+  - [func \(c \*SalesClient\) Get\(ctx context.Context, merchantCode string, saleID string\) \(\*Sale, error\)](<#SalesClient.Get>)
+  - [func \(c \*SalesClient\) List\(ctx context.Context, merchantCode string, params SalesListParams\) \(\*SalePage, error\)](<#SalesClient.List>)
+  - [func \(c \*SalesClient\) Search\(ctx context.Context, merchantCode string, body SalesSearchParams\) \(\*SaleSearchResponse, error\)](<#SalesClient.Search>)
+- [type SalesListParams](<#SalesListParams>)
+  - [func \(p \*SalesListParams\) QueryValues\(\) url.Values](<#SalesListParams.QueryValues>)
+- [type SalesSearchParams](<#SalesSearchParams>)
 - [type StatusResponse](<#StatusResponse>)
 - [type StatusResponseData](<#StatusResponseData>)
 - [type StatusResponseDataConnectionType](<#StatusResponseDataConnectionType>)
@@ -5584,8 +5584,9 @@ type PublicPaymentV10 struct {
     Amount int64 `json:"amount"`
     // Alternative payment method type when `method` is `apm`.
     // Gift card is not an APM on this API.
-    // Input is case-insensitive; the canonical form is lowercase snake_case.
-    // **VALUES**: [qr_code_pix, sepa_dd, paypal, sumup_pay, twint, iris].
+    // Values use lowercase snake_case. Known values are `qr_code_pix`, `sepa_dd`, `paypal`,
+    // `sumup_pay`, `twint`, and `iris`.
+    // Additional values may be returned as new alternative payment methods become available.
     // Max length: 20
     ApmType *string `json:"apm_type,omitempty"`
     // Card brand, credit/debit processing type, and last four digits.
@@ -5597,8 +5598,9 @@ type PublicPaymentV10 struct {
     GiftCard *PublicGiftCardPayment `json:"gift_card,omitempty"`
     // Payment method on public sales read API v1.0.
     // Digital wallets are first-class methods. Gift card payments use `gift_card`, not `apm`.
-    // Input is case-insensitive; the canonical form is lowercase snake_case.
-    // **VALUES**: [card, cash, apm, external, apple_pay, google_pay, whatsapp_pay, gift_card].
+    // Values use lowercase snake_case. Known values are `card`, `cash`, `apm`, `external`,
+    // `apple_pay`, `google_pay`, `whatsapp_pay`, and `gift_card`.
+    // Additional values may be returned as new payment methods become available.
     // Max length: 20
     Method string `json:"method"`
     // UTC date-time when SumUp recorded this payment’s exposed `status` (successful, failed,
@@ -5612,10 +5614,8 @@ type PublicPaymentV10 struct {
     Status PublicPaymentV10Status `json:"status"`
     // Payment operation type.
     // This is distinct from the payment instrument in `method`.
-    // Input is case-insensitive; the canonical form is lowercase snake_case.
-    // **VALUES**: [purchase, unreferenced_refund]
-    // Defaults to "purchase" if unspecified. Either a normal purchase or an unreferenced refund for negative
-    // sales like deposit returns.
+    // Values use lowercase snake_case. Known values are `purchase` for a normal purchase
+    // and `unreferenced_refund` for negative sales such as deposit returns.
     // Default: purchase
     Type string `json:"type"`
 }
@@ -6801,23 +6801,21 @@ const (
 ```
 
 <a name="SalePage"></a>
-## type [SalePage](<https://github.com/sumup/sumup-go/blob/main/sales.go#L748-L755>)
+## type [SalePage](<https://github.com/sumup/sumup-go/blob/main/sales.go#L748-L753>)
 
-Paginated list of \`Sale\` objects. Results are ordered \*\*newest first\*\* by the newest activity recorded for each sale. See \`ListSalesV10\`.
+Paginated list of \`Sale\` objects. Results are ordered \*\*newest first\*\* by the newest activity recorded for each sale.
 
 ```go
 type SalePage struct {
     Items []Sale `json:"items"`
-    // Pagination token for subsequent requests. Should only be set by clients if they have
-    // received a token in the previous response, and this request is an immediate follow-up
-    // request to that response to load the subsequent page. Clients should treat this as an
-    // opaque token and should not attempt to parse it in any way.
+    // Opaque token for the next page. Pass it as the `pagination_token` query parameter
+    // on the next list request. Omitted when no further page is available.
     PaginationToken *string `json:"pagination_token,omitempty"`
 }
 ```
 
 <a name="SalePriceV10"></a>
-## type [SalePriceV10](<https://github.com/sumup/sumup-go/blob/main/sales.go#L762-L783>)
+## type [SalePriceV10](<https://github.com/sumup/sumup-go/blob/main/sales.go#L760-L781>)
 
 Sale\-level pricing aggregate, parallel to \`LineItemPrice\` on each \`SaleLineItem\`.
 
@@ -6849,7 +6847,7 @@ type SalePriceV10 struct {
 ```
 
 <a name="SaleSearchItem"></a>
-## type [SaleSearchItem](<https://github.com/sumup/sumup-go/blob/main/sales.go#L786-L812>)
+## type [SaleSearchItem](<https://github.com/sumup/sumup-go/blob/main/sales.go#L784-L810>)
 
 Summary row for a sale in search results. Use \`GET /sales/\{sale\_id\}\` for the full \`Sale\`.
 
@@ -6884,7 +6882,7 @@ type SaleSearchItem struct {
 ```
 
 <a name="SaleSearchRequest"></a>
-## type [SaleSearchRequest](<https://github.com/sumup/sumup-go/blob/main/sales.go#L818-L840>)
+## type [SaleSearchRequest](<https://github.com/sumup/sumup-go/blob/main/sales.go#L816-L838>)
 
 Filter and pagination criteria for \`POST /sales/search\`. Filters from different categories stack with \*\*logical AND\*\*; multiple values in one array field stack with \*\*logical OR\*\*. Results cover the merchant’s \*\*last two years\*\* of sales \(narrow further with \`start\_date\` / \`end\_date\`\). Results are sorted \*\*newest first\*\* by sale close date.
 
@@ -6897,8 +6895,8 @@ type SaleSearchRequest struct {
     // Min: 1
     // Max: 25
     PaginationLimit *int `json:"pagination_limit,omitempty"`
-    // Opaque pagination token from a previous search response. Not interchangeable with tokens
-    // from `GET /sales`.
+    // Opaque token from the previous search response. To load the next page, send it with
+    // the same filters. Not interchangeable with tokens from `GET /sales`.
     PaginationToken *string `json:"pagination_token,omitempty"`
     // Filters rows by payment outcome. Multiple values match any of them (**OR**). The search
     // row does not echo this value.
@@ -6915,20 +6913,21 @@ type SaleSearchRequest struct {
 ```
 
 <a name="SaleSearchResponse"></a>
-## type [SaleSearchResponse](<https://github.com/sumup/sumup-go/blob/main/sales.go#L843-L847>)
+## type [SaleSearchResponse](<https://github.com/sumup/sumup-go/blob/main/sales.go#L841-L846>)
 
 Search hits and an optional pagination token. Results are ordered \*\*newest first\*\* by sale close date.
 
 ```go
 type SaleSearchResponse struct {
     Items []SaleSearchItem `json:"items"`
-    // Opaque token for the next page of search results.
+    // Opaque token for the next page. Pass it as `pagination_token` in the next search
+    // request body with the same filters. Omitted when no further page is available.
     PaginationToken *string `json:"pagination_token,omitempty"`
 }
 ```
 
 <a name="SaleSource"></a>
-## type [SaleSource](<https://github.com/sumup/sumup-go/blob/main/sales.go#L850-L872>)
+## type [SaleSource](<https://github.com/sumup/sumup-go/blob/main/sales.go#L849-L871>)
 
 Information about the source of the sale.
 
@@ -6959,7 +6958,7 @@ type SaleSource struct {
 ```
 
 <a name="SaleStateV10"></a>
-## type [SaleStateV10](<https://github.com/sumup/sumup-go/blob/main/sales.go#L876>)
+## type [SaleStateV10](<https://github.com/sumup/sumup-go/blob/main/sales.go#L875>)
 
 Lifecycle state of the sale. Non\-finalised sales are never returned; only fully\-paid sales.
 
@@ -6987,7 +6986,7 @@ type SaleUpdatedEvent struct {
 ```
 
 <a name="SalesActivityCurrency"></a>
-## type [SalesActivityCurrency](<https://github.com/sumup/sumup-go/blob/main/sales.go#L883-L894>)
+## type [SalesActivityCurrency](<https://github.com/sumup/sumup-go/blob/main/sales.go#L882-L893>)
 
 The currency of the sale.
 
@@ -7007,7 +7006,7 @@ type SalesActivityCurrency struct {
 ```
 
 <a name="SalesChannelFilterV10"></a>
-## type [SalesChannelFilterV10](<https://github.com/sumup/sumup-go/blob/main/sales.go#L897>)
+## type [SalesChannelFilterV10](<https://github.com/sumup/sumup-go/blob/main/sales.go#L896>)
 
 Sale channel filter value. Multi\-select uses \*\*OR\*\* within this field.
 
@@ -7034,11 +7033,15 @@ const (
 ```
 
 <a name="SalesClient"></a>
-## type [SalesClient](<https://github.com/sumup/sumup-go/blob/main/sales.go#L1001-L1003>)
+## type [SalesClient](<https://github.com/sumup/sumup-go/blob/main/sales.go#L1004-L1006>)
 
 SalesClient provides access to the Sales API.
 
-Operations related to reading sales data.
+Read a merchant's fully\-paid, closed sales, including item lines, taxes, discounts, and payments.
+
+List sales to retrieve full \`Sale\` objects, or search by date, payment status, and sales channel to retrieve summaries. Use a summary's \`id\` to get the full sale.
+
+Amounts are expressed in minor units according to each sale's \`currency.scale\`.
 
 ```go
 type SalesClient struct {
@@ -7047,7 +7050,7 @@ type SalesClient struct {
 ```
 
 <a name="NewSalesClient"></a>
-### func [NewSalesClient](<https://github.com/sumup/sumup-go/blob/main/sales.go#L1005>)
+### func [NewSalesClient](<https://github.com/sumup/sumup-go/blob/main/sales.go#L1008>)
 
 ```go
 func NewSalesClient(c *client.Client) *SalesClient
@@ -7055,70 +7058,69 @@ func NewSalesClient(c *client.Client) *SalesClient
 
 
 
-<a name="SalesClient.GetSaleV10"></a>
-### func \(\*SalesClient\) [GetSaleV10](<https://github.com/sumup/sumup-go/blob/main/sales.go#L1095>)
+<a name="SalesClient.Get"></a>
+### func \(\*SalesClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/sales.go#L1098>)
 
 ```go
-func (c *SalesClient) GetSaleV10(ctx context.Context, merchantCode string, saleID string) (*Sale, error)
+func (c *SalesClient) Get(ctx context.Context, merchantCode string, saleID string) (*Sale, error)
 ```
 
 Returns \`Sale\` for \`sale\_id\`, including item lines and \`payments\[\]\`. Non\-finalised sales are never returned; only fully\-paid sales.
 
-<a name="SalesClient.ListSalesV10"></a>
-### func \(\*SalesClient\) [ListSalesV10](<https://github.com/sumup/sumup-go/blob/main/sales.go#L1057>)
+<a name="SalesClient.List"></a>
+### func \(\*SalesClient\) [List](<https://github.com/sumup/sumup-go/blob/main/sales.go#L1060>)
 
 ```go
-func (c *SalesClient) ListSalesV10(ctx context.Context, merchantCode string, params SalesListSalesV10Params) (*SalePage, error)
+func (c *SalesClient) List(ctx context.Context, merchantCode string, params SalesListParams) (*SalePage, error)
 ```
 
 Returns a paginated list of \`Sale\` objects. Results are sorted \*\*newest first\*\* by the \*\*newest event\*\* recorded for each sale. Pagination tokens follow that order.
 
 Covers the merchant’s \*\*last two years\*\* of sales. Non\-finalised sales are never returned; only fully\-paid sales. Use \`POST /sales/search\` for filtered queries.
 
-<a name="SalesClient.SearchSalesV10"></a>
-### func \(\*SalesClient\) [SearchSalesV10](<https://github.com/sumup/sumup-go/blob/main/sales.go#L1016>)
+<a name="SalesClient.Search"></a>
+### func \(\*SalesClient\) [Search](<https://github.com/sumup/sumup-go/blob/main/sales.go#L1019>)
 
 ```go
-func (c *SalesClient) SearchSalesV10(ctx context.Context, merchantCode string, body SalesSearchSalesV10Params) (*SaleSearchResponse, error)
+func (c *SalesClient) Search(ctx context.Context, merchantCode string, body SalesSearchParams) (*SaleSearchResponse, error)
 ```
 
 Returns a paginated list of \`SaleSearchItem\` rows matching filter criteria. Results are sorted \*\*newest first\*\* by \*\*sale close date\*\*.
 
 Filters from different categories stack with \*\*logical AND\*\*; multiple values in one array field stack with \*\*logical OR\*\*. Results cover the merchant’s \*\*last two years\*\* of sales \(narrow further with \`start\_date\` / \`end\_date\`\). Pagination tokens are not interchangeable with \`GET /sales\`.
 
-<a name="SalesListSalesV10Params"></a>
-## type [SalesListSalesV10Params](<https://github.com/sumup/sumup-go/blob/main/sales.go#L973-L981>)
+<a name="SalesListParams"></a>
+## type [SalesListParams](<https://github.com/sumup/sumup-go/blob/main/sales.go#L972-L979>)
 
-SalesListSalesV10Params are query parameters for ListSalesV10.
+SalesListParams are query parameters for ListSalesV10.
 
 ```go
-type SalesListSalesV10Params struct {
+type SalesListParams struct {
     // Maximum number of results per page.
     PaginationLimit *int
-    // Pagination token for subsequent requests. Should only be set by clients if they have
-    // received a token in the previous response, and this request is an immediate follow-up
-    // request to that response to load the subsequent page. Clients should treat this as an
-    // opaque token and should not attempt to parse it in any way.
+    // Opaque token from the previous list response. Omit it on the first request. To load
+    // the next page, pass the returned token unchanged. Not interchangeable with tokens
+    // from `POST /sales/search`.
     PaginationToken *string
 }
 ```
 
-<a name="SalesListSalesV10Params.QueryValues"></a>
-### func \(\*SalesListSalesV10Params\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/sales.go#L984>)
+<a name="SalesListParams.QueryValues"></a>
+### func \(\*SalesListParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/sales.go#L982>)
 
 ```go
-func (p *SalesListSalesV10Params) QueryValues() url.Values
+func (p *SalesListParams) QueryValues() url.Values
 ```
 
-QueryValues converts [SalesListSalesV10Params](<#SalesListSalesV10Params>) into \[url.Values\].
+QueryValues converts [SalesListParams](<#SalesListParams>) into \[url.Values\].
 
-<a name="SalesSearchSalesV10Params"></a>
-## type [SalesSearchSalesV10Params](<https://github.com/sumup/sumup-go/blob/main/sales.go#L970>)
+<a name="SalesSearchParams"></a>
+## type [SalesSearchParams](<https://github.com/sumup/sumup-go/blob/main/sales.go#L969>)
 
 
 
 ```go
-type SalesSearchSalesV10Params = SaleSearchRequest
+type SalesSearchParams = SaleSearchRequest
 ```
 
 <a name="StatusResponse"></a>
@@ -7377,7 +7379,7 @@ type SubaccountsUpdateSubAccountParamsPermissions struct {
 ```
 
 <a name="TaxLine"></a>
-## type [TaxLine](<https://github.com/sumup/sumup-go/blob/main/sales.go#L916-L939>)
+## type [TaxLine](<https://github.com/sumup/sumup-go/blob/main/sales.go#L915-L938>)
 
 Information about tax together with amounts before and after its application such as:
 
@@ -7412,7 +7414,7 @@ type TaxLine struct {
 ```
 
 <a name="TaxMode"></a>
-## type [TaxMode](<https://github.com/sumup/sumup-go/blob/main/sales.go#L949>)
+## type [TaxMode](<https://github.com/sumup/sumup-go/blob/main/sales.go#L948>)
 
 The tax mode used by merchant for displaying prices and calculating taxes: \- NO\_TAX: The prices don't contain any taxes, merchant don't report taxes \- GROSS: The prices used by merchant already include taxes \(common in EU\), the tax is calculated from the gross price \- NET: The prices used by merchant don't include taxes \(common in US\), the tax is calculated from the net price Since tax values can be different for the same net price depending if the tax was calculated from gross or net price, this info is necessary to be able to reconcile tax calculations.
 
@@ -8611,7 +8613,7 @@ const (
 ```
 
 <a name="UnitOfMeasure"></a>
-## type [UnitOfMeasure](<https://github.com/sumup/sumup-go/blob/main/sales.go#L958-L968>)
+## type [UnitOfMeasure](<https://github.com/sumup/sumup-go/blob/main/sales.go#L957-L967>)
 
 The unit of measure of the item.
 
