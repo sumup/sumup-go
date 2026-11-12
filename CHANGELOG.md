@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.22.1](https://github.com/sumup/sumup-go/compare/v0.22.0...v0.22.1) (2026-11-12)
+
+
+### Chores
+
+* **deps:** bump github.com/pb33f/libopenapi from 0.41.7 to 0.42.3 in /internal/cmd/codegen ([#366](https://github.com/sumup/sumup-go/issues/366)) ([733929d](https://github.com/sumup/sumup-go/commit/733929d7d7a769d979da1cdaf49afe6c5de70073))
+* **deps:** bump reviewdog/action-actionlint from 1.80.6 to 1.81.1 ([#365](https://github.com/sumup/sumup-go/issues/365)) ([8f7e7cf](https://github.com/sumup/sumup-go/commit/8f7e7cf3737689679a1fe16f51680663e5016a07))
+* synced file(s) with sumup/apis ([#361](https://github.com/sumup/sumup-go/issues/361)) ([1809333](https://github.com/sumup/sumup-go/commit/1809333854e46177bd174035f13cff53a53dc4f0))
+* synced file(s) with sumup/apis ([#362](https://github.com/sumup/sumup-go/issues/362)) ([2bff583](https://github.com/sumup/sumup-go/commit/2bff583b686d1bb98490a05e0d8e031eae9b1be8))
+* synced file(s) with sumup/apis ([#364](https://github.com/sumup/sumup-go/issues/364)) ([bc2e63b](https://github.com/sumup/sumup-go/commit/bc2e63bfda80db6a88626bf26724d9791d6159b0))
+* synced file(s) with sumup/apis ([#367](https://github.com/sumup/sumup-go/issues/367)) ([7a23ad5](https://github.com/sumup/sumup-go/commit/7a23ad5d5fd8fb98a2c3c2775d95778904d55928))
+* synced file(s) with sumup/apis ([#368](https://github.com/sumup/sumup-go/issues/368)) ([3c4e262](https://github.com/sumup/sumup-go/commit/3c4e2621197f1e5b57b78ecdc3be1b9251c631a1))
+
 ## [0.22.0](https://github.com/sumup/sumup-go/compare/v0.21.0...v0.22.0) (2026-11-03)
 
 
