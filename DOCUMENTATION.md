@@ -28,7 +28,6 @@ import "github.com/sumup/sumup-go"
 - [type Card](<#Card>)
 - [type CardResponse](<#CardResponse>)
 - [type CardType](<#CardType>)
-- [type CategoryV10](<#CategoryV10>)
 - [type Checkout](<#Checkout>)
 - [type CheckoutAccepted](<#CheckoutAccepted>)
 - [type CheckoutAcceptedNextStep](<#CheckoutAcceptedNextStep>)
@@ -178,8 +177,6 @@ import "github.com/sumup/sumup-go"
   - [func \(h \*EventsHandler\) OnSaleUpdated\(callback func\(context.Context, \*SaleUpdatedEvent\) error\) error](<#EventsHandler.OnSaleUpdated>)
   - [func \(h \*EventsHandler\) Parse\(payload \[\]byte, signature string\) \(EventNotification, error\)](<#EventsHandler.Parse>)
   - [func \(h \*EventsHandler\) String\(\) string](<#EventsHandler.String>)
-- [type FeatureV10](<#FeatureV10>)
-- [type FeatureValueTypeV10](<#FeatureValueTypeV10>)
 - [type FinalPriceAmounts](<#FinalPriceAmounts>)
 - [type FinancialPayout](<#FinancialPayout>)
 - [type FinancialPayoutStatus](<#FinancialPayoutStatus>)
@@ -196,9 +193,6 @@ import "github.com/sumup/sumup-go"
 - [type GetReaderSettingsResponseDataMenuLock](<#GetReaderSettingsResponseDataMenuLock>)
 - [type HostedCheckout](<#HostedCheckout>)
 - [type Invite](<#Invite>)
-- [type ItemReferencesV10](<#ItemReferencesV10>)
-- [type ItemReferencesV10CatalogSource](<#ItemReferencesV10CatalogSource>)
-- [type LineItemPriceV10](<#LineItemPriceV10>)
 - [type Link](<#Link>)
 - [type ListPersonsResponseBody](<#ListPersonsResponseBody>)
 - [type MandatePayload](<#MandatePayload>)
@@ -256,7 +250,6 @@ import "github.com/sumup/sumup-go"
 - [type PaymentInstrumentResponse](<#PaymentInstrumentResponse>)
 - [type PaymentInstrumentResponseCard](<#PaymentInstrumentResponseCard>)
 - [type PaymentInstrumentResponseType](<#PaymentInstrumentResponseType>)
-- [type PaymentStatusFilterV10](<#PaymentStatusFilterV10>)
 - [type PaymentType](<#PaymentType>)
 - [type PayoutsClient](<#PayoutsClient>)
   - [func NewPayoutsClient\(c \*client.Client\) \*PayoutsClient](<#NewPayoutsClient>)
@@ -276,16 +269,9 @@ import "github.com/sumup/sumup-go"
 - [type PriceAmounts](<#PriceAmounts>)
 - [type Problem](<#Problem>)
   - [func \(e \*Problem\) Error\(\) string](<#Problem.Error>)
-- [type ProblemV10](<#ProblemV10>)
-  - [func \(e \*ProblemV10\) Error\(\) string](<#ProblemV10.Error>)
 - [type ProcessCheckout](<#ProcessCheckout>)
 - [type ProcessCheckoutPaymentType](<#ProcessCheckoutPaymentType>)
 - [type Product](<#Product>)
-- [type PublicCardV10](<#PublicCardV10>)
-- [type PublicCardV10Type](<#PublicCardV10Type>)
-- [type PublicGiftCardPayment](<#PublicGiftCardPayment>)
-- [type PublicPaymentV10](<#PublicPaymentV10>)
-- [type PublicPaymentV10Status](<#PublicPaymentV10Status>)
 - [type Reader](<#Reader>)
 - [type ReaderCreatedEvent](<#ReaderCreatedEvent>)
 - [type ReaderDeletedEvent](<#ReaderDeletedEvent>)
@@ -351,19 +337,31 @@ import "github.com/sumup/sumup-go"
 - [type RolesListResponse](<#RolesListResponse>)
 - [type RolesUpdateParams](<#RolesUpdateParams>)
 - [type Sale](<#Sale>)
+- [type SaleChannelFilter](<#SaleChannelFilter>)
 - [type SaleCompletedEvent](<#SaleCompletedEvent>)
-- [type SaleLineItemV10](<#SaleLineItemV10>)
-- [type SaleLineItemV10ServiceType](<#SaleLineItemV10ServiceType>)
+- [type SaleGiftCardPayment](<#SaleGiftCardPayment>)
+- [type SaleItem](<#SaleItem>)
+- [type SaleItemCategory](<#SaleItemCategory>)
+- [type SaleItemFeature](<#SaleItemFeature>)
+- [type SaleItemFeatureValueType](<#SaleItemFeatureValueType>)
+- [type SaleItemPrice](<#SaleItemPrice>)
+- [type SaleItemReferences](<#SaleItemReferences>)
+- [type SaleItemReferencesCatalogSource](<#SaleItemReferencesCatalogSource>)
+- [type SaleItemServiceType](<#SaleItemServiceType>)
+- [type SaleLifecycleState](<#SaleLifecycleState>)
 - [type SalePage](<#SalePage>)
-- [type SalePriceV10](<#SalePriceV10>)
+- [type SalePayment](<#SalePayment>)
+- [type SalePaymentCard](<#SalePaymentCard>)
+- [type SalePaymentCardType](<#SalePaymentCardType>)
+- [type SalePaymentStatus](<#SalePaymentStatus>)
+- [type SalePaymentStatusFilter](<#SalePaymentStatusFilter>)
 - [type SaleSearchItem](<#SaleSearchItem>)
 - [type SaleSearchRequest](<#SaleSearchRequest>)
 - [type SaleSearchResponse](<#SaleSearchResponse>)
 - [type SaleSource](<#SaleSource>)
-- [type SaleStateV10](<#SaleStateV10>)
+- [type SaleTotals](<#SaleTotals>)
 - [type SaleUpdatedEvent](<#SaleUpdatedEvent>)
 - [type SalesActivityCurrency](<#SalesActivityCurrency>)
-- [type SalesChannelFilterV10](<#SalesChannelFilterV10>)
 - [type SalesClient](<#SalesClient>)
   - [func NewSalesClient\(c \*client.Client\) \*SalesClient](<#NewSalesClient>)
   - [func \(c \*SalesClient\) Get\(ctx context.Context, merchantCode string, saleID string\) \(\*Sale, error\)](<#SalesClient.Get>)
@@ -996,22 +994,6 @@ const (
     CardTypeVpay         CardType = "VPAY"
     CardTypeVr           CardType = "VR"
 )
-```
-
-<a name="CategoryV10"></a>
-## type [CategoryV10](<https://github.com/sumup/sumup-go/blob/main/sales.go#L20-L27>)
-
-A category a line belongs to.
-
-```go
-type CategoryV10 struct {
-    // The category id. Usually a UUID, but not always (legacy cases).
-    // Max length: 100
-    ID  string `json:"id"`
-    // The category name.
-    // Max length: 30
-    Name string `json:"name"`
-}
 ```
 
 <a name="Checkout"></a>
@@ -2803,7 +2785,7 @@ type Device struct {
 ```
 
 <a name="DiscountApplicationMode"></a>
-## type [DiscountApplicationMode](<https://github.com/sumup/sumup-go/blob/main/sales.go#L30>)
+## type [DiscountApplicationMode](<https://github.com/sumup/sumup-go/blob/main/sales.go#L19>)
 
 Method of applying the discount to the items or cart.
 
@@ -2821,7 +2803,7 @@ const (
 ```
 
 <a name="DiscountClas"></a>
-## type [DiscountClas](<https://github.com/sumup/sumup-go/blob/main/sales.go#L41>)
+## type [DiscountClas](<https://github.com/sumup/sumup-go/blob/main/sales.go#L30>)
 
 The method used to target items to discount. Must be populated for ITEM level discounts, and must be null for CART level discounts \(CART level targets all
 
@@ -2844,7 +2826,7 @@ const (
 ```
 
 <a name="DiscountLine"></a>
-## type [DiscountLine](<https://github.com/sumup/sumup-go/blob/main/sales.go#L52-L93>)
+## type [DiscountLine](<https://github.com/sumup/sumup-go/blob/main/sales.go#L41-L82>)
 
 Object representing information about single discount line.
 
@@ -2894,7 +2876,7 @@ type DiscountLine struct {
 ```
 
 <a name="DiscountSource"></a>
-## type [DiscountSource](<https://github.com/sumup/sumup-go/blob/main/sales.go#L96-L107>)
+## type [DiscountSource](<https://github.com/sumup/sumup-go/blob/main/sales.go#L85-L96>)
 
 The source of discount. Exactly one property must be set.
 
@@ -2914,7 +2896,7 @@ type DiscountSource struct {
 ```
 
 <a name="DiscountSourceAdHoc"></a>
-## type [DiscountSourceAdHoc](<https://github.com/sumup/sumup-go/blob/main/sales.go#L110-L120>)
+## type [DiscountSourceAdHoc](<https://github.com/sumup/sumup-go/blob/main/sales.go#L99-L109>)
 
 Discount created ad\-hoc on device during checkout.
 
@@ -2933,7 +2915,7 @@ type DiscountSourceAdHoc struct {
 ```
 
 <a name="DiscountSourceBasic"></a>
-## type [DiscountSourceBasic](<https://github.com/sumup/sumup-go/blob/main/sales.go#L123-L135>)
+## type [DiscountSourceBasic](<https://github.com/sumup/sumup-go/blob/main/sales.go#L112-L124>)
 
 Preset discount applied manually on the POS.
 
@@ -2954,7 +2936,7 @@ type DiscountSourceBasic struct {
 ```
 
 <a name="DiscountSourceCoupon"></a>
-## type [DiscountSourceCoupon](<https://github.com/sumup/sumup-go/blob/main/sales.go#L138-L158>)
+## type [DiscountSourceCoupon](<https://github.com/sumup/sumup-go/blob/main/sales.go#L127-L147>)
 
 Discount applied manually when entering a coupon code at checkout.
 
@@ -2983,7 +2965,7 @@ type DiscountSourceCoupon struct {
 ```
 
 <a name="DiscountSourceLoyalty"></a>
-## type [DiscountSourceLoyalty](<https://github.com/sumup/sumup-go/blob/main/sales.go#L161-L189>)
+## type [DiscountSourceLoyalty](<https://github.com/sumup/sumup-go/blob/main/sales.go#L150-L178>)
 
 Discount applied when redeeming a reward from the merchant's loyalty scheme.
 
@@ -3020,7 +3002,7 @@ type DiscountSourceLoyalty struct {
 ```
 
 <a name="DiscountSourceLoyaltySchemeType"></a>
-## type [DiscountSourceLoyaltySchemeType](<https://github.com/sumup/sumup-go/blob/main/sales.go#L192>)
+## type [DiscountSourceLoyaltySchemeType](<https://github.com/sumup/sumup-go/blob/main/sales.go#L181>)
 
 The scheme type of the loyalty program.
 
@@ -3038,7 +3020,7 @@ const (
 ```
 
 <a name="DiscountSourceLoyaltyType"></a>
-## type [DiscountSourceLoyaltyType](<https://github.com/sumup/sumup-go/blob/main/sales.go#L201>)
+## type [DiscountSourceLoyaltyType](<https://github.com/sumup/sumup-go/blob/main/sales.go#L190>)
 
 The type of loyalty discount, either a promotion \(e.g. new customer discount\) or a reward \(free coffee after completing stamp card\).
 
@@ -3056,7 +3038,7 @@ const (
 ```
 
 <a name="DiscountSourceOffer"></a>
-## type [DiscountSourceOffer](<https://github.com/sumup/sumup-go/blob/main/sales.go#L209-L226>)
+## type [DiscountSourceOffer](<https://github.com/sumup/sumup-go/blob/main/sales.go#L198-L215>)
 
 Discount applied automatically when cart is updated based on preset promotions.
 
@@ -3082,7 +3064,7 @@ type DiscountSourceOffer struct {
 ```
 
 <a name="DiscountValue"></a>
-## type [DiscountValue](<https://github.com/sumup/sumup-go/blob/main/sales.go#L233-L248>)
+## type [DiscountValue](<https://github.com/sumup/sumup-go/blob/main/sales.go#L222-L237>)
 
 The value type of the discount, either a percentage based or absolute monetary value.
 
@@ -3504,67 +3486,8 @@ func (h *EventsHandler) String() string
 
 String describes registered callbacks without exposing the signing secret.
 
-<a name="FeatureV10"></a>
-## type [FeatureV10](<https://github.com/sumup/sumup-go/blob/main/sales.go#L275-L288>)
-
-A named, typed characteristic of a line. New item types add data here instead of a typed sub\-object per type.
-
-Examples by item type \(illustrative, not exhaustive\):
-
-- DEPOSIT: \`operation\_type\` = "SALE", \`linked\_line\_id\` = "line\-1"
-- GIFT\_CARD: \`gift\_card\_reference\` = "GCMINGXPC5"
-- CATALOG: \`variant\_name\` = "Large", \`item\_id\` / \`variant\_id\` \(TEXT\), \`reporting\_category\_id\` = "cat\-..."
-- FEE: \`fee\_type\` = "SHIPPING" \(required\); optional \`fee\_id\`, \`value\_absolute\` or \`value\_percentage\`, and per\-type metadata features such as \`delivery\_name\` / \`tracking\_reference\` \(shipping\), \`card\_type\` / \`scheme\` \(surcharge\), or \`policy\_id\` \(cancellation\)
-- \(future\) SUBSCRIPTION: \`billing\_period\` = "P1M", \`renews\_at\` = "2026\-07\-02"
-
-Conventional \`FEE\` feature keys:
-
-- \`fee\_type\` \(TEXT, required\): \`SHIPPING\`, \`SURCHARGE\`, \`SERVICE\_CHARGE\`, or \`CANCELLATION\`
-- \`fee\_id\` \(TEXT, optional\): identifier of the fee definition
-- \`value\_absolute\` \(INTEGER, optional\): configured absolute value in minor units of the sale currency \(the charged amount is on \`price\`\)
-- \`value\_percentage\` \(INTEGER, optional\): configured percentage in minor units \(1/100000; e.g. 10000 = 10%\)
-- Per\-type metadata \(optional, TEXT unless noted\): \`delivery\_name\`, \`tracking\_reference\` \(shipping\); \`card\_type\`, \`scheme\` \(surcharge\); \`policy\_id\` \(cancellation\)
-
-```go
-type FeatureV10 struct {
-    // The feature name/key.
-    // Max length: 100
-    Name string `json:"name"`
-    // The feature value in canonical string form, to be parsed per `value_type`
-    // (e.g. INTEGER -> "3", DECIMAL -> "1.50", DATE -> "2026-07-02",
-    // BOOLEAN -> "true"). Carrying it as a string keeps the wire format stable as
-    // new feature names and value types are introduced.
-    // Max length: 1000
-    Value string `json:"value"`
-    // The data type of a feature value. The wire `value` is always a string and is parsed
-    // according to this type.
-    ValueType FeatureValueTypeV10 `json:"value_type"`
-}
-```
-
-<a name="FeatureValueTypeV10"></a>
-## type [FeatureValueTypeV10](<https://github.com/sumup/sumup-go/blob/main/sales.go#L292>)
-
-The data type of a feature value. The wire \`value\` is always a string and is parsed according to this type.
-
-```go
-type FeatureValueTypeV10 string
-```
-
-<a name="FeatureValueTypeV10Boolean"></a>
-
-```go
-const (
-    FeatureValueTypeV10Boolean FeatureValueTypeV10 = "BOOLEAN"
-    FeatureValueTypeV10Date    FeatureValueTypeV10 = "DATE"
-    FeatureValueTypeV10Decimal FeatureValueTypeV10 = "DECIMAL"
-    FeatureValueTypeV10Integer FeatureValueTypeV10 = "INTEGER"
-    FeatureValueTypeV10Text    FeatureValueTypeV10 = "TEXT"
-)
-```
-
 <a name="FinalPriceAmounts"></a>
-## type [FinalPriceAmounts](<https://github.com/sumup/sumup-go/blob/main/sales.go#L303-L330>)
+## type [FinalPriceAmounts](<https://github.com/sumup/sumup-go/blob/main/sales.go#L240-L267>)
 
 Final price amounts after all calculations and adjustments.
 
@@ -3875,96 +3798,6 @@ type Invite struct {
     // Format: email
     Email     string    `json:"email"`
     ExpiresAt time.Time `json:"expires_at"`
-}
-```
-
-<a name="ItemReferencesV10"></a>
-## type [ItemReferencesV10](<https://github.com/sumup/sumup-go/blob/main/sales.go#L334-L352>)
-
-Outward identifiers and links for a line, kept in one place rather than scattered per item type.
-
-```go
-type ItemReferencesV10 struct {
-    // Reference to the backing catalog entity (item variant, deposit, ...),
-    // typically a URN such as
-    // `urn:sumup:pos:variant:${MERCHANT_CODE}:${ITEM_ID}:${VARIANT_ID}` or
-    // `urn:sumup:pos:deposit:${MERCHANT_CODE}:${DEPOSIT_ID}`.
-    // Empty for ad-hoc / manual lines. Type-agnostic on purpose: a new item type
-    // backed by a catalog entity reuses this field instead of adding its own.
-    // Max length: 255
-    CatalogReference *string `json:"catalog_reference,omitempty"`
-    // The source of the catalog the line originates from.
-    // Default: SUMUP
-    CatalogSource *ItemReferencesV10CatalogSource `json:"catalog_source,omitempty"`
-    // An external reference id connecting this line to another system.
-    // Max length: 250
-    ExternalID *string `json:"external_id,omitempty"`
-    // Stock keeping unit, enriched from the Catalog when available.
-    // Max length: 100
-    Sku *string `json:"sku,omitempty"`
-}
-```
-
-<a name="ItemReferencesV10CatalogSource"></a>
-## type [ItemReferencesV10CatalogSource](<https://github.com/sumup/sumup-go/blob/main/sales.go#L356>)
-
-The source of the catalog the line originates from. Default: SUMUP
-
-```go
-type ItemReferencesV10CatalogSource string
-```
-
-<a name="ItemReferencesV10CatalogSourceExternal"></a>
-
-```go
-const (
-    ItemReferencesV10CatalogSourceExternal ItemReferencesV10CatalogSource = "EXTERNAL"
-    ItemReferencesV10CatalogSourceSumup    ItemReferencesV10CatalogSource = "SUMUP"
-)
-```
-
-<a name="LineItemPriceV10"></a>
-## type [LineItemPriceV10](<https://github.com/sumup/sumup-go/blob/main/sales.go#L370-L402>)
-
-Pricing for a single line, valid for every item type.
-
-Merges the standard amounts \(with tax breakdown\) and the final amounts \(after discounts/modifiers\).
-
-Totals and tax amounts can be negative for return\-like operations \(for example a deposit with \`operation\_type\` = \`RETURN\`\).
-
-```go
-type LineItemPriceV10 struct {
-    // Discounts applied. Discount amounts do not affect `total_net_amount` /
-    // `total_gross_amount`; they are reflected in the `*_final` amounts.
-    // Max items: 1000
-    Discounts []DiscountLine `json:"discounts,omitempty"`
-    // Taxes applied on top of the net amount resulting in the gross amount.
-    // Min items: 1
-    // Max items: 1000
-    Taxes []TaxLine `json:"taxes"`
-    // Taxes applied on top of `total_net_amount_final` resulting in `total_gross_amount_final`. Equals `taxes` if
-    // no discounts apply.
-    // Min items: 1
-    // Max items: 1000
-    TaxesFinal []TaxLine `json:"taxes_final"`
-    // The gross amount (including modifiers if applied). It does NOT include discounts.
-    // Format: int64
-    TotalGrossAmount int64 `json:"total_gross_amount"`
-    // The final gross amount including discounts, modifiers and taxes. Equals `total_gross_amount` if no discounts apply.
-    //
-    // Format: int64
-    TotalGrossAmountFinal int64 `json:"total_gross_amount_final"`
-    // The net amount (including modifiers if applied). It does NOT include discounts.
-    // Format: int64
-    TotalNetAmount int64 `json:"total_net_amount"`
-    // The final net amount including discounts and modifiers. Equals `total_net_amount` if no discounts apply.
-    // Format: int64
-    TotalNetAmountFinal int64 `json:"total_net_amount_final"`
-    // The price of a single unit. If the tax_mode is GROSS it includes taxes,
-    // otherwise no tax is included. It does NOT include discounts.
-    // Format: int64
-    // Min: 0
-    UnitAmount int64 `json:"unit_amount"`
 }
 ```
 
@@ -4810,7 +4643,7 @@ type Metadata map[string]any
 ```
 
 <a name="ModifierItem"></a>
-## type [ModifierItem](<https://github.com/sumup/sumup-go/blob/main/sales.go#L406>)
+## type [ModifierItem](<https://github.com/sumup/sumup-go/blob/main/sales.go#L271>)
 
 Modifiers are reported under line items and can be build from Item Catalog objects. Modifiers has to be attached to an item and can't be sold and refunded alone.
 
@@ -4819,7 +4652,7 @@ type ModifierItem = json.RawMessage
 ```
 
 <a name="ModifierSet"></a>
-## type [ModifierSet](<https://github.com/sumup/sumup-go/blob/main/sales.go#L409-L417>)
+## type [ModifierSet](<https://github.com/sumup/sumup-go/blob/main/sales.go#L274-L282>)
 
 Modifier set attached to an item.
 
@@ -4981,24 +4814,6 @@ type PaymentInstrumentResponseType string
 ```go
 const (
     PaymentInstrumentResponseTypeCard PaymentInstrumentResponseType = "card"
-)
-```
-
-<a name="PaymentStatusFilterV10"></a>
-## type [PaymentStatusFilterV10](<https://github.com/sumup/sumup-go/blob/main/sales.go#L423>)
-
-Payment outcome filter value. Multi\-select uses \*\*OR\*\* within this field; combined with other filters using \*\*AND\*\*. Only fully\-paid closed sales are exposed. Refunded original sales remain searchable as \`PAID\`; refunds are separate negative sales, not a \`REFUNDED\` sale\-search outcome.
-
-```go
-type PaymentStatusFilterV10 string
-```
-
-<a name="PaymentStatusFilterV10ChargedBack"></a>
-
-```go
-const (
-    PaymentStatusFilterV10ChargedBack PaymentStatusFilterV10 = "CHARGED_BACK"
-    PaymentStatusFilterV10Paid        PaymentStatusFilterV10 = "PAID"
 )
 ```
 
@@ -5260,7 +5075,7 @@ type PersonalDetails struct {
 ```
 
 <a name="PositivePriceAmounts"></a>
-## type [PositivePriceAmounts](<https://github.com/sumup/sumup-go/blob/main/sales.go#L431-L444>)
+## type [PositivePriceAmounts](<https://github.com/sumup/sumup-go/blob/main/sales.go#L285-L298>)
 
 Price information for items with positive amounts only.
 
@@ -5282,7 +5097,7 @@ type PositivePriceAmounts struct {
 ```
 
 <a name="PositivePriceWithTaxes"></a>
-## type [PositivePriceWithTaxes](<https://github.com/sumup/sumup-go/blob/main/sales.go#L447-L452>)
+## type [PositivePriceWithTaxes](<https://github.com/sumup/sumup-go/blob/main/sales.go#L301-L306>)
 
 Price information with positive amounts and detailed tax breakdown.
 
@@ -5296,7 +5111,7 @@ type PositivePriceWithTaxes struct {
 ```
 
 <a name="PositiveTaxLine"></a>
-## type [PositiveTaxLine](<https://github.com/sumup/sumup-go/blob/main/sales.go#L460-L483>)
+## type [PositiveTaxLine](<https://github.com/sumup/sumup-go/blob/main/sales.go#L314-L337>)
 
 Tax line with positive amounts only. Information about tax together with amounts before and after its application such as:
 
@@ -5333,7 +5148,7 @@ type PositiveTaxLine struct {
 ```
 
 <a name="PriceAmounts"></a>
-## type [PriceAmounts](<https://github.com/sumup/sumup-go/blob/main/sales.go#L486-L499>)
+## type [PriceAmounts](<https://github.com/sumup/sumup-go/blob/main/sales.go#L340-L353>)
 
 Base price information for items including unit amount and totals.
 
@@ -5383,39 +5198,6 @@ type Problem struct {
 
 ```go
 func (e *Problem) Error() string
-```
-
-
-
-<a name="ProblemV10"></a>
-## type [ProblemV10](<https://github.com/sumup/sumup-go/blob/main/sales.go#L504-L517>)
-
-A RFC 9457 problem details object.
-
-Additional properties specific to the problem type may be present.
-
-```go
-type ProblemV10 struct {
-    // A human-readable explanation specific to this occurrence of the problem.
-    Detail *string `json:"detail,omitempty"`
-    // A URI reference that identifies the specific occurrence of the problem.
-    // Format: uri
-    Instance *string `json:"instance,omitempty"`
-    // The HTTP status code generated by the origin server for this occurrence of the problem.
-    Status *int `json:"status,omitempty"`
-    // A short, human-readable summary of the problem type.
-    Title *string `json:"title,omitempty"`
-    // A URI reference that identifies the problem type.
-    // Format: uri
-    Type string `json:"type"`
-}
-```
-
-<a name="ProblemV10.Error"></a>
-### func \(\*ProblemV10\) [Error](<https://github.com/sumup/sumup-go/blob/main/sales.go#L519>)
-
-```go
-func (e *ProblemV10) Error() string
 ```
 
 
@@ -5510,134 +5292,6 @@ type Product struct {
     // Format: decimal
     VATRate *float64 `json:"vat_rate,omitempty"`
 }
-```
-
-<a name="PublicCardV10"></a>
-## type [PublicCardV10](<https://github.com/sumup/sumup-go/blob/main/sales.go#L526-L541>)
-
-Card brand, credit/debit processing type, and last four digits.
-
-```go
-type PublicCardV10 struct {
-    // The brand of the card.
-    // Input is case-insensitive; the canonical form is lowercase snake_case.
-    // **VALUES**: [amex, cup, diners, discover, elo, elv, hipercard, jcb, maestro, mastercard, visa, visa_electron,
-    // visa_vpay, vr, eftpos, conecs, swile, girocard, interac, sumup, bancomat].
-    // Max length: 20
-    Brand string `json:"brand"`
-    // The last 4 digits of the card used for the payment.
-    // Min length: 4
-    // Max length: 4
-    // Pattern: ^\d{4}$
-    Last4Digits string `json:"last_4_digits"`
-    // Credit or debit processing choice, not brand or funding.
-    // `unknown` when unavailable; prepaid/voucher are not processing types.
-    Type PublicCardV10Type `json:"type"`
-}
-```
-
-<a name="PublicCardV10Type"></a>
-## type [PublicCardV10Type](<https://github.com/sumup/sumup-go/blob/main/sales.go#L545>)
-
-Credit or debit processing choice, not brand or funding. \`unknown\` when unavailable; prepaid/voucher are not processing types.
-
-```go
-type PublicCardV10Type string
-```
-
-<a name="PublicCardV10TypeCredit"></a>
-
-```go
-const (
-    PublicCardV10TypeCredit  PublicCardV10Type = "credit"
-    PublicCardV10TypeDebit   PublicCardV10Type = "debit"
-    PublicCardV10TypeUnknown PublicCardV10Type = "unknown"
-)
-```
-
-<a name="PublicGiftCardPayment"></a>
-## type [PublicGiftCardPayment](<https://github.com/sumup/sumup-go/blob/main/sales.go#L557-L561>)
-
-Gift card used for this payment. Present when \`method\` is \`gift\_card\` and the gift card id is known. Gift card IDs use the format "GC" followed by 9 alphanumeric characters \(e.g. GCZ3NTMB1V\).
-
-```go
-type PublicGiftCardPayment struct {
-    // Gift card identifier. Format "GC" followed by 9 alphanumeric characters
-    // (e.g. GCZ3NTMB1V).
-    ID string `json:"id"`
-}
-```
-
-<a name="PublicPaymentV10"></a>
-## type [PublicPaymentV10](<https://github.com/sumup/sumup-go/blob/main/sales.go#L567-L609>)
-
-Payment on a closed sale, for bookkeeping and reconciliation.
-
-Acquirer/processing cost is not on this object. Merchant\-charged fees \(shipping, service charge, etc.\) appear as \`type: "FEE"\` item lines in \`Sale.items\`.
-
-```go
-type PublicPaymentV10 struct {
-    // The amount of the payment including tips.
-    // The value of the amount in minor units of `Sale.currency`.
-    // Format: int64
-    // Min: 0
-    Amount int64 `json:"amount"`
-    // Alternative payment method type when `method` is `apm`.
-    // Gift card is not an APM on this API.
-    // Values use lowercase snake_case. Known values are `qr_code_pix`, `sepa_dd`, `paypal`,
-    // `sumup_pay`, `twint`, and `iris`.
-    // Additional values may be returned as new alternative payment methods become available.
-    // Max length: 20
-    ApmType *string `json:"apm_type,omitempty"`
-    // Card brand, credit/debit processing type, and last four digits.
-    Card *PublicCardV10 `json:"card,omitempty"`
-    // Gift card used for this payment. Present when `method` is `gift_card` and the gift card
-    // id is known.
-    // Gift card IDs use the format "GC" followed by 9 alphanumeric characters
-    // (e.g. GCZ3NTMB1V).
-    GiftCard *PublicGiftCardPayment `json:"gift_card,omitempty"`
-    // Payment method on public sales read API v1.0.
-    // Digital wallets are first-class methods. Gift card payments use `gift_card`, not `apm`.
-    // Values use lowercase snake_case. Known values are `card`, `cash`, `apm`, `external`,
-    // `apple_pay`, `google_pay`, `whatsapp_pay`, and `gift_card`.
-    // Additional values may be returned as new payment methods become available.
-    // Max length: 20
-    Method string `json:"method"`
-    // UTC date-time when SumUp recorded this payment’s exposed `status` (successful, failed,
-    // or canceled). Server processed time when available; otherwise the payment provider’s
-    // transaction time. Not the device clock.
-    ProcessedAt time.Time `json:"processed_at"`
-    // The reference to the actual payment used for this sale, e.g. the sumup transaction code.
-    // Max length: 50
-    Reference string `json:"reference"`
-    // The status of the payment.
-    Status PublicPaymentV10Status `json:"status"`
-    // Payment operation type.
-    // This is distinct from the payment instrument in `method`.
-    // Values use lowercase snake_case. Known values are `purchase` for a normal purchase
-    // and `unreferenced_refund` for negative sales such as deposit returns.
-    // Default: purchase
-    Type string `json:"type"`
-}
-```
-
-<a name="PublicPaymentV10Status"></a>
-## type [PublicPaymentV10Status](<https://github.com/sumup/sumup-go/blob/main/sales.go#L612>)
-
-The status of the payment.
-
-```go
-type PublicPaymentV10Status string
-```
-
-<a name="PublicPaymentV10StatusCanceled"></a>
-
-```go
-const (
-    PublicPaymentV10StatusCanceled   PublicPaymentV10Status = "CANCELED"
-    PublicPaymentV10StatusFailed     PublicPaymentV10Status = "FAILED"
-    PublicPaymentV10StatusSuccessful PublicPaymentV10Status = "SUCCESSFUL"
-)
 ```
 
 <a name="Reader"></a>
@@ -6646,13 +6300,13 @@ type RolesUpdateParams struct {
 ```
 
 <a name="Sale"></a>
-## type [Sale](<https://github.com/sumup/sumup-go/blob/main/sales.go#L626-L673>)
+## type [Sale](<https://github.com/sumup/sumup-go/blob/main/sales.go#L361-L408>)
 
 Core model of the Sales API. Returned by \`GET /sales\` and \`GET /sales/\{sale\_id\}\`.
 
 Non\-finalised sales are never returned; only fully\-paid sales.
 
-Item lines are \`SaleLineItem\`. Merchant fees appear as \`type: "FEE"\` lines; extra fee data is in \`features\`.
+Item lines are \`SaleItem\`. Merchant fees appear as \`type: "FEE"\` lines; extra fee data is in \`features\`.
 
 ```go
 type Sale struct {
@@ -6668,7 +6322,7 @@ type Sale struct {
     // Includes merchant fees (`type: "FEE"`) when present; fee details are in `features`.
     // Min items: 1
     // Max items: 1000
-    Items []SaleLineItemV10 `json:"items"`
+    Items []SaleItem `json:"items"`
     // Human-readable name of the sale (not unique, not the sale id).
     // Max length: 160
     Name *string `json:"name,omitempty"`
@@ -6677,18 +6331,18 @@ type Sale struct {
     Note *string `json:"note,omitempty"`
     // Payments on this sale, in the order they were recorded.
     // Max items: 1000
-    Payments []PublicPaymentV10 `json:"payments"`
-    // Sale-level pricing aggregate, parallel to `LineItemPrice` on each `SaleLineItem`.
+    Payments []SalePayment `json:"payments"`
+    // Sale-level pricing aggregate, parallel to `SaleItemPrice` on each `SaleItem`.
     //
     // Line-level breakdown (unit price, line discounts, per-line taxes) lives on
     // `items[].price`. This object holds the rolled-up totals and cart-level
     // adjustments that consumers use for receipts and payment reconciliation.
-    Price SalePriceV10 `json:"price"`
+    Price SaleTotals `json:"price"`
     // Information about the source of the sale.
     Source SaleSource `json:"source"`
     // Lifecycle state of the sale.
     // Non-finalised sales are never returned; only fully-paid sales.
-    State SaleStateV10 `json:"state"`
+    State SaleLifecycleState `json:"state"`
     // The tax mode used by merchant for displaying prices and calculating taxes:
     // - NO_TAX: The prices don't contain any taxes, merchant don't report taxes
     // - GROSS: The prices used by merchant already include taxes (common in EU), the tax is calculated from the
@@ -6705,6 +6359,33 @@ type Sale struct {
 }
 ```
 
+<a name="SaleChannelFilter"></a>
+## type [SaleChannelFilter](<https://github.com/sumup/sumup-go/blob/main/sales.go#L411>)
+
+Sale channel filter value. Multi\-select uses \*\*OR\*\* within this field.
+
+```go
+type SaleChannelFilter string
+```
+
+<a name="SaleChannelFilterBookings"></a>
+
+```go
+const (
+    SaleChannelFilterBookings        SaleChannelFilter = "BOOKINGS"
+    SaleChannelFilterInvoice         SaleChannelFilter = "INVOICE"
+    SaleChannelFilterKiosk           SaleChannelFilter = "KIOSK"
+    SaleChannelFilterOnlinePayments  SaleChannelFilter = "ONLINE_PAYMENTS"
+    SaleChannelFilterOnlineStore     SaleChannelFilter = "ONLINE_STORE"
+    SaleChannelFilterOrderAggregator SaleChannelFilter = "ORDER_AGGREGATOR"
+    SaleChannelFilterOrderAndPay     SaleChannelFilter = "ORDER_AND_PAY"
+    SaleChannelFilterPOS             SaleChannelFilter = "POS"
+    SaleChannelFilterSolo            SaleChannelFilter = "SOLO"
+    SaleChannelFilterSubscriptions   SaleChannelFilter = "SUBSCRIPTIONS"
+    SaleChannelFilterUnknown         SaleChannelFilter = "UNKNOWN"
+)
+```
+
 <a name="SaleCompletedEvent"></a>
 ## type [SaleCompletedEvent](<https://github.com/sumup/sumup-go/blob/main/events_generated.go#L196>)
 
@@ -6716,23 +6397,36 @@ type SaleCompletedEvent struct {
 }
 ```
 
-<a name="SaleLineItemV10"></a>
-## type [SaleLineItemV10](<https://github.com/sumup/sumup-go/blob/main/sales.go#L681-L736>)
+<a name="SaleGiftCardPayment"></a>
+## type [SaleGiftCardPayment](<https://github.com/sumup/sumup-go/blob/main/sales.go#L431-L435>)
+
+Gift card used for this payment. Present when \`method\` is \`gift\_card\` and the gift card id is known. Gift card IDs use the format "GC" followed by 9 alphanumeric characters \(e.g. GCZ3NTMB1V\).
+
+```go
+type SaleGiftCardPayment struct {
+    // Gift card identifier. Format "GC" followed by 9 alphanumeric characters
+    // (e.g. GCZ3NTMB1V).
+    ID string `json:"id"`
+}
+```
+
+<a name="SaleItem"></a>
+## type [SaleItem](<https://github.com/sumup/sumup-go/blob/main/sales.go#L443-L498>)
 
 A single line of a sale.
 
 The envelope \(id, type, name, quantity, unit\_of\_measure, price\) is stable and type\-agnostic: any consumer can render and total a line from these fields alone. Type\-specific data is in \`features\`. There is no per\-type object and no discriminator, so a new item type does not change this schema.
 
 ```go
-type SaleLineItemV10 struct {
+type SaleItem struct {
     // Categories the line belongs to. A shared optional structure available to any
     // line; not a per-type field.
     // Max items: 1000
-    Categories []CategoryV10 `json:"categories,omitempty"`
+    Categories []SaleItemCategory `json:"categories,omitempty"`
     // Named, typed, type-specific data. New item types add their data here as
-    // features instead of new schema variants. See `Feature` for per-type examples.
+    // features instead of new schema variants. See `SaleItemFeature` for per-type examples.
     // Max items: 100
-    Features []FeatureV10 `json:"features,omitempty"`
+    Features []SaleItemFeature `json:"features,omitempty"`
     // Stable identifier of the line within the sale. Used for linking (e.g. deposits).
     // Max length: 100
     ID  string `json:"id"`
@@ -6753,23 +6447,23 @@ type SaleLineItemV10 struct {
     //
     // Totals and tax amounts can be negative for return-like operations (for example
     // a deposit with `operation_type` = `RETURN`).
-    Price LineItemPriceV10 `json:"price"`
+    Price SaleItemPrice `json:"price"`
     // The numerical value representing the quantity in the specified unit.
     // Format: double
     // Min: 0
     Quantity float64 `json:"quantity"`
     // Outward identifiers and links for a line, kept in one place rather than scattered
     // per item type.
-    References *ItemReferencesV10 `json:"references,omitempty"`
+    References *SaleItemReferences `json:"references,omitempty"`
     // The type of service for this line.
-    ServiceType *SaleLineItemV10ServiceType `json:"service_type,omitempty"`
+    ServiceType *SaleItemServiceType `json:"service_type,omitempty"`
     // Classifies a sale line. Not a schema subclass.
     //
     // Known values: `CATALOG`, `DEPOSIT`, `GIFT_CARD`, `CUSTOM`, `FEE`.
     //
     // `FEE` lines represent merchant-charged fees on the sale (e.g. shipping, service
     // charge, surcharge, cancellation). They participate in sale totals like any other
-    // line; type-specific data is carried in `features` (see `Feature` for the
+    // line; type-specific data is carried in `features` (see `SaleItemFeature` for the
     // conventional feature keys).
     //
     // This is intentionally an open string, NOT a closed enum: new values are added
@@ -6782,26 +6476,208 @@ type SaleLineItemV10 struct {
 }
 ```
 
-<a name="SaleLineItemV10ServiceType"></a>
-## type [SaleLineItemV10ServiceType](<https://github.com/sumup/sumup-go/blob/main/sales.go#L739>)
+<a name="SaleItemCategory"></a>
+## type [SaleItemCategory](<https://github.com/sumup/sumup-go/blob/main/sales.go#L509-L516>)
+
+A category a line belongs to.
+
+```go
+type SaleItemCategory struct {
+    // The category id. Usually a UUID, but not always (legacy cases).
+    // Max length: 100
+    ID  string `json:"id"`
+    // The category name.
+    // Max length: 30
+    Name string `json:"name"`
+}
+```
+
+<a name="SaleItemFeature"></a>
+## type [SaleItemFeature](<https://github.com/sumup/sumup-go/blob/main/sales.go#L543-L556>)
+
+A named, typed characteristic of a line. New item types add data here instead of a typed sub\-object per type.
+
+Examples by item type \(illustrative, not exhaustive\):
+
+- DEPOSIT: \`operation\_type\` = "SALE", \`linked\_line\_id\` = "line\-1"
+- GIFT\_CARD: \`gift\_card\_reference\` = "GCMINGXPC5"
+- CATALOG: \`variant\_name\` = "Large", \`item\_id\` / \`variant\_id\` \(TEXT\), \`reporting\_category\_id\` = "cat\-..."
+- FEE: \`fee\_type\` = "SHIPPING" \(required\); optional \`fee\_id\`, \`value\_absolute\` or \`value\_percentage\`, and per\-type metadata features such as \`delivery\_name\` / \`tracking\_reference\` \(shipping\), \`card\_type\` / \`scheme\` \(surcharge\), or \`policy\_id\` \(cancellation\)
+- \(future\) SUBSCRIPTION: \`billing\_period\` = "P1M", \`renews\_at\` = "2026\-07\-02"
+
+Conventional \`FEE\` feature keys:
+
+- \`fee\_type\` \(TEXT, required\): \`SHIPPING\`, \`SURCHARGE\`, \`SERVICE\_CHARGE\`, or \`CANCELLATION\`
+- \`fee\_id\` \(TEXT, optional\): identifier of the fee definition
+- \`value\_absolute\` \(INTEGER, optional\): configured absolute value in minor units of the sale currency \(the charged amount is on \`price\`\)
+- \`value\_percentage\` \(INTEGER, optional\): configured percentage in minor units \(1/100000; e.g. 10000 = 10%\)
+- Per\-type metadata \(optional, TEXT unless noted\): \`delivery\_name\`, \`tracking\_reference\` \(shipping\); \`card\_type\`, \`scheme\` \(surcharge\); \`policy\_id\` \(cancellation\)
+
+```go
+type SaleItemFeature struct {
+    // The feature name/key.
+    // Max length: 100
+    Name string `json:"name"`
+    // The feature value in canonical string form, to be parsed per `value_type`
+    // (e.g. INTEGER -> "3", DECIMAL -> "1.50", DATE -> "2026-07-02",
+    // BOOLEAN -> "true"). Carrying it as a string keeps the wire format stable as
+    // new feature names and value types are introduced.
+    // Max length: 1000
+    Value string `json:"value"`
+    // The data type of a feature value. The wire `value` is always a string and is parsed
+    // according to this type.
+    ValueType SaleItemFeatureValueType `json:"value_type"`
+}
+```
+
+<a name="SaleItemFeatureValueType"></a>
+## type [SaleItemFeatureValueType](<https://github.com/sumup/sumup-go/blob/main/sales.go#L560>)
+
+The data type of a feature value. The wire \`value\` is always a string and is parsed according to this type.
+
+```go
+type SaleItemFeatureValueType string
+```
+
+<a name="SaleItemFeatureValueTypeBoolean"></a>
+
+```go
+const (
+    SaleItemFeatureValueTypeBoolean SaleItemFeatureValueType = "BOOLEAN"
+    SaleItemFeatureValueTypeDate    SaleItemFeatureValueType = "DATE"
+    SaleItemFeatureValueTypeDecimal SaleItemFeatureValueType = "DECIMAL"
+    SaleItemFeatureValueTypeInteger SaleItemFeatureValueType = "INTEGER"
+    SaleItemFeatureValueTypeText    SaleItemFeatureValueType = "TEXT"
+)
+```
+
+<a name="SaleItemPrice"></a>
+## type [SaleItemPrice](<https://github.com/sumup/sumup-go/blob/main/sales.go#L577-L609>)
+
+Pricing for a single line, valid for every item type.
+
+Merges the standard amounts \(with tax breakdown\) and the final amounts \(after discounts/modifiers\).
+
+Totals and tax amounts can be negative for return\-like operations \(for example a deposit with \`operation\_type\` = \`RETURN\`\).
+
+```go
+type SaleItemPrice struct {
+    // Discounts applied. Discount amounts do not affect `total_net_amount` /
+    // `total_gross_amount`; they are reflected in the `*_final` amounts.
+    // Max items: 1000
+    Discounts []DiscountLine `json:"discounts,omitempty"`
+    // Taxes applied on top of the net amount resulting in the gross amount.
+    // Min items: 1
+    // Max items: 1000
+    Taxes []TaxLine `json:"taxes"`
+    // Taxes applied on top of `total_net_amount_final` resulting in `total_gross_amount_final`. Equals `taxes` if
+    // no discounts apply.
+    // Min items: 1
+    // Max items: 1000
+    TaxesFinal []TaxLine `json:"taxes_final"`
+    // The gross amount (including modifiers if applied). It does NOT include discounts.
+    // Format: int64
+    TotalGrossAmount int64 `json:"total_gross_amount"`
+    // The final gross amount including discounts, modifiers and taxes. Equals `total_gross_amount` if no discounts apply.
+    //
+    // Format: int64
+    TotalGrossAmountFinal int64 `json:"total_gross_amount_final"`
+    // The net amount (including modifiers if applied). It does NOT include discounts.
+    // Format: int64
+    TotalNetAmount int64 `json:"total_net_amount"`
+    // The final net amount including discounts and modifiers. Equals `total_net_amount` if no discounts apply.
+    // Format: int64
+    TotalNetAmountFinal int64 `json:"total_net_amount_final"`
+    // The price of a single unit. If the tax_mode is GROSS it includes taxes,
+    // otherwise no tax is included. It does NOT include discounts.
+    // Format: int64
+    // Min: 0
+    UnitAmount int64 `json:"unit_amount"`
+}
+```
+
+<a name="SaleItemReferences"></a>
+## type [SaleItemReferences](<https://github.com/sumup/sumup-go/blob/main/sales.go#L613-L631>)
+
+Outward identifiers and links for a line, kept in one place rather than scattered per item type.
+
+```go
+type SaleItemReferences struct {
+    // Reference to the backing catalog entity (item variant, deposit, ...),
+    // typically a URN such as
+    // `urn:sumup:pos:variant:${MERCHANT_CODE}:${ITEM_ID}:${VARIANT_ID}` or
+    // `urn:sumup:pos:deposit:${MERCHANT_CODE}:${DEPOSIT_ID}`.
+    // Empty for ad-hoc / manual lines. Type-agnostic on purpose: a new item type
+    // backed by a catalog entity reuses this field instead of adding its own.
+    // Max length: 255
+    CatalogReference *string `json:"catalog_reference,omitempty"`
+    // The source of the catalog the line originates from.
+    // Default: SUMUP
+    CatalogSource *SaleItemReferencesCatalogSource `json:"catalog_source,omitempty"`
+    // An external reference id connecting this line to another system.
+    // Max length: 250
+    ExternalID *string `json:"external_id,omitempty"`
+    // Stock keeping unit, enriched from the Catalog when available.
+    // Max length: 100
+    Sku *string `json:"sku,omitempty"`
+}
+```
+
+<a name="SaleItemReferencesCatalogSource"></a>
+## type [SaleItemReferencesCatalogSource](<https://github.com/sumup/sumup-go/blob/main/sales.go#L635>)
+
+The source of the catalog the line originates from. Default: SUMUP
+
+```go
+type SaleItemReferencesCatalogSource string
+```
+
+<a name="SaleItemReferencesCatalogSourceExternal"></a>
+
+```go
+const (
+    SaleItemReferencesCatalogSourceExternal SaleItemReferencesCatalogSource = "EXTERNAL"
+    SaleItemReferencesCatalogSourceSumup    SaleItemReferencesCatalogSource = "SUMUP"
+)
+```
+
+<a name="SaleItemServiceType"></a>
+## type [SaleItemServiceType](<https://github.com/sumup/sumup-go/blob/main/sales.go#L501>)
 
 The type of service for this line.
 
 ```go
-type SaleLineItemV10ServiceType string
+type SaleItemServiceType string
 ```
 
-<a name="SaleLineItemV10ServiceTypeInHouse"></a>
+<a name="SaleItemServiceTypeInHouse"></a>
 
 ```go
 const (
-    SaleLineItemV10ServiceTypeInHouse  SaleLineItemV10ServiceType = "IN_HOUSE"
-    SaleLineItemV10ServiceTypeTakeAway SaleLineItemV10ServiceType = "TAKE_AWAY"
+    SaleItemServiceTypeInHouse  SaleItemServiceType = "IN_HOUSE"
+    SaleItemServiceTypeTakeAway SaleItemServiceType = "TAKE_AWAY"
+)
+```
+
+<a name="SaleLifecycleState"></a>
+## type [SaleLifecycleState](<https://github.com/sumup/sumup-go/blob/main/sales.go#L644>)
+
+Lifecycle state of the sale. Non\-finalised sales are never returned; only fully\-paid sales.
+
+```go
+type SaleLifecycleState string
+```
+
+<a name="SaleLifecycleStateClosed"></a>
+
+```go
+const (
+    SaleLifecycleStateClosed SaleLifecycleState = "CLOSED"
 )
 ```
 
 <a name="SalePage"></a>
-## type [SalePage](<https://github.com/sumup/sumup-go/blob/main/sales.go#L748-L753>)
+## type [SalePage](<https://github.com/sumup/sumup-go/blob/main/sales.go#L652-L657>)
 
 Paginated list of \`Sale\` objects. Results are ordered \*\*newest first\*\* by the newest activity recorded for each sale.
 
@@ -6814,40 +6690,141 @@ type SalePage struct {
 }
 ```
 
-<a name="SalePriceV10"></a>
-## type [SalePriceV10](<https://github.com/sumup/sumup-go/blob/main/sales.go#L760-L781>)
+<a name="SalePayment"></a>
+## type [SalePayment](<https://github.com/sumup/sumup-go/blob/main/sales.go#L663-L705>)
 
-Sale\-level pricing aggregate, parallel to \`LineItemPrice\` on each \`SaleLineItem\`.
+Payment on a closed sale, for bookkeeping and reconciliation.
 
-Line\-level breakdown \(unit price, line discounts, per\-line taxes\) lives on \`items\[\].price\`. This object holds the rolled\-up totals and cart\-level adjustments that consumers use for receipts and payment reconciliation.
+Acquirer/processing cost is not on this object. Merchant\-charged fees \(shipping, service charge, etc.\) appear as \`type: "FEE"\` item lines in \`Sale.items\`.
 
 ```go
-type SalePriceV10 struct {
-    // Discounts applied at cart level. Item-level discounts remain on
-    // `items[].price.discounts`.
-    // Max items: 1000
-    CartDiscounts []DiscountLine `json:"cart_discounts,omitempty"`
-    // Final gross total for the sale: sum of `items[].price.total_gross_amount_final`
-    // after cart-level discounts (tips excluded).
-    // Same value as search `total_amount`, in minor units according to `Sale.currency.scale`.
-    // Payment amounts include tips and can therefore differ from this gross total.
+type SalePayment struct {
+    // The amount of the payment including tips.
+    // The value of the amount in minor units of `Sale.currency`.
     // Format: int64
-    GrossAmount int64 `json:"gross_amount"`
-    // Final net total for the sale: sum of `items[].price.total_net_amount_final`
-    // after cart-level discounts (tips excluded).
-    // In minor units according to `Sale.currency.scale`.
-    // Format: int64
-    NetAmount int64 `json:"net_amount"`
-    // Tax lines aggregated across the sale (after cart-level discounts).
-    // Per-line tax detail remains on `items[].price.taxes` / `taxes_final`.
-    // Min items: 1
-    // Max items: 1000
-    Taxes []TaxLine `json:"taxes"`
+    // Min: 0
+    Amount int64 `json:"amount"`
+    // Alternative payment method type when `method` is `apm`.
+    // Gift card is not an APM on this API.
+    // Values use lowercase snake_case. Known values are `qr_code_pix`, `sepa_dd`, `paypal`,
+    // `sumup_pay`, `twint`, and `iris`.
+    // Additional values may be returned as new alternative payment methods become available.
+    // Max length: 20
+    ApmType *string `json:"apm_type,omitempty"`
+    // Card brand, credit/debit processing type, and last four digits.
+    Card *SalePaymentCard `json:"card,omitempty"`
+    // Gift card used for this payment. Present when `method` is `gift_card` and the gift card
+    // id is known.
+    // Gift card IDs use the format "GC" followed by 9 alphanumeric characters
+    // (e.g. GCZ3NTMB1V).
+    GiftCard *SaleGiftCardPayment `json:"gift_card,omitempty"`
+    // Payment method on public sales read API v1.0.
+    // Digital wallets are first-class methods. Gift card payments use `gift_card`, not `apm`.
+    // Values use lowercase snake_case. Known values are `card`, `cash`, `apm`, `external`,
+    // `apple_pay`, `google_pay`, `whatsapp_pay`, and `gift_card`.
+    // Additional values may be returned as new payment methods become available.
+    // Max length: 20
+    Method string `json:"method"`
+    // UTC date-time when SumUp recorded this payment’s exposed `status` (successful, failed,
+    // or canceled). Server processed time when available; otherwise the payment provider’s
+    // transaction time. Not the device clock.
+    ProcessedAt time.Time `json:"processed_at"`
+    // The reference to the actual payment used for this sale, e.g. the sumup transaction code.
+    // Max length: 50
+    Reference string `json:"reference"`
+    // The status of the payment.
+    Status SalePaymentStatus `json:"status"`
+    // Payment operation type.
+    // This is distinct from the payment instrument in `method`.
+    // Values use lowercase snake_case. Known values are `purchase` for a normal purchase
+    // and `unreferenced_refund` for negative sales such as deposit returns.
+    // Default: purchase
+    Type string `json:"type"`
 }
 ```
 
+<a name="SalePaymentCard"></a>
+## type [SalePaymentCard](<https://github.com/sumup/sumup-go/blob/main/sales.go#L717-L732>)
+
+Card brand, credit/debit processing type, and last four digits.
+
+```go
+type SalePaymentCard struct {
+    // The brand of the card.
+    // Input is case-insensitive; the canonical form is lowercase snake_case.
+    // **VALUES**: [amex, cup, diners, discover, elo, elv, hipercard, jcb, maestro, mastercard, visa, visa_electron,
+    // visa_vpay, vr, eftpos, conecs, swile, girocard, interac, sumup, bancomat].
+    // Max length: 20
+    Brand string `json:"brand"`
+    // The last 4 digits of the card used for the payment.
+    // Min length: 4
+    // Max length: 4
+    // Pattern: ^\d{4}$
+    Last4Digits string `json:"last_4_digits"`
+    // Credit or debit processing choice, not brand or funding.
+    // `unknown` when unavailable; prepaid/voucher are not processing types.
+    Type SalePaymentCardType `json:"type"`
+}
+```
+
+<a name="SalePaymentCardType"></a>
+## type [SalePaymentCardType](<https://github.com/sumup/sumup-go/blob/main/sales.go#L736>)
+
+Credit or debit processing choice, not brand or funding. \`unknown\` when unavailable; prepaid/voucher are not processing types.
+
+```go
+type SalePaymentCardType string
+```
+
+<a name="SalePaymentCardTypeCredit"></a>
+
+```go
+const (
+    SalePaymentCardTypeCredit  SalePaymentCardType = "credit"
+    SalePaymentCardTypeDebit   SalePaymentCardType = "debit"
+    SalePaymentCardTypeUnknown SalePaymentCardType = "unknown"
+)
+```
+
+<a name="SalePaymentStatus"></a>
+## type [SalePaymentStatus](<https://github.com/sumup/sumup-go/blob/main/sales.go#L708>)
+
+The status of the payment.
+
+```go
+type SalePaymentStatus string
+```
+
+<a name="SalePaymentStatusCanceled"></a>
+
+```go
+const (
+    SalePaymentStatusCanceled   SalePaymentStatus = "CANCELED"
+    SalePaymentStatusFailed     SalePaymentStatus = "FAILED"
+    SalePaymentStatusSuccessful SalePaymentStatus = "SUCCESSFUL"
+)
+```
+
+<a name="SalePaymentStatusFilter"></a>
+## type [SalePaymentStatusFilter](<https://github.com/sumup/sumup-go/blob/main/sales.go#L748>)
+
+Payment outcome filter value. Multi\-select uses \*\*OR\*\* within this field; combined with other filters using \*\*AND\*\*. Only fully\-paid closed sales are exposed. Refunded original sales remain searchable as \`PAID\`; refunds are separate negative sales, not a \`REFUNDED\` sale\-search outcome.
+
+```go
+type SalePaymentStatusFilter string
+```
+
+<a name="SalePaymentStatusFilterChargedBack"></a>
+
+```go
+const (
+    SalePaymentStatusFilterChargedBack SalePaymentStatusFilter = "CHARGED_BACK"
+    SalePaymentStatusFilterPaid        SalePaymentStatusFilter = "PAID"
+)
+```
+
 <a name="SaleSearchItem"></a>
-## type [SaleSearchItem](<https://github.com/sumup/sumup-go/blob/main/sales.go#L784-L810>)
+## type [SaleSearchItem](<https://github.com/sumup/sumup-go/blob/main/sales.go#L756-L782>)
 
 Summary row for a sale in search results. Use \`GET /sales/\{sale\_id\}\` for the full \`Sale\`.
 
@@ -6866,7 +6843,7 @@ type SaleSearchItem struct {
     Name *string `json:"name,omitempty"`
     // Lifecycle state of the sale.
     // Non-finalised sales are never returned; only fully-paid sales.
-    State SaleStateV10 `json:"state"`
+    State SaleLifecycleState `json:"state"`
     // Checkout tax mode for the sale. Same values as `Sale.tax_mode`.
     TaxMode TaxMode `json:"tax_mode"`
     // Final sale gross total after discounts and taxes, excluding tips.
@@ -6882,7 +6859,7 @@ type SaleSearchItem struct {
 ```
 
 <a name="SaleSearchRequest"></a>
-## type [SaleSearchRequest](<https://github.com/sumup/sumup-go/blob/main/sales.go#L816-L838>)
+## type [SaleSearchRequest](<https://github.com/sumup/sumup-go/blob/main/sales.go#L788-L810>)
 
 Filter and pagination criteria for \`POST /sales/search\`. Filters from different categories stack with \*\*logical AND\*\*; multiple values in one array field stack with \*\*logical OR\*\*. Results cover the merchant’s \*\*last two years\*\* of sales \(narrow further with \`start\_date\` / \`end\_date\`\). Results are sorted \*\*newest first\*\* by sale close date.
 
@@ -6900,20 +6877,20 @@ type SaleSearchRequest struct {
     PaginationToken *string `json:"pagination_token,omitempty"`
     // Filters rows by payment outcome. Multiple values match any of them (**OR**). The search
     // row does not echo this value.
-    PaymentStatuses []PaymentStatusFilterV10 `json:"payment_statuses,omitempty"`
+    PaymentStatuses []SalePaymentStatusFilter `json:"payment_statuses,omitempty"`
     // Filters rows by sale lifecycle (`state`). Multiple values match any of them (**OR**).
     // Uses the same values as `Sale.state`. Non-finalised sales are never returned; only
     // fully-paid sales.
-    SaleStatuses []SaleStateV10 `json:"sale_statuses,omitempty"`
+    SaleStatuses []SaleLifecycleState `json:"sale_statuses,omitempty"`
     // Sales channel filter. Multiple values match any of them (**OR**).
-    SalesChannels []SalesChannelFilterV10 `json:"sales_channels,omitempty"`
+    SalesChannels []SaleChannelFilter `json:"sales_channels,omitempty"`
     // Sale created **on or after** this instant (inclusive).
     StartDate *time.Time `json:"start_date,omitempty"`
 }
 ```
 
 <a name="SaleSearchResponse"></a>
-## type [SaleSearchResponse](<https://github.com/sumup/sumup-go/blob/main/sales.go#L841-L846>)
+## type [SaleSearchResponse](<https://github.com/sumup/sumup-go/blob/main/sales.go#L813-L818>)
 
 Search hits and an optional pagination token. Results are ordered \*\*newest first\*\* by sale close date.
 
@@ -6927,7 +6904,7 @@ type SaleSearchResponse struct {
 ```
 
 <a name="SaleSource"></a>
-## type [SaleSource](<https://github.com/sumup/sumup-go/blob/main/sales.go#L849-L871>)
+## type [SaleSource](<https://github.com/sumup/sumup-go/blob/main/sales.go#L821-L843>)
 
 Information about the source of the sale.
 
@@ -6957,21 +6934,36 @@ type SaleSource struct {
 }
 ```
 
-<a name="SaleStateV10"></a>
-## type [SaleStateV10](<https://github.com/sumup/sumup-go/blob/main/sales.go#L875>)
+<a name="SaleTotals"></a>
+## type [SaleTotals](<https://github.com/sumup/sumup-go/blob/main/sales.go#L850-L871>)
 
-Lifecycle state of the sale. Non\-finalised sales are never returned; only fully\-paid sales.
+Sale\-level pricing aggregate, parallel to \`SaleItemPrice\` on each \`SaleItem\`.
 
-```go
-type SaleStateV10 string
-```
-
-<a name="SaleStateV10Closed"></a>
+Line\-level breakdown \(unit price, line discounts, per\-line taxes\) lives on \`items\[\].price\`. This object holds the rolled\-up totals and cart\-level adjustments that consumers use for receipts and payment reconciliation.
 
 ```go
-const (
-    SaleStateV10Closed SaleStateV10 = "CLOSED"
-)
+type SaleTotals struct {
+    // Discounts applied at cart level. Item-level discounts remain on
+    // `items[].price.discounts`.
+    // Max items: 1000
+    CartDiscounts []DiscountLine `json:"cart_discounts,omitempty"`
+    // Final gross total for the sale: sum of `items[].price.total_gross_amount_final`
+    // after cart-level discounts (tips excluded).
+    // Same value as search `total_amount`, in minor units according to `Sale.currency.scale`.
+    // Payment amounts include tips and can therefore differ from this gross total.
+    // Format: int64
+    GrossAmount int64 `json:"gross_amount"`
+    // Final net total for the sale: sum of `items[].price.total_net_amount_final`
+    // after cart-level discounts (tips excluded).
+    // In minor units according to `Sale.currency.scale`.
+    // Format: int64
+    NetAmount int64 `json:"net_amount"`
+    // Tax lines aggregated across the sale (after cart-level discounts).
+    // Per-line tax detail remains on `items[].price.taxes` / `taxes_final`.
+    // Min items: 1
+    // Max items: 1000
+    Taxes []TaxLine `json:"taxes"`
+}
 ```
 
 <a name="SaleUpdatedEvent"></a>
@@ -6986,7 +6978,7 @@ type SaleUpdatedEvent struct {
 ```
 
 <a name="SalesActivityCurrency"></a>
-## type [SalesActivityCurrency](<https://github.com/sumup/sumup-go/blob/main/sales.go#L882-L893>)
+## type [SalesActivityCurrency](<https://github.com/sumup/sumup-go/blob/main/sales.go#L874-L885>)
 
 The currency of the sale.
 
@@ -7005,35 +6997,8 @@ type SalesActivityCurrency struct {
 }
 ```
 
-<a name="SalesChannelFilterV10"></a>
-## type [SalesChannelFilterV10](<https://github.com/sumup/sumup-go/blob/main/sales.go#L896>)
-
-Sale channel filter value. Multi\-select uses \*\*OR\*\* within this field.
-
-```go
-type SalesChannelFilterV10 string
-```
-
-<a name="SalesChannelFilterV10Bookings"></a>
-
-```go
-const (
-    SalesChannelFilterV10Bookings        SalesChannelFilterV10 = "BOOKINGS"
-    SalesChannelFilterV10Invoice         SalesChannelFilterV10 = "INVOICE"
-    SalesChannelFilterV10Kiosk           SalesChannelFilterV10 = "KIOSK"
-    SalesChannelFilterV10OnlinePayments  SalesChannelFilterV10 = "ONLINE_PAYMENTS"
-    SalesChannelFilterV10OnlineStore     SalesChannelFilterV10 = "ONLINE_STORE"
-    SalesChannelFilterV10OrderAggregator SalesChannelFilterV10 = "ORDER_AGGREGATOR"
-    SalesChannelFilterV10OrderAndPay     SalesChannelFilterV10 = "ORDER_AND_PAY"
-    SalesChannelFilterV10POS             SalesChannelFilterV10 = "POS"
-    SalesChannelFilterV10Solo            SalesChannelFilterV10 = "SOLO"
-    SalesChannelFilterV10Subscriptions   SalesChannelFilterV10 = "SUBSCRIPTIONS"
-    SalesChannelFilterV10Unknown         SalesChannelFilterV10 = "UNKNOWN"
-)
-```
-
 <a name="SalesClient"></a>
-## type [SalesClient](<https://github.com/sumup/sumup-go/blob/main/sales.go#L1004-L1006>)
+## type [SalesClient](<https://github.com/sumup/sumup-go/blob/main/sales.go#L979-L981>)
 
 SalesClient provides access to the Sales API.
 
@@ -7050,7 +7015,7 @@ type SalesClient struct {
 ```
 
 <a name="NewSalesClient"></a>
-### func [NewSalesClient](<https://github.com/sumup/sumup-go/blob/main/sales.go#L1008>)
+### func [NewSalesClient](<https://github.com/sumup/sumup-go/blob/main/sales.go#L983>)
 
 ```go
 func NewSalesClient(c *client.Client) *SalesClient
@@ -7059,7 +7024,7 @@ func NewSalesClient(c *client.Client) *SalesClient
 
 
 <a name="SalesClient.Get"></a>
-### func \(\*SalesClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/sales.go#L1098>)
+### func \(\*SalesClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/sales.go#L1073>)
 
 ```go
 func (c *SalesClient) Get(ctx context.Context, merchantCode string, saleID string) (*Sale, error)
@@ -7068,7 +7033,7 @@ func (c *SalesClient) Get(ctx context.Context, merchantCode string, saleID strin
 Returns \`Sale\` for \`sale\_id\`, including item lines and \`payments\[\]\`. Non\-finalised sales are never returned; only fully\-paid sales.
 
 <a name="SalesClient.List"></a>
-### func \(\*SalesClient\) [List](<https://github.com/sumup/sumup-go/blob/main/sales.go#L1060>)
+### func \(\*SalesClient\) [List](<https://github.com/sumup/sumup-go/blob/main/sales.go#L1035>)
 
 ```go
 func (c *SalesClient) List(ctx context.Context, merchantCode string, params SalesListParams) (*SalePage, error)
@@ -7079,7 +7044,7 @@ Returns a paginated list of \`Sale\` objects. Results are sorted \*\*newest firs
 Covers the merchant’s \*\*last two years\*\* of sales. Non\-finalised sales are never returned; only fully\-paid sales. Use \`POST /sales/search\` for filtered queries.
 
 <a name="SalesClient.Search"></a>
-### func \(\*SalesClient\) [Search](<https://github.com/sumup/sumup-go/blob/main/sales.go#L1019>)
+### func \(\*SalesClient\) [Search](<https://github.com/sumup/sumup-go/blob/main/sales.go#L994>)
 
 ```go
 func (c *SalesClient) Search(ctx context.Context, merchantCode string, body SalesSearchParams) (*SaleSearchResponse, error)
@@ -7090,7 +7055,7 @@ Returns a paginated list of \`SaleSearchItem\` rows matching filter criteria. Re
 Filters from different categories stack with \*\*logical AND\*\*; multiple values in one array field stack with \*\*logical OR\*\*. Results cover the merchant’s \*\*last two years\*\* of sales \(narrow further with \`start\_date\` / \`end\_date\`\). Pagination tokens are not interchangeable with \`GET /sales\`.
 
 <a name="SalesListParams"></a>
-## type [SalesListParams](<https://github.com/sumup/sumup-go/blob/main/sales.go#L972-L979>)
+## type [SalesListParams](<https://github.com/sumup/sumup-go/blob/main/sales.go#L947-L954>)
 
 SalesListParams are query parameters for ListSalesV10.
 
@@ -7106,7 +7071,7 @@ type SalesListParams struct {
 ```
 
 <a name="SalesListParams.QueryValues"></a>
-### func \(\*SalesListParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/sales.go#L982>)
+### func \(\*SalesListParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/sales.go#L957>)
 
 ```go
 func (p *SalesListParams) QueryValues() url.Values
@@ -7115,7 +7080,7 @@ func (p *SalesListParams) QueryValues() url.Values
 QueryValues converts [SalesListParams](<#SalesListParams>) into \[url.Values\].
 
 <a name="SalesSearchParams"></a>
-## type [SalesSearchParams](<https://github.com/sumup/sumup-go/blob/main/sales.go#L969>)
+## type [SalesSearchParams](<https://github.com/sumup/sumup-go/blob/main/sales.go#L944>)
 
 
 
@@ -7379,7 +7344,7 @@ type SubaccountsUpdateSubAccountParamsPermissions struct {
 ```
 
 <a name="TaxLine"></a>
-## type [TaxLine](<https://github.com/sumup/sumup-go/blob/main/sales.go#L915-L938>)
+## type [TaxLine](<https://github.com/sumup/sumup-go/blob/main/sales.go#L890-L913>)
 
 Information about tax together with amounts before and after its application such as:
 
@@ -7414,7 +7379,7 @@ type TaxLine struct {
 ```
 
 <a name="TaxMode"></a>
-## type [TaxMode](<https://github.com/sumup/sumup-go/blob/main/sales.go#L948>)
+## type [TaxMode](<https://github.com/sumup/sumup-go/blob/main/sales.go#L923>)
 
 The tax mode used by merchant for displaying prices and calculating taxes: \- NO\_TAX: The prices don't contain any taxes, merchant don't report taxes \- GROSS: The prices used by merchant already include taxes \(common in EU\), the tax is calculated from the gross price \- NET: The prices used by merchant don't include taxes \(common in US\), the tax is calculated from the net price Since tax values can be different for the same net price depending if the tax was calculated from gross or net price, this info is necessary to be able to reconcile tax calculations.
 
@@ -8613,7 +8578,7 @@ const (
 ```
 
 <a name="UnitOfMeasure"></a>
-## type [UnitOfMeasure](<https://github.com/sumup/sumup-go/blob/main/sales.go#L957-L967>)
+## type [UnitOfMeasure](<https://github.com/sumup/sumup-go/blob/main/sales.go#L932-L942>)
 
 The unit of measure of the item.
 
@@ -9122,7 +9087,7 @@ const APIVersion = "1.0.0"
 <a name="Version"></a>
 
 ```go
-const Version = "0.22.0" // x-release-please-version
+const Version = "0.22.1" // x-release-please-version
 ```
 
 # nullable

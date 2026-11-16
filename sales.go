@@ -12,19 +12,8 @@ import (
 	"time"
 
 	"github.com/sumup/sumup-go/client"
-	"github.com/sumup/sumup-go/internal/ptr"
 	"github.com/sumup/sumup-go/nullable"
 )
-
-// A category a line belongs to.
-type CategoryV10 struct {
-	// The category id. Usually a UUID, but not always (legacy cases).
-	// Max length: 100
-	ID string `json:"id"`
-	// The category name.
-	// Max length: 30
-	Name string `json:"name"`
-}
 
 // Method of applying the discount to the items or cart.
 type DiscountApplicationMode string
@@ -247,58 +236,6 @@ type DiscountValue struct {
 	Percentage *int64 `json:"percentage,omitempty"`
 }
 
-// A named, typed characteristic of a line. New item types add data here instead of
-// a typed sub-object per type.
-//
-// Examples by item type (illustrative, not exhaustive):
-//   - DEPOSIT:   `operation_type` = "SALE", `linked_line_id` = "line-1"
-//   - GIFT_CARD: `gift_card_reference` = "GCMINGXPC5"
-//   - CATALOG:   `variant_name` = "Large", `item_id` / `variant_id` (TEXT),
-//     `reporting_category_id` = "cat-..."
-//   - FEE:       `fee_type` = "SHIPPING" (required); optional `fee_id`,
-//     `value_absolute` or `value_percentage`, and per-type metadata
-//     features such as `delivery_name` / `tracking_reference` (shipping),
-//     `card_type` / `scheme` (surcharge), or `policy_id` (cancellation)
-//   - (future) SUBSCRIPTION: `billing_period` = "P1M", `renews_at` = "2026-07-02"
-//
-// Conventional `FEE` feature keys:
-//   - `fee_type` (TEXT, required): `SHIPPING`, `SURCHARGE`, `SERVICE_CHARGE`, or
-//     `CANCELLATION`
-//   - `fee_id` (TEXT, optional): identifier of the fee definition
-//   - `value_absolute` (INTEGER, optional): configured absolute value in minor units
-//     of the sale currency (the charged amount is on `price`)
-//   - `value_percentage` (INTEGER, optional): configured percentage in minor units
-//     (1/100000; e.g. 10000 = 10%)
-//   - Per-type metadata (optional, TEXT unless noted): `delivery_name`,
-//     `tracking_reference` (shipping); `card_type`, `scheme` (surcharge);
-//     `policy_id` (cancellation)
-type FeatureV10 struct {
-	// The feature name/key.
-	// Max length: 100
-	Name string `json:"name"`
-	// The feature value in canonical string form, to be parsed per `value_type`
-	// (e.g. INTEGER -> "3", DECIMAL -> "1.50", DATE -> "2026-07-02",
-	// BOOLEAN -> "true"). Carrying it as a string keeps the wire format stable as
-	// new feature names and value types are introduced.
-	// Max length: 1000
-	Value string `json:"value"`
-	// The data type of a feature value. The wire `value` is always a string and is parsed
-	// according to this type.
-	ValueType FeatureValueTypeV10 `json:"value_type"`
-}
-
-// The data type of a feature value. The wire `value` is always a string and is parsed
-// according to this type.
-type FeatureValueTypeV10 string
-
-const (
-	FeatureValueTypeV10Boolean FeatureValueTypeV10 = "BOOLEAN"
-	FeatureValueTypeV10Date    FeatureValueTypeV10 = "DATE"
-	FeatureValueTypeV10Decimal FeatureValueTypeV10 = "DECIMAL"
-	FeatureValueTypeV10Integer FeatureValueTypeV10 = "INTEGER"
-	FeatureValueTypeV10Text    FeatureValueTypeV10 = "TEXT"
-)
-
 // Final price amounts after all calculations and adjustments.
 type FinalPriceAmounts struct {
 	// Discounts applied.
@@ -329,78 +266,6 @@ type FinalPriceAmounts struct {
 	TotalNetAmountFinal int64 `json:"total_net_amount_final"`
 }
 
-// Outward identifiers and links for a line, kept in one place rather than scattered
-// per item type.
-type ItemReferencesV10 struct {
-	// Reference to the backing catalog entity (item variant, deposit, ...),
-	// typically a URN such as
-	// `urn:sumup:pos:variant:${MERCHANT_CODE}:${ITEM_ID}:${VARIANT_ID}` or
-	// `urn:sumup:pos:deposit:${MERCHANT_CODE}:${DEPOSIT_ID}`.
-	// Empty for ad-hoc / manual lines. Type-agnostic on purpose: a new item type
-	// backed by a catalog entity reuses this field instead of adding its own.
-	// Max length: 255
-	CatalogReference *string `json:"catalog_reference,omitempty"`
-	// The source of the catalog the line originates from.
-	// Default: SUMUP
-	CatalogSource *ItemReferencesV10CatalogSource `json:"catalog_source,omitempty"`
-	// An external reference id connecting this line to another system.
-	// Max length: 250
-	ExternalID *string `json:"external_id,omitempty"`
-	// Stock keeping unit, enriched from the Catalog when available.
-	// Max length: 100
-	Sku *string `json:"sku,omitempty"`
-}
-
-// The source of the catalog the line originates from.
-// Default: SUMUP
-type ItemReferencesV10CatalogSource string
-
-const (
-	ItemReferencesV10CatalogSourceExternal ItemReferencesV10CatalogSource = "EXTERNAL"
-	ItemReferencesV10CatalogSourceSumup    ItemReferencesV10CatalogSource = "SUMUP"
-)
-
-// Pricing for a single line, valid for every item type.
-//
-// Merges the standard amounts (with tax breakdown) and the final amounts (after
-// discounts/modifiers).
-//
-// Totals and tax amounts can be negative for return-like operations (for example
-// a deposit with `operation_type` = `RETURN`).
-type LineItemPriceV10 struct {
-	// Discounts applied. Discount amounts do not affect `total_net_amount` /
-	// `total_gross_amount`; they are reflected in the `*_final` amounts.
-	// Max items: 1000
-	Discounts []DiscountLine `json:"discounts,omitempty"`
-	// Taxes applied on top of the net amount resulting in the gross amount.
-	// Min items: 1
-	// Max items: 1000
-	Taxes []TaxLine `json:"taxes"`
-	// Taxes applied on top of `total_net_amount_final` resulting in `total_gross_amount_final`. Equals `taxes` if
-	// no discounts apply.
-	// Min items: 1
-	// Max items: 1000
-	TaxesFinal []TaxLine `json:"taxes_final"`
-	// The gross amount (including modifiers if applied). It does NOT include discounts.
-	// Format: int64
-	TotalGrossAmount int64 `json:"total_gross_amount"`
-	// The final gross amount including discounts, modifiers and taxes. Equals `total_gross_amount` if no discounts apply.
-	//
-	// Format: int64
-	TotalGrossAmountFinal int64 `json:"total_gross_amount_final"`
-	// The net amount (including modifiers if applied). It does NOT include discounts.
-	// Format: int64
-	TotalNetAmount int64 `json:"total_net_amount"`
-	// The final net amount including discounts and modifiers. Equals `total_net_amount` if no discounts apply.
-	// Format: int64
-	TotalNetAmountFinal int64 `json:"total_net_amount_final"`
-	// The price of a single unit. If the tax_mode is GROSS it includes taxes,
-	// otherwise no tax is included. It does NOT include discounts.
-	// Format: int64
-	// Min: 0
-	UnitAmount int64 `json:"unit_amount"`
-}
-
 // Modifiers are reported under line items and can be build from Item Catalog objects.
 // Modifiers has to be attached to an item and can't be sold and refunded alone.
 type ModifierItem = json.RawMessage
@@ -415,17 +280,6 @@ type ModifierSet struct {
 	// Max length: 150
 	Name string `json:"name"`
 }
-
-// Payment outcome filter value. Multi-select uses **OR** within this field; combined with
-// other filters using **AND**.
-// Only fully-paid closed sales are exposed. Refunded original sales remain searchable as
-// `PAID`; refunds are separate negative sales, not a `REFUNDED` sale-search outcome.
-type PaymentStatusFilterV10 string
-
-const (
-	PaymentStatusFilterV10ChargedBack PaymentStatusFilterV10 = "CHARGED_BACK"
-	PaymentStatusFilterV10Paid        PaymentStatusFilterV10 = "PAID"
-)
 
 // Price information for items with positive amounts only.
 type PositivePriceAmounts struct {
@@ -498,130 +352,11 @@ type PriceAmounts struct {
 	UnitAmount int64 `json:"unit_amount"`
 }
 
-// A RFC 9457 problem details object.
-//
-// Additional properties specific to the problem type may be present.
-type ProblemV10 struct {
-	// A human-readable explanation specific to this occurrence of the problem.
-	Detail *string `json:"detail,omitempty"`
-	// A URI reference that identifies the specific occurrence of the problem.
-	// Format: uri
-	Instance *string `json:"instance,omitempty"`
-	// The HTTP status code generated by the origin server for this occurrence of the problem.
-	Status *int `json:"status,omitempty"`
-	// A short, human-readable summary of the problem type.
-	Title *string `json:"title,omitempty"`
-	// A URI reference that identifies the problem type.
-	// Format: uri
-	Type string `json:"type"`
-}
-
-func (e *ProblemV10) Error() string {
-	return fmt.Sprintf("detail=%v, instance=%v, status=%v, title=%v, type=%v", ptr.OrNil(e.Detail), ptr.OrNil(e.Instance), ptr.OrNil(e.Status), ptr.OrNil(e.Title), e.Type)
-}
-
-var _ error = (*ProblemV10)(nil)
-
-// Card brand, credit/debit processing type, and last four digits.
-type PublicCardV10 struct {
-	// The brand of the card.
-	// Input is case-insensitive; the canonical form is lowercase snake_case.
-	// **VALUES**: [amex, cup, diners, discover, elo, elv, hipercard, jcb, maestro, mastercard, visa, visa_electron,
-	// visa_vpay, vr, eftpos, conecs, swile, girocard, interac, sumup, bancomat].
-	// Max length: 20
-	Brand string `json:"brand"`
-	// The last 4 digits of the card used for the payment.
-	// Min length: 4
-	// Max length: 4
-	// Pattern: ^\d{4}$
-	Last4Digits string `json:"last_4_digits"`
-	// Credit or debit processing choice, not brand or funding.
-	// `unknown` when unavailable; prepaid/voucher are not processing types.
-	Type PublicCardV10Type `json:"type"`
-}
-
-// Credit or debit processing choice, not brand or funding.
-// `unknown` when unavailable; prepaid/voucher are not processing types.
-type PublicCardV10Type string
-
-const (
-	PublicCardV10TypeCredit  PublicCardV10Type = "credit"
-	PublicCardV10TypeDebit   PublicCardV10Type = "debit"
-	PublicCardV10TypeUnknown PublicCardV10Type = "unknown"
-)
-
-// Gift card used for this payment. Present when `method` is `gift_card` and the gift card
-// id is known.
-// Gift card IDs use the format "GC" followed by 9 alphanumeric characters
-// (e.g. GCZ3NTMB1V).
-type PublicGiftCardPayment struct {
-	// Gift card identifier. Format "GC" followed by 9 alphanumeric characters
-	// (e.g. GCZ3NTMB1V).
-	ID string `json:"id"`
-}
-
-// Payment on a closed sale, for bookkeeping and reconciliation.
-//
-// Acquirer/processing cost is not on this object. Merchant-charged fees (shipping, service
-// charge, etc.) appear as `type: "FEE"` item lines in `Sale.items`.
-type PublicPaymentV10 struct {
-	// The amount of the payment including tips.
-	// The value of the amount in minor units of `Sale.currency`.
-	// Format: int64
-	// Min: 0
-	Amount int64 `json:"amount"`
-	// Alternative payment method type when `method` is `apm`.
-	// Gift card is not an APM on this API.
-	// Values use lowercase snake_case. Known values are `qr_code_pix`, `sepa_dd`, `paypal`,
-	// `sumup_pay`, `twint`, and `iris`.
-	// Additional values may be returned as new alternative payment methods become available.
-	// Max length: 20
-	ApmType *string `json:"apm_type,omitempty"`
-	// Card brand, credit/debit processing type, and last four digits.
-	Card *PublicCardV10 `json:"card,omitempty"`
-	// Gift card used for this payment. Present when `method` is `gift_card` and the gift card
-	// id is known.
-	// Gift card IDs use the format "GC" followed by 9 alphanumeric characters
-	// (e.g. GCZ3NTMB1V).
-	GiftCard *PublicGiftCardPayment `json:"gift_card,omitempty"`
-	// Payment method on public sales read API v1.0.
-	// Digital wallets are first-class methods. Gift card payments use `gift_card`, not `apm`.
-	// Values use lowercase snake_case. Known values are `card`, `cash`, `apm`, `external`,
-	// `apple_pay`, `google_pay`, `whatsapp_pay`, and `gift_card`.
-	// Additional values may be returned as new payment methods become available.
-	// Max length: 20
-	Method string `json:"method"`
-	// UTC date-time when SumUp recorded this payment’s exposed `status` (successful, failed,
-	// or canceled). Server processed time when available; otherwise the payment provider’s
-	// transaction time. Not the device clock.
-	ProcessedAt time.Time `json:"processed_at"`
-	// The reference to the actual payment used for this sale, e.g. the sumup transaction code.
-	// Max length: 50
-	Reference string `json:"reference"`
-	// The status of the payment.
-	Status PublicPaymentV10Status `json:"status"`
-	// Payment operation type.
-	// This is distinct from the payment instrument in `method`.
-	// Values use lowercase snake_case. Known values are `purchase` for a normal purchase
-	// and `unreferenced_refund` for negative sales such as deposit returns.
-	// Default: purchase
-	Type string `json:"type"`
-}
-
-// The status of the payment.
-type PublicPaymentV10Status string
-
-const (
-	PublicPaymentV10StatusCanceled   PublicPaymentV10Status = "CANCELED"
-	PublicPaymentV10StatusFailed     PublicPaymentV10Status = "FAILED"
-	PublicPaymentV10StatusSuccessful PublicPaymentV10Status = "SUCCESSFUL"
-)
-
 // Core model of the Sales API. Returned by `GET /sales` and `GET /sales/{sale_id}`.
 //
 // Non-finalised sales are never returned; only fully-paid sales.
 //
-// Item lines are `SaleLineItem`. Merchant fees appear as `type: "FEE"` lines; extra fee data
+// Item lines are `SaleItem`. Merchant fees appear as `type: "FEE"` lines; extra fee data
 // is in `features`.
 type Sale struct {
 	// Instant when the sale was closed. Always present: non-finalised sales are never returned.
@@ -636,7 +371,7 @@ type Sale struct {
 	// Includes merchant fees (`type: "FEE"`) when present; fee details are in `features`.
 	// Min items: 1
 	// Max items: 1000
-	Items []SaleLineItemV10 `json:"items"`
+	Items []SaleItem `json:"items"`
 	// Human-readable name of the sale (not unique, not the sale id).
 	// Max length: 160
 	Name *string `json:"name,omitempty"`
@@ -645,18 +380,18 @@ type Sale struct {
 	Note *string `json:"note,omitempty"`
 	// Payments on this sale, in the order they were recorded.
 	// Max items: 1000
-	Payments []PublicPaymentV10 `json:"payments"`
-	// Sale-level pricing aggregate, parallel to `LineItemPrice` on each `SaleLineItem`.
+	Payments []SalePayment `json:"payments"`
+	// Sale-level pricing aggregate, parallel to `SaleItemPrice` on each `SaleItem`.
 	//
 	// Line-level breakdown (unit price, line discounts, per-line taxes) lives on
 	// `items[].price`. This object holds the rolled-up totals and cart-level
 	// adjustments that consumers use for receipts and payment reconciliation.
-	Price SalePriceV10 `json:"price"`
+	Price SaleTotals `json:"price"`
 	// Information about the source of the sale.
 	Source SaleSource `json:"source"`
 	// Lifecycle state of the sale.
 	// Non-finalised sales are never returned; only fully-paid sales.
-	State SaleStateV10 `json:"state"`
+	State SaleLifecycleState `json:"state"`
 	// The tax mode used by merchant for displaying prices and calculating taxes:
 	// - NO_TAX: The prices don't contain any taxes, merchant don't report taxes
 	// - GROSS: The prices used by merchant already include taxes (common in EU), the tax is calculated from the
@@ -672,21 +407,48 @@ type Sale struct {
 	UserID *string `json:"user_id,omitempty"`
 }
 
+// Sale channel filter value. Multi-select uses **OR** within this field.
+type SaleChannelFilter string
+
+const (
+	SaleChannelFilterBookings        SaleChannelFilter = "BOOKINGS"
+	SaleChannelFilterInvoice         SaleChannelFilter = "INVOICE"
+	SaleChannelFilterKiosk           SaleChannelFilter = "KIOSK"
+	SaleChannelFilterOnlinePayments  SaleChannelFilter = "ONLINE_PAYMENTS"
+	SaleChannelFilterOnlineStore     SaleChannelFilter = "ONLINE_STORE"
+	SaleChannelFilterOrderAggregator SaleChannelFilter = "ORDER_AGGREGATOR"
+	SaleChannelFilterOrderAndPay     SaleChannelFilter = "ORDER_AND_PAY"
+	SaleChannelFilterPOS             SaleChannelFilter = "POS"
+	SaleChannelFilterSolo            SaleChannelFilter = "SOLO"
+	SaleChannelFilterSubscriptions   SaleChannelFilter = "SUBSCRIPTIONS"
+	SaleChannelFilterUnknown         SaleChannelFilter = "UNKNOWN"
+)
+
+// Gift card used for this payment. Present when `method` is `gift_card` and the gift card
+// id is known.
+// Gift card IDs use the format "GC" followed by 9 alphanumeric characters
+// (e.g. GCZ3NTMB1V).
+type SaleGiftCardPayment struct {
+	// Gift card identifier. Format "GC" followed by 9 alphanumeric characters
+	// (e.g. GCZ3NTMB1V).
+	ID string `json:"id"`
+}
+
 // A single line of a sale.
 //
 // The envelope (id, type, name, quantity, unit_of_measure, price) is stable and
 // type-agnostic: any consumer can render and total a line from these fields alone.
 // Type-specific data is in `features`. There is no per-type object and no discriminator,
 // so a new item type does not change this schema.
-type SaleLineItemV10 struct {
+type SaleItem struct {
 	// Categories the line belongs to. A shared optional structure available to any
 	// line; not a per-type field.
 	// Max items: 1000
-	Categories []CategoryV10 `json:"categories,omitempty"`
+	Categories []SaleItemCategory `json:"categories,omitempty"`
 	// Named, typed, type-specific data. New item types add their data here as
-	// features instead of new schema variants. See `Feature` for per-type examples.
+	// features instead of new schema variants. See `SaleItemFeature` for per-type examples.
 	// Max items: 100
-	Features []FeatureV10 `json:"features,omitempty"`
+	Features []SaleItemFeature `json:"features,omitempty"`
 	// Stable identifier of the line within the sale. Used for linking (e.g. deposits).
 	// Max length: 100
 	ID string `json:"id"`
@@ -707,23 +469,23 @@ type SaleLineItemV10 struct {
 	//
 	// Totals and tax amounts can be negative for return-like operations (for example
 	// a deposit with `operation_type` = `RETURN`).
-	Price LineItemPriceV10 `json:"price"`
+	Price SaleItemPrice `json:"price"`
 	// The numerical value representing the quantity in the specified unit.
 	// Format: double
 	// Min: 0
 	Quantity float64 `json:"quantity"`
 	// Outward identifiers and links for a line, kept in one place rather than scattered
 	// per item type.
-	References *ItemReferencesV10 `json:"references,omitempty"`
+	References *SaleItemReferences `json:"references,omitempty"`
 	// The type of service for this line.
-	ServiceType *SaleLineItemV10ServiceType `json:"service_type,omitempty"`
+	ServiceType *SaleItemServiceType `json:"service_type,omitempty"`
 	// Classifies a sale line. Not a schema subclass.
 	//
 	// Known values: `CATALOG`, `DEPOSIT`, `GIFT_CARD`, `CUSTOM`, `FEE`.
 	//
 	// `FEE` lines represent merchant-charged fees on the sale (e.g. shipping, service
 	// charge, surcharge, cancellation). They participate in sale totals like any other
-	// line; type-specific data is carried in `features` (see `Feature` for the
+	// line; type-specific data is carried in `features` (see `SaleItemFeature` for the
 	// conventional feature keys).
 	//
 	// This is intentionally an open string, NOT a closed enum: new values are added
@@ -736,11 +498,153 @@ type SaleLineItemV10 struct {
 }
 
 // The type of service for this line.
-type SaleLineItemV10ServiceType string
+type SaleItemServiceType string
 
 const (
-	SaleLineItemV10ServiceTypeInHouse  SaleLineItemV10ServiceType = "IN_HOUSE"
-	SaleLineItemV10ServiceTypeTakeAway SaleLineItemV10ServiceType = "TAKE_AWAY"
+	SaleItemServiceTypeInHouse  SaleItemServiceType = "IN_HOUSE"
+	SaleItemServiceTypeTakeAway SaleItemServiceType = "TAKE_AWAY"
+)
+
+// A category a line belongs to.
+type SaleItemCategory struct {
+	// The category id. Usually a UUID, but not always (legacy cases).
+	// Max length: 100
+	ID string `json:"id"`
+	// The category name.
+	// Max length: 30
+	Name string `json:"name"`
+}
+
+// A named, typed characteristic of a line. New item types add data here instead of
+// a typed sub-object per type.
+//
+// Examples by item type (illustrative, not exhaustive):
+//   - DEPOSIT:   `operation_type` = "SALE", `linked_line_id` = "line-1"
+//   - GIFT_CARD: `gift_card_reference` = "GCMINGXPC5"
+//   - CATALOG:   `variant_name` = "Large", `item_id` / `variant_id` (TEXT),
+//     `reporting_category_id` = "cat-..."
+//   - FEE:       `fee_type` = "SHIPPING" (required); optional `fee_id`,
+//     `value_absolute` or `value_percentage`, and per-type metadata
+//     features such as `delivery_name` / `tracking_reference` (shipping),
+//     `card_type` / `scheme` (surcharge), or `policy_id` (cancellation)
+//   - (future) SUBSCRIPTION: `billing_period` = "P1M", `renews_at` = "2026-07-02"
+//
+// Conventional `FEE` feature keys:
+//   - `fee_type` (TEXT, required): `SHIPPING`, `SURCHARGE`, `SERVICE_CHARGE`, or
+//     `CANCELLATION`
+//   - `fee_id` (TEXT, optional): identifier of the fee definition
+//   - `value_absolute` (INTEGER, optional): configured absolute value in minor units
+//     of the sale currency (the charged amount is on `price`)
+//   - `value_percentage` (INTEGER, optional): configured percentage in minor units
+//     (1/100000; e.g. 10000 = 10%)
+//   - Per-type metadata (optional, TEXT unless noted): `delivery_name`,
+//     `tracking_reference` (shipping); `card_type`, `scheme` (surcharge);
+//     `policy_id` (cancellation)
+type SaleItemFeature struct {
+	// The feature name/key.
+	// Max length: 100
+	Name string `json:"name"`
+	// The feature value in canonical string form, to be parsed per `value_type`
+	// (e.g. INTEGER -> "3", DECIMAL -> "1.50", DATE -> "2026-07-02",
+	// BOOLEAN -> "true"). Carrying it as a string keeps the wire format stable as
+	// new feature names and value types are introduced.
+	// Max length: 1000
+	Value string `json:"value"`
+	// The data type of a feature value. The wire `value` is always a string and is parsed
+	// according to this type.
+	ValueType SaleItemFeatureValueType `json:"value_type"`
+}
+
+// The data type of a feature value. The wire `value` is always a string and is parsed
+// according to this type.
+type SaleItemFeatureValueType string
+
+const (
+	SaleItemFeatureValueTypeBoolean SaleItemFeatureValueType = "BOOLEAN"
+	SaleItemFeatureValueTypeDate    SaleItemFeatureValueType = "DATE"
+	SaleItemFeatureValueTypeDecimal SaleItemFeatureValueType = "DECIMAL"
+	SaleItemFeatureValueTypeInteger SaleItemFeatureValueType = "INTEGER"
+	SaleItemFeatureValueTypeText    SaleItemFeatureValueType = "TEXT"
+)
+
+// Pricing for a single line, valid for every item type.
+//
+// Merges the standard amounts (with tax breakdown) and the final amounts (after
+// discounts/modifiers).
+//
+// Totals and tax amounts can be negative for return-like operations (for example
+// a deposit with `operation_type` = `RETURN`).
+type SaleItemPrice struct {
+	// Discounts applied. Discount amounts do not affect `total_net_amount` /
+	// `total_gross_amount`; they are reflected in the `*_final` amounts.
+	// Max items: 1000
+	Discounts []DiscountLine `json:"discounts,omitempty"`
+	// Taxes applied on top of the net amount resulting in the gross amount.
+	// Min items: 1
+	// Max items: 1000
+	Taxes []TaxLine `json:"taxes"`
+	// Taxes applied on top of `total_net_amount_final` resulting in `total_gross_amount_final`. Equals `taxes` if
+	// no discounts apply.
+	// Min items: 1
+	// Max items: 1000
+	TaxesFinal []TaxLine `json:"taxes_final"`
+	// The gross amount (including modifiers if applied). It does NOT include discounts.
+	// Format: int64
+	TotalGrossAmount int64 `json:"total_gross_amount"`
+	// The final gross amount including discounts, modifiers and taxes. Equals `total_gross_amount` if no discounts apply.
+	//
+	// Format: int64
+	TotalGrossAmountFinal int64 `json:"total_gross_amount_final"`
+	// The net amount (including modifiers if applied). It does NOT include discounts.
+	// Format: int64
+	TotalNetAmount int64 `json:"total_net_amount"`
+	// The final net amount including discounts and modifiers. Equals `total_net_amount` if no discounts apply.
+	// Format: int64
+	TotalNetAmountFinal int64 `json:"total_net_amount_final"`
+	// The price of a single unit. If the tax_mode is GROSS it includes taxes,
+	// otherwise no tax is included. It does NOT include discounts.
+	// Format: int64
+	// Min: 0
+	UnitAmount int64 `json:"unit_amount"`
+}
+
+// Outward identifiers and links for a line, kept in one place rather than scattered
+// per item type.
+type SaleItemReferences struct {
+	// Reference to the backing catalog entity (item variant, deposit, ...),
+	// typically a URN such as
+	// `urn:sumup:pos:variant:${MERCHANT_CODE}:${ITEM_ID}:${VARIANT_ID}` or
+	// `urn:sumup:pos:deposit:${MERCHANT_CODE}:${DEPOSIT_ID}`.
+	// Empty for ad-hoc / manual lines. Type-agnostic on purpose: a new item type
+	// backed by a catalog entity reuses this field instead of adding its own.
+	// Max length: 255
+	CatalogReference *string `json:"catalog_reference,omitempty"`
+	// The source of the catalog the line originates from.
+	// Default: SUMUP
+	CatalogSource *SaleItemReferencesCatalogSource `json:"catalog_source,omitempty"`
+	// An external reference id connecting this line to another system.
+	// Max length: 250
+	ExternalID *string `json:"external_id,omitempty"`
+	// Stock keeping unit, enriched from the Catalog when available.
+	// Max length: 100
+	Sku *string `json:"sku,omitempty"`
+}
+
+// The source of the catalog the line originates from.
+// Default: SUMUP
+type SaleItemReferencesCatalogSource string
+
+const (
+	SaleItemReferencesCatalogSourceExternal SaleItemReferencesCatalogSource = "EXTERNAL"
+	SaleItemReferencesCatalogSourceSumup    SaleItemReferencesCatalogSource = "SUMUP"
+)
+
+// Lifecycle state of the sale.
+// Non-finalised sales are never returned; only fully-paid sales.
+type SaleLifecycleState string
+
+const (
+	SaleLifecycleStateClosed SaleLifecycleState = "CLOSED"
 )
 
 // Paginated list of `Sale` objects. Results are ordered **newest first** by the newest
@@ -752,33 +656,101 @@ type SalePage struct {
 	PaginationToken *string `json:"pagination_token,omitempty"`
 }
 
-// Sale-level pricing aggregate, parallel to `LineItemPrice` on each `SaleLineItem`.
+// Payment on a closed sale, for bookkeeping and reconciliation.
 //
-// Line-level breakdown (unit price, line discounts, per-line taxes) lives on
-// `items[].price`. This object holds the rolled-up totals and cart-level
-// adjustments that consumers use for receipts and payment reconciliation.
-type SalePriceV10 struct {
-	// Discounts applied at cart level. Item-level discounts remain on
-	// `items[].price.discounts`.
-	// Max items: 1000
-	CartDiscounts []DiscountLine `json:"cart_discounts,omitempty"`
-	// Final gross total for the sale: sum of `items[].price.total_gross_amount_final`
-	// after cart-level discounts (tips excluded).
-	// Same value as search `total_amount`, in minor units according to `Sale.currency.scale`.
-	// Payment amounts include tips and can therefore differ from this gross total.
+// Acquirer/processing cost is not on this object. Merchant-charged fees (shipping, service
+// charge, etc.) appear as `type: "FEE"` item lines in `Sale.items`.
+type SalePayment struct {
+	// The amount of the payment including tips.
+	// The value of the amount in minor units of `Sale.currency`.
 	// Format: int64
-	GrossAmount int64 `json:"gross_amount"`
-	// Final net total for the sale: sum of `items[].price.total_net_amount_final`
-	// after cart-level discounts (tips excluded).
-	// In minor units according to `Sale.currency.scale`.
-	// Format: int64
-	NetAmount int64 `json:"net_amount"`
-	// Tax lines aggregated across the sale (after cart-level discounts).
-	// Per-line tax detail remains on `items[].price.taxes` / `taxes_final`.
-	// Min items: 1
-	// Max items: 1000
-	Taxes []TaxLine `json:"taxes"`
+	// Min: 0
+	Amount int64 `json:"amount"`
+	// Alternative payment method type when `method` is `apm`.
+	// Gift card is not an APM on this API.
+	// Values use lowercase snake_case. Known values are `qr_code_pix`, `sepa_dd`, `paypal`,
+	// `sumup_pay`, `twint`, and `iris`.
+	// Additional values may be returned as new alternative payment methods become available.
+	// Max length: 20
+	ApmType *string `json:"apm_type,omitempty"`
+	// Card brand, credit/debit processing type, and last four digits.
+	Card *SalePaymentCard `json:"card,omitempty"`
+	// Gift card used for this payment. Present when `method` is `gift_card` and the gift card
+	// id is known.
+	// Gift card IDs use the format "GC" followed by 9 alphanumeric characters
+	// (e.g. GCZ3NTMB1V).
+	GiftCard *SaleGiftCardPayment `json:"gift_card,omitempty"`
+	// Payment method on public sales read API v1.0.
+	// Digital wallets are first-class methods. Gift card payments use `gift_card`, not `apm`.
+	// Values use lowercase snake_case. Known values are `card`, `cash`, `apm`, `external`,
+	// `apple_pay`, `google_pay`, `whatsapp_pay`, and `gift_card`.
+	// Additional values may be returned as new payment methods become available.
+	// Max length: 20
+	Method string `json:"method"`
+	// UTC date-time when SumUp recorded this payment’s exposed `status` (successful, failed,
+	// or canceled). Server processed time when available; otherwise the payment provider’s
+	// transaction time. Not the device clock.
+	ProcessedAt time.Time `json:"processed_at"`
+	// The reference to the actual payment used for this sale, e.g. the sumup transaction code.
+	// Max length: 50
+	Reference string `json:"reference"`
+	// The status of the payment.
+	Status SalePaymentStatus `json:"status"`
+	// Payment operation type.
+	// This is distinct from the payment instrument in `method`.
+	// Values use lowercase snake_case. Known values are `purchase` for a normal purchase
+	// and `unreferenced_refund` for negative sales such as deposit returns.
+	// Default: purchase
+	Type string `json:"type"`
 }
+
+// The status of the payment.
+type SalePaymentStatus string
+
+const (
+	SalePaymentStatusCanceled   SalePaymentStatus = "CANCELED"
+	SalePaymentStatusFailed     SalePaymentStatus = "FAILED"
+	SalePaymentStatusSuccessful SalePaymentStatus = "SUCCESSFUL"
+)
+
+// Card brand, credit/debit processing type, and last four digits.
+type SalePaymentCard struct {
+	// The brand of the card.
+	// Input is case-insensitive; the canonical form is lowercase snake_case.
+	// **VALUES**: [amex, cup, diners, discover, elo, elv, hipercard, jcb, maestro, mastercard, visa, visa_electron,
+	// visa_vpay, vr, eftpos, conecs, swile, girocard, interac, sumup, bancomat].
+	// Max length: 20
+	Brand string `json:"brand"`
+	// The last 4 digits of the card used for the payment.
+	// Min length: 4
+	// Max length: 4
+	// Pattern: ^\d{4}$
+	Last4Digits string `json:"last_4_digits"`
+	// Credit or debit processing choice, not brand or funding.
+	// `unknown` when unavailable; prepaid/voucher are not processing types.
+	Type SalePaymentCardType `json:"type"`
+}
+
+// Credit or debit processing choice, not brand or funding.
+// `unknown` when unavailable; prepaid/voucher are not processing types.
+type SalePaymentCardType string
+
+const (
+	SalePaymentCardTypeCredit  SalePaymentCardType = "credit"
+	SalePaymentCardTypeDebit   SalePaymentCardType = "debit"
+	SalePaymentCardTypeUnknown SalePaymentCardType = "unknown"
+)
+
+// Payment outcome filter value. Multi-select uses **OR** within this field; combined with
+// other filters using **AND**.
+// Only fully-paid closed sales are exposed. Refunded original sales remain searchable as
+// `PAID`; refunds are separate negative sales, not a `REFUNDED` sale-search outcome.
+type SalePaymentStatusFilter string
+
+const (
+	SalePaymentStatusFilterChargedBack SalePaymentStatusFilter = "CHARGED_BACK"
+	SalePaymentStatusFilterPaid        SalePaymentStatusFilter = "PAID"
+)
 
 // Summary row for a sale in search results. Use `GET /sales/{sale_id}` for the full `Sale`.
 type SaleSearchItem struct {
@@ -795,7 +767,7 @@ type SaleSearchItem struct {
 	Name *string `json:"name,omitempty"`
 	// Lifecycle state of the sale.
 	// Non-finalised sales are never returned; only fully-paid sales.
-	State SaleStateV10 `json:"state"`
+	State SaleLifecycleState `json:"state"`
 	// Checkout tax mode for the sale. Same values as `Sale.tax_mode`.
 	TaxMode TaxMode `json:"tax_mode"`
 	// Final sale gross total after discounts and taxes, excluding tips.
@@ -826,13 +798,13 @@ type SaleSearchRequest struct {
 	PaginationToken *string `json:"pagination_token,omitempty"`
 	// Filters rows by payment outcome. Multiple values match any of them (**OR**). The search
 	// row does not echo this value.
-	PaymentStatuses []PaymentStatusFilterV10 `json:"payment_statuses,omitempty"`
+	PaymentStatuses []SalePaymentStatusFilter `json:"payment_statuses,omitempty"`
 	// Filters rows by sale lifecycle (`state`). Multiple values match any of them (**OR**).
 	// Uses the same values as `Sale.state`. Non-finalised sales are never returned; only
 	// fully-paid sales.
-	SaleStatuses []SaleStateV10 `json:"sale_statuses,omitempty"`
+	SaleStatuses []SaleLifecycleState `json:"sale_statuses,omitempty"`
 	// Sales channel filter. Multiple values match any of them (**OR**).
-	SalesChannels []SalesChannelFilterV10 `json:"sales_channels,omitempty"`
+	SalesChannels []SaleChannelFilter `json:"sales_channels,omitempty"`
 	// Sale created **on or after** this instant (inclusive).
 	StartDate *time.Time `json:"start_date,omitempty"`
 }
@@ -870,13 +842,33 @@ type SaleSource struct {
 	SubChannel *string `json:"sub_channel,omitempty"`
 }
 
-// Lifecycle state of the sale.
-// Non-finalised sales are never returned; only fully-paid sales.
-type SaleStateV10 string
-
-const (
-	SaleStateV10Closed SaleStateV10 = "CLOSED"
-)
+// Sale-level pricing aggregate, parallel to `SaleItemPrice` on each `SaleItem`.
+//
+// Line-level breakdown (unit price, line discounts, per-line taxes) lives on
+// `items[].price`. This object holds the rolled-up totals and cart-level
+// adjustments that consumers use for receipts and payment reconciliation.
+type SaleTotals struct {
+	// Discounts applied at cart level. Item-level discounts remain on
+	// `items[].price.discounts`.
+	// Max items: 1000
+	CartDiscounts []DiscountLine `json:"cart_discounts,omitempty"`
+	// Final gross total for the sale: sum of `items[].price.total_gross_amount_final`
+	// after cart-level discounts (tips excluded).
+	// Same value as search `total_amount`, in minor units according to `Sale.currency.scale`.
+	// Payment amounts include tips and can therefore differ from this gross total.
+	// Format: int64
+	GrossAmount int64 `json:"gross_amount"`
+	// Final net total for the sale: sum of `items[].price.total_net_amount_final`
+	// after cart-level discounts (tips excluded).
+	// In minor units according to `Sale.currency.scale`.
+	// Format: int64
+	NetAmount int64 `json:"net_amount"`
+	// Tax lines aggregated across the sale (after cart-level discounts).
+	// Per-line tax detail remains on `items[].price.taxes` / `taxes_final`.
+	// Min items: 1
+	// Max items: 1000
+	Taxes []TaxLine `json:"taxes"`
+}
 
 // The currency of the sale.
 type SalesActivityCurrency struct {
@@ -891,23 +883,6 @@ type SalesActivityCurrency struct {
 	// / 10^s`.
 	Scale int `json:"scale"`
 }
-
-// Sale channel filter value. Multi-select uses **OR** within this field.
-type SalesChannelFilterV10 string
-
-const (
-	SalesChannelFilterV10Bookings        SalesChannelFilterV10 = "BOOKINGS"
-	SalesChannelFilterV10Invoice         SalesChannelFilterV10 = "INVOICE"
-	SalesChannelFilterV10Kiosk           SalesChannelFilterV10 = "KIOSK"
-	SalesChannelFilterV10OnlinePayments  SalesChannelFilterV10 = "ONLINE_PAYMENTS"
-	SalesChannelFilterV10OnlineStore     SalesChannelFilterV10 = "ONLINE_STORE"
-	SalesChannelFilterV10OrderAggregator SalesChannelFilterV10 = "ORDER_AGGREGATOR"
-	SalesChannelFilterV10OrderAndPay     SalesChannelFilterV10 = "ORDER_AND_PAY"
-	SalesChannelFilterV10POS             SalesChannelFilterV10 = "POS"
-	SalesChannelFilterV10Solo            SalesChannelFilterV10 = "SOLO"
-	SalesChannelFilterV10Subscriptions   SalesChannelFilterV10 = "SUBSCRIPTIONS"
-	SalesChannelFilterV10Unknown         SalesChannelFilterV10 = "UNKNOWN"
-)
 
 // Information about tax together with amounts before and after its application such as:
 //   - net amount: taxable net amount, scoped by this tax
@@ -1036,16 +1011,16 @@ func (c *SalesClient) Search(ctx context.Context, merchantCode string, body Sale
 
 		return &v, nil
 	case http.StatusBadRequest:
-		var apiErr ProblemV10
+		var apiErr Problem
 		return nil, readAPIError(resp, &apiErr)
 	case http.StatusUnauthorized:
-		var apiErr ProblemV10
+		var apiErr Problem
 		return nil, readAPIError(resp, &apiErr)
 	case http.StatusForbidden:
-		var apiErr ProblemV10
+		var apiErr Problem
 		return nil, readAPIError(resp, &apiErr)
 	case http.StatusPreconditionFailed:
-		var apiErr ProblemV10
+		var apiErr Problem
 		return nil, readAPIError(resp, &apiErr)
 	default:
 		return nil, readAPIError(resp, nil)
@@ -1077,16 +1052,16 @@ func (c *SalesClient) List(ctx context.Context, merchantCode string, params Sale
 
 		return &v, nil
 	case http.StatusBadRequest:
-		var apiErr ProblemV10
+		var apiErr Problem
 		return nil, readAPIError(resp, &apiErr)
 	case http.StatusUnauthorized:
-		var apiErr ProblemV10
+		var apiErr Problem
 		return nil, readAPIError(resp, &apiErr)
 	case http.StatusForbidden:
-		var apiErr ProblemV10
+		var apiErr Problem
 		return nil, readAPIError(resp, &apiErr)
 	case http.StatusPreconditionFailed:
-		var apiErr ProblemV10
+		var apiErr Problem
 		return nil, readAPIError(resp, &apiErr)
 	default:
 		return nil, readAPIError(resp, nil)
@@ -1115,16 +1090,16 @@ func (c *SalesClient) Get(ctx context.Context, merchantCode string, saleID strin
 
 		return &v, nil
 	case http.StatusUnauthorized:
-		var apiErr ProblemV10
+		var apiErr Problem
 		return nil, readAPIError(resp, &apiErr)
 	case http.StatusForbidden:
-		var apiErr ProblemV10
+		var apiErr Problem
 		return nil, readAPIError(resp, &apiErr)
 	case http.StatusNotFound:
-		var apiErr ProblemV10
+		var apiErr Problem
 		return nil, readAPIError(resp, &apiErr)
 	case http.StatusPreconditionFailed:
-		var apiErr ProblemV10
+		var apiErr Problem
 		return nil, readAPIError(resp, &apiErr)
 	default:
 		return nil, readAPIError(resp, nil)
