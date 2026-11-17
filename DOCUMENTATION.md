@@ -8226,7 +8226,7 @@ const (
 ```
 
 <a name="TransactionsClient"></a>
-## type [TransactionsClient](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L807-L809>)
+## type [TransactionsClient](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L808-L810>)
 
 TransactionsClient provides access to the Transactions API.
 
@@ -8245,7 +8245,7 @@ type TransactionsClient struct {
 ```
 
 <a name="NewTransactionsClient"></a>
-### func [NewTransactionsClient](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L811>)
+### func [NewTransactionsClient](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L812>)
 
 ```go
 func NewTransactionsClient(c *client.Client) *TransactionsClient
@@ -8254,7 +8254,7 @@ func NewTransactionsClient(c *client.Client) *TransactionsClient
 
 
 <a name="TransactionsClient.Get"></a>
-### func \(\*TransactionsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L857>)
+### func \(\*TransactionsClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L858>)
 
 ```go
 func (c *TransactionsClient) Get(ctx context.Context, merchantCode string, params TransactionsGetParams) (*TransactionFull, error)
@@ -8263,7 +8263,7 @@ func (c *TransactionsClient) Get(ctx context.Context, merchantCode string, param
 Retrieves the full details of an identified transaction. The transaction resource is identified by a query parameter and \*one\* of following parameters is required: \- \`id\` \- \`transaction\_code\` \- \`foreign\_transaction\_id\` \- \`client\_transaction\_id\`
 
 <a name="TransactionsClient.List"></a>
-### func \(\*TransactionsClient\) [List](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L821>)
+### func \(\*TransactionsClient\) [List](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L822>)
 
 ```go
 func (c *TransactionsClient) List(ctx context.Context, merchantCode string, params TransactionsListParams) (*TransactionsListResponse, error)
@@ -8274,7 +8274,7 @@ Lists transaction history for the merchant, with optional filters for payment ty
 To request another page, use the query string from the relevant link's \`href\` with this history endpoint. Use \`changes\_since\` when retrieving transactions modified since a previous synchronization, including transactions created earlier whose status has changed.
 
 <a name="TransactionsClient.Refund"></a>
-### func \(\*TransactionsClient\) [Refund](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L892>)
+### func \(\*TransactionsClient\) [Refund](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L893>)
 
 ```go
 func (c *TransactionsClient) Refund(ctx context.Context, merchantCode string, transactionID string, body TransactionsRefundParams) (*TransactionsRefundResponse, error)
@@ -8285,7 +8285,7 @@ Refunds a transaction identified by its SumUp transaction ID. Omit the request b
 Retrieve the transaction afterwards to inspect its refunded amount and refund events. The transaction must be eligible for a refund; see the error responses for invalid amounts, permissions, and processing failures.
 
 <a name="TransactionsGetParams"></a>
-## type [TransactionsGetParams](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L737-L746>)
+## type [TransactionsGetParams](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L738-L747>)
 
 TransactionsGetParams are query parameters for GetTransactionV2.1.
 
@@ -8303,7 +8303,7 @@ type TransactionsGetParams struct {
 ```
 
 <a name="TransactionsGetParams.QueryValues"></a>
-### func \(\*TransactionsGetParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L749>)
+### func \(\*TransactionsGetParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L750>)
 
 ```go
 func (p *TransactionsGetParams) QueryValues() url.Values
@@ -8327,7 +8327,7 @@ type TransactionsHistoryLink struct {
 ```
 
 <a name="TransactionsListOrder"></a>
-## type [TransactionsListOrder](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L611>)
+## type [TransactionsListOrder](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L612>)
 
 TransactionsListOrder is a schema definition. Default: ascending
 
@@ -8345,7 +8345,7 @@ const (
 ```
 
 <a name="TransactionsListParams"></a>
-## type [TransactionsListParams](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L639-L675>)
+## type [TransactionsListParams](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L640-L676>)
 
 TransactionsListParams are query parameters for ListTransactionsV2.1.
 
@@ -8390,7 +8390,7 @@ type TransactionsListParams struct {
 ```
 
 <a name="TransactionsListParams.QueryValues"></a>
-### func \(\*TransactionsListParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L678>)
+### func \(\*TransactionsListParams\) [QueryValues](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L679>)
 
 ```go
 func (p *TransactionsListParams) QueryValues() url.Values
@@ -8399,7 +8399,7 @@ func (p *TransactionsListParams) QueryValues() url.Values
 QueryValues converts [TransactionsListParams](<#TransactionsListParams>) into \[url.Values\].
 
 <a name="TransactionsListResponse"></a>
-## type [TransactionsListResponse](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L772-L777>)
+## type [TransactionsListResponse](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L773-L778>)
 
 TransactionsListResponse is a schema definition.
 
@@ -8413,7 +8413,7 @@ type TransactionsListResponse struct {
 ```
 
 <a name="TransactionsListStatusesItem"></a>
-## type [TransactionsListStatusesItem](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L619>)
+## type [TransactionsListStatusesItem](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L620>)
 
 TransactionsListStatusesItem is a schema definition.
 
@@ -8434,7 +8434,7 @@ const (
 ```
 
 <a name="TransactionsListTypesItem"></a>
-## type [TransactionsListTypesItem](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L630>)
+## type [TransactionsListTypesItem](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L631>)
 
 TransactionsListTypesItem is a schema definition.
 
@@ -8453,21 +8453,22 @@ const (
 ```
 
 <a name="TransactionsRefundParams"></a>
-## type [TransactionsRefundParams](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L602-L607>)
+## type [TransactionsRefundParams](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L602-L608>)
 
 Optional amount for partial refunds of transactions.
 
 ```go
 type TransactionsRefundParams struct {
-    // Amount to refund in major units of the transaction's currency, for example `5` for EUR 5.00. It must be
+    // Amount to refund in minor units of the transaction's currency, for example `500` for EUR 5.00. It must be
     // greater than zero and cannot exceed the amount eligible for a refund. Eligibility depends on the transaction and
     // country/currency rules. If omitted, the system requests a full refund.
-    Amount *float32 `json:"amount,omitempty"`
+    // Min: 0
+    Amount *int `json:"amount,omitempty"`
 }
 ```
 
 <a name="TransactionsRefundResponse"></a>
-## type [TransactionsRefundResponse](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L780>)
+## type [TransactionsRefundResponse](<https://github.com/sumup/sumup-go/blob/main/transactions.go#L781>)
 
 TransactionsRefundResponse is a schema definition.
 
