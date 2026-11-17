@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.22.2](https://github.com/sumup/sumup-go/compare/v0.22.1...v0.22.2) (2026-11-17)
+
+
+### Chores
+
+* **deps:** bump amannn/action-semantic-pull-request from 6.1.1 to 6.1.2 ([#372](https://github.com/sumup/sumup-go/issues/372)) ([5dcc200](https://github.com/sumup/sumup-go/commit/5dcc2003ba09fc72e621864162c550e919f04f3b))
+* **deps:** bump github.com/pb33f/libopenapi from 0.42.3 to 0.42.4 in /internal/cmd/codegen ([#373](https://github.com/sumup/sumup-go/issues/373)) ([aa65089](https://github.com/sumup/sumup-go/commit/aa6508927cdf7959fcbff68cece34a5b1339ecc7))
+* **deps:** bump github/codeql-action/upload-sarif from 4.39.1 to 4.39.3 ([#370](https://github.com/sumup/sumup-go/issues/370)) ([dbc10d0](https://github.com/sumup/sumup-go/commit/dbc10d0a252d145cb336affe925a5c4ed71dcfb4))
+* **deps:** bump reviewdog/action-actionlint from 1.81.1 to 1.83.0 ([#371](https://github.com/sumup/sumup-go/issues/371)) ([a66136b](https://github.com/sumup/sumup-go/commit/a66136bc74ad30af6a95988cc5b58b699ef4f5c9))
+* synced file(s) with sumup/apis ([#374](https://github.com/sumup/sumup-go/issues/374)) ([294cf6f](https://github.com/sumup/sumup-go/commit/294cf6f659893b9f836a5d272b7443767f21adc4))
+* synced file(s) with sumup/apis ([#376](https://github.com/sumup/sumup-go/issues/376)) ([9629496](https://github.com/sumup/sumup-go/commit/9629496619a1cf5801b6eab69b53637fa3b39d08))
+
 ## [0.22.1](https://github.com/sumup/sumup-go/compare/v0.22.0...v0.22.1) (2026-11-12)
 
 
