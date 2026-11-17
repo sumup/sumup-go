@@ -600,10 +600,11 @@ type TransactionsHistoryLink struct {
 
 // Optional amount for partial refunds of transactions.
 type TransactionsRefundParams struct {
-	// Amount to refund in major units of the transaction's currency, for example `5` for EUR 5.00. It must be
+	// Amount to refund in minor units of the transaction's currency, for example `500` for EUR 5.00. It must be
 	// greater than zero and cannot exceed the amount eligible for a refund. Eligibility depends on the transaction and
 	// country/currency rules. If omitted, the system requests a full refund.
-	Amount *float32 `json:"amount,omitempty"`
+	// Min: 0
+	Amount *int `json:"amount,omitempty"`
 }
 
 // TransactionsListOrder is a schema definition.
