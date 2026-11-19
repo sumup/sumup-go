@@ -718,7 +718,7 @@ type SalePaymentCard struct {
 	// The brand of the card.
 	// Input is case-insensitive; the canonical form is lowercase snake_case.
 	// **VALUES**: [amex, cup, diners, discover, elo, elv, hipercard, jcb, maestro, mastercard, visa, visa_electron,
-	// visa_vpay, vr, eftpos, carnet, conecs, swile, girocard, interac, sumup, bancomat].
+	// visa_vpay, vr, eftpos, conecs, swile, girocard, interac, sumup, bancomat].
 	// Max length: 20
 	Brand string `json:"brand"`
 	// The last 4 digits of the card used for the payment.

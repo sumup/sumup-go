@@ -970,12 +970,12 @@ const (
     CardTypeAlelo        CardType = "ALELO"
     CardTypeAmex         CardType = "AMEX"
     CardTypeBancomat     CardType = "BANCOMAT"
+    CardTypeCarnet       CardType = "CARNET"
     CardTypeConecs       CardType = "CONECS"
     CardTypeCup          CardType = "CUP"
     CardTypeDiners       CardType = "DINERS"
     CardTypeDiscover     CardType = "DISCOVER"
     CardTypeEftpos       CardType = "EFTPOS"
-    CardTypeCarnet       CardType = "CARNET"
     CardTypeElo          CardType = "ELO"
     CardTypeElv          CardType = "ELV"
     CardTypeGirocard     CardType = "GIROCARD"
@@ -2542,7 +2542,7 @@ type CreateReaderTerminateUnprocessableEntityErrors map[string]any
 ```
 
 <a name="Currency"></a>
-## type [Currency](<https://github.com/sumup/sumup-go/blob/main/shared.go#L65>)
+## type [Currency](<https://github.com/sumup/sumup-go/blob/main/shared.go#L66>)
 
 Three\-letter \[ISO 4217\]\(https://en.wikipedia.org/wiki/ISO_4217\) currency code of the amount.
 
@@ -3155,7 +3155,7 @@ const (
 ```
 
 <a name="Error"></a>
-## type [Error](<https://github.com/sumup/sumup-go/blob/main/shared.go#L86-L91>)
+## type [Error](<https://github.com/sumup/sumup-go/blob/main/shared.go#L87-L92>)
 
 Details of an API error.
 
@@ -3169,7 +3169,7 @@ type Error struct {
 ```
 
 <a name="Error.Error"></a>
-### func \(\*Error\) [Error](<https://github.com/sumup/sumup-go/blob/main/shared.go#L93>)
+### func \(\*Error\) [Error](<https://github.com/sumup/sumup-go/blob/main/shared.go#L94>)
 
 ```go
 func (e *Error) Error() string
@@ -3178,7 +3178,7 @@ func (e *Error) Error() string
 
 
 <a name="ErrorExtended"></a>
-## type [ErrorExtended](<https://github.com/sumup/sumup-go/blob/main/shared.go#L100-L109>)
+## type [ErrorExtended](<https://github.com/sumup/sumup-go/blob/main/shared.go#L101-L110>)
 
 Error payload with the invalid parameter reference.
 
@@ -3196,7 +3196,7 @@ type ErrorExtended struct {
 ```
 
 <a name="ErrorExtended.Error"></a>
-### func \(\*ErrorExtended\) [Error](<https://github.com/sumup/sumup-go/blob/main/shared.go#L111>)
+### func \(\*ErrorExtended\) [Error](<https://github.com/sumup/sumup-go/blob/main/shared.go#L112>)
 
 ```go
 func (e *ErrorExtended) Error() string
@@ -3205,7 +3205,7 @@ func (e *ErrorExtended) Error() string
 
 
 <a name="ErrorForbidden"></a>
-## type [ErrorForbidden](<https://github.com/sumup/sumup-go/blob/main/shared.go#L118-L125>)
+## type [ErrorForbidden](<https://github.com/sumup/sumup-go/blob/main/shared.go#L119-L126>)
 
 Details of an error returned for a forbidden request.
 
@@ -3221,7 +3221,7 @@ type ErrorForbidden struct {
 ```
 
 <a name="ErrorForbidden.Error"></a>
-### func \(\*ErrorForbidden\) [Error](<https://github.com/sumup/sumup-go/blob/main/shared.go#L127>)
+### func \(\*ErrorForbidden\) [Error](<https://github.com/sumup/sumup-go/blob/main/shared.go#L128>)
 
 ```go
 func (e *ErrorForbidden) Error() string
@@ -3789,7 +3789,7 @@ type HostedCheckout struct {
 ```
 
 <a name="Invite"></a>
-## type [Invite](<https://github.com/sumup/sumup-go/blob/main/shared.go#L134-L139>)
+## type [Invite](<https://github.com/sumup/sumup-go/blob/main/shared.go#L135-L140>)
 
 Pending invitation for membership.
 
@@ -3868,7 +3868,7 @@ const (
 ```
 
 <a name="MandateResponse"></a>
-## type [MandateResponse](<https://github.com/sumup/sumup-go/blob/main/shared.go#L142-L149>)
+## type [MandateResponse](<https://github.com/sumup/sumup-go/blob/main/shared.go#L143-L150>)
 
 Details of the mandate linked to the saved payment instrument.
 
@@ -3884,7 +3884,7 @@ type MandateResponse struct {
 ```
 
 <a name="MandateResponseStatus"></a>
-## type [MandateResponseStatus](<https://github.com/sumup/sumup-go/blob/main/shared.go#L152>)
+## type [MandateResponseStatus](<https://github.com/sumup/sumup-go/blob/main/shared.go#L153>)
 
 Current lifecycle status of the mandate.
 
@@ -4228,7 +4228,7 @@ type MembershipResource struct {
 ```
 
 <a name="MembershipStatus"></a>
-## type [MembershipStatus](<https://github.com/sumup/sumup-go/blob/main/shared.go#L160>)
+## type [MembershipStatus](<https://github.com/sumup/sumup-go/blob/main/shared.go#L161>)
 
 The status of the membership.
 
@@ -4635,7 +4635,7 @@ type Meta map[string]any
 ```
 
 <a name="Metadata"></a>
-## type [Metadata](<https://github.com/sumup/sumup-go/blob/main/shared.go#L173>)
+## type [Metadata](<https://github.com/sumup/sumup-go/blob/main/shared.go#L174>)
 
 Set of user\-defined key\-value pairs attached to the object. Partial updates are not supported. When updating, always submit whole metadata. Maximum of 64 parameters are allowed in the object. Max properties: 64
 
@@ -4819,7 +4819,7 @@ const (
 ```
 
 <a name="PaymentType"></a>
-## type [PaymentType](<https://github.com/sumup/sumup-go/blob/main/shared.go#L178>)
+## type [PaymentType](<https://github.com/sumup/sumup-go/blob/main/shared.go#L179>)
 
 Payment category recorded on a transaction, for example \`POS\` for a point\-of\-sale card payment, \`ECOM\` for an online card payment, or \`RECURRING\` for a recurring card payment. These reporting values are separate from the lowercase \`payment\_type\` values used to process checkouts.
 
@@ -5050,7 +5050,7 @@ type Person struct {
 ```
 
 <a name="PersonalDetails"></a>
-## type [PersonalDetails](<https://github.com/sumup/sumup-go/blob/main/shared.go#L195-L212>)
+## type [PersonalDetails](<https://github.com/sumup/sumup-go/blob/main/shared.go#L196-L213>)
 
 Personal details for the customer.
 
@@ -5171,7 +5171,7 @@ type PriceAmounts struct {
 ```
 
 <a name="Problem"></a>
-## type [Problem](<https://github.com/sumup/sumup-go/blob/main/shared.go#L217-L230>)
+## type [Problem](<https://github.com/sumup/sumup-go/blob/main/shared.go#L218-L231>)
 
 A RFC 9457 problem details object.
 
@@ -5195,7 +5195,7 @@ type Problem struct {
 ```
 
 <a name="Problem.Error"></a>
-### func \(\*Problem\) [Error](<https://github.com/sumup/sumup-go/blob/main/shared.go#L232>)
+### func \(\*Problem\) [Error](<https://github.com/sumup/sumup-go/blob/main/shared.go#L233>)
 
 ```go
 func (e *Problem) Error() string
@@ -7523,7 +7523,7 @@ const (
 ```
 
 <a name="TransactionBase"></a>
-## type [TransactionBase](<https://github.com/sumup/sumup-go/blob/main/shared.go#L239-L266>)
+## type [TransactionBase](<https://github.com/sumup/sumup-go/blob/main/shared.go#L240-L267>)
 
 Core details shared by transaction resources.
 
@@ -7559,7 +7559,7 @@ type TransactionBase struct {
 ```
 
 <a name="TransactionCheckoutInfo"></a>
-## type [TransactionCheckoutInfo](<https://github.com/sumup/sumup-go/blob/main/shared.go#L269-L278>)
+## type [TransactionCheckoutInfo](<https://github.com/sumup/sumup-go/blob/main/shared.go#L270-L279>)
 
 Checkout\-specific fields associated with a transaction.
 
@@ -7685,7 +7685,7 @@ type TransactionEventDetails struct {
 ```
 
 <a name="TransactionEventStatus"></a>
-## type [TransactionEventStatus](<https://github.com/sumup/sumup-go/blob/main/shared.go#L297>)
+## type [TransactionEventStatus](<https://github.com/sumup/sumup-go/blob/main/shared.go#L298>)
 
 Status of the transaction event.
 
@@ -7712,7 +7712,7 @@ const (
 ```
 
 <a name="TransactionEventType"></a>
-## type [TransactionEventType](<https://github.com/sumup/sumup-go/blob/main/shared.go#L316>)
+## type [TransactionEventType](<https://github.com/sumup/sumup-go/blob/main/shared.go#L317>)
 
 Financial event associated with a transaction.
 
@@ -8204,7 +8204,7 @@ const (
 ```
 
 <a name="TransactionStatus"></a>
-## type [TransactionStatus](<https://github.com/sumup/sumup-go/blob/main/shared.go#L332>)
+## type [TransactionStatus](<https://github.com/sumup/sumup-go/blob/main/shared.go#L333>)
 
 Current status of the transaction.
 
@@ -9089,7 +9089,7 @@ const APIVersion = "1.0.0"
 <a name="Version"></a>
 
 ```go
-const Version = "0.22.1" // x-release-please-version
+const Version = "0.22.2" // x-release-please-version
 ```
 
 # nullable
