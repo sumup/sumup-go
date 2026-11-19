@@ -41,6 +41,7 @@ const (
 	CardTypeDiners       CardType = "DINERS"
 	CardTypeDiscover     CardType = "DISCOVER"
 	CardTypeEftpos       CardType = "EFTPOS"
+	CardTypeCarnet       CardType = "CARNET"
 	CardTypeElo          CardType = "ELO"
 	CardTypeElv          CardType = "ELV"
 	CardTypeGirocard     CardType = "GIROCARD"
