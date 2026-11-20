@@ -48,22 +48,24 @@ func readResourceParents(doc *v3.Document) (map[string]resourceParent, error) {
 		if labels[group.Name] == "" {
 			continue
 		}
+		parent := strings.ToLower(group.Name)
 		for _, child := range group.Tags {
-			if child == group.Name || labels[child] == "" || parents[child].tag != "" {
+			key := strings.ToLower(child)
+			if child == group.Name || labels[child] == "" || parents[key].tag != "" {
 				continue
 			}
-			for ancestor := group.Name; ancestor != ""; ancestor = parents[ancestor].tag {
-				if ancestor == child {
+			for ancestor := parent; ancestor != ""; ancestor = parents[ancestor].tag {
+				if ancestor == key {
 					return nil, fmt.Errorf("tag hierarchy contains a cycle at %s", child)
 				}
 			}
-			parents[child] = resourceParent{tag: group.Name, label: labels[child]}
+			parents[key] = resourceParent{tag: parent, label: labels[child]}
 		}
 	}
 	return parents, nil
 }
 
-func (b *Builder) pathForResource(path *v3.PathItem, tag string) *v3.PathItem {
+func pathForResource(path *v3.PathItem, tag string) *v3.PathItem {
 	operation := func(op *v3.Operation) *v3.Operation {
 		if op == nil {
 			return nil
@@ -72,14 +74,12 @@ func (b *Builder) pathForResource(path *v3.PathItem, tag string) *v3.PathItem {
 		if len(op.Tags) > 0 {
 			owner = strings.ToLower(op.Tags[0])
 		}
-		for ; owner != ""; owner = b.resourceParents[owner].tag {
-			if owner == tag {
-				copy := *op
-				copy.Parameters = slices.Clone(op.Parameters)
-				return &copy
-			}
+		if owner != tag {
+			return nil
 		}
-		return nil
+		copy := *op
+		copy.Parameters = slices.Clone(op.Parameters)
+		return &copy
 	}
 	return &v3.PathItem{
 		Parameters: path.Parameters,
@@ -92,7 +92,6 @@ func (b *Builder) pathForResource(path *v3.PathItem, tag string) *v3.PathItem {
 type childResource struct {
 	Name    string
 	Service string
-	Package string
 }
 
 func (b *Builder) children(tag string) []childResource {
@@ -100,7 +99,7 @@ func (b *Builder) children(tag string) []childResource {
 	for child, parent := range b.resourceParents {
 		if parent.tag == tag && b.pathsByTag[child] != nil {
 			name := b.tagByTagName(child).Name
-			children = append(children, childResource{Name: strcase.ToCamel(parent.label), Service: strcase.ToCamel(name), Package: strcase.ToSnake(name)})
+			children = append(children, childResource{Name: strcase.ToCamel(parent.label), Service: strcase.ToCamel(name)})
 		}
 	}
 	slices.SortFunc(children, func(a, b childResource) int { return cmp.Compare(a.Name, b.Name) })

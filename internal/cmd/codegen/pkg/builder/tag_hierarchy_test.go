@@ -30,7 +30,7 @@ paths:
     post:
       operationId: CreateReaderCheckout
       tags: [ReaderCheckouts]
-      x-codegen: {method_name: create_checkout}
+      x-codegen: {method_name: create}
       parameters:
         - in: header
           name: X-SumUp-Merchant-Code
@@ -61,23 +61,45 @@ components: {schemas: {}}
 		t.Fatal("the child must only contain its own operation")
 	}
 	parent := builder.pathsByTag["readers"].PathItems.GetOrZero("/readers/checkouts")
-	if parent.Get == nil || parent.Post == nil {
-		t.Fatal("the parent must still contain both operations")
+	if parent.Get == nil || parent.Post != nil {
+		t.Fatal("the parent must only contain its own operation")
 	}
 	if path := builder.resourcePath("readercheckouts"); path != "Readers.Checkouts" {
 		t.Fatalf("wrong resource path %q", path)
 	}
-	for _, tag := range []string{"readers", "readercheckouts"} {
-		method, err := builder.operationToMethod(tag, "POST", "/readers/checkouts", child.Post)
-		if err != nil {
-			t.Fatal(err)
-		}
-		if !strings.Contains(method.ParamsString(), "body ReadersCreateCheckoutParams, params ...ReadersCreateCheckoutOptions") {
-			t.Errorf("unexpected checkout method signature for %s: %s", tag, method.ParamsString())
-		}
+	method, err := builder.operationToMethod("readercheckouts", "POST", "/readers/checkouts", child.Post)
+	if err != nil {
+		t.Fatal(err)
 	}
-	fields := builder.pathsToParamTypes("readers", builder.pathsByTag["readers"])
+	if method.FunctionName != "Create" {
+		t.Errorf("unexpected checkout method name: %s", method.FunctionName)
+	}
+	if !strings.Contains(method.ParamsString(), "body ReaderCheckoutsCreateParams, params ...ReaderCheckoutsCreateOptions") {
+		t.Errorf("unexpected checkout method signature: %s", method.ParamsString())
+	}
+	fields := builder.pathsToParamTypes("readercheckouts", builder.pathsByTag["readercheckouts"])
 	if len(fields) != 3 || !strings.Contains(fields[2].String(), `headers.Set("X-SumUp-Merchant-Code", *p.XSumUpMerchantCode)`) {
 		t.Fatalf("expected checkout options to set the merchant header: %v", fields)
+	}
+}
+
+func TestResourceParentCycleAfterNormalization(t *testing.T) {
+	t.Parallel()
+	doc, err := libopenapi.NewDocument([]byte(`
+openapi: 3.1.0
+info: {title: Test, version: 1.0.0}
+paths: {}
+tags: [{name: A}, {name: B}, {name: a}]
+x-tagGroups: [{name: A, tags: [B]}, {name: B, tags: [a]}]
+`))
+	if err != nil {
+		t.Fatal(err)
+	}
+	model, err := doc.BuildV3Model()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := readResourceParents(&model.Model); err == nil {
+		t.Fatal("expected a cycle error for the normalized resource tags")
 	}
 }

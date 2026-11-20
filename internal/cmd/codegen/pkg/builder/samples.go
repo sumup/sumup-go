@@ -272,7 +272,7 @@ type sampleRenderer struct {
 }
 
 func (r *sampleRenderer) render(
-	tagName string,
+	resourcePath string,
 	operation *v3.Operation,
 	method *Method,
 	example requestExample,
@@ -317,12 +317,12 @@ func (r *sampleRenderer) render(
 		}
 		expression, err := r.value(method.RequestParams.Type, nil, values, false, true)
 		if err != nil {
-			return "", fmt.Errorf("render query parameters: %w", err)
+			return "", fmt.Errorf("render request parameters: %w", err)
 		}
 		args = append(args, expression)
 	}
 
-	call := fmt.Sprintf("client.%s.%s(%s)", tagName, method.FunctionName, strings.Join(args, ", "))
+	call := fmt.Sprintf("client.%s.%s(%s)", resourcePath, method.FunctionName, strings.Join(args, ", "))
 	var body strings.Builder
 	body.WriteString("func main() {\n")
 	body.WriteString("\tclient := sumup.NewClient()\n")

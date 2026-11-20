@@ -43,19 +43,13 @@ func (b *Builder) generateResource(tagName string, paths *v3.Paths) error {
 	types := b.schemasToTypes(resolvedSchemas, b.errorSchemas)
 
 	bodyTypes := b.pathsToBodyTypes(tagName, paths)
-	if b.resourceParents[tagName].tag == "" {
-		types = append(types, bodyTypes...)
-	}
+	types = append(types, bodyTypes...)
 
 	paramTypes := b.pathsToParamTypes(tagName, paths)
-	if b.resourceParents[tagName].tag == "" {
-		types = append(types, paramTypes...)
-	}
+	types = append(types, paramTypes...)
 
 	responseTypes := b.pathsToResponseTypes(tagName, paths)
-	if b.resourceParents[tagName].tag == "" {
-		types = append(types, responseTypes...)
-	}
+	types = append(types, responseTypes...)
 
 	respTypes := b.respToTypes(resolvedResponses, b.errorSchemas)
 	types = append(types, respTypes...)
@@ -120,7 +114,7 @@ func (b *Builder) writeClientFile(fname string, tags []string) error {
 		if b.resourceParents[tags[i]].tag != "" {
 			continue
 		}
-		if p := b.pathsByTag[tags[i]]; p.PathItems.Len() == 0 {
+		if p := b.pathsByTag[tags[i]]; p.PathItems.Len() == 0 && len(b.children(tags[i])) == 0 {
 			continue
 		}
 		resources = append(resources, resource{

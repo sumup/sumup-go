@@ -96,11 +96,7 @@ func (b *Builder) Load(spec *v3.Document) error {
 	if err != nil {
 		return err
 	}
-	b.resourceParents = make(map[string]resourceParent, len(parents))
-	for child, parent := range parents {
-		parent.tag = strings.ToLower(parent.tag)
-		b.resourceParents[strings.ToLower(child)] = parent
-	}
+	b.resourceParents = parents
 	normalizeSchemaAnnotations(spec)
 
 	b.collectPaths()
@@ -174,18 +170,18 @@ func (b *Builder) collectPaths() {
 				)
 				tag = "shared"
 			}
-
-			for owner := tag; owner != ""; owner = b.resourceParents[owner].tag {
-				tagPaths := b.pathsByTag[owner]
-				if tagPaths == nil {
-					tagPaths = v3.NewPaths(&v3low.Paths{})
-					b.pathsByTag[owner] = tagPaths
-				}
-				if len(b.resourceParents) == 0 {
-					tagPaths.PathItems.Set(path, pathSpec)
-				} else if _, exists := tagPaths.PathItems.Get(path); !exists {
-					tagPaths.PathItems.Set(path, b.pathForResource(pathSpec, owner))
-				}
+			tagPaths := b.pathsByTag[tag]
+			if tagPaths == nil {
+				tagPaths = v3.NewPaths(&v3low.Paths{})
+				b.pathsByTag[tag] = tagPaths
+			}
+			if len(b.resourceParents) == 0 {
+				tagPaths.PathItems.Set(path, pathSpec)
+			} else if _, exists := tagPaths.PathItems.Get(path); !exists {
+				tagPaths.PathItems.Set(path, pathForResource(pathSpec, tag))
+			}
+			for parent := b.resourceParents[tag].tag; parent != "" && b.pathsByTag[parent] == nil; parent = b.resourceParents[parent].tag {
+				b.pathsByTag[parent] = v3.NewPaths(&v3low.Paths{})
 			}
 		}
 	}

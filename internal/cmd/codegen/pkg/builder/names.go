@@ -23,13 +23,10 @@ func operationMethodName(op *v3.Operation) string {
 }
 
 func (b *Builder) operationTypePrefix(tagName string) string {
-	for b.resourceParents[tagName].tag != "" {
-		tagName = b.resourceParents[tagName].tag
-	}
 	if tagName == "" || tagName == "shared" {
 		return ""
 	}
-	return strcase.ToCamel(tagName)
+	return strcase.ToCamel(b.tagByTagName(tagName).Name)
 }
 
 func (b *Builder) operationTypeName(tagName, base string) string {
