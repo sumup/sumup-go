@@ -36,6 +36,7 @@ const (
 	CardTypeAlelo        CardType = "ALELO"
 	CardTypeAmex         CardType = "AMEX"
 	CardTypeBancomat     CardType = "BANCOMAT"
+	CardTypeCarnet       CardType = "CARNET"
 	CardTypeConecs       CardType = "CONECS"
 	CardTypeCup          CardType = "CUP"
 	CardTypeDiners       CardType = "DINERS"
@@ -171,6 +172,23 @@ const (
 // submit whole metadata. Maximum of 64 parameters are allowed in the object.
 // Max properties: 64
 type Metadata map[string]any
+
+// 404 Not Found
+type NotFound struct {
+	Errors NotFoundErrors `json:"errors"`
+}
+
+// NotFoundErrors is a schema definition.
+type NotFoundErrors struct {
+	// Fuller message giving context to error
+	Detail string `json:"detail"`
+}
+
+func (e *NotFound) Error() string {
+	return fmt.Sprintf("errors=%v", e.Errors)
+}
+
+var _ error = (*NotFound)(nil)
 
 // Payment category recorded on a transaction, for example `POS` for a point-of-sale card payment, `ECOM` for
 // an online card payment, or `RECURRING` for a recurring card payment. These reporting values are separate from

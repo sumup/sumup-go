@@ -5,19 +5,21 @@ package sumup
 import "github.com/sumup/sumup-go/client"
 
 type Client struct {
-	c            *client.Client
-	Checkouts    *CheckoutsClient
-	Customers    *CustomersClient
-	Members      *MembersClient
-	Memberships  *MembershipsClient
-	Merchants    *MerchantsClient
-	Payouts      *PayoutsClient
-	Readers      *ReadersClient
-	Receipts     *ReceiptsClient
-	Roles        *RolesClient
-	Sales        *SalesClient
-	Tokens       *TokensClient
-	Transactions *TransactionsClient
+	c               *client.Client
+	Checkouts       *CheckoutsClient
+	Customers       *CustomersClient
+	Members         *MembersClient
+	Memberships     *MembershipsClient
+	Merchants       *MerchantsClient
+	Payouts         *PayoutsClient
+	Readercheckouts *ReadercheckoutsClient
+	Readers         *ReadersClient
+	Readersettings  *ReadersettingsClient
+	Receipts        *ReceiptsClient
+	Roles           *RolesClient
+	Sales           *SalesClient
+	Tokens          *TokensClient
+	Transactions    *TransactionsClient
 }
 
 // NewClient creates new SumUp API client.
@@ -33,7 +35,9 @@ func NewClient(opts ...client.ClientOption) *Client {
 	c.Memberships = NewMembershipsClient(client)
 	c.Merchants = NewMerchantsClient(client)
 	c.Payouts = NewPayoutsClient(client)
+	c.Readercheckouts = NewReadercheckoutsClient(client)
 	c.Readers = NewReadersClient(client)
+	c.Readersettings = NewReadersettingsClient(client)
 	c.Receipts = NewReceiptsClient(client)
 	c.Roles = NewRolesClient(client)
 	c.Sales = NewSalesClient(client)
