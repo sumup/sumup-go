@@ -306,16 +306,16 @@ func (r *sampleRenderer) render(
 		args = append(args, expression)
 	}
 
-	if method.QueryParams != nil {
+	if method.RequestParams != nil {
 		values := make(map[string]any)
-		if declaration := r.registry.declaration(method.QueryParams.Type); declaration != nil {
+		if declaration := r.registry.declaration(method.RequestParams.Type); declaration != nil {
 			for _, field := range declaration.Fields {
 				if value, provided := parameterExample(field.Parameter); provided {
 					values[field.Name] = value
 				}
 			}
 		}
-		expression, err := r.value(method.QueryParams.Type, nil, values, false, true)
+		expression, err := r.value(method.RequestParams.Type, nil, values, false, true)
 		if err != nil {
 			return "", fmt.Errorf("render query parameters: %w", err)
 		}

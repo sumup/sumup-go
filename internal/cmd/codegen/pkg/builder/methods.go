@@ -27,15 +27,18 @@ type Parameter struct {
 
 // Method describes a client method. Methods map one-to-one to OpenAPI operations.
 type Method struct {
-	Description  string
-	HTTPMethod   string
-	FunctionName string
-	ResponseType *ResponseType
-	Path         string
-	PathParams   []Parameter
-	QueryParams  *Parameter
-	HasBody      bool
-	Responses    []Response
+	Description    string
+	HTTPMethod     string
+	FunctionName   string
+	ResponseType   *ResponseType
+	Path           string
+	PathParams     []Parameter
+	RequestParams  *Parameter
+	HasQueries     bool
+	HasHeaders     bool
+	OptionalParams bool
+	HasBody        bool
+	Responses      []Response
 }
 
 func (mt Method) ParamsString() string {
@@ -45,9 +48,13 @@ func (mt Method) ParamsString() string {
 		res.WriteString(", ")
 		fmt.Fprintf(&res, "%s %s", strcase.ToLowerCamel(p.Name), p.Type)
 	}
-	if mt.QueryParams != nil {
+	if mt.RequestParams != nil {
 		res.WriteString(", ")
-		fmt.Fprintf(&res, "%s %s", strcase.ToLowerCamel(mt.QueryParams.Name), mt.QueryParams.Type)
+		paramType := mt.RequestParams.Type
+		if mt.OptionalParams {
+			paramType = "..." + paramType
+		}
+		fmt.Fprintf(&res, "%s %s", strcase.ToLowerCamel(mt.RequestParams.Name), paramType)
 	}
 	return res.String()
 }
@@ -149,27 +156,31 @@ func (b *Builder) operationToMethod(tagName, method, path string, o *v3.Operatio
 		return nil, fmt.Errorf("build path parameters: %w", err)
 	}
 
-	hasBody := false
-	if o.RequestBody != nil && o.RequestBody.Content != nil {
-		mt, ok := getJSONMediaType(o.RequestBody.Content)
-		if ok && mt.Schema != nil {
-			paramType := typeName + "Params"
-			params = append(params, Parameter{
-				Name: "body",
-				Type: paramType,
-			})
-			hasBody = true
-		}
+	hasBody := operationJSONBodySchema(o) != nil
+	if hasBody {
+		params = append(params, Parameter{Name: "body", Type: typeName + "Params"})
 	}
 
-	var queryParams *Parameter
-	if slices.ContainsFunc(o.Parameters, func(p *v3.Parameter) bool {
-		p = b.resolveParameter(p)
-		return p != nil && p.In != "path"
-	}) {
-		queryParams = &Parameter{
+	var hasQueries, hasHeaders, hasRequiredHeader bool
+	for _, parameter := range o.Parameters {
+		p := b.resolveParameter(parameter)
+		if p == nil || p.In == "path" {
+			continue
+		}
+		if p.In == "header" {
+			hasHeaders = true
+			hasRequiredHeader = hasRequiredHeader || (p.Required != nil && *p.Required)
+		} else {
+			hasQueries = true
+		}
+	}
+	// GetReader already has a positional Params argument for If-Modified-Since.
+	optionalParams := hasHeaders && !hasQueries && !hasRequiredHeader && o.OperationId != "GetReader"
+	var requestParams *Parameter
+	if hasQueries || hasHeaders {
+		requestParams = &Parameter{
 			Name: "params",
-			Type: typeName + "Params",
+			Type: operationParamsTypeName(typeName, hasBody),
 		}
 	}
 
@@ -223,15 +234,18 @@ func (b *Builder) operationToMethod(tagName, method, path string, o *v3.Operatio
 	)
 
 	return &Method{
-		Description:  operationGodoc(methodName, o),
-		HTTPMethod:   httpMethod(method),
-		FunctionName: methodName,
-		ResponseType: respType,
-		Path:         pathBuilder(path),
-		PathParams:   params,
-		QueryParams:  queryParams,
-		HasBody:      hasBody,
-		Responses:    responses,
+		Description:    operationGodoc(methodName, o),
+		HTTPMethod:     httpMethod(method),
+		FunctionName:   methodName,
+		ResponseType:   respType,
+		Path:           pathBuilder(path),
+		PathParams:     params,
+		RequestParams:  requestParams,
+		HasQueries:     hasQueries,
+		HasHeaders:     hasHeaders,
+		OptionalParams: optionalParams,
+		HasBody:        hasBody,
+		Responses:      responses,
 	}, nil
 }
 

@@ -71,6 +71,17 @@ func (b *Builder) respToTypes(schemas []*v3.Response, errorSchemas map[string]st
 	return allTypes
 }
 
+func operationJSONBodySchema(operation *v3.Operation) *base.SchemaProxy {
+	if operation.RequestBody == nil || operation.RequestBody.Content == nil {
+		return nil
+	}
+	media, ok := getJSONMediaType(operation.RequestBody.Content)
+	if !ok {
+		return nil
+	}
+	return media.Schema
+}
+
 // TODO: is this different from respToTypes?
 func (b *Builder) pathsToBodyTypes(tagName string, paths *v3.Paths) []Writable {
 	if paths == nil {
@@ -93,28 +104,25 @@ func (b *Builder) pathsToBodyTypes(tagName string, paths *v3.Paths) []Writable {
 			operationName := operationMethodName(opSpec)
 			typeName := b.operationTypeName(tagName, operationName)
 
-			if opSpec.RequestBody != nil && opSpec.RequestBody.Content != nil {
-				mt, ok := getJSONMediaType(opSpec.RequestBody.Content)
-				if ok && mt.Schema != nil {
-					paramsName := typeName + "Params"
-					if mt.Schema.IsReference() {
-						baseName := b.schemaTypeName(mt.Schema.GetReference())
-						if paramsName != baseName && !aliasTypes[paramsName] {
-							paramTypes = append(paramTypes, &TypeDeclaration{
-								Name: paramsName,
-								Type: "= " + baseName,
-							})
-							aliasTypes[paramsName] = true
-						}
-						continue
+			if schema := operationJSONBodySchema(opSpec); schema != nil {
+				paramsName := typeName + "Params"
+				if schema.IsReference() {
+					baseName := b.schemaTypeName(schema.GetReference())
+					if paramsName != baseName && !aliasTypes[paramsName] {
+						paramTypes = append(paramTypes, &TypeDeclaration{
+							Name: paramsName,
+							Type: "= " + baseName,
+						})
+						aliasTypes[paramsName] = true
 					}
-					if mt.Schema.Schema() == nil {
-						continue
-					}
-					bodyObject, additionalTypes := b.createObject(mt.Schema.Schema(), paramsName)
-					paramTypes = append(paramTypes, bodyObject)
-					paramTypes = append(paramTypes, additionalTypes...)
+					continue
 				}
+				if schema.Schema() == nil {
+					continue
+				}
+				bodyObject, additionalTypes := b.createObject(schema.Schema(), paramsName)
+				paramTypes = append(paramTypes, bodyObject)
+				paramTypes = append(paramTypes, additionalTypes...)
 			}
 		}
 	}
@@ -186,7 +194,7 @@ func (b *Builder) pathsToParamTypes(tagName string, paths *v3.Paths) []Writable 
 				}
 
 				if len(fields) != 0 {
-					paramsTypeName := typeName + "Params"
+					paramsTypeName := operationParamsTypeName(typeName, operationJSONBodySchema(opSpec) != nil)
 					paramsTpl := TypeDeclaration{
 						Type:      "struct",
 						Name:      paramsTypeName,
@@ -195,7 +203,10 @@ func (b *Builder) pathsToParamTypes(tagName string, paths *v3.Paths) []Writable 
 						Operation: opSpec,
 					}
 
-					paramTypes = append(paramTypes, &paramsTpl, &toQueryValues{Typ: &paramsTpl})
+					paramTypes = append(paramTypes, &paramsTpl, &toParameterValues{Typ: &paramsTpl})
+					if slices.ContainsFunc(fields, func(field StructField) bool { return field.Parameter.In == "header" }) {
+						paramTypes = append(paramTypes, &toParameterValues{Typ: &paramsTpl, Headers: true})
+					}
 				}
 			}
 		}

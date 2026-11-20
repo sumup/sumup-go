@@ -265,37 +265,45 @@ func paramToString(name string, param *v3.Parameter) string {
 	return schemaToString(name, param.Schema)
 }
 
-type toQueryValues struct {
-	Typ *TypeDeclaration
+type toParameterValues struct {
+	Typ     *TypeDeclaration
+	Headers bool
 }
 
-func (e toQueryValues) String() string {
+func (e toParameterValues) String() string {
 	buf := new(strings.Builder)
-	fmt.Fprintf(buf, "// QueryValues converts [%s] into [url.Values].\n", e.Typ.Name)
-	fmt.Fprintf(buf, "func (p *%s) QueryValues() url.Values {\n", e.Typ.Name)
-	fmt.Fprintf(buf, "\tq := make(url.Values)\n\n")
+	method, typ, values := "QueryValues", "url.Values", "q"
+	if e.Headers {
+		method, typ, values = "HeaderValues", "http.Header", "headers"
+	}
+	fmt.Fprintf(buf, "// %s converts [%s] into [%s].\n", method, e.Typ.Name, typ)
+	fmt.Fprintf(buf, "func (p *%s) %s() %s {\n", e.Typ.Name, method, typ)
+	fmt.Fprintf(buf, "\t%s := make(%s)\n\n", values, typ)
 	for _, f := range e.Typ.Fields {
+		if (f.Parameter.In == "header") != e.Headers {
+			continue
+		}
 		name := strcase.ToCamel(f.Name)
 		if f.Parameter.Schema != nil && f.Parameter.Schema.Schema() != nil && slices.Contains(f.Parameter.Schema.Schema().Type, "array") {
 			field := fmt.Sprintf("p.%s", name)
 			fmt.Fprintf(buf, "\tfor _, v := range %s {\n", field)
-			fmt.Fprintf(buf, "\t\tq.Add(%q, %s)\n", f.Name, paramToString("v", f.Parameter))
+			fmt.Fprintf(buf, "\t\t%s.Add(%q, %s)\n", values, f.Name, paramToString("v", f.Parameter))
 			fmt.Fprintf(buf, "\t}\n")
 		} else {
 			required := f.Parameter.Required != nil && *f.Parameter.Required
 			if required {
 				field := fmt.Sprintf("p.%s", name)
-				fmt.Fprintf(buf, "\tq.Set(%q, %s)\n", f.Name, paramToString(field, f.Parameter))
+				fmt.Fprintf(buf, "\t%s.Set(%q, %s)\n", values, f.Name, paramToString(field, f.Parameter))
 			} else {
 				fmt.Fprintf(buf, "\tif p.%s != nil {\n", name)
 				field := fmt.Sprintf("*p.%s", name)
-				fmt.Fprintf(buf, "\t\tq.Set(%q, %s)\n", f.Name, paramToString(field, f.Parameter))
+				fmt.Fprintf(buf, "\t\t%s.Set(%q, %s)\n", values, f.Name, paramToString(field, f.Parameter))
 				fmt.Fprintf(buf, "\t}\n")
 			}
 		}
 		fmt.Fprint(buf, "\n")
 	}
-	fmt.Fprint(buf, "\treturn q\n")
+	fmt.Fprintf(buf, "\treturn %s\n", values)
 	fmt.Fprintf(buf, "}\n")
 	return buf.String()
 }

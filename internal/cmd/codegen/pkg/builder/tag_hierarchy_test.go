@@ -1,6 +1,7 @@
 package builder
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/pb33f/libopenapi"
@@ -29,6 +30,16 @@ paths:
     post:
       operationId: CreateReaderCheckout
       tags: [ReaderCheckouts]
+      x-codegen: {method_name: create_checkout}
+      parameters:
+        - in: header
+          name: X-SumUp-Merchant-Code
+          required: false
+          schema: {type: string}
+      requestBody:
+        content:
+          application/json:
+            schema: {type: object, properties: {reference: {type: string}}}
       responses:
         '204': {description: OK}
 components: {schemas: {}}
@@ -55,5 +66,18 @@ components: {schemas: {}}
 	}
 	if path := builder.resourcePath("readercheckouts"); path != "Readers.Checkouts" {
 		t.Fatalf("wrong resource path %q", path)
+	}
+	for _, tag := range []string{"readers", "readercheckouts"} {
+		method, err := builder.operationToMethod(tag, "POST", "/readers/checkouts", child.Post)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !strings.Contains(method.ParamsString(), "body ReadersCreateCheckoutParams, params ...ReadersCreateCheckoutOptions") {
+			t.Errorf("unexpected checkout method signature for %s: %s", tag, method.ParamsString())
+		}
+	}
+	fields := builder.pathsToParamTypes("readers", builder.pathsByTag["readers"])
+	if len(fields) != 3 || !strings.Contains(fields[2].String(), `headers.Set("X-SumUp-Merchant-Code", *p.XSumUpMerchantCode)`) {
+		t.Fatalf("expected checkout options to set the merchant header: %v", fields)
 	}
 }

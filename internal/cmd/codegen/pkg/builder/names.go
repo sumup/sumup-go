@@ -36,6 +36,13 @@ func (b *Builder) operationTypeName(tagName, base string) string {
 	return b.operationTypePrefix(tagName) + base
 }
 
+func operationParamsTypeName(typeName string, hasBody bool) string {
+	if hasBody {
+		return typeName + "Options"
+	}
+	return typeName + "Params"
+}
+
 func (b *Builder) schemaTypeName(ref string) string {
 	if ref == "" {
 		return ""
