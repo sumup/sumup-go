@@ -11,8 +11,6 @@ import (
 	"time"
 
 	"github.com/sumup/sumup-go/client"
-	"github.com/sumup/sumup-go/nullable"
-	"github.com/sumup/sumup-go/secret"
 )
 
 // Affiliate is a schema definition.
@@ -59,341 +57,6 @@ func (e *BadRequest) Error() string {
 }
 
 var _ error = (*BadRequest)(nil)
-
-// Error description
-type CreateReaderCheckoutError struct {
-	Errors CreateReaderCheckoutErrorErrors `json:"errors"`
-}
-
-// CreateReaderCheckoutErrorErrors is a schema definition.
-type CreateReaderCheckoutErrorErrors struct {
-	// Error message
-	Detail *string `json:"detail,omitempty"`
-	// Error code
-	Type string `json:"type"`
-}
-
-func (e *CreateReaderCheckoutError) Error() string {
-	return fmt.Sprintf("errors=%v", e.Errors)
-}
-
-var _ error = (*CreateReaderCheckoutError)(nil)
-
-// Payment details for a Reader Checkout.
-type CreateCheckoutRequest struct {
-	// Optional object containing data for transactions from ERP integrators in Greece that comply with the AADE
-	// 1155 protocol.
-	// When such regulatory/business requirements apply, this object must be provided and contains the data needed
-	// to validate the transaction with the AADE signature provider.
-	AADE *CreateCheckoutRequestAADE `json:"aade,omitempty"`
-	// Optional affiliate metadata associated with the checkout's payment.
-	// Provide both `app_id` and `key` when including this object.
-	Affiliate *nullable.Field[CreateCheckoutRequestAffiliate] `json:"affiliate,omitempty"`
-	// The card type of the card used for the transaction.
-	// It is required only for some countries (e.g: Brazil).
-	CardType *CreateCheckoutRequestCardType `json:"card_type,omitempty"`
-	// Description of the checkout to be shown in the Merchant Sales
-	Description *string `json:"description,omitempty"`
-	// Number of installments for the transaction.
-	// It may vary according to the merchant country.
-	// For example, in Brazil, the maximum number of installments is 12.
-	//
-	// Omit if the merchant country does not support installments.
-	// Otherwise, the checkout will be rejected.
-	// Min: 1
-	Installments *nullable.Field[int] `json:"installments,omitempty"`
-	// The payment method type for the transaction. Defaults to `card`.
-	//
-	// Use `pix` to initiate a Pix QR-code payment flow on the device.
-	// Pix is only supported for Brazilian merchants; other merchants will receive a 422 error.
-	// Default: card
-	PaymentType *CreateCheckoutRequestPaymentType `json:"payment_type,omitempty"`
-	// Webhook URL to which the payment result will be sent.
-	// It must be a HTTPS url.
-	// Format: uri
-	ReturnURL *string `json:"return_url,omitempty"`
-	// Exactly three distinct tipping rates to be displayed to the cardholder.
-	// Each rate is a fraction between 0.01 and 1.00 in increments of 0.01.
-	// The rates are sorted in ascending order by the server.
-	// Unique items only
-	// Min items: 3
-	// Max items: 3
-	TipRates []float32 `json:"tip_rates,omitempty"`
-	// Time in seconds the cardholder has to select a tip rate.
-	// If not provided, the default value is 30 seconds.
-	//
-	// It can only be set if `tip_rates` is provided.
-	//
-	// **Note**: If the target device is a Solo, it must be in version 3.3.38.0 or higher.
-	// Default: 30
-	// Min: 30
-	// Max: 120
-	TipTimeout *int `json:"tip_timeout,omitempty"`
-	// Amount structure.
-	//
-	// The amount is represented as an integer value altogether with the currency and the minor unit.
-	//
-	// For example, EUR 1.00 is represented as value 100 with minor unit of 2.
-	TotalAmount CreateCheckoutRequestTotalAmount `json:"total_amount"`
-}
-
-// Optional object containing data for transactions from ERP integrators in Greece that comply with the AADE
-// 1155 protocol.
-// When such regulatory/business requirements apply, this object must be provided and contains the data needed
-// to validate the transaction with the AADE signature provider.
-type CreateCheckoutRequestAADE struct {
-	// The identifier of the AADE signature provider.
-	ProviderID string `json:"provider_id"`
-	// The base64 encoded signature of the transaction data.
-	Signature string `json:"signature"`
-	// The string containing the signed transaction data.
-	SignatureData string `json:"signature_data"`
-}
-
-// Optional affiliate metadata associated with the checkout's payment.
-// Provide both `app_id` and `key` when including this object.
-type CreateCheckoutRequestAffiliate struct {
-	// Integrator application identifier from the [Affiliate Keys](https://developer.sumup.com/affiliate-keys) page.
-	//
-	// Required when the affiliate object is provided.
-	AppID string `json:"app_id"`
-	// Integrator-owned transaction reference. Optional.
-	// Can be used to retrieve the transaction via the [Transactions API](https://developer.sumup.com/api/transactions/get).
-	ForeignTransactionID *string `json:"foreign_transaction_id,omitempty"`
-	// Affiliate key generated in the [Affiliate Keys](https://developer.sumup.com/affiliate-keys) page.
-	// Required when the affiliate object is provided.
-	Key string `json:"key"`
-	// Optional key-value metadata associated with the transaction.
-	Tags CreateCheckoutRequestAffiliateTags `json:"tags,omitempty"`
-}
-
-// Optional key-value metadata associated with the transaction.
-type CreateCheckoutRequestAffiliateTags map[string]any
-
-// The card type of the card used for the transaction.
-// It is required only for some countries (e.g: Brazil).
-type CreateCheckoutRequestCardType string
-
-const (
-	CreateCheckoutRequestCardTypeCredit CreateCheckoutRequestCardType = "credit"
-	CreateCheckoutRequestCardTypeDebit  CreateCheckoutRequestCardType = "debit"
-)
-
-// The payment method type for the transaction. Defaults to `card`.
-//
-// Use `pix` to initiate a Pix QR-code payment flow on the device.
-// Pix is only supported for Brazilian merchants; other merchants will receive a 422 error.
-//
-// Default: card
-type CreateCheckoutRequestPaymentType string
-
-const (
-	CreateCheckoutRequestPaymentTypeCard CreateCheckoutRequestPaymentType = "card"
-	CreateCheckoutRequestPaymentTypePix  CreateCheckoutRequestPaymentType = "pix"
-)
-
-// Amount structure.
-//
-// The amount is represented as an integer value altogether with the currency and the minor unit.
-//
-// For example, EUR 1.00 is represented as value 100 with minor unit of 2.
-type CreateCheckoutRequestTotalAmount struct {
-	// Currency ISO 4217 code
-	Currency string `json:"currency"`
-	// The minor units of the currency.
-	// It represents the number of decimals of the currency. For the currencies CLP, COP and HUF, the minor unit
-	// is 0.
-	// Min: 0
-	MinorUnit int `json:"minor_unit"`
-	// Integer value of the amount.
-	// Min: 0
-	Value int `json:"value"`
-}
-
-// CreateReaderCheckoutResponse is a schema definition.
-type CreateReaderCheckoutResponse struct {
-	Data CreateReaderCheckoutResponseData `json:"data"`
-}
-
-// CreateReaderCheckoutResponseData is a schema definition.
-type CreateReaderCheckoutResponseData struct {
-	// The checkout ID is a unique identifier for the checkout.
-	CheckoutID *string `json:"checkout_id,omitempty"`
-	// Unique identifier for the transaction associated with this checkout.
-	// Use this value to match the checkout with payment events and transaction records.
-	ClientTransactionID string `json:"client_transaction_id"`
-}
-
-// Unprocessable entity
-type CreateReaderCheckoutUnprocessableEntity struct {
-	Errors CreateReaderCheckoutUnprocessableEntityErrors `json:"errors"`
-}
-
-// CreateReaderCheckoutUnprocessableEntityErrors is a schema definition.
-type CreateReaderCheckoutUnprocessableEntityErrors map[string]any
-
-func (e *CreateReaderCheckoutUnprocessableEntity) Error() string {
-	return fmt.Sprintf("errors=%v", e.Errors)
-}
-
-var _ error = (*CreateReaderCheckoutUnprocessableEntity)(nil)
-
-// Error description
-type CreateReaderTerminateError struct {
-	Errors CreateReaderTerminateErrorErrors `json:"errors"`
-}
-
-// CreateReaderTerminateErrorErrors is a schema definition.
-type CreateReaderTerminateErrorErrors struct {
-	// Error message
-	Detail *string `json:"detail,omitempty"`
-	// Error code
-	Type string `json:"type"`
-}
-
-func (e *CreateReaderTerminateError) Error() string {
-	return fmt.Sprintf("errors=%v", e.Errors)
-}
-
-var _ error = (*CreateReaderTerminateError)(nil)
-
-// Unprocessable entity
-type CreateReaderTerminateUnprocessableEntity struct {
-	Errors CreateReaderTerminateUnprocessableEntityErrors `json:"errors"`
-}
-
-// CreateReaderTerminateUnprocessableEntityErrors is a schema definition.
-type CreateReaderTerminateUnprocessableEntityErrors map[string]any
-
-func (e *CreateReaderTerminateUnprocessableEntity) Error() string {
-	return fmt.Sprintf("errors=%v", e.Errors)
-}
-
-var _ error = (*CreateReaderTerminateUnprocessableEntity)(nil)
-
-// GetReaderCheckoutResponse is a schema definition.
-type GetReaderCheckoutResponse struct {
-	Data GetReaderCheckoutResponseData `json:"data"`
-}
-
-// GetReaderCheckoutResponseData is a schema definition.
-type GetReaderCheckoutResponseData struct {
-	// Type of the card, or null when no card type was specified.
-	CardType nullable.Field[GetReaderCheckoutResponseDataCardType] `json:"card_type"`
-	// Unique identifier for the checkout
-	// Format: uuid
-	CheckoutID string `json:"checkout_id"`
-	// Client transaction identifier associated with the checkout
-	ClientTransactionID string `json:"client_transaction_id"`
-	// Checkout creation timestamp
-	CreatedAt time.Time `json:"created_at"`
-	// Number of installments for the transaction. Required for some countries.
-	Installments nullable.Field[int] `json:"installments"`
-	// Reason for the payment failure, or null when no failure reason is available.
-	PaymentFailureReason nullable.Field[string] `json:"payment_failure_reason"`
-	// Status of the payment, or null when no payment status is available.
-	PaymentStatus nullable.Field[string] `json:"payment_status"`
-	// Type of the payment. Required for some countries
-	PaymentType GetReaderCheckoutResponseDataPaymentType `json:"payment_type"`
-	// Reader firmware version
-	ReaderFirmwareVersion string `json:"reader_firmware_version"`
-	// Device serial number
-	ReaderSerialNumber string `json:"reader_serial_number"`
-	// Current status of the checkout
-	Status GetReaderCheckoutResponseDataStatus `json:"status"`
-	// Amount structure.
-	//
-	// The amount is represented as an integer value altogether with the currency and the minor unit.
-	//
-	// For example, EUR 1.00 is represented as value 100 with minor unit of 2.
-	TotalAmount GetReaderCheckoutResponseDataTotalAmount `json:"total_amount"`
-	// Checkout last update timestamp
-	UpdatedAt time.Time `json:"updated_at"`
-	// Checkout expiration timestamp. After this time, the checkout will be automatically cancelled.
-	ValidUntil nullable.Field[time.Time] `json:"valid_until"`
-}
-
-// Type of the card, or null when no card type was specified.
-type GetReaderCheckoutResponseDataCardType string
-
-const (
-	GetReaderCheckoutResponseDataCardTypeCredit GetReaderCheckoutResponseDataCardType = "credit"
-	GetReaderCheckoutResponseDataCardTypeDebit  GetReaderCheckoutResponseDataCardType = "debit"
-)
-
-// Type of the payment. Required for some countries
-type GetReaderCheckoutResponseDataPaymentType string
-
-const (
-	GetReaderCheckoutResponseDataPaymentTypeCard GetReaderCheckoutResponseDataPaymentType = "card"
-	GetReaderCheckoutResponseDataPaymentTypePix  GetReaderCheckoutResponseDataPaymentType = "pix"
-)
-
-// Current status of the checkout
-type GetReaderCheckoutResponseDataStatus string
-
-const (
-	GetReaderCheckoutResponseDataStatusCancelled  GetReaderCheckoutResponseDataStatus = "cancelled"
-	GetReaderCheckoutResponseDataStatusFailed     GetReaderCheckoutResponseDataStatus = "failed"
-	GetReaderCheckoutResponseDataStatusPending    GetReaderCheckoutResponseDataStatus = "pending"
-	GetReaderCheckoutResponseDataStatusSuccessful GetReaderCheckoutResponseDataStatus = "successful"
-)
-
-// Amount structure.
-//
-// The amount is represented as an integer value altogether with the currency and the minor unit.
-//
-// For example, EUR 1.00 is represented as value 100 with minor unit of 2.
-type GetReaderCheckoutResponseDataTotalAmount struct {
-	// Currency ISO 4217 code
-	Currency string `json:"currency"`
-	// The minor units of the currency.
-	// It represents the number of decimals of the currency. For the currencies CLP, COP and HUF, the minor unit
-	// is 0.
-	// Min: 0
-	MinorUnit int `json:"minor_unit"`
-	// Integer value of the amount.
-	// Min: 0
-	Value int `json:"value"`
-}
-
-// Menu lock settings reported by the reader, or the last saved settings when offline.
-type GetReaderSettingsResponse struct {
-	Data GetReaderSettingsResponseData `json:"data"`
-}
-
-// GetReaderSettingsResponseData is a schema definition.
-type GetReaderSettingsResponseData struct {
-	// Menu lock configuration. Fields may be absent if no value is available.
-	MenuLock GetReaderSettingsResponseDataMenuLock `json:"menu_lock"`
-}
-
-// Menu lock configuration. Fields may be absent if no value is available.
-type GetReaderSettingsResponseDataMenuLock struct {
-	// Whether menu lock is enabled.
-	Enabled *bool `json:"enabled,omitempty"`
-	// Four-digit PIN used to unlock the reader's menu.
-	// Format: password
-	// Pattern: ^[0-9]{4}$
-	Passcode *secret.Secret `json:"passcode,omitempty"`
-}
-
-// 404 Not Found
-type NotFound struct {
-	Errors NotFoundErrors `json:"errors"`
-}
-
-// NotFoundErrors is a schema definition.
-type NotFoundErrors struct {
-	// Fuller message giving context to error
-	Detail string `json:"detail"`
-}
-
-func (e *NotFound) Error() string {
-	return fmt.Sprintf("errors=%v", e.Errors)
-}
-
-var _ error = (*NotFound)(nil)
 
 // A physical card reader device that can accept in-person payments.
 type Reader struct {
@@ -591,87 +254,6 @@ func (e *Unauthorized) Error() string {
 
 var _ error = (*Unauthorized)(nil)
 
-// Details of a failed reader settings request.
-type UpdateReaderSettingsError struct {
-	Errors UpdateReaderSettingsErrorErrors `json:"errors"`
-}
-
-// UpdateReaderSettingsErrorErrors is a schema definition.
-type UpdateReaderSettingsErrorErrors struct {
-	// Error message
-	Detail string `json:"detail"`
-	// Error code
-	Type *string `json:"type,omitempty"`
-}
-
-func (e *UpdateReaderSettingsError) Error() string {
-	return fmt.Sprintf("errors=%v", e.Errors)
-}
-
-var _ error = (*UpdateReaderSettingsError)(nil)
-
-// Menu lock settings to update for a Solo reader.
-type UpdateReaderSettingsRequest struct {
-	// Menu lock configuration. Provide at least one of `enabled` or `passcode`.
-	// Min properties: 1
-	MenuLock UpdateReaderSettingsRequestMenuLock `json:"menu_lock"`
-}
-
-// Menu lock configuration. Provide at least one of `enabled` or `passcode`.
-// Min properties: 1
-type UpdateReaderSettingsRequestMenuLock struct {
-	// Whether menu lock is enabled.
-	Enabled *bool `json:"enabled,omitempty"`
-	// Four-digit PIN used to unlock the reader's menu.
-	// Format: password
-	// Pattern: ^[0-9]{4}$
-	Passcode *secret.Secret `json:"passcode,omitempty"`
-}
-
-// Menu lock settings applied to the reader.
-type UpdateReaderSettingsResponse struct {
-	Data UpdateReaderSettingsResponseData `json:"data"`
-}
-
-// UpdateReaderSettingsResponseData is a schema definition.
-type UpdateReaderSettingsResponseData struct {
-	// Settings included in the update. Omitted fields are not returned.
-	MenuLock UpdateReaderSettingsResponseDataMenuLock `json:"menu_lock"`
-	// Indicates that the reader applied the settings update.
-	Status UpdateReaderSettingsResponseDataStatus `json:"status"`
-}
-
-// Settings included in the update. Omitted fields are not returned.
-type UpdateReaderSettingsResponseDataMenuLock struct {
-	// Whether menu lock is enabled.
-	Enabled *bool `json:"enabled,omitempty"`
-	// Four-digit PIN used to unlock the reader's menu.
-	// Format: password
-	// Pattern: ^[0-9]{4}$
-	Passcode *secret.Secret `json:"passcode,omitempty"`
-}
-
-// Indicates that the reader applied the settings update.
-type UpdateReaderSettingsResponseDataStatus string
-
-const (
-	UpdateReaderSettingsResponseDataStatusApplied UpdateReaderSettingsResponseDataStatus = "applied"
-)
-
-// The reader cannot complete the settings request, or the settings are invalid.
-type UpdateReaderSettingsUnprocessableEntity struct {
-	Errors UpdateReaderSettingsUnprocessableEntityErrors `json:"errors"`
-}
-
-// UpdateReaderSettingsUnprocessableEntityErrors is a schema definition.
-type UpdateReaderSettingsUnprocessableEntityErrors map[string]any
-
-func (e *UpdateReaderSettingsUnprocessableEntity) Error() string {
-	return fmt.Sprintf("errors=%v", e.Errors)
-}
-
-var _ error = (*UpdateReaderSettingsUnprocessableEntity)(nil)
-
 // ReadersCreateParams is a schema definition.
 type ReadersCreateParams struct {
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
@@ -690,10 +272,6 @@ type ReadersCreateParams struct {
 
 type ReadersCreateGoCheckoutParams = ReaderPaymentRequestParams
 
-type ReadersUpdateReaderSettingsParams = UpdateReaderSettingsRequest
-
-type ReadersCreateCheckoutParams = CreateCheckoutRequest
-
 // ReadersUpdateParams is a schema definition.
 type ReadersUpdateParams struct {
 	// Set of user-defined key-value pairs attached to the object. Partial updates are not supported. When updating, always
@@ -703,6 +281,25 @@ type ReadersUpdateParams struct {
 	// Custom human-readable, user-defined name for easier identification of the reader.
 	// Max length: 500
 	Name *string `json:"name,omitempty"`
+}
+
+// ReadersGetStatusParams are query parameters for GetReaderStatus.
+type ReadersGetStatusParams struct {
+	// Merchant for this request when the access token's user has an accepted membership for more than one merchant. Send
+	// the same value on every request in the flow. When the header is absent or blank, the merchant on the access
+	// token is used. A code with no accepted membership returns 422.
+	XSumupMerchantCode *string
+}
+
+// QueryValues converts [ReadersGetStatusParams] into [url.Values].
+func (p *ReadersGetStatusParams) QueryValues() url.Values {
+	q := make(url.Values)
+
+	if p.XSumupMerchantCode != nil {
+		q.Set("x-sumup-merchant-code", *p.XSumupMerchantCode)
+	}
+
+	return q
 }
 
 // ReadersGetParams are query parameters for GetReader.
@@ -846,51 +443,6 @@ func (c *ReadersClient) CreateGoCheckout(ctx context.Context, merchantCode strin
 	}
 }
 
-// Terminate a Reader Checkout stops the current transaction on the target device.
-//
-// This process is asynchronous and the actual termination may take some time to be performed on the device.
-//
-// There are some caveats when using this endpoint:
-// * The target device must be online, otherwise terminate won't be accepted
-// * The action will succeed only if the device is waiting for cardholder action: e.g: waiting for card, waiting
-// for PIN, etc.
-// * There is no confirmation of the termination.
-//
-// If a transaction is successfully terminated and `return_url` was provided on Checkout, the transaction status
-// will be sent as `failed` to the provided URL.
-//
-// **Note**: If the target device is a Solo, it must be in version 3.3.28.0 or higher.
-func (c *ReadersClient) TerminateCheckout(ctx context.Context, merchantCode string, readerID string) error {
-	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v/terminate", merchantCode, readerID)
-
-	resp, err := c.c.Call(ctx, http.MethodPost, path)
-	if err != nil {
-		return fmt.Errorf("call %s %s: %w", http.MethodPost, path, err)
-	}
-	defer func() {
-		_ = resp.Body.Close()
-	}()
-
-	switch resp.StatusCode {
-	case http.StatusAccepted:
-		return nil
-	case http.StatusBadRequest:
-		var apiErr Problem
-		return readAPIError(resp, &apiErr)
-	case http.StatusUnauthorized:
-		var apiErr Problem
-		return readAPIError(resp, &apiErr)
-	case http.StatusNotFound:
-		var apiErr Problem
-		return readAPIError(resp, &apiErr)
-	case http.StatusUnprocessableEntity:
-		var apiErr Problem
-		return readAPIError(resp, &apiErr)
-	default:
-		return readAPIError(resp, nil)
-	}
-}
-
 // Provides the last known status for a Reader.
 //
 // This endpoint allows you to retrieve updates from the connected card reader, including the current screen being
@@ -911,10 +463,10 @@ func (c *ReadersClient) TerminateCheckout(ctx context.Context, merchantCode stri
 // * `OFFLINE` – Device disconnected (last state persisted)
 //
 // **Note**: If the target device is a Solo, it must be in version 3.3.39.0 or higher.
-func (c *ReadersClient) GetStatus(ctx context.Context, merchantCode string, readerID string) (*StatusResponse, error) {
+func (c *ReadersClient) GetStatus(ctx context.Context, merchantCode string, readerID string, params ReadersGetStatusParams) (*StatusResponse, error) {
 	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v/status", merchantCode, readerID)
 
-	resp, err := c.c.Call(ctx, http.MethodGet, path)
+	resp, err := c.c.Call(ctx, http.MethodGet, path, client.WithQueryValues(params.QueryValues()))
 	if err != nil {
 		return nil, fmt.Errorf("call %s %s: %w", http.MethodGet, path, err)
 	}
@@ -937,140 +489,6 @@ func (c *ReadersClient) GetStatus(ctx context.Context, merchantCode string, read
 		var apiErr Problem
 		return nil, readAPIError(resp, &apiErr)
 	case http.StatusNotFound:
-		var apiErr Problem
-		return nil, readAPIError(resp, &apiErr)
-	default:
-		return nil, readAPIError(resp, nil)
-	}
-}
-
-// Returns the menu lock settings for a Solo reader.
-//
-// For an online reader, returns the current settings. For an offline reader,
-// returns the last saved settings, which may differ from its current configuration.
-// Returns `404` if the reader is offline and no saved settings are available.
-//
-// The response may include the menu lock PIN.
-func (c *ReadersClient) GetReaderSettings(ctx context.Context, merchantCode string, readerID string) (*GetReaderSettingsResponse, error) {
-	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v/settings", merchantCode, readerID)
-
-	resp, err := c.c.Call(ctx, http.MethodGet, path)
-	if err != nil {
-		return nil, fmt.Errorf("call %s %s: %w", http.MethodGet, path, err)
-	}
-	defer func() {
-		_ = resp.Body.Close()
-	}()
-
-	switch resp.StatusCode {
-	case http.StatusOK:
-		var v GetReaderSettingsResponse
-		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-			return nil, fmt.Errorf("decode response: %s", err.Error())
-		}
-
-		return &v, nil
-	case http.StatusUnauthorized:
-		var apiErr Problem
-		return nil, readAPIError(resp, &apiErr)
-	case http.StatusNotFound:
-		var apiErr Problem
-		return nil, readAPIError(resp, &apiErr)
-	case http.StatusUnprocessableEntity:
-		var apiErr Problem
-		return nil, readAPIError(resp, &apiErr)
-	default:
-		return nil, readAPIError(resp, nil)
-	}
-}
-
-// Updates the menu lock settings for a Solo reader. The reader must be online.
-// A successful response confirms that the reader applied the update.
-//
-// Include at least one of `menu_lock.enabled` or `menu_lock.passcode`.
-// Omitted settings keep their current values. The response contains only the
-// settings included in the request.
-//
-// When enabling menu lock for a reader without a PIN, include a four-digit PIN
-// in `menu_lock.passcode` in the same request.
-func (c *ReadersClient) UpdateReaderSettings(ctx context.Context, merchantCode string, readerID string, body ReadersUpdateReaderSettingsParams) (*UpdateReaderSettingsResponse, error) {
-	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v/settings", merchantCode, readerID)
-
-	resp, err := c.c.Call(ctx, http.MethodPatch, path, client.WithJSONBody(body))
-	if err != nil {
-		return nil, fmt.Errorf("call %s %s: %w", http.MethodPatch, path, err)
-	}
-	defer func() {
-		_ = resp.Body.Close()
-	}()
-
-	switch resp.StatusCode {
-	case http.StatusOK:
-		var v UpdateReaderSettingsResponse
-		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-			return nil, fmt.Errorf("decode response: %s", err.Error())
-		}
-
-		return &v, nil
-	case http.StatusBadRequest:
-		var apiErr Problem
-		return nil, readAPIError(resp, &apiErr)
-	case http.StatusUnauthorized:
-		var apiErr Problem
-		return nil, readAPIError(resp, &apiErr)
-	case http.StatusNotFound:
-		var apiErr Problem
-		return nil, readAPIError(resp, &apiErr)
-	case http.StatusUnprocessableEntity:
-		var apiErr Problem
-		return nil, readAPIError(resp, &apiErr)
-	default:
-		return nil, readAPIError(resp, nil)
-	}
-}
-
-// Creates a Checkout for a Reader.
-//
-// This process is asynchronous and the actual transaction may take some time to be started on the device.
-//
-// There are some caveats when using this endpoint:
-// * The target device must be online, otherwise checkout won't be accepted
-// * After the checkout is accepted, the system has 60 seconds to start the payment on the target device. During
-// this time, any other checkout for the same device will be rejected.
-//
-// **Note**: If the target device is a Solo, it must be in version 3.3.24.3 or higher.
-//
-// Optionally include an `affiliate` object to attach integrator metadata to the payment.
-// Provide both `app_id` and `key` when including this object.
-func (c *ReadersClient) CreateCheckout(ctx context.Context, merchantCode string, readerID string, body ReadersCreateCheckoutParams) (*CreateReaderCheckoutResponse, error) {
-	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v/checkout", merchantCode, readerID)
-
-	resp, err := c.c.Call(ctx, http.MethodPost, path, client.WithJSONBody(body))
-	if err != nil {
-		return nil, fmt.Errorf("call %s %s: %w", http.MethodPost, path, err)
-	}
-	defer func() {
-		_ = resp.Body.Close()
-	}()
-
-	switch resp.StatusCode {
-	case http.StatusCreated:
-		var v CreateReaderCheckoutResponse
-		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-			return nil, fmt.Errorf("decode response: %s", err.Error())
-		}
-
-		return &v, nil
-	case http.StatusBadRequest:
-		var apiErr Problem
-		return nil, readAPIError(resp, &apiErr)
-	case http.StatusUnauthorized:
-		var apiErr Problem
-		return nil, readAPIError(resp, &apiErr)
-	case http.StatusNotFound:
-		var apiErr Problem
-		return nil, readAPIError(resp, &apiErr)
-	case http.StatusUnprocessableEntity:
 		var apiErr Problem
 		return nil, readAPIError(resp, &apiErr)
 	default:
@@ -1153,37 +571,6 @@ func (c *ReadersClient) Update(ctx context.Context, merchantCode string, readerI
 
 		return &v, nil
 	case http.StatusForbidden:
-		var apiErr Problem
-		return nil, readAPIError(resp, &apiErr)
-	case http.StatusNotFound:
-		var apiErr Problem
-		return nil, readAPIError(resp, &apiErr)
-	default:
-		return nil, readAPIError(resp, nil)
-	}
-}
-
-// Get a Checkout for a Reader.
-func (c *ReadersClient) GetCheckout(ctx context.Context, merchantCode string, readerID string, checkoutID string) (*GetReaderCheckoutResponse, error) {
-	path := fmt.Sprintf("/v0.1/merchants/%v/readers/%v/checkout/%v", merchantCode, readerID, checkoutID)
-
-	resp, err := c.c.Call(ctx, http.MethodGet, path)
-	if err != nil {
-		return nil, fmt.Errorf("call %s %s: %w", http.MethodGet, path, err)
-	}
-	defer func() {
-		_ = resp.Body.Close()
-	}()
-
-	switch resp.StatusCode {
-	case http.StatusOK:
-		var v GetReaderCheckoutResponse
-		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-			return nil, fmt.Errorf("decode response: %s", err.Error())
-		}
-
-		return &v, nil
-	case http.StatusUnauthorized:
 		var apiErr Problem
 		return nil, readAPIError(resp, &apiErr)
 	case http.StatusNotFound:

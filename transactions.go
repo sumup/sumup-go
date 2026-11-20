@@ -603,7 +603,6 @@ type TransactionsRefundParams struct {
 	// Amount to refund in minor units of the transaction's currency, for example `500` for EUR 5.00. It must be
 	// greater than zero and cannot exceed the amount eligible for a refund. Eligibility depends on the transaction and
 	// country/currency rules. If omitted, the system requests a full refund.
-	// Min: 0
 	Amount *int `json:"amount,omitempty"`
 }
 
