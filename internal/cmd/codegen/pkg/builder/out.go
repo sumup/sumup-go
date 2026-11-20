@@ -26,6 +26,7 @@ type templateData struct {
 	Types       []Writable
 	Service     string
 	ServiceDoc  string
+	Children    []childResource
 	Methods     []*Method
 }
 
@@ -42,13 +43,19 @@ func (b *Builder) generateResource(tagName string, paths *v3.Paths) error {
 	types := b.schemasToTypes(resolvedSchemas, b.errorSchemas)
 
 	bodyTypes := b.pathsToBodyTypes(tagName, paths)
-	types = append(types, bodyTypes...)
+	if b.resourceParents[tagName].tag == "" {
+		types = append(types, bodyTypes...)
+	}
 
 	paramTypes := b.pathsToParamTypes(tagName, paths)
-	types = append(types, paramTypes...)
+	if b.resourceParents[tagName].tag == "" {
+		types = append(types, paramTypes...)
+	}
 
 	responseTypes := b.pathsToResponseTypes(tagName, paths)
-	types = append(types, responseTypes...)
+	if b.resourceParents[tagName].tag == "" {
+		types = append(types, responseTypes...)
+	}
 
 	respTypes := b.respToTypes(resolvedResponses, b.errorSchemas)
 	types = append(types, respTypes...)
@@ -75,6 +82,7 @@ func (b *Builder) generateResource(tagName string, paths *v3.Paths) error {
 		PackageName: strcase.ToSnake(tag.Name),
 		Types:       types,
 		Methods:     methods,
+		Children:    b.children(tagName),
 		Service:     strcase.ToCamel(tag.Name),
 		ServiceDoc:  clientGodoc(strcase.ToCamel(tag.Name)+"Client", tag),
 	}); err != nil {
@@ -109,6 +117,9 @@ func (b *Builder) writeClientFile(fname string, tags []string) error {
 
 	resources := make([]resource, 0, len(tags))
 	for i := range tags {
+		if b.resourceParents[tags[i]].tag != "" {
+			continue
+		}
 		if p := b.pathsByTag[tags[i]]; p.PathItems.Len() == 0 {
 			continue
 		}

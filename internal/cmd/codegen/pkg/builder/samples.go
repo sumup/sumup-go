@@ -13,8 +13,6 @@ import (
 	"github.com/pb33f/go-yaml"
 	"github.com/pb33f/libopenapi/datamodel/high/base"
 	v3 "github.com/pb33f/libopenapi/datamodel/high/v3"
-
-	"github.com/sumup/sumup-go/internal/cmd/codegen/internal/strcase"
 )
 
 const (
@@ -145,7 +143,7 @@ func (b *Builder) samplesForOperation(
 			registry: registry,
 			imports:  make(map[string]struct{}),
 		}
-		source, err := renderer.render(tagName, operation, method, example)
+		source, err := renderer.render(b.resourcePath(tagName), operation, method, example)
 		if err != nil {
 			return nil, err
 		}
@@ -324,7 +322,7 @@ func (r *sampleRenderer) render(
 		args = append(args, expression)
 	}
 
-	call := fmt.Sprintf("client.%s.%s(%s)", strcase.ToCamel(tagName), method.FunctionName, strings.Join(args, ", "))
+	call := fmt.Sprintf("client.%s.%s(%s)", tagName, method.FunctionName, strings.Join(args, ", "))
 	var body strings.Builder
 	body.WriteString("func main() {\n")
 	body.WriteString("\tclient := sumup.NewClient()\n")
