@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.23.0](https://github.com/sumup/sumup-go/compare/v0.22.2...v0.23.0) (2026-11-21)
+
+
+### Features
+
+* **codegen:** support nested SDK resources ([#379](https://github.com/sumup/sumup-go/issues/379)) ([855e4e1](https://github.com/sumup/sumup-go/commit/855e4e1382f92d9b530294fcb73adcd304ddea78))
+
 ## [0.22.2](https://github.com/sumup/sumup-go/compare/v0.22.1...v0.22.2) (2026-11-17)
 
 
