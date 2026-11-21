@@ -27,7 +27,8 @@ type Builder struct {
 
 	// spec are the OpenAPI specs we are working with.
 	// Load the specs using [Builder.Load].
-	spec *v3.Document
+	spec            *v3.Document
+	resourceParents map[string]resourceParent
 
 	// schemasByTag maps tags to respective schema references.
 	schemasByTag    map[string][]string
@@ -91,6 +92,11 @@ func New(cfg Config, opts ...Option) *Builder {
 func (b *Builder) Load(spec *v3.Document) error {
 	b.start = time.Now()
 	b.spec = spec
+	parents, err := readResourceParents(spec)
+	if err != nil {
+		return err
+	}
+	b.resourceParents = parents
 	normalizeSchemaAnnotations(spec)
 
 	b.collectPaths()
@@ -164,14 +170,19 @@ func (b *Builder) collectPaths() {
 				)
 				tag = "shared"
 			}
-
-			tagPaths, ok := b.pathsByTag[tag]
-			if !ok {
+			tagPaths := b.pathsByTag[tag]
+			if tagPaths == nil {
 				tagPaths = v3.NewPaths(&v3low.Paths{})
 				b.pathsByTag[tag] = tagPaths
 			}
-
-			tagPaths.PathItems.Set(path, pathSpec)
+			if len(b.resourceParents) == 0 {
+				tagPaths.PathItems.Set(path, pathSpec)
+			} else if _, exists := tagPaths.PathItems.Get(path); !exists {
+				tagPaths.PathItems.Set(path, pathForResource(pathSpec, tag))
+			}
+			for parent := b.resourceParents[tag].tag; parent != "" && b.pathsByTag[parent] == nil; parent = b.resourceParents[parent].tag {
+				b.pathsByTag[parent] = v3.NewPaths(&v3low.Paths{})
+			}
 		}
 	}
 }

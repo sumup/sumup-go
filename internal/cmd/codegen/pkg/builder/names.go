@@ -26,11 +26,18 @@ func (b *Builder) operationTypePrefix(tagName string) string {
 	if tagName == "" || tagName == "shared" {
 		return ""
 	}
-	return strcase.ToCamel(tagName)
+	return strcase.ToCamel(b.tagByTagName(tagName).Name)
 }
 
 func (b *Builder) operationTypeName(tagName, base string) string {
 	return b.operationTypePrefix(tagName) + base
+}
+
+func operationParamsTypeName(typeName string, hasBody bool) string {
+	if hasBody {
+		return typeName + "Options"
+	}
+	return typeName + "Params"
 }
 
 func (b *Builder) schemaTypeName(ref string) string {

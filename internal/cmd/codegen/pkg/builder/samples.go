@@ -13,8 +13,6 @@ import (
 	"github.com/pb33f/go-yaml"
 	"github.com/pb33f/libopenapi/datamodel/high/base"
 	v3 "github.com/pb33f/libopenapi/datamodel/high/v3"
-
-	"github.com/sumup/sumup-go/internal/cmd/codegen/internal/strcase"
 )
 
 const (
@@ -145,7 +143,7 @@ func (b *Builder) samplesForOperation(
 			registry: registry,
 			imports:  make(map[string]struct{}),
 		}
-		source, err := renderer.render(tagName, operation, method, example)
+		source, err := renderer.render(b.resourcePath(tagName), operation, method, example)
 		if err != nil {
 			return nil, err
 		}
@@ -274,7 +272,7 @@ type sampleRenderer struct {
 }
 
 func (r *sampleRenderer) render(
-	tagName string,
+	resourcePath string,
 	operation *v3.Operation,
 	method *Method,
 	example requestExample,
@@ -308,23 +306,23 @@ func (r *sampleRenderer) render(
 		args = append(args, expression)
 	}
 
-	if method.QueryParams != nil {
+	if method.RequestParams != nil {
 		values := make(map[string]any)
-		if declaration := r.registry.declaration(method.QueryParams.Type); declaration != nil {
+		if declaration := r.registry.declaration(method.RequestParams.Type); declaration != nil {
 			for _, field := range declaration.Fields {
 				if value, provided := parameterExample(field.Parameter); provided {
 					values[field.Name] = value
 				}
 			}
 		}
-		expression, err := r.value(method.QueryParams.Type, nil, values, false, true)
+		expression, err := r.value(method.RequestParams.Type, nil, values, false, true)
 		if err != nil {
-			return "", fmt.Errorf("render query parameters: %w", err)
+			return "", fmt.Errorf("render request parameters: %w", err)
 		}
 		args = append(args, expression)
 	}
 
-	call := fmt.Sprintf("client.%s.%s(%s)", strcase.ToCamel(tagName), method.FunctionName, strings.Join(args, ", "))
+	call := fmt.Sprintf("client.%s.%s(%s)", resourcePath, method.FunctionName, strings.Join(args, ", "))
 	var body strings.Builder
 	body.WriteString("func main() {\n")
 	body.WriteString("\tclient := sumup.NewClient()\n")

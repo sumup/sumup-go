@@ -224,6 +224,14 @@ func WithHeader(key, value string) RequestOption {
 	}
 }
 
+// WithHeaderValues returns a [RequestOption] that sets request headers.
+func WithHeaderValues(headers http.Header) RequestOption {
+	return func(r *request) error {
+		maps.Copy(r.req.Header, headers)
+		return nil
+	}
+}
+
 // WithBody returns a [RequestOption] that sets the request body as a JSON of the value v.
 func WithJSONBody(v any) RequestOption {
 	return func(r *request) error {

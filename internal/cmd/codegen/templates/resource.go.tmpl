@@ -37,10 +37,22 @@ import (
 {{- end }}
 type {{.Service}}Client struct {
 	c *client.Client
+{{- range .Children }}
+	{{.Name}} *{{.Service}}Client
+{{- end }}
 }
 
 func New{{.Service}}Client(c *client.Client) *{{.Service}}Client {
+{{- if .Children }}
+	return &{{.Service}}Client{
+    c: c,
+{{- range .Children }}
+    {{.Name}}: New{{.Service}}Client(c),
+{{- end }}
+    }
+{{- else }}
 	return &{{.Service}}Client{c: c}
+{{- end }}
 }
 
 {{ range $method := .Methods }}
@@ -50,11 +62,22 @@ func New{{.Service}}Client(c *client.Client) *{{.Service}}Client {
 {{- end }}
 func (c *{{$.Service}}Client) {{.FunctionName}}({{.ParamsString}}) {{with .ResponseType}}(*{{.Type}}, error){{else}}error{{end}} {
 	path := {{.Path}}
+{{ if .OptionalParams }}
+	options := []client.RequestOption{
+	{{- if .HasBody }}client.WithJSONBody(body),{{ end }}
+	}
+	for _, param := range params {
+		options = append(options, client.WithHeaderValues(param.HeaderValues()))
+	}
+	resp, err := c.c.Call(ctx, {{.HTTPMethod}}, path, options...)
+{{- else }}
 
 	resp, err := c.c.Call(ctx, {{.HTTPMethod}}, path
 	{{- if .HasBody }}, client.WithJSONBody(body){{ end -}}
-	{{- if .QueryParams }}, client.WithQueryValues(params.QueryValues()){{ end -}}
+	{{- if .HasQueries }}, client.WithQueryValues(params.QueryValues()){{ end -}}
+	{{- if .HasHeaders }}, client.WithHeaderValues(params.HeaderValues()){{ end -}}
 	)
+{{- end }}
 	if err != nil {
 		return {{with $responseType}}nil, {{end}}fmt.Errorf("call %s %s: %w", {{.HTTPMethod}}, path, err)
 	}
