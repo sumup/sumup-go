@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.23.0](https://github.com/sumup/sumup-go/compare/v0.22.2...v0.23.0) (2026-11-25)
+
+
+### Features
+
+* **codegen:** support nested SDK resources ([#379](https://github.com/sumup/sumup-go/issues/379)) ([855e4e1](https://github.com/sumup/sumup-go/commit/855e4e1382f92d9b530294fcb73adcd304ddea78))
+
+
+### Bug Fixes
+
+* **codegen:** retain resource-qualified Reader request types ([#383](https://github.com/sumup/sumup-go/issues/383)) ([f39a907](https://github.com/sumup/sumup-go/commit/f39a907c937bc332713b53733c4fb5bb85f869f1))
+
+
+### Chores
+
+* **deps:** bump github.com/pb33f/libopenapi from 0.42.4 to 0.42.5 in /internal/cmd/codegen ([#382](https://github.com/sumup/sumup-go/issues/382)) ([e8b71a3](https://github.com/sumup/sumup-go/commit/e8b71a3ff66d264b4ae781e2702d7540bfd2c242))
+* **deps:** bump reviewdog/action-actionlint from 1.83.0 to 1.84.1 ([#381](https://github.com/sumup/sumup-go/issues/381)) ([c714f5e](https://github.com/sumup/sumup-go/commit/c714f5e3fec3303ea4f6eb21760f0eea513a9315))
+* synced file(s) with sumup/apis ([#378](https://github.com/sumup/sumup-go/issues/378)) ([176c23f](https://github.com/sumup/sumup-go/commit/176c23f47834f31bf07acdbb76ca789b1a5e6dce))
+
 ## [0.22.2](https://github.com/sumup/sumup-go/compare/v0.22.1...v0.22.2) (2026-11-17)
 
 
