@@ -53,15 +53,15 @@ func (e *UpdateReaderSettingsError) Error() string {
 var _ error = (*UpdateReaderSettingsError)(nil)
 
 // Menu lock settings to update for a Solo reader.
-type UpdateRequest struct {
+type UpdateReaderSettingsRequest struct {
 	// Menu lock configuration. Provide at least one of `enabled` or `passcode`.
 	// Min properties: 1
-	MenuLock UpdateRequestMenuLock `json:"menu_lock"`
+	MenuLock UpdateReaderSettingsRequestMenuLock `json:"menu_lock"`
 }
 
 // Menu lock configuration. Provide at least one of `enabled` or `passcode`.
 // Min properties: 1
-type UpdateRequestMenuLock struct {
+type UpdateReaderSettingsRequestMenuLock struct {
 	// Whether menu lock is enabled.
 	Enabled *bool `json:"enabled,omitempty"`
 	// Four-digit PIN used to unlock the reader's menu.
@@ -114,7 +114,7 @@ func (e *UpdateReaderSettingsUnprocessableEntity) Error() string {
 
 var _ error = (*UpdateReaderSettingsUnprocessableEntity)(nil)
 
-type ReaderSettingsUpdateParams = UpdateRequest
+type ReaderSettingsUpdateParams = UpdateReaderSettingsRequest
 
 // ReaderSettingsClient provides access to the ReaderSettings API.
 //

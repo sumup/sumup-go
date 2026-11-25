@@ -93,6 +93,13 @@ import "github.com/sumup/sumup-go"
 - [type CreateReaderCheckoutError](<#CreateReaderCheckoutError>)
   - [func \(e \*CreateReaderCheckoutError\) Error\(\) string](<#CreateReaderCheckoutError.Error>)
 - [type CreateReaderCheckoutErrorErrors](<#CreateReaderCheckoutErrorErrors>)
+- [type CreateReaderCheckoutRequest](<#CreateReaderCheckoutRequest>)
+- [type CreateReaderCheckoutRequestAADE](<#CreateReaderCheckoutRequestAADE>)
+- [type CreateReaderCheckoutRequestAffiliate](<#CreateReaderCheckoutRequestAffiliate>)
+- [type CreateReaderCheckoutRequestAffiliateTags](<#CreateReaderCheckoutRequestAffiliateTags>)
+- [type CreateReaderCheckoutRequestCardType](<#CreateReaderCheckoutRequestCardType>)
+- [type CreateReaderCheckoutRequestPaymentType](<#CreateReaderCheckoutRequestPaymentType>)
+- [type CreateReaderCheckoutRequestTotalAmount](<#CreateReaderCheckoutRequestTotalAmount>)
 - [type CreateReaderCheckoutResponse](<#CreateReaderCheckoutResponse>)
 - [type CreateReaderCheckoutResponseData](<#CreateReaderCheckoutResponseData>)
 - [type CreateReaderCheckoutUnprocessableEntity](<#CreateReaderCheckoutUnprocessableEntity>)
@@ -104,13 +111,6 @@ import "github.com/sumup/sumup-go"
 - [type CreateReaderTerminateUnprocessableEntity](<#CreateReaderTerminateUnprocessableEntity>)
   - [func \(e \*CreateReaderTerminateUnprocessableEntity\) Error\(\) string](<#CreateReaderTerminateUnprocessableEntity.Error>)
 - [type CreateReaderTerminateUnprocessableEntityErrors](<#CreateReaderTerminateUnprocessableEntityErrors>)
-- [type CreateRequest](<#CreateRequest>)
-- [type CreateRequestAADE](<#CreateRequestAADE>)
-- [type CreateRequestAffiliate](<#CreateRequestAffiliate>)
-- [type CreateRequestAffiliateTags](<#CreateRequestAffiliateTags>)
-- [type CreateRequestCardType](<#CreateRequestCardType>)
-- [type CreateRequestPaymentType](<#CreateRequestPaymentType>)
-- [type CreateRequestTotalAmount](<#CreateRequestTotalAmount>)
 - [type Currency](<#Currency>)
 - [type Customer](<#Customer>)
 - [type CustomerValidationError](<#CustomerValidationError>)
@@ -454,6 +454,8 @@ import "github.com/sumup/sumup-go"
 - [type UpdateReaderSettingsError](<#UpdateReaderSettingsError>)
   - [func \(e \*UpdateReaderSettingsError\) Error\(\) string](<#UpdateReaderSettingsError.Error>)
 - [type UpdateReaderSettingsErrorErrors](<#UpdateReaderSettingsErrorErrors>)
+- [type UpdateReaderSettingsRequest](<#UpdateReaderSettingsRequest>)
+- [type UpdateReaderSettingsRequestMenuLock](<#UpdateReaderSettingsRequestMenuLock>)
 - [type UpdateReaderSettingsResponse](<#UpdateReaderSettingsResponse>)
 - [type UpdateReaderSettingsResponseData](<#UpdateReaderSettingsResponseData>)
 - [type UpdateReaderSettingsResponseDataMenuLock](<#UpdateReaderSettingsResponseDataMenuLock>)
@@ -461,8 +463,6 @@ import "github.com/sumup/sumup-go"
 - [type UpdateReaderSettingsUnprocessableEntity](<#UpdateReaderSettingsUnprocessableEntity>)
   - [func \(e \*UpdateReaderSettingsUnprocessableEntity\) Error\(\) string](<#UpdateReaderSettingsUnprocessableEntity.Error>)
 - [type UpdateReaderSettingsUnprocessableEntityErrors](<#UpdateReaderSettingsUnprocessableEntityErrors>)
-- [type UpdateRequest](<#UpdateRequest>)
-- [type UpdateRequestMenuLock](<#UpdateRequestMenuLock>)
 - [type UserType](<#UserType>)
 
 
@@ -2253,6 +2253,173 @@ type CreateReaderCheckoutErrorErrors struct {
 }
 ```
 
+<a name="CreateReaderCheckoutRequest"></a>
+## type [CreateReaderCheckoutRequest](<https://github.com/sumup/sumup-go/blob/main/reader_checkouts.go#L36-L90>)
+
+Payment details for a Reader Checkout.
+
+```go
+type CreateReaderCheckoutRequest struct {
+    // Optional object containing data for transactions from ERP integrators in Greece that comply with the AADE
+    // 1155 protocol.
+    // When such regulatory/business requirements apply, this object must be provided and contains the data needed
+    // to validate the transaction with the AADE signature provider.
+    AADE *CreateReaderCheckoutRequestAADE `json:"aade,omitempty"`
+    // Optional affiliate metadata associated with the checkout's payment.
+    // Provide both `app_id` and `key` when including this object.
+    Affiliate *nullable.Field[CreateReaderCheckoutRequestAffiliate] `json:"affiliate,omitempty"`
+    // The card type of the card used for the transaction.
+    // It is required only for some countries (e.g: Brazil).
+    CardType *CreateReaderCheckoutRequestCardType `json:"card_type,omitempty"`
+    // Description of the checkout to be shown in the Merchant Sales
+    Description *string `json:"description,omitempty"`
+    // Number of installments for the transaction.
+    // It may vary according to the merchant country.
+    // For example, in Brazil, the maximum number of installments is 12.
+    //
+    // Omit if the merchant country does not support installments.
+    // Otherwise, the checkout will be rejected.
+    // Min: 1
+    Installments *nullable.Field[int] `json:"installments,omitempty"`
+    // The payment method type for the transaction. Defaults to `card`.
+    //
+    // Use `pix` to initiate a Pix QR-code payment flow on the device.
+    // Pix is only supported for Brazilian merchants; other merchants will receive a 422 error.
+    // Default: card
+    PaymentType *CreateReaderCheckoutRequestPaymentType `json:"payment_type,omitempty"`
+    // Webhook URL to which the payment result will be sent.
+    // It must be a HTTPS url.
+    // Format: uri
+    ReturnURL *string `json:"return_url,omitempty"`
+    // Exactly three distinct tipping rates to be displayed to the cardholder.
+    // Each rate is a fraction between 0.01 and 1.00 in increments of 0.01.
+    // The rates are sorted in ascending order by the server.
+    // Unique items only
+    // Min items: 3
+    // Max items: 3
+    TipRates []float32 `json:"tip_rates,omitempty"`
+    // Time in seconds the cardholder has to select a tip rate.
+    // If not provided, the default value is 30 seconds.
+    //
+    // It can only be set if `tip_rates` is provided.
+    //
+    // **Note**: If the target device is a Solo, it must be in version 3.3.38.0 or higher.
+    // Default: 30
+    // Min: 30
+    // Max: 120
+    TipTimeout *int `json:"tip_timeout,omitempty"`
+    // Amount to charge in minor units. Use the decimal places for the currency.
+    // CLP, COP, and HUF use zero decimal places.
+    //
+    // For example, send `1234` for EUR 12.34 or `1000` for CLP 1000.
+    TotalAmount CreateReaderCheckoutRequestTotalAmount `json:"total_amount"`
+}
+```
+
+<a name="CreateReaderCheckoutRequestAADE"></a>
+## type [CreateReaderCheckoutRequestAADE](<https://github.com/sumup/sumup-go/blob/main/reader_checkouts.go#L96-L103>)
+
+Optional object containing data for transactions from ERP integrators in Greece that comply with the AADE 1155 protocol. When such regulatory/business requirements apply, this object must be provided and contains the data needed to validate the transaction with the AADE signature provider.
+
+```go
+type CreateReaderCheckoutRequestAADE struct {
+    // The identifier of the AADE signature provider.
+    ProviderID string `json:"provider_id"`
+    // The base64 encoded signature of the transaction data.
+    Signature string `json:"signature"`
+    // The string containing the signed transaction data.
+    SignatureData string `json:"signature_data"`
+}
+```
+
+<a name="CreateReaderCheckoutRequestAffiliate"></a>
+## type [CreateReaderCheckoutRequestAffiliate](<https://github.com/sumup/sumup-go/blob/main/reader_checkouts.go#L107-L120>)
+
+Optional affiliate metadata associated with the checkout's payment. Provide both \`app\_id\` and \`key\` when including this object.
+
+```go
+type CreateReaderCheckoutRequestAffiliate struct {
+    // Integrator application identifier from the [Affiliate Keys](https://developer.sumup.com/affiliate-keys) page.
+    //
+    // Required when the affiliate object is provided.
+    AppID string `json:"app_id"`
+    // Integrator-owned transaction reference. Optional.
+    // Can be used to retrieve the transaction via the [Transactions API](https://developer.sumup.com/api/transactions/get).
+    ForeignTransactionID *string `json:"foreign_transaction_id,omitempty"`
+    // Affiliate key generated in the [Affiliate Keys](https://developer.sumup.com/affiliate-keys) page.
+    // Required when the affiliate object is provided.
+    Key string `json:"key"`
+    // Optional key-value metadata associated with the transaction.
+    Tags CreateReaderCheckoutRequestAffiliateTags `json:"tags,omitempty"`
+}
+```
+
+<a name="CreateReaderCheckoutRequestAffiliateTags"></a>
+## type [CreateReaderCheckoutRequestAffiliateTags](<https://github.com/sumup/sumup-go/blob/main/reader_checkouts.go#L123>)
+
+Optional key\-value metadata associated with the transaction.
+
+```go
+type CreateReaderCheckoutRequestAffiliateTags map[string]any
+```
+
+<a name="CreateReaderCheckoutRequestCardType"></a>
+## type [CreateReaderCheckoutRequestCardType](<https://github.com/sumup/sumup-go/blob/main/reader_checkouts.go#L127>)
+
+The card type of the card used for the transaction. It is required only for some countries \(e.g: Brazil\).
+
+```go
+type CreateReaderCheckoutRequestCardType string
+```
+
+<a name="CreateReaderCheckoutRequestCardTypeCredit"></a>
+
+```go
+const (
+    CreateReaderCheckoutRequestCardTypeCredit CreateReaderCheckoutRequestCardType = "credit"
+    CreateReaderCheckoutRequestCardTypeDebit  CreateReaderCheckoutRequestCardType = "debit"
+)
+```
+
+<a name="CreateReaderCheckoutRequestPaymentType"></a>
+## type [CreateReaderCheckoutRequestPaymentType](<https://github.com/sumup/sumup-go/blob/main/reader_checkouts.go#L140>)
+
+The payment method type for the transaction. Defaults to \`card\`.
+
+Use \`pix\` to initiate a Pix QR\-code payment flow on the device. Pix is only supported for Brazilian merchants; other merchants will receive a 422 error.
+
+Default: card
+
+```go
+type CreateReaderCheckoutRequestPaymentType string
+```
+
+<a name="CreateReaderCheckoutRequestPaymentTypeCard"></a>
+
+```go
+const (
+    CreateReaderCheckoutRequestPaymentTypeCard CreateReaderCheckoutRequestPaymentType = "card"
+    CreateReaderCheckoutRequestPaymentTypePix  CreateReaderCheckoutRequestPaymentType = "pix"
+)
+```
+
+<a name="CreateReaderCheckoutRequestTotalAmount"></a>
+## type [CreateReaderCheckoutRequestTotalAmount](<https://github.com/sumup/sumup-go/blob/main/reader_checkouts.go#L151-L157>)
+
+Amount to charge in minor units. Use the decimal places for the currency. CLP, COP, and HUF use zero decimal places.
+
+For example, send \`1234\` for EUR 12.34 or \`1000\` for CLP 1000.
+
+```go
+type CreateReaderCheckoutRequestTotalAmount struct {
+    // Currency ISO 4217 code
+    Currency string `json:"currency"`
+    // Integer value of the amount.
+    // Min: 0
+    Value int `json:"value"`
+}
+```
+
 <a name="CreateReaderCheckoutResponse"></a>
 ## type [CreateReaderCheckoutResponse](<https://github.com/sumup/sumup-go/blob/main/reader_checkouts.go#L160-L162>)
 
@@ -2369,173 +2536,6 @@ CreateReaderTerminateUnprocessableEntityErrors is a schema definition.
 
 ```go
 type CreateReaderTerminateUnprocessableEntityErrors map[string]any
-```
-
-<a name="CreateRequest"></a>
-## type [CreateRequest](<https://github.com/sumup/sumup-go/blob/main/reader_checkouts.go#L36-L90>)
-
-Payment details for a Reader Checkout.
-
-```go
-type CreateRequest struct {
-    // Optional object containing data for transactions from ERP integrators in Greece that comply with the AADE
-    // 1155 protocol.
-    // When such regulatory/business requirements apply, this object must be provided and contains the data needed
-    // to validate the transaction with the AADE signature provider.
-    AADE *CreateRequestAADE `json:"aade,omitempty"`
-    // Optional affiliate metadata associated with the checkout's payment.
-    // Provide both `app_id` and `key` when including this object.
-    Affiliate *nullable.Field[CreateRequestAffiliate] `json:"affiliate,omitempty"`
-    // The card type of the card used for the transaction.
-    // It is required only for some countries (e.g: Brazil).
-    CardType *CreateRequestCardType `json:"card_type,omitempty"`
-    // Description of the checkout to be shown in the Merchant Sales
-    Description *string `json:"description,omitempty"`
-    // Number of installments for the transaction.
-    // It may vary according to the merchant country.
-    // For example, in Brazil, the maximum number of installments is 12.
-    //
-    // Omit if the merchant country does not support installments.
-    // Otherwise, the checkout will be rejected.
-    // Min: 1
-    Installments *nullable.Field[int] `json:"installments,omitempty"`
-    // The payment method type for the transaction. Defaults to `card`.
-    //
-    // Use `pix` to initiate a Pix QR-code payment flow on the device.
-    // Pix is only supported for Brazilian merchants; other merchants will receive a 422 error.
-    // Default: card
-    PaymentType *CreateRequestPaymentType `json:"payment_type,omitempty"`
-    // Webhook URL to which the payment result will be sent.
-    // It must be a HTTPS url.
-    // Format: uri
-    ReturnURL *string `json:"return_url,omitempty"`
-    // Exactly three distinct tipping rates to be displayed to the cardholder.
-    // Each rate is a fraction between 0.01 and 1.00 in increments of 0.01.
-    // The rates are sorted in ascending order by the server.
-    // Unique items only
-    // Min items: 3
-    // Max items: 3
-    TipRates []float32 `json:"tip_rates,omitempty"`
-    // Time in seconds the cardholder has to select a tip rate.
-    // If not provided, the default value is 30 seconds.
-    //
-    // It can only be set if `tip_rates` is provided.
-    //
-    // **Note**: If the target device is a Solo, it must be in version 3.3.38.0 or higher.
-    // Default: 30
-    // Min: 30
-    // Max: 120
-    TipTimeout *int `json:"tip_timeout,omitempty"`
-    // Amount to charge in minor units. Use the decimal places for the currency.
-    // CLP, COP, and HUF use zero decimal places.
-    //
-    // For example, send `1234` for EUR 12.34 or `1000` for CLP 1000.
-    TotalAmount CreateRequestTotalAmount `json:"total_amount"`
-}
-```
-
-<a name="CreateRequestAADE"></a>
-## type [CreateRequestAADE](<https://github.com/sumup/sumup-go/blob/main/reader_checkouts.go#L96-L103>)
-
-Optional object containing data for transactions from ERP integrators in Greece that comply with the AADE 1155 protocol. When such regulatory/business requirements apply, this object must be provided and contains the data needed to validate the transaction with the AADE signature provider.
-
-```go
-type CreateRequestAADE struct {
-    // The identifier of the AADE signature provider.
-    ProviderID string `json:"provider_id"`
-    // The base64 encoded signature of the transaction data.
-    Signature string `json:"signature"`
-    // The string containing the signed transaction data.
-    SignatureData string `json:"signature_data"`
-}
-```
-
-<a name="CreateRequestAffiliate"></a>
-## type [CreateRequestAffiliate](<https://github.com/sumup/sumup-go/blob/main/reader_checkouts.go#L107-L120>)
-
-Optional affiliate metadata associated with the checkout's payment. Provide both \`app\_id\` and \`key\` when including this object.
-
-```go
-type CreateRequestAffiliate struct {
-    // Integrator application identifier from the [Affiliate Keys](https://developer.sumup.com/affiliate-keys) page.
-    //
-    // Required when the affiliate object is provided.
-    AppID string `json:"app_id"`
-    // Integrator-owned transaction reference. Optional.
-    // Can be used to retrieve the transaction via the [Transactions API](https://developer.sumup.com/api/transactions/get).
-    ForeignTransactionID *string `json:"foreign_transaction_id,omitempty"`
-    // Affiliate key generated in the [Affiliate Keys](https://developer.sumup.com/affiliate-keys) page.
-    // Required when the affiliate object is provided.
-    Key string `json:"key"`
-    // Optional key-value metadata associated with the transaction.
-    Tags CreateRequestAffiliateTags `json:"tags,omitempty"`
-}
-```
-
-<a name="CreateRequestAffiliateTags"></a>
-## type [CreateRequestAffiliateTags](<https://github.com/sumup/sumup-go/blob/main/reader_checkouts.go#L123>)
-
-Optional key\-value metadata associated with the transaction.
-
-```go
-type CreateRequestAffiliateTags map[string]any
-```
-
-<a name="CreateRequestCardType"></a>
-## type [CreateRequestCardType](<https://github.com/sumup/sumup-go/blob/main/reader_checkouts.go#L127>)
-
-The card type of the card used for the transaction. It is required only for some countries \(e.g: Brazil\).
-
-```go
-type CreateRequestCardType string
-```
-
-<a name="CreateRequestCardTypeCredit"></a>
-
-```go
-const (
-    CreateRequestCardTypeCredit CreateRequestCardType = "credit"
-    CreateRequestCardTypeDebit  CreateRequestCardType = "debit"
-)
-```
-
-<a name="CreateRequestPaymentType"></a>
-## type [CreateRequestPaymentType](<https://github.com/sumup/sumup-go/blob/main/reader_checkouts.go#L140>)
-
-The payment method type for the transaction. Defaults to \`card\`.
-
-Use \`pix\` to initiate a Pix QR\-code payment flow on the device. Pix is only supported for Brazilian merchants; other merchants will receive a 422 error.
-
-Default: card
-
-```go
-type CreateRequestPaymentType string
-```
-
-<a name="CreateRequestPaymentTypeCard"></a>
-
-```go
-const (
-    CreateRequestPaymentTypeCard CreateRequestPaymentType = "card"
-    CreateRequestPaymentTypePix  CreateRequestPaymentType = "pix"
-)
-```
-
-<a name="CreateRequestTotalAmount"></a>
-## type [CreateRequestTotalAmount](<https://github.com/sumup/sumup-go/blob/main/reader_checkouts.go#L151-L157>)
-
-Amount to charge in minor units. Use the decimal places for the currency. CLP, COP, and HUF use zero decimal places.
-
-For example, send \`1234\` for EUR 12.34 or \`1000\` for CLP 1000.
-
-```go
-type CreateRequestTotalAmount struct {
-    // Currency ISO 4217 code
-    Currency string `json:"currency"`
-    // Integer value of the amount.
-    // Min: 0
-    Value int `json:"value"`
-}
 ```
 
 <a name="Currency"></a>
@@ -5400,7 +5400,7 @@ If a transaction is successfully terminated and \`return\_url\` was provided on 
 
 
 ```go
-type ReaderCheckoutsCreateParams = CreateRequest
+type ReaderCheckoutsCreateParams = CreateReaderCheckoutRequest
 ```
 
 <a name="ReaderCreatedEvent"></a>
@@ -5578,7 +5578,7 @@ When enabling menu lock for a reader without a PIN, include a four\-digit PIN in
 
 
 ```go
-type ReaderSettingsUpdateParams = UpdateRequest
+type ReaderSettingsUpdateParams = UpdateReaderSettingsRequest
 ```
 
 <a name="ReaderStatus"></a>
@@ -8686,6 +8686,35 @@ type UpdateReaderSettingsErrorErrors struct {
 }
 ```
 
+<a name="UpdateReaderSettingsRequest"></a>
+## type [UpdateReaderSettingsRequest](<https://github.com/sumup/sumup-go/blob/main/reader_settings.go#L56-L60>)
+
+Menu lock settings to update for a Solo reader.
+
+```go
+type UpdateReaderSettingsRequest struct {
+    // Menu lock configuration. Provide at least one of `enabled` or `passcode`.
+    // Min properties: 1
+    MenuLock UpdateReaderSettingsRequestMenuLock `json:"menu_lock"`
+}
+```
+
+<a name="UpdateReaderSettingsRequestMenuLock"></a>
+## type [UpdateReaderSettingsRequestMenuLock](<https://github.com/sumup/sumup-go/blob/main/reader_settings.go#L64-L71>)
+
+Menu lock configuration. Provide at least one of \`enabled\` or \`passcode\`. Min properties: 1
+
+```go
+type UpdateReaderSettingsRequestMenuLock struct {
+    // Whether menu lock is enabled.
+    Enabled *bool `json:"enabled,omitempty"`
+    // Four-digit PIN used to unlock the reader's menu.
+    // Format: password
+    // Pattern: ^[0-9]{4}$
+    Passcode *secret.Secret `json:"passcode,omitempty"`
+}
+```
+
 <a name="UpdateReaderSettingsResponse"></a>
 ## type [UpdateReaderSettingsResponse](<https://github.com/sumup/sumup-go/blob/main/reader_settings.go#L74-L76>)
 
@@ -8771,35 +8800,6 @@ UpdateReaderSettingsUnprocessableEntityErrors is a schema definition.
 
 ```go
 type UpdateReaderSettingsUnprocessableEntityErrors map[string]any
-```
-
-<a name="UpdateRequest"></a>
-## type [UpdateRequest](<https://github.com/sumup/sumup-go/blob/main/reader_settings.go#L56-L60>)
-
-Menu lock settings to update for a Solo reader.
-
-```go
-type UpdateRequest struct {
-    // Menu lock configuration. Provide at least one of `enabled` or `passcode`.
-    // Min properties: 1
-    MenuLock UpdateRequestMenuLock `json:"menu_lock"`
-}
-```
-
-<a name="UpdateRequestMenuLock"></a>
-## type [UpdateRequestMenuLock](<https://github.com/sumup/sumup-go/blob/main/reader_settings.go#L64-L71>)
-
-Menu lock configuration. Provide at least one of \`enabled\` or \`passcode\`. Min properties: 1
-
-```go
-type UpdateRequestMenuLock struct {
-    // Whether menu lock is enabled.
-    Enabled *bool `json:"enabled,omitempty"`
-    // Four-digit PIN used to unlock the reader's menu.
-    // Format: password
-    // Pattern: ^[0-9]{4}$
-    Passcode *secret.Secret `json:"passcode,omitempty"`
-}
 ```
 
 <a name="UserType"></a>
