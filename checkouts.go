@@ -503,9 +503,9 @@ type CheckoutsCreateApplePaySessionParams struct {
 	Target string `json:"target"`
 }
 
-type CheckoutsUpdateParams = CheckoutUpdateRequest
-
 type CheckoutsProcessParams = ProcessCheckout
+
+type CheckoutsUpdateParams = CheckoutUpdateRequest
 
 // CheckoutsListParams are query parameters for ListCheckouts.
 type CheckoutsListParams struct {
