@@ -243,7 +243,8 @@ func (b *Builder) collectSchemas() {
 			schemas := b.collectSchemasInResponse(op)
 			schemas = append(schemas, collectSchemasInParams(op)...)
 			schemas = append(schemas, requestSchemas...)
-			if methodName != operationName {
+			isNested := len(op.Tags) > 0 && b.resourceParents[strings.ToLower(op.Tags[0])].tag != ""
+			if methodName != operationName && !isNested {
 				for _, schema := range requestSchemas {
 					if schema == nil || schema.GetReference() == "" {
 						continue

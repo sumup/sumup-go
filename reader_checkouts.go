@@ -33,18 +33,18 @@ func (e *CreateReaderCheckoutError) Error() string {
 var _ error = (*CreateReaderCheckoutError)(nil)
 
 // Payment details for a Reader Checkout.
-type CreateRequest struct {
+type CreateReaderCheckoutRequest struct {
 	// Optional object containing data for transactions from ERP integrators in Greece that comply with the AADE
 	// 1155 protocol.
 	// When such regulatory/business requirements apply, this object must be provided and contains the data needed
 	// to validate the transaction with the AADE signature provider.
-	AADE *CreateRequestAADE `json:"aade,omitempty"`
+	AADE *CreateReaderCheckoutRequestAADE `json:"aade,omitempty"`
 	// Optional affiliate metadata associated with the checkout's payment.
 	// Provide both `app_id` and `key` when including this object.
-	Affiliate *nullable.Field[CreateRequestAffiliate] `json:"affiliate,omitempty"`
+	Affiliate *nullable.Field[CreateReaderCheckoutRequestAffiliate] `json:"affiliate,omitempty"`
 	// The card type of the card used for the transaction.
 	// It is required only for some countries (e.g: Brazil).
-	CardType *CreateRequestCardType `json:"card_type,omitempty"`
+	CardType *CreateReaderCheckoutRequestCardType `json:"card_type,omitempty"`
 	// Description of the checkout to be shown in the Merchant Sales
 	Description *string `json:"description,omitempty"`
 	// Number of installments for the transaction.
@@ -60,7 +60,7 @@ type CreateRequest struct {
 	// Use `pix` to initiate a Pix QR-code payment flow on the device.
 	// Pix is only supported for Brazilian merchants; other merchants will receive a 422 error.
 	// Default: card
-	PaymentType *CreateRequestPaymentType `json:"payment_type,omitempty"`
+	PaymentType *CreateReaderCheckoutRequestPaymentType `json:"payment_type,omitempty"`
 	// Webhook URL to which the payment result will be sent.
 	// It must be a HTTPS url.
 	// Format: uri
@@ -86,14 +86,14 @@ type CreateRequest struct {
 	// CLP, COP, and HUF use zero decimal places.
 	//
 	// For example, send `1234` for EUR 12.34 or `1000` for CLP 1000.
-	TotalAmount CreateRequestTotalAmount `json:"total_amount"`
+	TotalAmount CreateReaderCheckoutRequestTotalAmount `json:"total_amount"`
 }
 
 // Optional object containing data for transactions from ERP integrators in Greece that comply with the AADE
 // 1155 protocol.
 // When such regulatory/business requirements apply, this object must be provided and contains the data needed
 // to validate the transaction with the AADE signature provider.
-type CreateRequestAADE struct {
+type CreateReaderCheckoutRequestAADE struct {
 	// The identifier of the AADE signature provider.
 	ProviderID string `json:"provider_id"`
 	// The base64 encoded signature of the transaction data.
@@ -104,7 +104,7 @@ type CreateRequestAADE struct {
 
 // Optional affiliate metadata associated with the checkout's payment.
 // Provide both `app_id` and `key` when including this object.
-type CreateRequestAffiliate struct {
+type CreateReaderCheckoutRequestAffiliate struct {
 	// Integrator application identifier from the [Affiliate Keys](https://developer.sumup.com/affiliate-keys) page.
 	//
 	// Required when the affiliate object is provided.
@@ -116,19 +116,19 @@ type CreateRequestAffiliate struct {
 	// Required when the affiliate object is provided.
 	Key string `json:"key"`
 	// Optional key-value metadata associated with the transaction.
-	Tags CreateRequestAffiliateTags `json:"tags,omitempty"`
+	Tags CreateReaderCheckoutRequestAffiliateTags `json:"tags,omitempty"`
 }
 
 // Optional key-value metadata associated with the transaction.
-type CreateRequestAffiliateTags map[string]any
+type CreateReaderCheckoutRequestAffiliateTags map[string]any
 
 // The card type of the card used for the transaction.
 // It is required only for some countries (e.g: Brazil).
-type CreateRequestCardType string
+type CreateReaderCheckoutRequestCardType string
 
 const (
-	CreateRequestCardTypeCredit CreateRequestCardType = "credit"
-	CreateRequestCardTypeDebit  CreateRequestCardType = "debit"
+	CreateReaderCheckoutRequestCardTypeCredit CreateReaderCheckoutRequestCardType = "credit"
+	CreateReaderCheckoutRequestCardTypeDebit  CreateReaderCheckoutRequestCardType = "debit"
 )
 
 // The payment method type for the transaction. Defaults to `card`.
@@ -137,18 +137,18 @@ const (
 // Pix is only supported for Brazilian merchants; other merchants will receive a 422 error.
 //
 // Default: card
-type CreateRequestPaymentType string
+type CreateReaderCheckoutRequestPaymentType string
 
 const (
-	CreateRequestPaymentTypeCard CreateRequestPaymentType = "card"
-	CreateRequestPaymentTypePix  CreateRequestPaymentType = "pix"
+	CreateReaderCheckoutRequestPaymentTypeCard CreateReaderCheckoutRequestPaymentType = "card"
+	CreateReaderCheckoutRequestPaymentTypePix  CreateReaderCheckoutRequestPaymentType = "pix"
 )
 
 // Amount to charge in minor units. Use the decimal places for the currency.
 // CLP, COP, and HUF use zero decimal places.
 //
 // For example, send `1234` for EUR 12.34 or `1000` for CLP 1000.
-type CreateRequestTotalAmount struct {
+type CreateReaderCheckoutRequestTotalAmount struct {
 	// Currency ISO 4217 code
 	Currency string `json:"currency"`
 	// Integer value of the amount.
@@ -296,7 +296,7 @@ type GetReaderCheckoutResponseDataTotalAmount struct {
 	Value int `json:"value"`
 }
 
-type ReaderCheckoutsCreateParams = CreateRequest
+type ReaderCheckoutsCreateParams = CreateReaderCheckoutRequest
 
 // ReaderCheckoutsClient provides access to the ReaderCheckouts API.
 //
