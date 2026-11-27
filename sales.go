@@ -976,6 +976,10 @@ func (p *SalesListParams) QueryValues() url.Values {
 // to retrieve summaries. Use a summary's `id` to get the full sale.
 //
 // Amounts are expressed in minor units according to each sale's `currency.scale`.
+//
+// Current limitation: In most countries, sales created via the Invoices product are only included when
+// the transaction happened through SumUp payments. This means invoices paid via cash or bank transfer
+// won’t be listed. Sales made in the UK are an exception to this limitation; all sales will be shown there.
 type SalesClient struct {
 	c *client.Client
 }

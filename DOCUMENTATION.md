@@ -7043,7 +7043,7 @@ type SalesActivityCurrency struct {
 ```
 
 <a name="SalesClient"></a>
-## type [SalesClient](<https://github.com/sumup/sumup-go/blob/main/sales.go#L979-L981>)
+## type [SalesClient](<https://github.com/sumup/sumup-go/blob/main/sales.go#L983-L985>)
 
 SalesClient provides access to the Sales API.
 
@@ -7053,6 +7053,8 @@ List sales to retrieve full \`Sale\` objects, or search by date, payment status,
 
 Amounts are expressed in minor units according to each sale's \`currency.scale\`.
 
+Current limitation: In most countries, sales created via the Invoices product are only included when the transaction happened through SumUp payments. This means invoices paid via cash or bank transfer won’t be listed. Sales made in the UK are an exception to this limitation; all sales will be shown there.
+
 ```go
 type SalesClient struct {
     // contains filtered or unexported fields
@@ -7060,7 +7062,7 @@ type SalesClient struct {
 ```
 
 <a name="NewSalesClient"></a>
-### func [NewSalesClient](<https://github.com/sumup/sumup-go/blob/main/sales.go#L983>)
+### func [NewSalesClient](<https://github.com/sumup/sumup-go/blob/main/sales.go#L987>)
 
 ```go
 func NewSalesClient(c *client.Client) *SalesClient
@@ -7069,7 +7071,7 @@ func NewSalesClient(c *client.Client) *SalesClient
 
 
 <a name="SalesClient.Get"></a>
-### func \(\*SalesClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/sales.go#L1073>)
+### func \(\*SalesClient\) [Get](<https://github.com/sumup/sumup-go/blob/main/sales.go#L1077>)
 
 ```go
 func (c *SalesClient) Get(ctx context.Context, merchantCode string, saleID string) (*Sale, error)
@@ -7078,7 +7080,7 @@ func (c *SalesClient) Get(ctx context.Context, merchantCode string, saleID strin
 Returns \`Sale\` for \`sale\_id\`, including item lines and \`payments\[\]\`. Non\-finalised sales are never returned; only fully\-paid sales.
 
 <a name="SalesClient.List"></a>
-### func \(\*SalesClient\) [List](<https://github.com/sumup/sumup-go/blob/main/sales.go#L1035>)
+### func \(\*SalesClient\) [List](<https://github.com/sumup/sumup-go/blob/main/sales.go#L1039>)
 
 ```go
 func (c *SalesClient) List(ctx context.Context, merchantCode string, params SalesListParams) (*SalePage, error)
@@ -7089,7 +7091,7 @@ Returns a paginated list of \`Sale\` objects. Results are sorted \*\*newest firs
 Covers the merchant’s \*\*last two years\*\* of sales. Non\-finalised sales are never returned; only fully\-paid sales. Use \`POST /sales/search\` for filtered queries.
 
 <a name="SalesClient.Search"></a>
-### func \(\*SalesClient\) [Search](<https://github.com/sumup/sumup-go/blob/main/sales.go#L994>)
+### func \(\*SalesClient\) [Search](<https://github.com/sumup/sumup-go/blob/main/sales.go#L998>)
 
 ```go
 func (c *SalesClient) Search(ctx context.Context, merchantCode string, body SalesSearchParams) (*SaleSearchResponse, error)
